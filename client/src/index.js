@@ -1,0 +1,106 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { AppContainer } from 'react-hot-loader';
+import RootRoute from './route/RootRoute';
+import registerServiceWorker from './registerServiceWorker';
+
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import createSagaMiddleware from 'redux-saga';
+import createHistory from 'history/createBrowserHistory';
+import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux';
+import appReducer from './reducer';
+import rootSaga from './saga';
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import Reboot from 'material-ui/Reboot';
+import blue from 'material-ui/colors/blue';
+import pink from 'material-ui/colors/pink';
+
+import './index.scss';
+
+const history = createHistory();
+const routeMiddleware = routerMiddleware(history);
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(
+    combineReducers({
+        router: routerReducer,
+        app: appReducer
+    }),
+    applyMiddleware(routeMiddleware, sagaMiddleware)
+);
+sagaMiddleware.run(rootSaga);
+
+// const theme = createMuiTheme({
+//     palette: {
+//         primary: {
+//             light: lightBlue[500],
+//             main: blue[500],
+//             dark: 'asdf',
+//             contrastText: 'asdf'
+//         },
+//         secondary: {
+//             light: 'asdf',
+//             main: 'asdf',
+//             dark: 'asdf',
+//             contrastText: 'asdf'
+//         },
+//         error: {
+//             light: 'asdf',
+//             main: 'asdf',
+//             dark: 'asdf',
+//             contrastText: 'asdf'
+//         }
+//     }
+// })
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            light: blue[400],
+            main: blue[500]
+        },
+        secondary: {
+            light: pink[400],
+            main: pink[500]
+        }
+    }
+});
+
+// const render = (Component) => {
+//     ReactDOM.render(
+//         <AppContainer>
+//             <Provider store={store}>
+//                 <ConnectedRouter history={history}>
+//                     <MuiThemeProvider theme={createMuiTheme()}>
+//                         <Component/>
+//                     </MuiThemeProvider>
+//                 </ConnectedRouter>
+//             </Provider>
+//         </AppContainer>,
+//         document.getElementById('root')
+//     );
+// }
+
+//render(RootRoute);
+
+// if (module.hot) {
+//     module.hot.accept('./route/RootRoute.js', () => {
+//         console.log('Some module is hot-replaced');
+//         render(require('./route/RootRoute').default);
+//     })
+// }
+
+ReactDOM.render(
+    <Provider store={store}>
+        <ConnectedRouter history={history}>
+            <MuiThemeProvider theme={theme}>
+                <div>
+                    <Reboot />
+                    <RootRoute />
+                </div>
+            </MuiThemeProvider>
+        </ConnectedRouter>
+    </Provider>,
+    document.getElementById('root')
+);
+
+registerServiceWorker();
