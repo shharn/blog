@@ -3,18 +3,27 @@ import List from 'material-ui/List';
 import DrawerItem from '../DrawerItem';
 import styles from './styles';
 import { withStyles } from 'material-ui/styles';
+import { getMenus } from '../../service';
+import { CircularProgress } from 'material-ui/Progress';
 
 class DrawerItems extends Component {
+    state = {
+        fetchComplete: false
+    };
+
+    componentDidMount() {
+        getMenus().then(menus => this.setState({ menus, fetchComplete: true }));
+    }
+
     render() {
-        const items = [
-            { url: 'http://localhost:3000/admin', title: 'Admin' },
-            { url: 'http://localhost:3000', title: 'Home' }
-        ];
+        const { menus, fetchComplete } = this.state;
         const { classes } = this.props;
         return (
+            fetchComplete ?
             <List className={classes.listContainer}>
-                {items.map(item => <DrawerItem item={item}/>)}
-            </List>
+                {menus.map(menu => <DrawerItem key={menu.Url} menu={menu}/>)}
+            </List> :
+            <CircularProgress size={30} className={classes.circularProgress}/>
         );
     }
 }

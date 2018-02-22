@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 
 class DrawerItem extends Component {
     render() {
-        const { url, title } = this.props.item;
+        const { Url, Title } = this.props.menu;
         return (
-            <ListItem button component={Link} to={url}>
-                <ListItemText primary={title}/>
+            <ListItem button component={Link} to={Url}>
+                <ListItemText primary={Title}/>
             </ListItem>
         );
     }

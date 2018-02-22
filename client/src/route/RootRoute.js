@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import Home from '../component/Home/Home';
-import Loading from '../component/Loading/Loading';
+import { CircularProgress } from 'material-ui/Progress';
 import { Route } from 'react-router';
 import Loadable from 'react-loadable';
 
 const Admin = Loadable({
     loader: () => import('../component/Admin'),
-    loading: Loading
+    loading: () => <CircularProgress size={30}/>
 })
 
 class RootRoute extends Component {

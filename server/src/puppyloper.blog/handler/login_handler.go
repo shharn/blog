@@ -19,7 +19,7 @@ type LoginInformation struct {
 	Password string
 }
 
-type Token struct {
+type BlogToken struct {
 	Token string
 }
 
@@ -31,6 +31,7 @@ func (e AppError) Error() string {
 	return fmt.Sprintf("%v", e.ErrorMessage)
 }
 
+// Handler for "/login"
 func LoginHandler(response http.ResponseWriter, request *http.Request) {
 	var info LoginInformation
 	if err := json.NewDecoder(request.Body).Decode(&info); err != nil {
@@ -43,7 +44,7 @@ func LoginHandler(response http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	token := makeToken(info)
+	token := makeToken(&info)
 	var (
 		tokenString string
 		err         error
@@ -52,7 +53,7 @@ func LoginHandler(response http.ResponseWriter, request *http.Request) {
 		util.ErrorResponse(response, err, http.StatusInternalServerError)
 		return
 	}
-	jsonResponse := Token{tokenString}
+	jsonResponse := BlogToken{tokenString}
 	util.JsonResponse(http.StatusOK, jsonResponse, response)
 }
 
@@ -60,7 +61,7 @@ func isAdminUser(info *LoginInformation) bool {
 	return info.Email == AdminEmail && info.Password == AdminPassword
 }
 
-func makeToken(info *LoginInfo) Token {
+func makeToken(info *LoginInformation) *jwt.Token {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := make(jwt.MapClaims)
 	claims["iat"] = time.Now().Unix()

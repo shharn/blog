@@ -1,17 +1,22 @@
 package dataloader
 
+// Menu type
 type Menu struct {
-	url string
-	title string
+	Url string
+	Title string
 }
 
+// Menu array type
+type Menus []Menu
+
 var (
-	menus []Menu = []Menu{
-		Menu{url: "/admin", title: "Admin"},
-		Menu{url: "/", title: "Home"}
+	menus = Menus{
+		Menu{Url: "/admin", Title: "Admin"},
+		Menu{Url: "/", Title: "Home"},
 	}
 )
 
-func getMenus() {
+// service for "/menus"
+func GetMenus() Menus {
 	return menus
 }

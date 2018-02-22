@@ -23,7 +23,6 @@ export default {
         margin: '10px 0'
     },
     header: {
-        alignSelf: 'flex-start',
         marginTop: '10px'
     },
     textfield: {

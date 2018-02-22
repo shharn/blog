@@ -5,12 +5,12 @@ import (
 	"net/http"
 )
 
+// Helper function for sending the response to client with json string
 func JsonResponse(statusCode int , content interface{}, writer http.ResponseWriter) {
 	var (
 		jsonData []byte
 		err error
 	)
-	
 	if jsonData, err = json.Marshal(content); err != nil {
 		ErrorResponse(writer, err, http.StatusInternalServerError)
 		return

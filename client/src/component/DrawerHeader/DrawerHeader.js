@@ -12,7 +12,7 @@ class DrawerHeader extends Component {
                     <Typography variant="title">Puppyloper's blog</Typography>
                 </div>
                 <div>
-                    <Typography variant="caption">Developer like cheerful Puppy :)</Typography>
+                    <Typography variant="caption">I'm software engineer :)</Typography>
                 </div>
             </a>
         );

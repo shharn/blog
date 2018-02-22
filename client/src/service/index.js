@@ -24,7 +24,7 @@ export function getMenus() {
     return request
         .get(`http://${env.apiServerDomain}/menus`)
         .accept('json')
-        .then(res => res)
+        .then(res =>res.body)
         .catch(err => err.response);
 }
 

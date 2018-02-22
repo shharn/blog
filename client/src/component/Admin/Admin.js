@@ -12,13 +12,10 @@ import Cookies from 'js-cookie';
 import styles from './styles';
 
 class Admin extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            emailValue: '',
-            passwordValue: ''
-        };
-    }
+    state = {
+        emailValue: '',
+        passwordValue: ''
+    };
 
     componentDidUpdate = () => {
         this._isAuthenticated() && this._redirectToHomeWithDelay();
@@ -64,9 +61,10 @@ class Admin extends Component {
     _getComponentOnLoginStatus = () => {
         const { loginStatus } = this.props;
         let result = null;
+        
         switch(loginStatus) {
             case loginStatusType.LOGIN_WAIT:
-                result = <CircularProgress size={30} className={this.props.classes.circularProgerss}/>
+                result = <CircularProgress className={this.props.classes.circularProgerss}/>
                 break;
             case loginStatusType.LOGIN_SUCCESS:
                 result = <Typography variant="caption">Confirmed. Will be redirected soon</Typography>
