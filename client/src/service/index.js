@@ -16,7 +16,7 @@ export function requestLogout(token : string)  {
     return request
         .post(`http://${env.apiServerDomain}/logout`)
         .send( { token } )
-        .then(res => res.body)
+        .then(res => res)
         .catch(err => err);
 }
 
@@ -24,8 +24,8 @@ export function getMenus() {
     return request
         .get(`http://${env.apiServerDomain}/menus`)
         .accept('json')
-        .then(res =>res.body)
-        .catch(err => err.response);
+        .then(res =>res)
+        .catch(err => err);
 }
 
 export function getArticles(menu: string) {
@@ -33,5 +33,5 @@ export function getArticles(menu: string) {
         .get(`http://${env.apiServerDomain}/menus/${menu}/articles`)
         .accept('json')
         .then(res => res)
-        .catch(err => err.response);
+        .catch(err => err);
 }

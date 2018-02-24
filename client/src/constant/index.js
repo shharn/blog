@@ -11,6 +11,13 @@ export const logoutStatus = {
     LOGOUT_FAIL: 'LOGOUT_FAIL'
 }
 
+export const fetchStatus = {
+    FETCH_INITIAL: 'FETCH_INITIAL',
+    FETCH_WAIT: 'FETCH_WAIT',
+    FETCH_SUCCESS: 'FETCH_SUCCESS',
+    FETCH_FAIL: 'FETCH_FAIL'
+}
+
 export const token = {
     cookieKey: 'puppyToken'
 }

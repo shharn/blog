@@ -14,7 +14,7 @@ class TopBar extends Component {
         const { classes, toggleDrawer } = this.props;
         return (
             <AppBar className={classes.appBar}>
-                  <Toolbar className={classes.toolBar}>
+                  <Toolbar classes={{ root: classes.toolBar}}>
                       <div>
                           <IconButton className={classes.navHamburgerIcon} onClick={toggleDrawer}>
                               <MenuIcon />

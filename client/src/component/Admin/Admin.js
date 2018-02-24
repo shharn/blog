@@ -18,14 +18,20 @@ class Admin extends Component {
     };
 
     componentDidUpdate = () => {
+        console.log('componentDidUpdate');
         this._isAuthenticated() && this._redirectToHomeWithDelay();
     }
 
     componentDidMount = () => {
-        this._isAuthenticated() && this.props.changeLoginStatusToSuccess(Cookies.get(token.cookieKey));
+        console.log('componentDidMount');
+        if (this._isAuthenticated()) {
+            this.props.changeLoginStatusToSuccess(Cookies.get(token.cookieKey));
+            this._redirectToHomeWithDelay();
+        }
     }
 
     _isAuthenticated = () => {
+        console.log(token.cookieKey);
         return this.props.loginStatus === loginStatusType.LOGIN_SUCCESS || Cookies.get(token.cookieKey);
     }
 

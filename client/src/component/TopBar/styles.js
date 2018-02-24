@@ -14,7 +14,8 @@ export default theme => ({
   toolBar: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    height: 'inherit'
   },
   navHamburgerIcon: {
     color: theme.palette.common.white,

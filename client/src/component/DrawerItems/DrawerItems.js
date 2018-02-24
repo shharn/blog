@@ -3,27 +3,26 @@ import List from 'material-ui/List';
 import DrawerItem from '../DrawerItem';
 import styles from './styles';
 import { withStyles } from 'material-ui/styles';
-import { getMenus } from '../../service';
 import { CircularProgress } from 'material-ui/Progress';
+import Typography from 'material-ui/Typography';
+import { fetchStatus as fetchStatusType } from '../../constant';
 
 class DrawerItems extends Component {
-    state = {
-        fetchComplete: false
-    };
-
     componentDidMount() {
-        getMenus().then(menus => this.setState({ menus, fetchComplete: true }));
+        this.props.requestMenuData();
     }
 
     render() {
-        const { menus, fetchComplete } = this.state;
-        const { classes } = this.props;
+        const { menus, fetchStatus, fetchComplete, classes, error } = this.props;
         return (
-            fetchComplete ?
+            fetchComplete ? 
             <List className={classes.listContainer}>
-                {menus.map(menu => <DrawerItem key={menu.Url} menu={menu}/>)}
+                {fetchStatus === fetchStatusType.FETCH_SUCCESS ?
+                    menus == null ? <Typography className={classes.text}>No Menus</Typography> : menus.map(menu => <DrawerItem key={menu.Url} menu={menu}/>) :
+                <Typography className={classes.text}>{error.message}</Typography>}
             </List> :
             <CircularProgress size={30} className={classes.circularProgress}/>
+            // reload button???
         );
     }
 }

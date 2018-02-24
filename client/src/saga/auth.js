@@ -11,7 +11,7 @@ import {
 import * as service from '../service';
 
 type LoginError = {
-    errorCode: Number,
+    statusCode: Number,
     message: string
 };
 
