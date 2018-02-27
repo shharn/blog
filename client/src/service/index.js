@@ -9,10 +9,20 @@ export function requestLogin(loginInfo) {
             .accept('json')
             .send(JSON.stringify(loginInfo))
             .then(res => res)
-            .catch(err => err.response);
+            .catch(err => err.response ? err.response : err);
 }
 
-export function requestLogout(token : string)  {
+export function validateToken(token: string) {
+    return request
+        .post(`http://${env.apiServerDomain}/check`)
+        .type('text/plain')
+        .accept('json')
+        .send(JSON.stringify({ token }))
+        .then(res => res)
+        .catch(err => err.response ? err.response : err);
+}
+
+export function requestLogout(token: string)  {
     return request
         .post(`http://${env.apiServerDomain}/logout`)
         .send( { token } )

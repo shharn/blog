@@ -8,7 +8,7 @@ import { CircularProgress } from 'material-ui/Progress';
 import { withStyles } from 'material-ui/styles';
 import { loginStatus as loginStatusType, token } from '../../constant';
 import keycode from 'keycode';
-import Cookies from 'js-cookie';
+import LocalStorage from 'local-storage';
 import styles from './styles';
 
 class Admin extends Component {
@@ -17,22 +17,14 @@ class Admin extends Component {
         passwordValue: ''
     };
 
-    componentDidUpdate = () => {
-        console.log('componentDidUpdate');
-        this._isAuthenticated() && this._redirectToHomeWithDelay();
-    }
-
     componentDidMount = () => {
         console.log('componentDidMount');
-        if (this._isAuthenticated()) {
-            this.props.changeLoginStatusToSuccess(Cookies.get(token.cookieKey));
-            this._redirectToHomeWithDelay();
+        const storedToken = LocalStorage.get(token.key);
+        if (storedToken) {
+            this.props.validateToken(storedToken);
+        } else {
+            this.props.initializeLoginStatus();
         }
-    }
-
-    _isAuthenticated = () => {
-        console.log(token.cookieKey);
-        return this.props.loginStatus === loginStatusType.LOGIN_SUCCESS || Cookies.get(token.cookieKey);
     }
 
     _redirectToHomeWithDelay = () => {
@@ -40,7 +32,8 @@ class Admin extends Component {
     }
 
     _handleSubmit = () => {
-        this._login();
+        const { emailValue, passwordValue } = this.state;
+        this.props.login({ email: emailValue, password: passwordValue });
     }
 
     _handleEmailChange = (e) => {
@@ -56,12 +49,7 @@ class Admin extends Component {
     }
 
     _handleKeyUp = (e) => {
-        e.keyCode === keycode('enter') && this._login();
-    }
-
-    _login = () => {
-        const { emailValue, passwordValue } = this.state;
-        this.props.login({ Email: emailValue, Password: passwordValue });
+        e.keyCode === keycode('enter') && this._handleSubmit();
     }
 
     _getComponentOnLoginStatus = () => {
@@ -90,6 +78,7 @@ class Admin extends Component {
     }
 
     render() {
+        this.props.loginStatus === loginStatusType.LOGIN_SUCCESS && this._redirectToHomeWithDelay();
         return (
             <div className={this.props.classes.root} onKeyUp={this._handleKeyUp}>
                 <Paper elevation={4} className={this.props.classes.paper}>

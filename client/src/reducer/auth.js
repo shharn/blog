@@ -1,6 +1,6 @@
 import { auth as authActionType } from '../action/types'
 import { loginStatus as loginStatusType, token } from '../constant';
-import Cookies from 'js-cookie';
+import LocalStorage from 'local-storage';
 
 const initialState = {
     loginStatus: loginStatusType.INITIAL
@@ -9,6 +9,11 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     let { type } = action;
     switch(type) {
+        case authActionType.INITIALISE_LOGIN_STATUS:
+            return {
+                ...state,
+                loginStatus: loginStatusType.INITIAL
+            }
         case authActionType.REQUEST_LOGIN:
             return {
                 ...state,
@@ -21,12 +26,23 @@ const reducer = (state = initialState, action) => {
                 error: action.payload.error
             }
         case authActionType.LOGIN_SUCCESS:
-            let date = new Date(Date.now());
-            date.setHours(date.getHours() + 2);
-            Cookies.set(token.cookieKey, action.payload.token, { expires: date });
+            console.dir(action.payload);
+            action.payload.token && LocalStorage.set(token.key, action.payload.token);
+            return {
+                ...state,
+                isAuthenticated: action.payload.isAuthenticated,
+                loginStatus: loginStatusType.LOGIN_SUCCESS
+            }
+        case authActionType.VALID_TOKEN:
             return {
                 ...state,
                 loginStatus: loginStatusType.LOGIN_SUCCESS
+            }
+        case authActionType.INVALID_TOKEN:
+            return {
+                ...state,
+                error: action.payload.error,
+                loginStatus: loginStatusType.LOGIN_INITIAL
             }
         case authActionType.REQUEST_LOGOUT:
             return {

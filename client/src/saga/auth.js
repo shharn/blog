@@ -6,7 +6,9 @@ import {
     loginFailed,
     clientHasNoToken,
     logoutSuccess,
-    logoutFailed 
+    logoutFailed, 
+    invalidToken,
+    validToken
 } from '../action/auth';
 import * as service from '../service';
 
@@ -17,13 +19,41 @@ type LoginError = {
 
 export function* loginProcess(action) {
     const response = yield call(service.requestLogin, action.payload.loginInfo);
-    if (response.statusCode === 200) {
-        yield put(loginSuccess(response.body.Token));
-    } else {
+    if (isNetworkOffline(response)) {
         yield put(loginFailed({
-            code: response.statusCode,
-            message: response.body.ErrorMessage
+            code: -1,
+            message: 'Network is down (Server or Client) :('
         }));
+    } else {
+        if (response.statusCode === 200) {
+            yield put(loginSuccess(response.body));
+        } else {
+            yield put(loginFailed({
+                code: response.statusCode,
+                message: response.body.errorMessage
+            }));
+        }
+    }
+}
+
+export function* validateToken(action) {
+    const { token } = action.payload;
+    const response = yield call(service.validateToken, token);
+    console.dir(response);
+    if (isNetworkOffline(response)) {
+        yield put(invalidToken({
+            code: -1,
+            message: 'Network is down :('
+        }));
+    } else {
+        if (response.statusCode === 200 && response.body.isAuthenticated === true) {
+            yield put(validToken());
+        } else {
+            yield put(invalidToken({
+                code: response.statusCode,
+                message: 'Invalid Token'
+            }));
+        }
     }
 }
 
@@ -44,7 +74,12 @@ export function* logoutProcess(action) {
     }
 }
 
+function isNetworkOffline(response) {
+    return !response.status;
+}
+
 export default function* watchLogin() {
     yield takeLatest(authActionType.REQUEST_LOGIN, loginProcess);
     yield takeLatest(authActionType.REQUEST_LOGOUT, logoutProcess);
+    yield takeLatest(authActionType.VALIDATE_TOKEN, validateToken);
 }

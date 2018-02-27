@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Home from '../component/Home/Home';
+import Home from '../component/Home';
 import { CircularProgress } from 'material-ui/Progress';
 import { Route } from 'react-router';
 import Loadable from 'react-loadable';

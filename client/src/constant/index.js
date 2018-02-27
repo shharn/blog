@@ -19,7 +19,7 @@ export const fetchStatus = {
 }
 
 export const token = {
-    cookieKey: 'puppyToken'
+    key: 'puppyToken'
 }
 
 export const styles = {

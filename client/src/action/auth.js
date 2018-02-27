@@ -6,7 +6,29 @@ import { auth } from './types';
 //     message: string
 // };
 
-export const requestLogin = (loginInfo) => {
+type LoginInformation = {
+    email: string,
+    password: string,
+    token: string
+}
+
+type LoginResponse = {
+    isAuthenticated: boolean,
+    token: string
+}
+
+type AuthError = {
+    code: number,
+    message: string
+}
+
+export const initializeLoginStatus = () => {
+    return {
+        type: auth.INITIALISE_LOGIN_STATUS
+    }
+}
+
+export const requestLogin = (loginInfo : LoginInformation) => {
     return {
         type: auth.REQUEST_LOGIN,
         payload: {
@@ -15,18 +37,40 @@ export const requestLogin = (loginInfo) => {
     }
 }
 
-export const loginSuccess = (token : string) => {
+export const loginSuccess = (loginResponse : LoginResponse) => {
     return {
         type: auth.LOGIN_SUCCESS,
+        payload: loginResponse
+    }
+}
+
+export const loginFailed= (error: AuthError) => {
+    return {
+        type: auth.LOGIN_FAILED,
+        payload: {
+            error
+        }
+    }
+}
+
+export const validateToken = (token: string) => {
+    return {
+        type: auth.VALIDATE_TOKEN,
         payload: {
             token
         }
     }
 }
 
-export const loginFailed= (error) => {
+export const validToken = () => {
     return {
-        type: auth.LOGIN_FAILED,
+        type: auth.VALID_TOKEN
+    }
+}
+
+export const invalidToken = (error: AuthError) => {
+    return {
+        type: auth.INVALID_TOKEN,
         payload: {
             error
         }
@@ -44,7 +88,7 @@ export const requestLogout = (token : string) => {
 
 export const clientHasNoToken = () => {
     return {
-        type: auth.CLIENT_HAS_NO_TOKEN
+        type: auth.CLINET_HAS_NO_TOKEN
     }
 }
 
@@ -54,7 +98,7 @@ export const logoutSuccess = () => {
     }
 }
 
-export const logoutFailed = (error) => {
+export const logoutFailed = (error: AuthError) => {
     return {
         type: auth.LOGOUT_FAILED,
         payload: {

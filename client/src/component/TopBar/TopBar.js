@@ -11,7 +11,8 @@ import styles from './styles';
 
 class TopBar extends Component {
     render() {
-        const { classes, toggleDrawer } = this.props;
+        console.dir(this.props);
+        const { classes, toggleDrawer, isAuthenticated } = this.props;
         return (
             <AppBar className={classes.appBar}>
                   <Toolbar classes={{ root: classes.toolBar}}>
@@ -22,6 +23,7 @@ class TopBar extends Component {
                       </div>
                       <EmptyCenter />
                       <div>
+                          {isAuthenticated ? <span>Authenticated</span> : void 0}
                           <IconButton className={classes.navSearchIcon} onClick={this._handleSearchToggle}>
                               <SearchIcon/>
                           </IconButton>

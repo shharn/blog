@@ -18,12 +18,12 @@ class Home extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, isAuthenticated } = this.props;
     return (
       <div className={classes.homeContainer}>
           <div className={classes.appFrame}>
-              <TopBar toggleDrawer={this._handleDrawerToggle}/>
-              <ResponsiveDrawer toggleDrawer={this._handleDrawerToggle} smallScreenOpen={this.state.smallScreenOpen}/>
+              <TopBar toggleDrawer={this._handleDrawerToggle} isAuthenticated={isAuthenticated}/>
+              <ResponsiveDrawer toggleDrawer={this._handleDrawerToggle} smallScreenOpen={this.state.smallScreenOpen} isAuthenticated={isAuthenticated}/>
               <main className={classes.content}>
                   <Typography>Main Content</Typography>
                   <Button variant="raised" color="secondary">Test</Button>
