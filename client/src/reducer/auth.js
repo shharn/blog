@@ -33,6 +33,11 @@ const reducer = (state = initialState, action) => {
                 isAuthenticated: action.payload.isAuthenticated,
                 loginStatus: loginStatusType.LOGIN_SUCCESS
             }
+        case authActionType.VALIDATE_TOKEN: 
+            return {
+                ...state,
+                loginStatue: loginStatusType.LOGIN_WAIT
+            }
         case authActionType.VALID_TOKEN:
             return {
                 ...state,

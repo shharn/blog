@@ -18,13 +18,20 @@ class Admin extends Component {
     };
 
     componentDidMount = () => {
-        console.log('componentDidMount');
         const storedToken = LocalStorage.get(token.key);
         if (storedToken) {
             this.props.validateToken(storedToken);
         } else {
             this.props.initializeLoginStatus();
         }
+    }
+
+    componentDidUpdate = () => {
+        this.props.loginStatus === loginStatusType.LOGIN_SUCCESS && this._redirectToHomeWithDelay();
+    }
+
+    componentWillUnmount = () => {
+        this.props.initializeLoginStatus();
     }
 
     _redirectToHomeWithDelay = () => {
@@ -78,7 +85,6 @@ class Admin extends Component {
     }
 
     render() {
-        this.props.loginStatus === loginStatusType.LOGIN_SUCCESS && this._redirectToHomeWithDelay();
         return (
             <div className={this.props.classes.root} onKeyUp={this._handleKeyUp}>
                 <Paper elevation={4} className={this.props.classes.paper}>
