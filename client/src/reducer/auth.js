@@ -23,10 +23,10 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 loginStatus: loginStatusType.LOGIN_FAIL,
+                isAuthenticated: false,
                 error: action.payload.error
             }
         case authActionType.LOGIN_SUCCESS:
-            console.dir(action.payload);
             action.payload.token && LocalStorage.set(token.key, action.payload.token);
             return {
                 ...state,
@@ -36,18 +36,20 @@ const reducer = (state = initialState, action) => {
         case authActionType.VALIDATE_TOKEN: 
             return {
                 ...state,
-                loginStatue: loginStatusType.LOGIN_WAIT
+                loginStatus: loginStatusType.LOGIN_WAIT
             }
         case authActionType.VALID_TOKEN:
             return {
                 ...state,
-                loginStatus: loginStatusType.LOGIN_SUCCESS
+                loginStatus: loginStatusType.LOGIN_SUCCESS,
+                isAuthenticated: true
             }
         case authActionType.INVALID_TOKEN:
             return {
                 ...state,
                 error: action.payload.error,
-                loginStatus: loginStatusType.LOGIN_INITIAL
+                loginStatus: loginStatusType.LOGIN_INITIAL,
+                isAuthenticated: false
             }
         case authActionType.REQUEST_LOGOUT:
             return {

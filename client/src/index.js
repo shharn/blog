@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { AppContainer } from 'react-hot-loader';
 import RootRoute from './route/RootRoute';
 import registerServiceWorker from './registerServiceWorker';
-
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
@@ -15,7 +13,6 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import Reboot from 'material-ui/Reboot';
 import blue from 'material-ui/colors/blue';
 import pink from 'material-ui/colors/pink';
-
 import './index.scss';
 
 const history = createHistory();
@@ -30,28 +27,6 @@ const store = createStore(
 );
 sagaMiddleware.run(rootSaga);
 
-// const theme = createMuiTheme({
-//     palette: {
-//         primary: {
-//             light: lightBlue[500],
-//             main: blue[500],
-//             dark: 'asdf',
-//             contrastText: 'asdf'
-//         },
-//         secondary: {
-//             light: 'asdf',
-//             main: 'asdf',
-//             dark: 'asdf',
-//             contrastText: 'asdf'
-//         },
-//         error: {
-//             light: 'asdf',
-//             main: 'asdf',
-//             dark: 'asdf',
-//             contrastText: 'asdf'
-//         }
-//     }
-// })
 const theme = createMuiTheme({
     palette: {
         primary: {
@@ -64,30 +39,6 @@ const theme = createMuiTheme({
         }
     }
 });
-
-// const render = (Component) => {
-//     ReactDOM.render(
-//         <AppContainer>
-//             <Provider store={store}>
-//                 <ConnectedRouter history={history}>
-//                     <MuiThemeProvider theme={createMuiTheme()}>
-//                         <Component/>
-//                     </MuiThemeProvider>
-//                 </ConnectedRouter>
-//             </Provider>
-//         </AppContainer>,
-//         document.getElementById('root')
-//     );
-// }
-
-//render(RootRoute);
-
-// if (module.hot) {
-//     module.hot.accept('./route/RootRoute.js', () => {
-//         console.log('Some module is hot-replaced');
-//         render(require('./route/RootRoute').default);
-//     })
-// }
 
 ReactDOM.render(
     <Provider store={store}>

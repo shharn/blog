@@ -7,6 +7,35 @@ function* dataRequestHandler(action) {
     const { dataName } = action.payload;
     const response = yield call(getMenus);
     
+    // yield put(dataResponseSuccess([
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    //     { Url: '/admin', Title: 'Admin'},
+    // ], dataName));
     if (response.statusCode === 200) {
         yield put(dataResponseSuccess(response.body, dataName));
     } else {

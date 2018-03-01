@@ -22,7 +22,6 @@ class DrawerItems extends Component {
                 <Typography className={classes.text}>{error.message}</Typography>}
             </List> :
             <CircularProgress size={30} className={classes.circularProgress}/>
-            // reload button???
         );
     }
 }

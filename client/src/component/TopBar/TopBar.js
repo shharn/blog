@@ -11,7 +11,6 @@ import styles from './styles';
 
 class TopBar extends Component {
     render() {
-        console.dir(this.props);
         const { classes, toggleDrawer, isAuthenticated } = this.props;
         return (
             <AppBar className={classes.appBar}>
