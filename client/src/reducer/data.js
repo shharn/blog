@@ -1,7 +1,28 @@
 import { data as actionType } from '../action/types';
 import { fetchStatus } from '../constant';
 
-const reducer = (state= {}, action) => {
+const initialState = {
+    menus: {
+        data: [],
+        error: {
+            code: 0,
+            message: ""
+        },
+        fetchStatus: fetchStatus.FETCH_INITIAL,
+        fetchComplete: false
+    },
+    articles: {
+        data: [],
+        error: {
+            code: 0,
+            message: ""
+        },
+        fetchStatus: fetchStatus.FETCH_INITIAL,
+        fetchComplete: false
+    }
+}
+
+const reducer = (state= initialState, action) => {
     const { type } = action;
     const { dataName } = action.payload || "";
     switch (type) {

@@ -2,8 +2,8 @@ package dataloader
 
 // Menu type
 type Menu struct {
-	Url string
-	Title string
+	Url string `json:"url"`
+	Title string `json:"title"`
 }
 
 // Menu array type

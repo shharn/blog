@@ -1,3 +1,3 @@
-import MenuManager from './MenuManager';
+import MenuManager from './Container';
 
 export default MenuManager;

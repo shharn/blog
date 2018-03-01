@@ -38,6 +38,21 @@ export function getMenus() {
         .catch(err => err);
 }
 
+export function deleteMenu(id, token) {
+    // Is it possible to send body on DELETE request???
+    // Let's try experiment
+    // return request
+    //     .delete(`http://${env.apiServerDomain}/menus/${id}`)
+}
+
+export function createMenu(menu) {
+
+}
+
+export function editMenu(menu) {
+
+}
+
 export function getArticles(menu: string) {
     return request
         .get(`http://${env.apiServerDomain}/menus/${menu}/articles`)

@@ -1,42 +1,69 @@
 import React, { Component } from 'react';
 import IconButton from 'material-ui/IconButton';
 import Settings from 'material-ui-icons/Settings';
+import Delete from 'material-ui-icons/Delete';
 import Dialog, {
-    DialogTitle,
+    DialogContent,
 } from 'material-ui/Dialog';
+import Table, {
+    TableBody, 
+    TableCell,
+    TableHead,
+    TableRow 
+} from 'material-ui/Table';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
 class MenuManager extends Component {
-    state = {
-        openDialog: false
-    };
-
     handleButtonClick = () => {
-        this.setState({
-            openDialog: !this.state.openDialog
-        });
+        const { isDialogOpened, openDialog, closeDialog } = this.props;
+        isDialogOpened ? closeDialog() : openDialog();
     }
 
     handleDialogClose = () => {
-        this.setState({
-            openDialog: false
-        });
+        this.props.closeDialog();
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, isDialogOpened, menus } = this.props;
         return (
             <div className={classes.container}>
                 <IconButton aria-label="Management" onClick={this.handleButtonClick}>
                     <Settings/> 
                 </IconButton>
                 <Dialog
-                    open={this.state.openDialog}
+                    open={isDialogOpened}
                     onClose={this.handleDialogClose}
-                    aria-labelledby="dialog-title"
+                    aria-labelledby="dialog-content"
                 >
-                    <DialogTitle id="dialog-title">Dialog Title :D</DialogTitle>
+                    <DialogContent id="dialog-content" className={classes.dialogContent}>
+                        <Table>
+                            <TableHead className={classes.tableHead}>
+                                <TableRow>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell>URL</TableCell>
+                                    <TableCell>Parent</TableCell>
+                                    <TableCell>&nbsp;</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody className={classes.tableBody}>
+                                {menus.map(menu => {
+                                    return (
+                                        <TableRow key={menu.Title}>
+                                            <TableCell>{menu.Title}</TableCell>
+                                            <TableCell>{menu.Url}</TableCell>
+                                            <TableCell>-1</TableCell>
+                                            <TableCell>
+                                                <IconButton aria-label="Delete">
+                                                    <Delete/>
+                                                </IconButton>
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                                })}
+                            </TableBody>
+                        </Table>
+                    </DialogContent>
                 </Dialog>
             </div>
         );
