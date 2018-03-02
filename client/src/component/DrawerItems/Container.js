@@ -3,18 +3,13 @@ import DrawerItems from './DrawerItems';
 import {  requestData } from '../../action/data';
 
 const mapStateToProps = (state, ownProps) => {
-    const stateMenus = state.app.data.menus;
-    const fetchComplete = stateMenus && (stateMenus.fetchComplete || null);
-    const fetchStatus = stateMenus && (stateMenus.fetchStatus || null);
-    const menus = stateMenus && (stateMenus.data || null);
-    const error= stateMenus && (stateMenus.error || null);
-    const result = {
+    const { data, error, fetchComplete, fetchStatus } = state.app.data.menus;
+    return {
+        menus: Object.keys(data).map(key => data[key]),
+        error,
         fetchComplete,
-        fetchStatus,
-        menus,
-        error
-    };
-    return result;
+        fetchStatus
+    }
 };
 
 const mapDispatchToProps = dispatch => ({

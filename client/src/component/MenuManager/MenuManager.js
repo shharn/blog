@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import IconButton from 'material-ui/IconButton';
 import Settings from 'material-ui-icons/Settings';
 import Delete from 'material-ui-icons/Delete';
+import TextField from 'material-ui/TextField';
 import Dialog, {
     DialogContent,
 } from 'material-ui/Dialog';
@@ -14,7 +15,17 @@ import Table, {
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
+const headerNames = [
+    'Name', 'URL', 'Parent', 'Delete'
+];
+
 class MenuManager extends Component {
+    state = {
+        editableCellName: '',
+        editableRowKey: '',
+        isEditable: false
+    }
+
     handleButtonClick = () => {
         const { isDialogOpened, openDialog, closeDialog } = this.props;
         isDialogOpened ? closeDialog() : openDialog();
@@ -24,8 +35,27 @@ class MenuManager extends Component {
         this.props.closeDialog();
     }
 
+    handleCellClick = () => {
+        const currentEditable = this.state.isEditable;
+        this.setState({
+            isEditable: !currentEditable
+        });
+        console.log('current status - ', this.state.isEditable);
+    }
+
+    getEditableOrPlainText = (menu, currentCellIndex) => {
+        const { isEditable, editableRowId, editableCellName } = this.props;
+        if (isEditable && menu.id === editableRowId && headerNames[currentCellIndex] === editableCellName) {
+            return <TextField>{menu.title}</TextField>
+        } else {
+            return (
+                <TableCell onClick={this.handleCellClick}>{Object.keys(menu)}</TableCell>
+            )
+        }
+    }
+
     render() {
-        const { classes, isDialogOpened, menus } = this.props;
+        const { classes, isDialogOpened, isEditable, editableRowId, editableCellName, menus } = this.props;
         return (
             <div className={classes.container}>
                 <IconButton aria-label="Management" onClick={this.handleButtonClick}>
@@ -38,21 +68,18 @@ class MenuManager extends Component {
                 >
                     <DialogContent id="dialog-content" className={classes.dialogContent}>
                         <Table>
-                            <TableHead className={classes.tableHead}>
+                            <TableHead>
                                 <TableRow>
-                                    <TableCell>Name</TableCell>
-                                    <TableCell>URL</TableCell>
-                                    <TableCell>Parent</TableCell>
-                                    <TableCell>&nbsp;</TableCell>
+                                    {headerNames.map(name => <TableCell>{this.name}</TableCell>)}
                                 </TableRow>
                             </TableHead>
-                            <TableBody className={classes.tableBody}>
+                            <TableBody>
                                 {menus.map(menu => {
                                     return (
-                                        <TableRow key={menu.Title}>
-                                            <TableCell>{menu.Title}</TableCell>
-                                            <TableCell>{menu.Url}</TableCell>
-                                            <TableCell>-1</TableCell>
+                                        <TableRow key={menu.id}>
+                                            <TableCell><TextField value={menu.title}/></TableCell>
+                                            <TableCell onClick={this.handleCellClick}>{menu.url}</TableCell>
+                                            <TableCell onClick={this.handleCellClick}>-1</TableCell>
                                             <TableCell>
                                                 <IconButton aria-label="Delete">
                                                     <Delete/>

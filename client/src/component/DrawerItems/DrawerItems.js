@@ -18,7 +18,7 @@ class DrawerItems extends Component {
             fetchComplete ? 
             <List className={classes.listContainer}>
                 {fetchStatus === fetchStatusType.FETCH_SUCCESS ?
-                    menus == null ? <Typography className={classes.text}>No Menus</Typography> : menus.map(menu => <DrawerItem key={menu.Url} menu={menu}/>) :
+                    menus == null ? <Typography className={classes.text}>No Menus</Typography> : menus.map(menu => <DrawerItem key={menu.id} menu={menu}/>) :
                 <Typography className={classes.text}>{error.message}</Typography>}
             </List> :
             <CircularProgress size={30} className={classes.circularProgress}/>

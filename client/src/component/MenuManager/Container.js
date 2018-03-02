@@ -1,18 +1,30 @@
 import { connect } from 'react-redux';
 import MenuManager from './MenuManager';
-import { openMenuManagementDialog, closeMenuManagementDialog } from '../../action/ui';
+import { 
+    openMenuManagementDialog, 
+    closeMenuManagementDialog,
+    changeToEditableCell,
+    disableEditableCell
+} from '../../action/ui';
 
 const mapStateToProps = (state, ownProps) => {
+    const { data } = state.app.data.menus,
+        { isDialogOpened, isEditable, editableRowId, editableCellName } = state.app.ui.menuManager;
     return {
-        isDialogOpened: state.app.ui.menuManager.isDialogOpened,
-        menus: state.app.data.menus.data
+        isEditable,
+        editableRowId,
+        editableCellName,
+        isDialogOpened,
+        menus: Object.keys(data).map(key => data[key])
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
         openDialog: () => dispatch(openMenuManagementDialog()),
-        closeDialog: () => dispatch(closeMenuManagementDialog())
+        closeDialog: () => dispatch(closeMenuManagementDialog()),
+        changeEditableCell: (rowId, cellName) => dispatch(changeToEditableCell(rowId, cellName)),
+        disableEditableCell: () => dispatch(disableEditableCell())
     }
 }
 
