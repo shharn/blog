@@ -29,14 +29,14 @@ const reducer = (state = initialState, action) => {
                 }
             };
         case uiActionType.CHANGE_EDITABLE_CELL:
-            const { rowId, cellName} = action.payload;
+            const { rowId, cellIndex} = action.payload;
             return {
                 ...state,
                 menuManager: {
                     ...state.menuManager,
                     isEditable: true,
                     editableRowId: rowId,
-                    editableCellName: cellName
+                    editableCellIndex: cellIndex
                 }
             }
         case uiActionType.DISABLE_EDITABLE_CELL: 

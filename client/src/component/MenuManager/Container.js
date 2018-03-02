@@ -9,11 +9,11 @@ import {
 
 const mapStateToProps = (state, ownProps) => {
     const { data } = state.app.data.menus,
-        { isDialogOpened, isEditable, editableRowId, editableCellName } = state.app.ui.menuManager;
+        { isDialogOpened, isEditable, editableRowId, editableCellIndex } = state.app.ui.menuManager;
     return {
         isEditable,
         editableRowId,
-        editableCellName,
+        editableCellIndex,
         isDialogOpened,
         menus: Object.keys(data).map(key => data[key])
     }
@@ -23,7 +23,7 @@ const mapDispatchToProps = dispatch => {
     return {
         openDialog: () => dispatch(openMenuManagementDialog()),
         closeDialog: () => dispatch(closeMenuManagementDialog()),
-        changeEditableCell: (rowId, cellName) => dispatch(changeToEditableCell(rowId, cellName)),
+        changeEditableCell: (rowId, cellIndex) => dispatch(changeToEditableCell(rowId, cellIndex)),
         disableEditableCell: () => dispatch(disableEditableCell())
     }
 }

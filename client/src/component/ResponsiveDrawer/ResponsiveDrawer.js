@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import SocialIcons from '../SocialIcons';
 import Hidden from 'material-ui/Hidden';
 import Drawer from 'material-ui/Drawer';
-import Settings from 'material-ui-icons/Settings';
 import DrawerHeader from '../DrawerHeader';
 import DrawerItems from '../DrawerItems';
 import MenuManager from '../MenuManager';

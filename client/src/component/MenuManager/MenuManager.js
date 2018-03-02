@@ -35,27 +35,24 @@ class MenuManager extends Component {
         this.props.closeDialog();
     }
 
-    handleCellClick = () => {
-        const currentEditable = this.state.isEditable;
-        this.setState({
-            isEditable: !currentEditable
-        });
-        console.log('current status - ', this.state.isEditable);
+    handleCellClick = (event) => {
+        console.dir(event);
+        // need to get current row id(menu.id) & current cell index
     }
 
-    getEditableOrPlainText = (menu, currentCellIndex) => {
-        const { isEditable, editableRowId, editableCellName } = this.props;
-        if (isEditable && menu.id === editableRowId && headerNames[currentCellIndex] === editableCellName) {
-            return <TextField>{menu.title}</TextField>
+    getEditableOrPlainText = (value, currentCellIndex) => {
+        const { editableCellIndex } = this.props;
+        if (currentCellIndex === editableCellIndex) {
+            return <TextField>{value}</TextField>
         } else {
             return (
-                <TableCell onClick={this.handleCellClick}>{Object.keys(menu)}</TableCell>
+                <TableCell onClick={this.handleCellClick}>{value}</TableCell>
             )
         }
     }
 
     render() {
-        const { classes, isDialogOpened, isEditable, editableRowId, editableCellName, menus } = this.props;
+        const { classes, isDialogOpened, isEditable, editableRowId, menus } = this.props;
         return (
             <div className={classes.container}>
                 <IconButton aria-label="Management" onClick={this.handleButtonClick}>
@@ -70,23 +67,23 @@ class MenuManager extends Component {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    {headerNames.map(name => <TableCell>{this.name}</TableCell>)}
+                                    {headerNames.map(name => <TableCell key={name}>{name}</TableCell>)}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {menus.map(menu => {
                                     return (
                                         <TableRow key={menu.id}>
-                                            <TableCell><TextField value={menu.title}/></TableCell>
-                                            <TableCell onClick={this.handleCellClick}>{menu.url}</TableCell>
-                                            <TableCell onClick={this.handleCellClick}>-1</TableCell>
+                                            {isEditable === true && menu.id === editableRowId ? 
+                                            Object.keys(menu).map((key, index) => this.getEditableOrPlainText(menu[key], index)) :
+                                            Object.keys(menu).map(key => <TableCell key={menu[key]} onClick={this.handleCellClick}>{menu[key]}</TableCell>)}
                                             <TableCell>
                                                 <IconButton aria-label="Delete">
                                                     <Delete/>
                                                 </IconButton>
                                             </TableCell>
                                         </TableRow>
-                                    )
+                                        )
                                 })}
                             </TableBody>
                         </Table>
@@ -96,5 +93,9 @@ class MenuManager extends Component {
         );
     }
 }
+
+{/* <TableCell><TextField value={menu.title}/></TableCell>
+                                            <TableCell onClick={this.handleCellClick}>{menu.url}</TableCell>
+                                            <TableCell onClick={this.handleCellClick}>-1</TableCell> } */}
 
 export default withStyles(styles)(MenuManager);
