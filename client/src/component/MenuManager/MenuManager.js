@@ -13,6 +13,8 @@ import Table, {
     TableRow 
 } from 'material-ui/Table';
 import { withStyles } from 'material-ui/styles';
+import TableCellWrapper from '../TableCellWrapper';
+import keycode from 'keycode';
 import styles from './styles';
 
 const headerNames = [
@@ -26,6 +28,15 @@ class MenuManager extends Component {
         isEditable: false
     }
 
+    constructor() {
+        super();
+        this.handleButtonClick = this.handleButtonClick.bind(this);
+        this.handleDialogClose = this.handleDialogClose.bind(this);
+        this.handleCellClick = this.handleCellClick.bind(this);
+        this.getEditableOrPlainText = this.getEditableOrPlainText.bind(this);
+        this.handleKeyUpOnEditableCell = this.handleKeyUpOnEditableCell.bind(this);
+    }
+
     handleButtonClick = () => {
         const { isDialogOpened, openDialog, closeDialog } = this.props;
         isDialogOpened ? closeDialog() : openDialog();
@@ -35,18 +46,36 @@ class MenuManager extends Component {
         this.props.closeDialog();
     }
 
-    handleCellClick = (event) => {
-        console.dir(event);
-        // need to get current row id(menu.id) & current cell index
+    handleCellClick = (rowId, cellIndex) => {
+        this.props.changeEditableCell(rowId, cellIndex);
     }
 
-    getEditableOrPlainText = (value, currentCellIndex) => {
+    handleKeyUpOnEditableCell = (event) => {
+        event.stopPropagation();
+        console.log('cell handler');
+        console.dir(event.target);
+        switch(event.keycode) {
+            case keycode['enter']:
+            case keycode['esc']:
+                this.props.disableEditableCell();
+                break;
+            default:
+                break;
+        }
+    }
+
+    handleKeyDownOnDialog = (event) => {
+        console.log('dialog handler');
+        console.dir(event.target);
+    }
+
+    getEditableOrPlainText = (rowId, value, currentCellIndex) => {
         const { editableCellIndex } = this.props;
         if (currentCellIndex === editableCellIndex) {
-            return <TextField>{value}</TextField>
+        return <TableCell key={`${rowId}:${currentCellIndex}`}><TextField autoFocus={true} required value={value} onKeyUp={this.handleKeyUpOnEditableCell}/></TableCell>
         } else {
             return (
-                <TableCell onClick={this.handleCellClick}>{value}</TableCell>
+                <TableCellWrapper key={`${rowId}:${currentCellIndex}`} rowId={rowId} cellIndex={currentCellIndex} value={value} onCellClick={this.handleCellClick}/>
             )
         }
     }
@@ -61,6 +90,7 @@ class MenuManager extends Component {
                 <Dialog
                     open={isDialogOpened}
                     onClose={this.handleDialogClose}
+                    onKeyDown={this.handleKeyDownOnDialog}
                     aria-labelledby="dialog-content"
                 >
                     <DialogContent id="dialog-content" className={classes.dialogContent}>
@@ -75,8 +105,8 @@ class MenuManager extends Component {
                                     return (
                                         <TableRow key={menu.id}>
                                             {isEditable === true && menu.id === editableRowId ? 
-                                            Object.keys(menu).map((key, index) => this.getEditableOrPlainText(menu[key], index)) :
-                                            Object.keys(menu).map(key => <TableCell key={menu[key]} onClick={this.handleCellClick}>{menu[key]}</TableCell>)}
+                                            Object.keys(menu).map((key, index) => key !== 'id' && this.getEditableOrPlainText(menu.id, menu[key], index)) :
+                                            Object.keys(menu).map((key, index) => key !== 'id' && <TableCellWrapper key={`${menu[key]}:${index}`} rowId={menu.id} cellIndex={index} value={menu[key]} onCellClick={this.handleCellClick}/>)}
                                             <TableCell>
                                                 <IconButton aria-label="Delete">
                                                     <Delete/>

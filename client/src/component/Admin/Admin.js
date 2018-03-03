@@ -91,7 +91,7 @@ class Admin extends Component {
                     <Typography className={this.props.classes.header}  variant="subheading">Login</Typography>
                     <div className={this.props.classes.formContainer}>
                         <TextField placeholder="Your Email" label="Your Email" className={this.props.classes.textfield} onChange={this._handleEmailChange}/>
-                        <TextField placeholder="Password" label="Password" variant="password" className={this.props.classes.textfield} onChange={this._handlePasswordChange}/>
+                        <TextField placeholder="Password" label="Password" type="password" className={this.props.classes.textfield} onChange={this._handlePasswordChange}/>
                     </div>
                     {this._getComponentOnLoginStatus()}
                 </Paper>    

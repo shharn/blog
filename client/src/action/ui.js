@@ -16,7 +16,7 @@ export const changeToEditableCell = (rowId, cellIndex) => {
     return {
         type: uiActionType.CHANGE_EDITABLE_CELL,
         payload: {
-            menuId: rowId,
+            rowId,
             cellIndex
         }
     }

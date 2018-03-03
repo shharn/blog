@@ -39,7 +39,6 @@ export function* loginProcess(action) {
 export function* validateToken(action) {
     const { token } = action.payload;
     const response = yield call(service.validateToken, token);
-    console.dir(response);
     if (isNetworkOffline(response)) {
         yield put(invalidToken({
             code: -1,

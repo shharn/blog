@@ -5,7 +5,7 @@ const initialState = {
         isDialogOpened: false,
         isEditable: false,
         editableRowId: null,
-        editableCellName: null
+        editableCellIndex: null
     }
 };
 
@@ -46,7 +46,7 @@ const reducer = (state = initialState, action) => {
                     ...state.menuManager,
                     isEditable: false,
                     editableRowId: null,
-                    editableCellName: null
+                    editableCellIndex: null
                 }
             }
         default:
