@@ -42,8 +42,10 @@ class MenuManager extends Component {
         isDialogOpened ? closeDialog() : openDialog();
     }
 
-    handleDialogClose = () => {
-        this.props.closeDialog();
+    handleDialogClose = (event) => {
+        if (event.srcElement.nodeName !== "INPUT") {
+            this.props.closeDialog();
+        }
     }
 
     handleCellClick = (rowId, cellIndex) => {
@@ -52,8 +54,6 @@ class MenuManager extends Component {
 
     handleKeyUpOnEditableCell = (event) => {
         event.stopPropagation();
-        console.log('cell handler');
-        console.dir(event.target);
         switch(event.keycode) {
             case keycode['enter']:
             case keycode['esc']:
@@ -62,11 +62,6 @@ class MenuManager extends Component {
             default:
                 break;
         }
-    }
-
-    handleKeyDownOnDialog = (event) => {
-        console.log('dialog handler');
-        console.dir(event.target);
     }
 
     getEditableOrPlainText = (rowId, value, currentCellIndex) => {
@@ -90,7 +85,7 @@ class MenuManager extends Component {
                 <Dialog
                     open={isDialogOpened}
                     onClose={this.handleDialogClose}
-                    onKeyDown={this.handleKeyDownOnDialog}
+                    onEscapeKeyDown={this.handleKeyDownOnDialog}
                     aria-labelledby="dialog-content"
                 >
                     <DialogContent id="dialog-content" className={classes.dialogContent}>
