@@ -15,11 +15,13 @@ class EditableCell extends Component {
     }
 
     handleKeyUp = event => {
-        switch(event.keycode) {
-            case keycode['enter']:
-                this.props.onEnterKeyUp();
+        switch(event.keyCode) {
+            case keycode('enter'):
+                this.state.textValue === this.props.value ? 
+                    this.props.onEscKeyUp() :
+                    this.props.onEnterKeyUp();
                 break;
-            case keycode['esc']:
+            case keycode('esc'):
                 this.props.onEscKeyUp();
                 break;
             default:
@@ -34,7 +36,7 @@ class EditableCell extends Component {
     }
 
     render() {
-        const { rowId, cellIndex, value, classes } = this.props;
+        const { rowId, cellIndex, classes } = this.props;
         return (
             <TableCell variant='body' key={`${rowId}:${cellIndex}`}>
                 <TextField
@@ -44,7 +46,7 @@ class EditableCell extends Component {
                         }
                     }}
                     autoFocus={true} required 
-                    value={value} 
+                    value={this.state.textValue} 
                     onKeyUp={this.handleKeyUp}
                     onChange={this.handleTextChange}
                     onClick={this.handleMouseClick}/>

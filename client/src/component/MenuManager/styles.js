@@ -4,6 +4,6 @@ export default {
         marginRight: '20px'
     },
     dialogContent: {
-        height: '500px'
+        maxHeight: '500px',
     },
 }
