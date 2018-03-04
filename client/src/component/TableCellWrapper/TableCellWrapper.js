@@ -10,7 +10,7 @@ class TableCellWrapper  extends Component {
     render() {
         const { value } = this.props;
         return (
-            <TableCell onClick={this.handleClick}>
+            <TableCell variant='body' onClick={this.handleClick}>
                 {value}
             </TableCell>
         )

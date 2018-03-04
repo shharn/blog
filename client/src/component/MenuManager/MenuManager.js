@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import IconButton from 'material-ui/IconButton';
 import Settings from 'material-ui-icons/Settings';
 import Delete from 'material-ui-icons/Delete';
-import TextField from 'material-ui/TextField';
 import Dialog, {
     DialogContent,
 } from 'material-ui/Dialog';
@@ -14,7 +13,7 @@ import Table, {
 } from 'material-ui/Table';
 import { withStyles } from 'material-ui/styles';
 import TableCellWrapper from '../TableCellWrapper';
-import keycode from 'keycode';
+import EditableCell from '../EditableCell';
 import styles from './styles';
 
 const headerNames = [
@@ -38,16 +37,8 @@ class MenuManager extends Component {
         this.props.changeEditableCell(rowId, cellIndex);
     }
 
-    handleKeyUpOnEditableCell = (event) => {
-        event.stopPropagation();
-        switch(event.keycode) {
-            case keycode['enter']:
-            case keycode['esc']:
-                this.props.disableEditableCell();
-                break;
-            default:
-                break;
-        }
+    handleEnterKeyUpOnEditableCell = menu => {
+        this.props.updateMenu(menu);
     }
 
     handleEmptySpaceClick = (event) => {
@@ -62,7 +53,13 @@ class MenuManager extends Component {
     getEditableOrPlainText = (rowId, value, currentCellIndex) => {
         const { editableCellIndex } = this.props;
         if (currentCellIndex === editableCellIndex) {
-        return <TableCell key={`${rowId}:${currentCellIndex}`}><TextField autoFocus={true} required value={value} onKeyUp={this.handleKeyUpOnEditableCell}/></TableCell>
+            return <EditableCell 
+                key={`${rowId}:${currentCellIndex}`}
+                rowId={rowId} 
+                cellIndex={currentCellIndex} 
+                value={value}
+                 onEnterKeyUp={this.handleEnterKeyUpOnEditableCell}
+                 onEscKeyUp={this.props.disableEditableCell}/>
         } else {
             return (
                 <TableCellWrapper key={`${rowId}:${currentCellIndex}`} rowId={rowId} cellIndex={currentCellIndex} value={value} onCellClick={this.handleCellClick}/>
@@ -88,7 +85,7 @@ class MenuManager extends Component {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    {headerNames.map(name => <TableCell key={name}>{name}</TableCell>)}
+                                    {headerNames.map(name => <TableCell variant='head' key={name}>{name}</TableCell>)}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -114,9 +111,5 @@ class MenuManager extends Component {
         );
     }
 }
-
-{/* <TableCell><TextField value={menu.title}/></TableCell>
-                                            <TableCell onClick={this.handleCellClick}>{menu.url}</TableCell>
-                                            <TableCell onClick={this.handleCellClick}>-1</TableCell> } */}
 
 export default withStyles(styles)(MenuManager);
