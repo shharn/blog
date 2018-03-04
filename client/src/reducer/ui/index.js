@@ -1,5 +1,5 @@
-import { ui as uiActionType }  from '../action/types';
-
+import { ui as uiActionType }  from '../../action/types';
+// import { combineReducers } from 'redux';
 const initialState = {
     menuManager: {
         isDialogOpened: false,
@@ -9,6 +9,10 @@ const initialState = {
     }
 };
 
+// need to splite reducer to:
+// - MenuManager
+// - ArticleManager
+// - AuthManager
 const reducer = (state = initialState, action) => {
     const { type } = action;
     switch (type){

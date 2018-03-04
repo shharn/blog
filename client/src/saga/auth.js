@@ -20,6 +20,8 @@ type LoginError = {
 export function* loginProcess(action) {
     const response = yield call(service.requestLogin, action.payload.loginInfo);
     if (isNetworkOffline(response)) {
+        // In this case, I think that using another action for 'network offline' is better idea
+        // because more expressive / meaningful
         yield put(loginFailed({
             code: -1,
             message: 'Network is down (Server or Client) :('

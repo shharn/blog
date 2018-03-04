@@ -25,3 +25,9 @@ export const token = {
 export const styles = {
     drawerWidth: 240
 }
+
+export const mutationOperationType = {
+    CREATE: 'CREATE_MUTATION',
+    UPDATE: 'UPDATE_MUTATION',
+    DELETE: 'DELETE_MUTATION'
+}

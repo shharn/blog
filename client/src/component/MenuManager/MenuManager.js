@@ -22,20 +22,6 @@ const headerNames = [
 ];
 
 class MenuManager extends Component {
-    state = {
-        editableCellName: '',
-        editableRowKey: '',
-        isEditable: false
-    }
-
-    constructor() {
-        super();
-        this.handleButtonClick = this.handleButtonClick.bind(this);
-        this.handleDialogClose = this.handleDialogClose.bind(this);
-        this.handleCellClick = this.handleCellClick.bind(this);
-        this.getEditableOrPlainText = this.getEditableOrPlainText.bind(this);
-        this.handleKeyUpOnEditableCell = this.handleKeyUpOnEditableCell.bind(this);
-    }
 
     handleButtonClick = () => {
         const { isDialogOpened, openDialog, closeDialog } = this.props;
@@ -64,6 +50,15 @@ class MenuManager extends Component {
         }
     }
 
+    handleEmptySpaceClick = (event) => {
+        (this.props.isEditable && !this.isFromEditableCell(event)) && this.props.disableEditableCell();
+    }
+
+    isFromEditableCell = (event) => {
+        let target = event.target;
+        return target.tagName === 'TD' && target.children.length < 1;
+    }
+
     getEditableOrPlainText = (rowId, value, currentCellIndex) => {
         const { editableCellIndex } = this.props;
         if (currentCellIndex === editableCellIndex) {
@@ -86,6 +81,7 @@ class MenuManager extends Component {
                     open={isDialogOpened}
                     onClose={this.handleDialogClose}
                     onEscapeKeyDown={this.handleKeyDownOnDialog}
+                    onClick={this.handleEmptySpaceClick}
                     aria-labelledby="dialog-content"
                 >
                     <DialogContent id="dialog-content" className={classes.dialogContent}>

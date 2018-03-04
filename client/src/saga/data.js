@@ -3,7 +3,7 @@ import { dataResponseSuccess, dataResponseFailed } from '../action/data';
 import { data as dataActionType } from '../action/types';
 import { getMenus } from '../service';
 
-function* dataRequestHandler(action) {
+function* dataGetRequestHandler(action) {
     const { dataName } = action.payload;
     const response = yield call(getMenus);
     
@@ -47,5 +47,6 @@ function* dataRequestHandler(action) {
 }
 
 export default function* watchDataRequest() {
-    yield takeLatest(dataActionType.REQUEST_DATA, dataRequestHandler);
+    yield takeLatest(dataActionType.REQUEST_GET_DATA, dataGetRequestHandler);
+    // yield takeLatest(dataActionType.)
 }
