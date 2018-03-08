@@ -5,6 +5,6 @@ export default {
         alignItems: 'center'
     },
     addButton: {
-        marginTop: '20px'
+        margin: '20px 0px'
     }
 }

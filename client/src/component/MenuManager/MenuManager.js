@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import IconButton from 'material-ui/IconButton';
 import Settings from 'material-ui-icons/Settings';
+import CreateMenu from '../CreateMenu';
 import Dialog, {
     DialogContent,
 } from 'material-ui/Dialog';
@@ -8,15 +9,35 @@ import MenuList from '../MenuList';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
-class MenuManager extends Component {
+const componentToDisplay = {
+    LIST: 'LIST',
+    CREATE_MENU: 'CREATE_MENU'
+}
 
-    handleButtonClick = () => {
+class MenuManager extends Component {
+    state = {
+        showWhich: componentToDisplay.LIST
+    }
+
+    toggleComponent = () => {
+        const { showWhich } = this.state;
+        this.setState({
+            showWhich: showWhich === componentToDisplay.LIST ? 
+            componentToDisplay.CREATE_MENU : 
+            componentToDisplay.LIST
+        });
+    }
+
+    handleManagementButtonClick = () => {
         const { isDialogOpened, openDialog, closeDialog } = this.props;
         isDialogOpened ? closeDialog() : openDialog();
     }
 
     handleDialogClose = (event) => {
-        if (event.srcElement.nodeName !== "INPUT") {
+        // event type check => keyboard, mouse-click
+        // keyboard -> if ifrom EditableCell and esc -> go on
+        // mouse-click -> just go on
+        if ((event.type === 'keydown' && event.target.tagName !== "INPUT") || event.type === 'click') {
             this.props.closeDialog();
         }
     }
@@ -30,11 +51,23 @@ class MenuManager extends Component {
         return target.tagName === 'TD' && target.children.length < 1;
     }
 
+    getRightComponent = () => {
+        const whichComponent = this.state.showWhich;
+        switch(whichComponent) {
+            case componentToDisplay.LIST:
+                return <MenuList toggleComponent={this.toggleComponent}/>;
+            case componentToDisplay.CREATE_MENU:
+                return <CreateMenu toggleComponent={this.toggleComponent}/>;
+            default:
+               return <MenuList toggleComponent={this.toggleComponent}/>;
+        }
+    }
+
     render() {
         const { classes, isDialogOpened } = this.props;
         return (
             <div className={classes.container}>
-                <IconButton aria-label="Management" onClick={this.handleButtonClick}>
+                <IconButton aria-label="Management" onClick={this.handleManagementButtonClick}>
                     <Settings/> 
                 </IconButton>
                 <Dialog
@@ -45,7 +78,7 @@ class MenuManager extends Component {
                     aria-labelledby="dialog-content"
                 >
                     <DialogContent id="dialog-content" className={classes.dialogContent}>
-                        <MenuList/>
+                        {this.getRightComponent()}
                     </DialogContent>
                 </Dialog>
             </div>

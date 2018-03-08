@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import Table, { TableHead, TableRow, TableBody, TableCell } from 'material-ui/Table';
-import Button from 'material-ui/Button';
-import AddIcon from 'material-ui-icons/Add';
 import Delete from 'material-ui-icons/Delete';
 import IconButton from 'material-ui/IconButton';
 import TableCellWrapper from '../TableCellWrapper';
+import Button from 'material-ui/Button';
+import AddIcon from 'material-ui-icons/Add';
 import EditableCell from '../EditableCell';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
@@ -14,7 +14,6 @@ const headerNames = [
 ];
 
 class MeuList extends Component {
-
     handleCellClick = (rowId, cellIndex) => {
         this.props.changeEditableCell(rowId, cellIndex);
     }
@@ -31,8 +30,8 @@ class MeuList extends Component {
                 rowId={rowId} 
                 cellIndex={currentCellIndex} 
                 value={value}
-                 onEnterKeyUp={this.handleEnterKeyUpOnEditableCell}
-                 onEscKeyUp={this.props.disableEditableCell}/>
+                onEnterKeyUp={this.handleEnterKeyUpOnEditableCell}
+                onEscKeyUp={this.props.disableEditableCell}/>
         } else {
             return (
                 <TableCellWrapper key={`${rowId}:${currentCellIndex}`} rowId={rowId} cellIndex={currentCellIndex} value={value} onCellClick={this.handleCellClick}/>
@@ -41,7 +40,7 @@ class MeuList extends Component {
     }
 
     render() {
-        const { menus, isEditable, editableRowId, classes } = this.props;
+        const { menus, isEditable, editableRowId, toggleComponent, classes } = this.props;
         return (
             <div className={classes.tableContainer}>
                 <Table>
@@ -67,8 +66,8 @@ class MeuList extends Component {
                         })}
                     </TableBody>
                 </Table>
-                <Button className={classes.addButton} variant="fab" mini color="secondary" aria-label="add">
-                        <AddIcon/>
+                <Button className={classes.addButton} variant="fab" mini color="secondary" aria-label="add" onClick={toggleComponent}>
+                    <AddIcon/>
                 </Button>
             </div>
         );

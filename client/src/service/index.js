@@ -46,11 +46,19 @@ export function deleteMenu(id, token) {
 }
 
 export function createMenu(menu) {
-
+    return request
+        .post(`http://${env.apiServerDomain}/menus`)
+        .accepti('json')
+        .then(res => res)
+        .catch(err => err.response ? err.response : err);
 }
 
 export function editMenu(menu) {
-
+    return request
+        .patch(`http://${env.apiServerDomain}/menus`)
+        .accept('json')
+        .then(res => res)
+        .catch(err => err.response ? err.response : err);
 }
 
 export function getArticles(menu: string) {
@@ -58,5 +66,5 @@ export function getArticles(menu: string) {
         .get(`http://${env.apiServerDomain}/menus/${menu}/articles`)
         .accept('json')
         .then(res => res)
-        .catch(err => err);
+        .catch(err => err.response ? err.response : err);
 }
