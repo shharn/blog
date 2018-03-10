@@ -14,7 +14,12 @@ func MenuHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 		menus := dataloader.GetMenus()
-		util.JsonResponse(http.StatusOK, menus, w)
+		responseBody := data.BlogResponseBody{
+			Data: map[string]interface{}{
+				"menus": menus,
+			},
+		}
+		util.JsonResponse(http.StatusOK, responseBody, w)
 		break
 	case "POST":
 		// check if client has valid token
@@ -30,7 +35,10 @@ func MenuHandler(w http.ResponseWriter, r *http.Request) {
 	case "DELETE":
 		break
 	default:
-		//util.ErrorResponse(http.StatusMethodNotAllowed)
+		util.ErrorResponse(w, data.AppError{
+			Code:    http.StatusMethodNotAllowed,
+			Message: "Not Allowed Method",
+		}, http.StatusMethodNotAllowed)
 		break
 	}
 }

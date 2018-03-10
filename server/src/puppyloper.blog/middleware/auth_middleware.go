@@ -15,7 +15,12 @@ import (
 func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// execute validation check when request method is one of the POST, PATCH, DELETE
+		fmt.Println(r.Method)
 		switch r.Method {
+		case "GET":
+			fmt.Println("GET")
+			next.ServeHTTP(w, r)
+			break
 		case "POST":
 		case "PATCH":
 		case "DELETE":
