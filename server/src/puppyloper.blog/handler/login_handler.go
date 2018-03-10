@@ -2,10 +2,11 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
+
 	"github.com/dgrijalva/jwt-go"
+	"puppyloper.blog/data"
 	"puppyloper.blog/util"
 )
 
@@ -15,75 +16,71 @@ const (
 	adminPassword string = `test`
 )
 
-type (
-	// ResponseBody is wrapper for json format response
-	ResponseBody map[string]interface{}
-	
-	logininformation struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-		Token string `json:"token"`
-	}
-	
-	// SessionStorage is memory-based storage for session data
-	SessionStorage map[string]string
-
-	// BlogToken : alias instead of string
-	BlogToken string
-	
-	// AppError is for custom error
-	AppError struct {
-		Message string `json:"message"`
-	}
-)
-
-func (e AppError) Error() string {
-	return fmt.Sprintf("%v", e.Message)
-}
-
-var (
-	Storage SessionStorage = SessionStorage{}
-)
-
 // LoginHandler is a handler for "/login"
-func LoginHandler(response http.ResponseWriter, request *http.Request) {
-	var info logininformation
-	if err := json.NewDecoder(request.Body).Decode(&info); err != nil {
-		util.ErrorResponse(response, err, http.StatusBadRequest)
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	var blogRequest data.BlogRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&blogRequest); err != nil {
+		util.ErrorResponse(w, err, http.StatusBadRequest)
 		return
 	}
 
-	// In case client already has valid token
-	
-
-	if !isAdminUser(&info) {
-		util.ErrorResponse(response, AppError{"Invalid Email or Password"}, http.StatusUnauthorized)
+	var (
+		loginInfo data.LoginInformation
+		ok        bool
+	)
+	temp, present := blogRequest.Data["LoginInformation"]
+	if present == true {
+		if loginInfo, ok = temp.(data.LoginInformation); ok == false {
+			util.ErrorResponse(w, data.AppError{
+				Code:    http.StatusBadRequest,
+				Message: "Has not enough information",
+			}, http.StatusBadRequest)
+			return
+		}
+	} else {
+		util.ErrorResponse(w, data.AppError{
+			Code:    http.StatusBadRequest,
+			Message: "Has no information",
+		}, http.StatusBadRequest)
 		return
 	}
 
-	token := makeToken(&info)
+	if !isAdminUser(&loginInfo) {
+		util.ErrorResponse(w, data.AppError{
+			Code:    http.StatusUnauthorized,
+			Message: "Invalid Email or Password",
+		}, http.StatusUnauthorized)
+		return
+	}
+
+	token := makeToken(&loginInfo)
 	var (
 		tokenString string
 		err         error
 	)
 	if tokenString, err = token.SignedString([]byte("secret")); err != nil {
-		util.ErrorResponse(response, AppError{err.Error()}, http.StatusInternalServerError)
+		util.ErrorResponse(w, data.AppError{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+		}, http.StatusInternalServerError)
 		return
 	}
 
-	storeToken(tokenString, info.Email)
-	responseBody := ResponseBody{
-		"isAuthenticated": true,
-		"token":           tokenString,
+	storeToken(tokenString, loginInfo.Email)
+	responseBody := data.BlogResponseBody{
+		Authentication: data.Authentication{
+			IsAuthenticated: true,
+			Token:           tokenString,
+		},
 	}
-	util.JsonResponse(http.StatusOK, responseBody, response)
+	util.JsonResponse(http.StatusOK, responseBody, w)
 }
 
-func isAdminUser(info *logininformation) bool {
+func isAdminUser(info *data.LoginInformation) bool {
 	return info.Email == adminEmail && info.Password == adminPassword
 }
 
-func makeToken(info *logininformation) *jwt.Token {
+func makeToken(info *data.LoginInformation) *jwt.Token {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := make(jwt.MapClaims)
 	claims["iat"] = time.Now().Unix()
@@ -93,7 +90,5 @@ func makeToken(info *logininformation) *jwt.Token {
 }
 
 func storeToken(tokenString string, email string) {
-	Storage[tokenString] = email
+	data.TokenStorage[tokenString] = email
 }
-
-

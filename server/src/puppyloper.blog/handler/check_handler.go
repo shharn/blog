@@ -1,40 +1,37 @@
 package handler
 
 import (
-	"net/http"
 	"encoding/json"
-	"puppyloper.blog/util"
-	"github.com/dgrijalva/jwt-go"
 	"fmt"
+	"net/http"
+
+	"github.com/dgrijalva/jwt-go"
+	"puppyloper.blog/data"
+	"puppyloper.blog/util"
 )
 
-// PuppyToken represents the token for this blog
-type PuppyToken struct {
-	// Token represents the jwt signed with secret
-	Token string `json:"token"`
-}
-
 // CheckHandler is handler for "/check"
-func CheckHandler(writer http.ResponseWriter, request *http.Request) {
-	var puppyToken PuppyToken
-	if err := json.NewDecoder(request.Body).Decode(&puppyToken); err != nil {
-		util.ErrorResponse(writer, err, http.StatusBadRequest)
+func CheckHandler(w http.ResponseWriter, r *http.Request) {
+	var blogRequest data.BlogRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&blogRequest); err != nil {
+		util.ErrorResponse(w, err, http.StatusBadRequest)
 		return
 	}
-	fmt.Println(puppyToken)
+	fmt.Println(blogRequest)
 
-	if len(puppyToken.Token) > 0 {
+	blogToken := blogRequest.Token
+	if len(blogToken) > 0 {
 		var (
 			isValid bool
-			err error
+			err     error
 		)
-		if isValid, err = validateToken(puppyToken.Token); err != nil {
-			util.ErrorResponse(writer, err, http.StatusBadRequest)
+		if isValid, err = validateToken(blogToken); err != nil {
+			util.ErrorResponse(w, err, http.StatusBadRequest)
 			return
 		}
-		responseBody := ResponseBody{}
-		responseBody["isAuthenticated"] = isValid
-		util.JsonResponse(http.StatusOK, responseBody, writer)
+		responseBody := data.BlogResponseBody{}
+		responseBody.Authentication.IsAuthenticated = isValid
+		util.JsonResponse(http.StatusOK, responseBody, w)
 	}
 }
 
