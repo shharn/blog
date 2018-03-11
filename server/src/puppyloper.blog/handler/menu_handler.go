@@ -15,19 +15,22 @@ func MenuHandler(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		menus := dataloader.GetMenus()
 		responseBody := data.BlogResponseBody{
-			Data: map[string]interface{}{
-				"menus": menus,
+			Data: data.DataChunk{
+				Menus: menus,
 			},
 		}
 		util.JsonResponse(http.StatusOK, responseBody, w)
-		break
 	case "POST":
-		// check if client has valid token
-		var menu data.Menu
-		if err := json.NewDecoder(r.Body).Decode(&menu); err != nil {
-			util.ErrorResponse(w, err, http.StatusBadRequest)
+		var blogRequest data.BlogRequestBody
+		err := json.NewDecoder(r.Body).Decode(&blogRequest)
+		if err != nil {
+			util.ErrorResponse(w, data.AppError{
+				Code:    http.StatusBadRequest,
+				Message: "Bad Data Format",
+			}, http.StatusBadRequest)
 			return
 		}
+		dataloader.CreateMenu(blogRequest.Data.Menu)
 		w.WriteHeader(http.StatusOK)
 		break
 	case "PATCH":

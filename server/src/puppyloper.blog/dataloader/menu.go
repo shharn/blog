@@ -1,6 +1,8 @@
 package dataloader
 
 import (
+	"fmt"
+
 	"puppyloper.blog/data"
 )
 
@@ -24,4 +26,6 @@ func CreateMenu(menu data.Menu) {
 	menu.ID = nextMenuID
 	nextMenuID++
 	menus[menu.ID] = menu
+	fmt.Println("[DataLoader] after create menu")
+	fmt.Println(menus)
 }

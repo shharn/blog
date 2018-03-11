@@ -24,20 +24,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var (
-		loginInfo data.LoginInformation
-		ok        bool
-	)
-	temp, present := blogRequest.Data["LoginInformation"]
-	if present == true {
-		if loginInfo, ok = temp.(data.LoginInformation); ok == false {
-			util.ErrorResponse(w, data.AppError{
-				Code:    http.StatusBadRequest,
-				Message: "Has not enough information",
-			}, http.StatusBadRequest)
-			return
-		}
-	} else {
+	loginInfo := blogRequest.Data.LoginInformation
+	if len(loginInfo.Email) < 1 || len(loginInfo.Password) < 1 {
 		util.ErrorResponse(w, data.AppError{
 			Code:    http.StatusBadRequest,
 			Message: "Has no information",
