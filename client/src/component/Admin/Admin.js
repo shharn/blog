@@ -47,39 +47,39 @@ class Admin extends Component<Props, State> {
     }
 
     componentDidUpdate = () => {
-        this.props.loginStatus === loginStatusType.LOGIN_SUCCESS && this._redirectToHomeWithDelay();
+        this.props.loginStatus === loginStatusType.LOGIN_SUCCESS && this.redirectToHomeWithDelay();
     }
 
     componentWillUnmount = () => {
         this.props.initializeLoginStatus();
     }
 
-    _redirectToHomeWithDelay = () => {
+    redirectToHomeWithDelay = () => {
         setTimeout(() => this.props.history.push('/'), 2000);
     }
 
-    _handleSubmit = () => {
+    handleSubmit = () => {
         const { emailValue, passwordValue } = this.state;
         this.props.login({ email: emailValue, password: passwordValue });
     }
 
-    _handleEmailChange = (e) => {
+    handleEmailChange = (e) => {
         this.setState({
             emailValue: e.target.value
         });
     }
 
-    _handlePasswordChange = (e) => {
+    handlePasswordChange = (e) => {
         this.setState({
             passwordValue: e.target.value
         });
     }
 
-    _handleKeyUp = (e) => {
-        e.keyCode === keycode('enter') && this._handleSubmit();
+    handleKeyUp = (e) => {
+        e.keyCode === keycode('enter') && this.handleSubmit();
     }
 
-    _getComponentOnLoginStatus = () => {
+    getComponentOnLoginStatus = () => {
         const { loginStatus } = this.props;
         let result = null;
         
@@ -94,13 +94,13 @@ class Admin extends Component<Props, State> {
                 result = (
                     <div className={this.props.classes.bottomContainer}>
                         <Typography className={this.props.classes.errorMessage} variant="caption">{this.props.error.message}</Typography>
-                        <Button variant="raised" color="primary" className={this.props.classes.button} onClick={this._handleSubmit}>Submit</Button>           
+                        <Button variant="raised" color="primary" className={this.props.classes.button} onClick={this.handleSubmit}>Submit</Button>           
                     </div>
                 )
                 break;
             case loginStatusType.INITIAL:
             default:
-                result = <Button variant="raised" color="primary" className={this.props.classes.button} onClick={this._handleSubmit}>Submit</Button>;
+                result = <Button variant="raised" color="primary" className={this.props.classes.button} onClick={this.handleSubmit}>Submit</Button>;
                 break;
         }
         return result;
@@ -108,14 +108,14 @@ class Admin extends Component<Props, State> {
 
     render() {
         return (
-            <div className={this.props.classes.root} onKeyUp={this._handleKeyUp}>
+            <div className={this.props.classes.root} onKeyUp={this.handleKeyUp}>
                 <Paper elevation={4} className={this.props.classes.paper}>
                     <Typography className={this.props.classes.header}  variant="subheading">Login</Typography>
                     <div className={this.props.classes.formContainer}>
-                        <TextField placeholder="Your Email" label="Your Email" className={this.props.classes.textfield} onChange={this._handleEmailChange}/>
-                        <TextField placeholder="Password" label="Password" type="password" className={this.props.classes.textfield} onChange={this._handlePasswordChange}/>
+                        <TextField placeholder="Your Email" label="Your Email" className={this.props.classes.textfield} onChange={this.handleEmailChange}/>
+                        <TextField placeholder="Password" label="Password" type="password" className={this.props.classes.textfield} onChange={this.handlePasswordChange}/>
                     </div>
-                    {this._getComponentOnLoginStatus()}
+                    {this.getComponentOnLoginStatus()}
                 </Paper>    
             </div>
         );
