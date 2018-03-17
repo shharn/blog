@@ -41,7 +41,7 @@ export const requestDataMutation = (operationType: string, data: object, dataNam
     }
 }
 
-export const dataMutationSuccess = (dataName, operationType) => {
+export const dataMutationSuccess = (dataName: string, operationType: string) => {
     return {
         type: dataActionType.DATA_MUTATION_SUCCESS,
         payload: {

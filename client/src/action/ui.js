@@ -12,7 +12,7 @@ export const closeMenuManagementDialog = () => {
     }
 }
 
-export const changeToEditableCell = (rowId, cellIndex) => {
+export const changeToEditableCell = (rowId: number, cellIndex: number) => {
     return {
         type: uiActionType.CHANGE_EDITABLE_CELL,
         payload: {

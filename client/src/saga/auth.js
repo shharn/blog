@@ -10,14 +10,17 @@ import {
     invalidToken,
     validToken
 } from '../action/auth';
+
 import * as service from '../service';
 
-type LoginError = {
-    statusCode: Number,
-    message: string
-};
+import type { BlogError } from '../action/auth';
 
-export function* loginProcess(action) {
+type BlogAction = {
+    type: string,
+    payload: any
+}
+
+export function* loginProcess(action: BlogAction): Generator<any, any, any> {
     const response = yield call(service.requestLogin, action.payload.loginInfo);
     if (isNetworkOffline(response)) {
         // In this case, I think that using another action for 'network offline' is better idea
@@ -38,7 +41,7 @@ export function* loginProcess(action) {
     }
 }
 
-export function* validateToken(action) {
+export function* validateToken(action: BlogAction): Generator<any, any, any> {
     const { token } = action.payload;
     const response = yield call(service.validateToken, token);
     if (isNetworkOffline(response)) {
@@ -58,7 +61,7 @@ export function* validateToken(action) {
     }
 }
 
-export function* logoutProcess(action) {
+export function* logoutProcess(action: BlogAction): Generator<any, any, any> {
     const { token } = action.payload;
     if (token) {
         // send request to server
@@ -75,11 +78,11 @@ export function* logoutProcess(action) {
     }
 }
 
-function isNetworkOffline(response) {
+function isNetworkOffline(response: any): boolean {
     return !response.status;
 }
 
-export default function* watchLogin() {
+export default function* watchLogin(): Generator<any, any, any,> {
     yield takeLatest(authActionType.REQUEST_LOGIN, loginProcess);
     yield takeLatest(authActionType.REQUEST_LOGOUT, logoutProcess);
     yield takeLatest(authActionType.VALIDATE_TOKEN, validateToken);

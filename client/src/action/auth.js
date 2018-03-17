@@ -2,7 +2,7 @@
 import { auth } from './types';
 
 export type BlogError = {
-    code: Number,
+    code: number,
     message: string
 };
 
@@ -38,7 +38,7 @@ export const loginSuccess = (loginResponse : LoginResponse) => {
     }
 }
 
-export const loginFailed= (error: AuthError) => {
+export const loginFailed= (error: BlogError) => {
     return {
         type: auth.LOGIN_FAILED,
         payload: {
@@ -62,7 +62,7 @@ export const validToken = () => {
     }
 }
 
-export const invalidToken = (error: AuthError) => {
+export const invalidToken = (error: BlogError) => {
     return {
         type: auth.INVALID_TOKEN,
         payload: {
@@ -92,7 +92,7 @@ export const logoutSuccess = () => {
     }
 }
 
-export const logoutFailed = (error: AuthError) => {
+export const logoutFailed = (error: BlogError) => {
     return {
         type: auth.LOGOUT_FAILED,
         payload: {

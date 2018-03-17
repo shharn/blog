@@ -1,13 +1,15 @@
 // @flow
-import request from 'superagent';
-import env from '../config/env';
+import request from 'superagent'
+import env from '../config/env'
 
-type BlogRequest : object = {
+import type { LoginInformation } from '../action/auth'
+
+type BlogRequest  = {
     token: string,
-    data: object
+    data: any   
 }
 
-export function requestLogin(loginInfo) {
+export function requestLogin(loginInfo: LoginInformation) {
     return request
             .post(`http://${env.apiServerDomain}/login`)
             .type('text/plain')
@@ -43,7 +45,7 @@ export function getData(dataName: string) {
         .catch(err => err.response ? err.response : err)
 }
 
-export function createData(dataName: string, data: object, token: string) {
+export function createData(dataName: string, data: any, token: string) {
     const blogRequest : BlogRequest = {
         token,
         data: {
@@ -59,7 +61,7 @@ export function createData(dataName: string, data: object, token: string) {
         .catch(err => err.response ? err.response : err)
 }
 
-export function updateData(dataName: string, data: object, token: string) {
+export function updateData(dataName: string, data: any, token: string) {
     const blogRequest : BlogRequest = {
         token,
         data: {
@@ -75,7 +77,7 @@ export function updateData(dataName: string, data: object, token: string) {
         .catch(err => err.response ? err.response : err)
 }
 
-export function deleteData(dataName: string, id: int, token: string) {
+export function deleteData(dataName: string, id: number, token: string) {
     const blogRequest: BlogRequest = {
         token,
         data: {
@@ -93,45 +95,45 @@ export function deleteData(dataName: string, id: int, token: string) {
 
 /////////////////////////////////////////////////////////////////
 // will be normalized
-export function getMenus() {
-    return request
-        .get(`http://${env.apiServerDomain}/menus`)
-        .accept('json')
-        .then(res =>res)
-        .catch(err => err);
-}
+// export function getMenus() {
+//     return request
+//         .get(`http://${env.apiServerDomain}/menus`)
+//         .accept('json')
+//         .then(res =>res)
+//         .catch(err => err);
+// }
 
-export function deleteMenu(id, token) {
-    // Is it possible to send body on DELETE request???
-    // Let's try experiment
-    // return request
-    //     .delete(`http://${env.apiServerDomain}/menus/${id}`)
-}
+// export function deleteMenu(id, token) {
+//     // Is it possible to send body on DELETE request???
+//     // Let's try experiment
+//     // return request
+//     //     .delete(`http://${env.apiServerDomain}/menus/${id}`)
+// }
 
-export function createMenu(menu, token) {
-    return request
-        .post(`http://${env.apiServerDomain}/menus`)
-        .type('text/plain')
-        .accepti('json')
-        .send(menu)
-        .then(res => res)
-        .catch(err => err.response ? err.response : err);
-}
+// export function createMenu(menu, token) {
+//     return request
+//         .post(`http://${env.apiServerDomain}/menus`)
+//         .type('text/plain')
+//         .accepti('json')
+//         .send(menu)
+//         .then(res => res)
+//         .catch(err => err.response ? err.response : err);
+// }
 
-export function editMenu(menu, token) {
-    return request
-        .patch(`http://${env.apiServerDomain}/menus`)
-        .type('text/plain')
-        .accept('json')
-        .send(menu)
-        .then(res => res)
-        .catch(err => err.response ? err.response : err);
-}
+// export function editMenu(menu, token) {
+//     return request
+//         .patch(`http://${env.apiServerDomain}/menus`)
+//         .type('text/plain')
+//         .accept('json')
+//         .send(menu)
+//         .then(res => res)
+//         .catch(err => err.response ? err.response : err);
+// }
 
-export function getArticles(menu: string) {
-    return request
-        .get(`http://${env.apiServerDomain}/menus/${menu}/articles`)
-        .accept('json')
-        .then(res => res)
-        .catch(err => err.response ? err.response : err);
-}
+// export function getArticles(menu: string) {
+//     return request
+//         .get(`http://${env.apiServerDomain}/menus/${menu}/articles`)
+//         .accept('json')
+//         .then(res => res)
+//         .catch(err => err.response ? err.response : err);
+// }
