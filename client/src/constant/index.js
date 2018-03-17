@@ -27,7 +27,7 @@ export const styles = {
 }
 
 export const mutationOperationType = {
-    CREATE: 'CREATE_MUTATION',
-    UPDATE: 'UPDATE_MUTATION',
-    DELETE: 'DELETE_MUTATION'
+    CREATE: 'create',
+    UPDATE: 'update',
+    DELETE: 'delete'
 }

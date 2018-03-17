@@ -1,13 +1,13 @@
 import { connect} from 'react-redux';
 import Admin from './Admin';
 import { requestLogin, validateToken, initializeLoginStatus } from '../../action/auth';
-import { loginStatus as loginStatusType } from '../../constant';
 
 const mapStateToProps = (state, ownProps) => {
+    const { loginStatus, error, isAuthenticated } = state.app.auth
     return {
-        loginStatus: state.app.auth.loginStatus || loginStatusType.INITIAL,
-        error: state.app.auth.error,
-        isAuthenticated: state.app.auth.isAuthenticated
+        loginStatus,
+        error,
+        isAuthenticated
     };
 };
 

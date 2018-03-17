@@ -11,11 +11,31 @@ import keycode from 'keycode';
 import LocalStorage from 'local-storage';
 import styles from './styles';
 
-class Admin extends Component {
+import type { LoginInformation, BlogError } from '../../action/auth'
+
+type Props = {
+    classes: any,
+    history: any,
+
+    loginStatus: 'INITIAL' |'LOGIN_WAIT' |'LOGIN_SUCCESS' | 'LOGIN_FAIL',
+    error: BlogError,
+    isAuthenticated: boolean,
+
+    login: (loginInfo: LoginInformation) => void,
+    validateToken: (token: string) => void,
+    initializeLoginStatus: () => void
+}
+
+type State = {
+    emailValue: string,
+    passwordValue: string
+}
+
+class Admin extends Component<Props, State> {
     state = {
         emailValue: '',
         passwordValue: ''
-    };
+    }
 
     componentDidMount = () => {
         const storedToken = LocalStorage.get(token.key);
@@ -71,10 +91,12 @@ class Admin extends Component {
                 result = <Typography variant="caption">Confirmed. Will be redirected soon</Typography>
                 break;
             case loginStatusType.LOGIN_FAIL:
-                result = <div className={this.props.classes.bottomContainer}>
-                                    <Typography className={this.props.classes.errorMessage} variant="caption">{this.props.error.message}</Typography>
-                                    <Button variant="raised" color="primary" className={this.props.classes.button} onClick={this._handleSubmit}>Submit</Button>           
-                                </div>
+                result = (
+                    <div className={this.props.classes.bottomContainer}>
+                        <Typography className={this.props.classes.errorMessage} variant="caption">{this.props.error.message}</Typography>
+                        <Button variant="raised" color="primary" className={this.props.classes.button} onClick={this._handleSubmit}>Submit</Button>           
+                    </div>
+                )
                 break;
             case loginStatusType.INITIAL:
             default:

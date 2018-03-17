@@ -9,7 +9,7 @@ const initialState = {
     }
 };
 
-// need to splite reducer to:
+// need to split reducer to:
 // - MenuManager
 // - ArticleManager
 // - AuthManager

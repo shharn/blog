@@ -3,7 +3,9 @@ import { loginStatus as loginStatusType, token } from '../constant';
 import LocalStorage from 'local-storage';
 
 const initialState = {
-    loginStatus: loginStatusType.INITIAL
+    loginStatus: loginStatusType.INITIAL,
+    error: null,
+    isAuthenticated: false
 };
 
 const reducer = (state = initialState, action) => {
