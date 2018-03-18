@@ -29,7 +29,6 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
     const clientToken = LocalStorage.get(token.key)
-    console.log(clientToken)
     return {
         changeEditableCell: (rowId, cellIndex) => dispatch(changeToEditableCell(rowId, cellIndex)),
         disableEditableCell: () => dispatch(disableEditableCell()),

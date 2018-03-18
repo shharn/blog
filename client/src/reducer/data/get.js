@@ -1,5 +1,5 @@
 import { data as dataActionType } from '../../action/types';
-import { fetchStatus } from '../../constant';
+import { fetchStatus, mutationOperationType } from '../../constant';
 
 const initialState = {
     menus: {
@@ -61,16 +61,22 @@ const reducer = (state= initialState, action) => {
             };
         }
         case dataActionType.DATA_MUTATION_SUCCESS: {
-            let { data } = action.payload;
+            let { data, operationType } = action.payload;
             console.dir(data)
+            let changedData
+            if (operationType === mutationOperationType.CREATE) {
+                changedData = { ...state[dataName].data, [data.id]: data}
+            } else if (operationType === mutationOperationType.DELETE) {
+                changedData = { ...state[dataName].data }
+                delete changedData[data.id]
+            } else if (operationType === mutationOperationType.UPDATE) {
+                changedData = { ...state[dataName].data, [data.id]: data }
+            }
             return {
                 ...state,
                 [dataName]: {
                     ...state[dataName],
-                    data: { 
-                        ...state[dataName].data,
-                        data
-                    }
+                    data: changedData
                 }
             }
         }
