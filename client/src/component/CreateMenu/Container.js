@@ -1,14 +1,15 @@
 import { connect} from 'react-redux'
 import CreateMenu from './CreateMenu'
 import {
-    requestDataMutation
+    requestDataMutation,
+    changeMutationStatus
 } from '../../action/data'
-import { mutationOperationType, token} from '../../constant'
+import { mutationOperationType, fetchStatus, token} from '../../constant'
 import LocalStorage from 'local-storage'
 
 const emptyMenu = {
     id: -1,
-    title: 'None',
+    name: 'None',
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -25,7 +26,8 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    createMenu: menu => dispatch(requestDataMutation(mutationOperationType.CREATE ,menu, 'menus', LocalStorage.get(token.key)))
+    createMenu: menu => dispatch(requestDataMutation(mutationOperationType.CREATE ,menu, 'menus', LocalStorage.get(token.key))),
+    initializeStatus: () => dispatch(changeMutationStatus('menus', mutationOperationType.CREATE, fetchStatus.FETCH_INITIAL))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateMenu);

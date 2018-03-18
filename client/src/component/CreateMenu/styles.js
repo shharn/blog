@@ -11,10 +11,16 @@ export default theme => ({
     formControl: {
         width: '167px'
     },
+    footer: {
+        alignSelf: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        paddingTop: theme.spacing.unit
+    },
     buttonContainer: {
         display: 'flex',
         justifyContent: 'center',
-        alignSelf: 'center'
     },
     iconButton: {
         margin: theme.spacing.unit

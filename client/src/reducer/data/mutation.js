@@ -3,24 +3,45 @@ import { fetchStatus } from '../../constant';
 
 const initialState = {
     menus: {
-        status: fetchStatus.FETCH_INITIAL,
-        isFetching: false
+        create: {
+            status: fetchStatus.FETCH_INITIAL,
+            isFetching: false
+        },
+        update: {
+            state: fetchStatus.FETCH_INITIAL,
+            isFetching: false
+        },
+         delete: {
+            state: fetchStatus.FETCH_INITIAL,
+            isFetching: false
+         }
     },
     articles: {
-        status:fetchStatus.FETCH_INITIAL,
-        isFetching: false
+        create: {
+            status: fetchStatus.FETCH_INITIAL,
+            isFetching: false
+        },
+        update: {
+            state: fetchStatus.FETCH_INITIAL,
+            isFetching: false
+        },
+         delete: {
+            state: fetchStatus.FETCH_INITIAL,
+            isFetching: false
+         }
     }
 }
 
 const reducer = (state = initialState, action) => {
-    const { type, dataName, operationName } = action
+    const { type } = action
+    const { dataName, operationType } = action.payload || {}
     switch(type) {
         case dataActionType.REQUEST_MUTATE_DATA:
             return {
                 ...state,
                 [dataName]: {
                     ...state[dataName],
-                    [operationName]: {
+                    [operationType]: {
                         status: fetchStatus.FETCH_WAIT,
                         isFetching: true
                     }
@@ -31,25 +52,37 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 [dataName]: {
                     ...state[dataName],
-                    [operationName]: {
+                    [operationType]: {
                         status: fetchStatus.FETCH_SUCCESS,
                         isFetching: false
                     }
                 }
             }
         case dataActionType.DATA_MUTATION_FAIL:
-            const { error } = this.action;
+            const { error } = this.action
             return {
                 ...state,
                 [dataName]: {
                     ...state[dataName],
-                        [operationName]: {
-                        status: fetchStatus.FETCH_FAIL,
-                        isFetching: false,
-                        error
+                        [operationType]: {
+                            status: fetchStatus.FETCH_FAIL,
+                            isFetching: false,
+                            error
+                        }
                     }
                 }
-            }
+        case dataActionType.CHANGE_MUTATION_STATUS:
+            const { statusToChange } = action.payload
+            return {
+                ...state,
+                [dataName]: {
+                    ...state[dataName],
+                        [operationType]: {
+                            status: statusToChange,
+                            isFetching: false
+                        }
+                    }
+                }
         default:
             return state;
     }

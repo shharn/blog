@@ -36,6 +36,7 @@ class MenuManager extends Component {
     handleDialogClose = (event) => {
         if ((event.type === 'keydown' && event.target.tagName !== "INPUT") || event.type === 'click') {
             this.props.closeDialog();
+            this.setState({ showWhich: componentToDisplay.LIST })
         }
     }
 

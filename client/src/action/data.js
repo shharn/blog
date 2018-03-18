@@ -1,4 +1,8 @@
-import { data as dataActionType } from './types';
+// @flow
+import { data as dataActionType } from './types'
+import { fetchStatus } from '../constant'
+
+import type { BlogError } from '../flowtype'
 
 export const requestData = (dataName: string) => {
     return {
@@ -9,7 +13,7 @@ export const requestData = (dataName: string) => {
     }
 }
 
-export const dataResponseFailed = (error, dataName: string) => {
+export const dataResponseFailed = (error: BlogError, dataName: string) => {
     return {
         type: dataActionType.GET_DATA_RESPONSE_ERROR,
         payload: {
@@ -41,12 +45,13 @@ export const requestDataMutation = (operationType: string, data: any, dataName: 
     }
 }
 
-export const dataMutationSuccess = (dataName: string, operationType: string) => {
+export const dataMutationSuccess = (dataName: string, operationType: string, data: any) => {
     return {
         type: dataActionType.DATA_MUTATION_SUCCESS,
         payload: {
             dataName,
-            operationType
+            operationType,
+            data
         }
     }
 }
@@ -57,13 +62,24 @@ export const dataMutationWait = () => {
     }
 }
 
-export const dataMutationFail = (dataName: string, operationType: string, error: object) => {
+export const dataMutationFail = (dataName: string, operationType: string, error: BlogError) => {
     return {
         type: dataActionType.DATA_MUTATION_RESPONSE_ERROR,
         payload: {
             dataName,
             operationType,
             error
+        }
+    }
+}
+
+export const changeMutationStatus = (dataName: string, operationType: string, statusToChange: $Values<fetchStatus>) => {
+    return {
+        type: dataActionType.CHANGE_MUTATION_STATUS,
+        payload: {
+            dataName,
+            operationType,
+            statusToChange
         }
     }
 }

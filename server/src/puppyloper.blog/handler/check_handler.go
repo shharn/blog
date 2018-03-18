@@ -17,7 +17,6 @@ func CheckHandler(w http.ResponseWriter, r *http.Request) {
 		util.ErrorResponse(w, err, http.StatusBadRequest)
 		return
 	}
-	fmt.Println(blogRequest)
 
 	blogToken := blogRequest.Token
 	if len(blogToken) > 0 {
@@ -26,12 +25,12 @@ func CheckHandler(w http.ResponseWriter, r *http.Request) {
 			err     error
 		)
 		if isValid, err = validateToken(blogToken); err != nil {
-			util.ErrorResponse(w, err, http.StatusBadRequest)
+			util.ErrorResponse(w, data.AppError{Code: 400, Message: "Invalid Token"}, http.StatusBadRequest)
 			return
 		}
 		responseBody := data.BlogResponseBody{}
 		responseBody.Authentication.IsAuthenticated = isValid
-		util.JsonResponse(http.StatusOK, responseBody, w)
+		util.JSONResponse(http.StatusOK, responseBody, w)
 	}
 }
 

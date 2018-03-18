@@ -9,16 +9,13 @@ import { FormControl } from 'material-ui/Form'
 import Select from 'material-ui/Select'
 import { MenuItem } from 'material-ui/Menu'
 import { LinearProgress } from 'material-ui/Progress'
+import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
 import { fetchStatus } from '../../constant'
+import keycode from 'keycode'
 import styles from './styles'
 
-type Menu = {
-    id?: number,
-    name: string,
-    url: string,
-    parentId: number
-}
+import type { Menu } from '../../flowtype'
 
 type Props = {
     history: any,
@@ -29,7 +26,8 @@ type Props = {
     isFetching: boolean,
     
     toggleComponent: () => void,
-    createMenu: (menu: Menu) => void
+    createMenu: (menu: Menu) => void,
+    initializeStatus: () => void
 }
 
 type State = {
@@ -49,6 +47,14 @@ class CreateMenu extends Component<Props, State> {
         this.props.status === fetchStatus.FETCH_SUCCESS && setTimeout(this.props.toggleComponent, 1000)
     }
 
+    componentWillUnmount() {
+        this.props.initializeStatus()
+    }
+
+    handleKeyUp = e => {
+        e.keyCode === keycode('esc') && this.props.toggleComponent()
+    }
+
     handleNameChange = event => {
         this.setState({ menuName: event.target.value })
     }
@@ -62,7 +68,7 @@ class CreateMenu extends Component<Props, State> {
     }
 
     handleSubmitButtonClick = event => {
-        const  { menuName, menuURL, parentMenuId } = this.state
+        const { menuName, menuURL, parentMenuId } = this.state
         if (menuName.length < 1) {
             // set error message on TextField of Name
         } 
@@ -84,10 +90,25 @@ class CreateMenu extends Component<Props, State> {
         this.props.toggleComponent()
     }
     
+    getExtraComponent = (isFetching, status) => {
+        if (isFetching === true) {
+            return <LinearProgress/>
+        }
+
+        switch(status) {
+            case fetchStatus.FETCH_SUCCESS:
+                return <Typography variant="caption" style={{ color: 'green' }}>Success</Typography>
+            case fetchStatus.FETCH_FAIL:
+                return <Typography variant="caption" color='error'>Failed</Typography>
+            default:
+                return
+        }
+    }
+
     render() {
-        const { classes, menus } = this.props;
+        const { classes, menus, isFetching, status } = this.props;
         return (
-            <div className={classes.createMenuContainer}>
+            <div className={classes.createMenuContainer} onKeyUp={this.handleKeyUp}>
                 <TextField className={classes.menuName} required label="Menu Name" margin="normal" onChange={this.handleNameChange}/>
                 <TextField className={classes.menuUrl} required label="Menu's URL" margin="normal" onChange={this.handleURLChange}/>
                 <div className={classes.dropboxContainer}>
@@ -97,7 +118,7 @@ class CreateMenu extends Component<Props, State> {
                             value={this.state.parentMenuId}
                             onChange={this.handleParentMenuChange}
                             inputProps={{
-                                name: 'menuId',
+                                name: 'parentMenuId',
                                 id: 'parentMenu'
                             }}
                         >
@@ -105,16 +126,16 @@ class CreateMenu extends Component<Props, State> {
                         </Select>
                     </FormControl>
                 </div>
-                <div className={classes.buttonContainer}>
-                    {this.props.isFetching && <LinearProgress/>}
-                    {this.props.status === fetchStatus.FETCH_FAIL && <span style={{color: 'red'}}>Error Message</span>}
-                    {this.props.status === fetchStatus.FETCH_SUCCESS && <span style={{color: 'green'}}>Succeeded!</span>}
-                    <IconButton className={classes.iconButton} aria-label="confirm" color="default">
-                        <SaveIcon/>
-                    </IconButton>
-                    <IconButton className={classes.iconButton} aria-label="cancel" onClick={this.handleCancelButtonClick} color="default">
-                        <ClearIcon/>
-                    </IconButton>
+                <div className={classes.footer}>
+                    {this.getExtraComponent(isFetching, status)}
+                    <div className={classes.buttonContainer}>
+                        <IconButton className={classes.iconButton} aria-label="confirm" color="default" onClick={this.handleSubmitButtonClick}>
+                            <SaveIcon/>
+                        </IconButton>
+                        <IconButton className={classes.iconButton} aria-label="cancel" onClick={this.handleCancelButtonClick} color="default">
+                            <ClearIcon/>
+                        </IconButton>
+                    </div>
                 </div>
             </div>
         );

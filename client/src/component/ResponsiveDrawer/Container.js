@@ -2,6 +2,7 @@ import { connect} from 'react-redux';
 import ResponsiveDrawer from './ResponsiveDrawer';
 
 const mapStateToProps = (state, ownProps) => {
+    console.dir(state.app.auth)
     return {
         isAuthenticated: state.app.auth.isAuthenticated
     }

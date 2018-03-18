@@ -2,19 +2,16 @@
 import request from 'superagent'
 import env from '../config/env'
 
-import type { LoginInformation } from '../action/auth'
+import type { LoginInformation, BlogRequest } from '../flowtype'
 
-type BlogRequest  = {
-    token: string,
-    data: any   
-}
+
 
 export function requestLogin(loginInfo: LoginInformation) {
     return request
             .post(`http://${env.apiServerDomain}/login`)
             .type('text/plain')
             .accept('json')
-            .send(JSON.stringify(loginInfo))
+            .send(JSON.stringify({ data: { loginInformation: loginInfo }}))
             .then(res => res)
             .catch(err => err.response ? err.response : err)
 }
@@ -56,7 +53,7 @@ export function createData(dataName: string, data: any, token: string) {
         .post(`http://${env.apiServerDomain}/${dataName}`)
         .type('text/plain')
         .accept('json')
-        .send(blogRequest)
+        .send(JSON.stringify(blogRequest))
         .then(res => res)
         .catch(err => err.response ? err.response : err)
 }
@@ -88,52 +85,7 @@ export function deleteData(dataName: string, id: number, token: string) {
         .delete(`http://${env.apiServerDomain}/${dataName}`)
         .type('text/plain')
         .accept('json')
-        .send(blogRequest)
+        .send(JSON.stringify(blogRequest))
         .then(res => res)
         .catch(err => err.response ? err.response : err)
 }
-
-/////////////////////////////////////////////////////////////////
-// will be normalized
-// export function getMenus() {
-//     return request
-//         .get(`http://${env.apiServerDomain}/menus`)
-//         .accept('json')
-//         .then(res =>res)
-//         .catch(err => err);
-// }
-
-// export function deleteMenu(id, token) {
-//     // Is it possible to send body on DELETE request???
-//     // Let's try experiment
-//     // return request
-//     //     .delete(`http://${env.apiServerDomain}/menus/${id}`)
-// }
-
-// export function createMenu(menu, token) {
-//     return request
-//         .post(`http://${env.apiServerDomain}/menus`)
-//         .type('text/plain')
-//         .accepti('json')
-//         .send(menu)
-//         .then(res => res)
-//         .catch(err => err.response ? err.response : err);
-// }
-
-// export function editMenu(menu, token) {
-//     return request
-//         .patch(`http://${env.apiServerDomain}/menus`)
-//         .type('text/plain')
-//         .accept('json')
-//         .send(menu)
-//         .then(res => res)
-//         .catch(err => err.response ? err.response : err);
-// }
-
-// export function getArticles(menu: string) {
-//     return request
-//         .get(`http://${env.apiServerDomain}/menus/${menu}/articles`)
-//         .accept('json')
-//         .then(res => res)
-//         .catch(err => err.response ? err.response : err);
-// }

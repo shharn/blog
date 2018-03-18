@@ -6,6 +6,6 @@ import (
 
 func ErrorResponse(w http.ResponseWriter, e error, statusCode int) {
 	if e != nil {
-		JsonResponse(statusCode, e, w)
+		JSONResponse(statusCode, e, w)
 	}
 }

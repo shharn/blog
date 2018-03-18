@@ -61,7 +61,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			Token:           tokenString,
 		},
 	}
-	util.JsonResponse(http.StatusOK, responseBody, w)
+	util.JSONResponse(http.StatusOK, responseBody, w)
 }
 
 func isAdminUser(info *data.LoginInformation) bool {

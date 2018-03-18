@@ -1,20 +1,7 @@
 // @flow
 import { auth } from './types';
 
-export type BlogError = {
-    code: number,
-    message: string
-};
-
-export type LoginInformation = {
-    email: string,
-    password: string
-}
-
-type LoginResponse = {
-    isAuthenticated: boolean,
-    token: string
-}
+import type { LoginInformation, LoginResponse, BlogError } from '../flowtype'
 
 export const initializeLoginStatus = () => {
     return {

@@ -13,17 +13,13 @@ import {
 
 import * as service from '../service';
 
-import type { BlogError } from '../action/auth';
+import type { BlogAction } from '../flowtype'
 
-type BlogAction = {
-    type: string,
-    payload: any
-}
 
 export function* loginProcess(action: BlogAction): Generator<any, any, any> {
     const response = yield call(service.requestLogin, action.payload.loginInfo);
     if (isNetworkOffline(response)) {
-        // In this case, I think that using another action for 'network offline' is better idea
+        // In this case, I think that using another action for 'net`work offline' is better idea
         // because more expressive / meaningful
         yield put(loginFailed({
             code: -1,
@@ -31,11 +27,11 @@ export function* loginProcess(action: BlogAction): Generator<any, any, any> {
         }));
     } else {
         if (response.statusCode === 200) {
-            yield put(loginSuccess(response.body));
+            yield put(loginSuccess(response.body.authentication));
         } else {
             yield put(loginFailed({
                 code: response.statusCode,
-                message: response.body.errorMessage
+                message: response.body.message
             }));
         }
     }
@@ -50,7 +46,7 @@ export function* validateToken(action: BlogAction): Generator<any, any, any> {
             message: 'Network is down :('
         }));
     } else {
-        if (response.statusCode === 200 && response.body.isAuthenticated === true) {
+        if (response.statusCode === 200 && response.body.authentication.isAuthenticated === true) {
             yield put(validToken());
         } else {
             yield put(invalidToken({

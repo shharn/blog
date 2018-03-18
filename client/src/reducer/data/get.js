@@ -3,7 +3,7 @@ import { fetchStatus } from '../../constant';
 
 const initialState = {
     menus: {
-        data: [],
+        data: {},
         error: {
             code: 0,
             message: ""
@@ -12,7 +12,7 @@ const initialState = {
         fetchComplete: false
     },
     articles: {
-        data: [],
+        data: {},
         error: {
             code: 0,
             message: ""
@@ -44,7 +44,7 @@ const reducer = (state= initialState, action) => {
                     ...state[dataName],
                     fetchComplete: true,
                     fetchStatus: fetchStatus.FETCH_SUCCESS,
-                    data
+                    data: data[dataName]
                 }
             };
         }
@@ -59,6 +59,20 @@ const reducer = (state= initialState, action) => {
                     error
                 }
             };
+        }
+        case dataActionType.DATA_MUTATION_SUCCESS: {
+            let { data } = action.payload;
+            console.dir(data)
+            return {
+                ...state,
+                [dataName]: {
+                    ...state[dataName],
+                    data: { 
+                        ...state[dataName].data,
+                        data
+                    }
+                }
+            }
         }
         default:
             return state;

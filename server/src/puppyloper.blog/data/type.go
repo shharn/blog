@@ -2,6 +2,12 @@ package data
 
 import "fmt"
 
+// BlogRequestBody represents the structure of the request to blog
+type BlogRequestBody struct {
+	Token string              `json:"token"`
+	Data  PredefinedDataChunk `json:"data"`
+}
+
 // BlogResponseBody is wrapper for json format response
 type BlogResponseBody struct {
 	Authentication Authentication      `json:"authentication"`
@@ -12,6 +18,7 @@ type BlogResponseBody struct {
 // PredefinedDataChunk represents the data structure transferred between client & server for domain data
 // It includes 'Menu','Article'
 type PredefinedDataChunk struct {
+	ID               int              `json:"id"`
 	Menu             Menu             `json:"menu"`
 	Menus            Menus            `json:"menus"`
 	MenuIDList       MenuIDList       `json:"menuIdList"`
@@ -25,12 +32,6 @@ type MenuIDList []int
 type Authentication struct {
 	Token           string `json:"token"`
 	IsAuthenticated bool   `json:"isAuthenticated"`
-}
-
-// BlogRequestBody represents the structure of the request to blog
-type BlogRequestBody struct {
-	Token string              `json:"token"`
-	Data  PredefinedDataChunk `json:"data"`
 }
 
 // LoginInformation respresents the data structure which is needed for "GET /login"
