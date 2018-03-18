@@ -19,7 +19,7 @@ export const dataResponseFailed = (error, dataName: string) => {
     }
 }
 
-export const dataResponseSuccess = (data: object, dataName: string) => {
+export const dataResponseSuccess = (data: any, dataName: string) => {
     return {
         type: dataActionType.GET_DATA_RESPONSE_SUCCESS,
         payload: {
@@ -29,7 +29,7 @@ export const dataResponseSuccess = (data: object, dataName: string) => {
     }
 }
 
-export const requestDataMutation = (operationType: string, data: object, dataName: string, token: string) => {
+export const requestDataMutation = (operationType: string, data: any, dataName: string, token: string) => {
     return {
         type: dataActionType.REQUEST_MUTATE_DATA,
         payload: {

@@ -54,10 +54,10 @@ func (e AppError) Error() string {
 
 // Menu type
 type Menu struct {
-	ID     int    `json:"id"`
-	Title  string `json:"title"`
-	URL    string `json:"url"`
-	Parent int    `json:"parent"`
+	ID       int    `json:"id"`
+	Name     string `json:"name"`
+	URL      string `json:"url"`
+	ParentID int    `json:"parentId"`
 }
 
 // Menus is a map for [id : menu] pair

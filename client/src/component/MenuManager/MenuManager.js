@@ -34,9 +34,6 @@ class MenuManager extends Component {
     }
 
     handleDialogClose = (event) => {
-        // event type check => keyboard, mouse-click
-        // keyboard -> if ifrom EditableCell and esc -> go on
-        // mouse-click -> just go on
         if ((event.type === 'keydown' && event.target.tagName !== "INPUT") || event.type === 'click') {
             this.props.closeDialog();
         }

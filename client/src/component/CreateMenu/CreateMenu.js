@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react'
 import IconButton from 'material-ui/IconButton'
 import SaveIcon from 'material-ui-icons/Save'
@@ -12,7 +13,32 @@ import { withStyles } from 'material-ui/styles'
 import { fetchStatus } from '../../constant'
 import styles from './styles'
 
-class CreateMenu extends Component {
+type Menu = {
+    id?: number,
+    name: string,
+    url: string,
+    parentId: number
+}
+
+type Props = {
+    history: any,
+    classes: any,
+
+    menus: Array<Menu>,
+    status: $Values<fetchStatus>,
+    isFetching: boolean,
+    
+    toggleComponent: () => void,
+    createMenu: (menu: Menu) => void
+}
+
+type State = {
+    menuName: string,
+    menuURL: string,
+    parentMenuId: number
+}
+
+class CreateMenu extends Component<Props, State> {
     state = {
         menuName: '',
         menuURL: '',
@@ -20,7 +46,7 @@ class CreateMenu extends Component {
     }
 
     componentDidUpdate() {
-        this.props.status === fetchStatus.FETCH_SUCCESS && setTimeout(1000, this.props.toggleComponent)
+        this.props.status === fetchStatus.FETCH_SUCCESS && setTimeout(this.props.toggleComponent, 1000)
     }
 
     handleNameChange = event => {
@@ -45,11 +71,11 @@ class CreateMenu extends Component {
             
         }
 
-        if (menuName.lenght > 0 && menuURL.length > 0) {
+        if (menuName.length > 0 && menuURL.length > 0) {
             this.props.createMenu({
-                menuName,
-                menuURL,
-                parentMenuId
+                name: menuName,
+                url: menuURL,
+                parentId: parentMenuId
             })
         }
     }
@@ -75,7 +101,7 @@ class CreateMenu extends Component {
                                 id: 'parentMenu'
                             }}
                         >
-                            {menus.map(menu => <MenuItem key={menu.id} value={menu.id}>{menu.title}</MenuItem>)}
+                            {menus.map(menu => <MenuItem key={menu.id} value={menu.id}>{menu.name}</MenuItem>)}
                         </Select>
                     </FormControl>
                 </div>

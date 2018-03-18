@@ -11,7 +11,7 @@ class Home extends Component {
     smallScreenOpen: false
   };
 
-  _handleDrawerToggle = () => {
+  handleDrawerToggle = () => {
       this.setState({
         smallScreenOpen: !this.state.smallScreenOpen
       });
@@ -22,8 +22,8 @@ class Home extends Component {
     return (
       <div className={classes.homeContainer}>
           <div className={classes.appFrame}>
-              <TopBar toggleDrawer={this._handleDrawerToggle} isAuthenticated={isAuthenticated}/>
-              <ResponsiveDrawer toggleDrawer={this._handleDrawerToggle} smallScreenOpen={this.state.smallScreenOpen} isAuthenticated={isAuthenticated}/>
+              <TopBar toggleDrawer={this.handleDrawerToggle} isAuthenticated={isAuthenticated}/>
+              <ResponsiveDrawer toggleDrawer={this.handleDrawerToggle} smallScreenOpen={this.state.smallScreenOpen} isAuthenticated={isAuthenticated}/>
               <main className={classes.content}>
                   <Typography>Main Content</Typography>
                   <Button variant="raised" color="secondary">Test</Button>
