@@ -62,7 +62,6 @@ const reducer = (state= initialState, action) => {
         }
         case dataActionType.DATA_MUTATION_SUCCESS: {
             let { data, operationType } = action.payload;
-            console.dir(data)
             let changedData
             if (operationType === mutationOperationType.CREATE) {
                 changedData = { ...state[dataName].data, [data.id]: data}

@@ -10,7 +10,8 @@ import { mutationOperationType } from '../constant'
 import { 
     getData,
     createData,
-    deleteData
+    deleteData,
+    updateData
 } from '../service'
 
 import type { BlogAction } from '../action/data'
@@ -38,14 +39,14 @@ function* dataMutationRequestHandler(action: BlogAction) : Generator<any, any, a
     let response
     switch(operationType) {
         case mutationOperationType.CREATE:
-        response = yield call(createData, dataName, data, token)
-        break
+            response = yield call(createData, dataName, data, token)
+            break
         case mutationOperationType.UPDATE:
-        // response = yield call(updateData, dataName, data, token)
-        break
+            response = yield call(updateData, dataName, data, token)
+            break
         case mutationOperationType.DELETE:
-        response = yield call(deleteData, dataName, data, token)
-        break
+            response = yield call(deleteData, dataName, data, token)
+            break
         default:
         break
     }

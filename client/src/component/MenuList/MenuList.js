@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import Table, { TableHead, TableRow, TableBody, TableCell } from 'material-ui/Table';
 import ButtonWrapper from '../ButtonWrapper'
@@ -15,12 +16,14 @@ const headerNames = [
 ];
 
 type Props = {
+    classes: any,
+
     isEditable: boolean,
     editableRowId: number,
-    editableCellIndex: number,
+    editableCellName: string,
     menus: Array<Menu>,
 
-    changeEditableCell: (rowId: number, cellIndex: number) => void,
+    changeEditableCell: (rowId: number, cellName: string) => void,
     disableEditableCell: () => void,
     updateMenu: (menu: Menu) => void,
     deleteMenu: (id: number) => void,
@@ -28,32 +31,32 @@ type Props = {
     toggleComponent: () => void
 }
 
-type State = {
-
-}
-
-class MeuList extends Component<Props, State> {
-    handleCellClick = (rowId: number, cellIndex: number) => {
-        this.props.changeEditableCell(rowId, cellIndex);
+class MeuList extends Component<Props> {
+    handleCellClick = (rowId: number, cellName: string) => {
+        this.props.changeEditableCell(rowId, cellName)
     }
 
-    handleEnterKeyUpOnEditableCell = (menu: Menu) => {
-        this.props.updateMenu(menu);
+    handleEnterKeyUpOnEditableCell = (rowId: number, cellName: string, value: number | string) => {
+        let maybeCloned = this.props.menus.filter(menu => menu.id === rowId)
+        if (maybeCloned && maybeCloned.length === 1) {
+            maybeCloned[0][cellName] = value
+            this.props.updateMenu(maybeCloned[0])
+        }
     }
 
-    getEditableOrPlainText = (rowId: number, value: number | string, currentCellIndex: number) => {
-        const { editableCellIndex } = this.props;
-        if (currentCellIndex === editableCellIndex) {
+    getEditableOrPlainText = (rowId: number, currentCellName: string, value: number | string) => {
+        const { editableCellName } = this.props;
+        if (currentCellName === editableCellName) {
             return <EditableCell 
-                key={`${rowId}:${currentCellIndex}`}
+                key={`${currentCellName}:${rowId}`}
                 rowId={rowId} 
-                cellIndex={currentCellIndex} 
+                cellName={currentCellName}
                 value={value}
                 onEnterKeyUp={this.handleEnterKeyUpOnEditableCell}
                 onEscKeyUp={this.props.disableEditableCell}/>
         } else {
             return (
-                <TableCellWrapper key={`${rowId}:${currentCellIndex}`} rowId={rowId} cellIndex={currentCellIndex} value={value} onCellClick={this.handleCellClick}/>
+                <TableCellWrapper key={`${currentCellName}:${rowId}`} rowId={rowId} cellName={currentCellName} value={value} onCellClick={this.handleCellClick}/>
             )
         }
     }
@@ -77,8 +80,8 @@ class MeuList extends Component<Props, State> {
                             return (
                                 <TableRow key={menu.id}>
                                     {isEditable === true && menu.id === editableRowId ? 
-                                    Object.keys(menu).map((key, index) => key !== 'id' && this.getEditableOrPlainText(menu.id, menu[key], index)) :
-                                    Object.keys(menu).map((key, index) => key !== 'id' && <TableCellWrapper key={`${menu[key]}:${index}`} rowId={menu.id} cellIndex={index} value={menu[key]} onCellClick={this.handleCellClick}/>)}
+                                    Object.keys(menu).map(key => key !== 'id' && this.getEditableOrPlainText(menu.id, key, menu[key])) :
+                                    Object.keys(menu).map(key => key !== 'id' && <TableCellWrapper key={`:${key}:${menu[key]}`} rowId={menu.id} cellName={key} value={menu[key]} onCellClick={this.handleCellClick}/>)}
                                     <TableCell>
                                         <ButtonWrapper deleteMenu={this.deleteMenu} id={menu.id}/>
                                     </TableCell>

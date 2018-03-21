@@ -22,7 +22,7 @@ func GetMenus() data.Menus {
 
 // CreateMenu is service for "POST /menus"
 func CreateMenu(menu data.Menu) data.Menu {
-	// throw error when duplicate menu title exists later from DB or another way
+	// throw error when duplicate menu name exists later from DB or another way
 	menu.ID = nextMenuID
 	nextMenuID++
 	menus[menu.ID] = menu
@@ -34,5 +34,11 @@ func DeleteMenu(id int) data.Menu {
 	menu := menus[id]
 	delete(menus, id)
 	fmt.Println(menus)
+	return menu
+}
+
+// UpdateMenu updates the menu
+func UpdateMenu(menu data.Menu) data.Menu {
+	menus[menu.ID] = menu
 	return menu
 }

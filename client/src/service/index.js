@@ -69,7 +69,7 @@ export function updateData(dataName: string, data: any, token: string) {
         .patch(`http://${env.apiServerDomain}/${dataName}`)
         .type('text/plain')
         .accept('json')
-        .send(blogRequest)
+        .send(JSON.stringify(blogRequest))
         .then(res => res)
         .catch(err => err.response ? err.response : err)
 }

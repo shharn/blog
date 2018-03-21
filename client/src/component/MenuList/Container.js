@@ -13,15 +13,17 @@ import {
 } from '../../constant';
 import LocalStorage from 'local-storage'
 
+import type { Menu } from '../../flowtype'
+
 const MENU_DATA_NAME = 'menus';
 
 const mapStateToProps = (state, ownProps) => {
     const { data } = state.app.data.get.menus,
-        { isEditable, editableRowId, editableCellIndex } = state.app.ui.menuManager;
+        { isEditable, editableRowId, editableCellName } = state.app.ui.menuManager;
     return {
         isEditable,
         editableRowId,
-        editableCellIndex,
+        editableCellName,
         menus: Object.keys(data).map(key => data[key]),
         ...ownProps
     }
@@ -30,11 +32,11 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
     const clientToken = LocalStorage.get(token.key)
     return {
-        changeEditableCell: (rowId, cellIndex) => dispatch(changeToEditableCell(rowId, cellIndex)),
+        changeEditableCell: (rowId: number, cellName: string) => dispatch(changeToEditableCell(rowId, cellName)),
         disableEditableCell: () => dispatch(disableEditableCell()),
-        updateMenu: menu => dispatch(requestDataMutation(mutationOperationType.UPDATE, menu, MENU_DATA_NAME, clientToken)),
-        deleteMenu: id => dispatch(requestDataMutation(mutationOperationType.DELETE, id, MENU_DATA_NAME, clientToken)),
-        createMenu: menu => dispatch(requestDataMutation(mutationOperationType.CREATE, menu, MENU_DATA_NAME, clientToken))
+        updateMenu: (menu: Menu) => dispatch(requestDataMutation(mutationOperationType.UPDATE, menu, MENU_DATA_NAME, clientToken)),
+        deleteMenu: (id: number) => dispatch(requestDataMutation(mutationOperationType.DELETE, id, MENU_DATA_NAME, clientToken)),
+        createMenu: (menu: Menu) => dispatch(requestDataMutation(mutationOperationType.CREATE, menu, MENU_DATA_NAME, clientToken))
     }
 }
 

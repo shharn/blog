@@ -40,6 +40,22 @@ func MenuHandler(w http.ResponseWriter, r *http.Request) {
 		util.JSONResponse(http.StatusOK, responseBody, w)
 		break
 	case "PATCH":
+		var blogRequest data.BlogRequestBody
+		err := json.NewDecoder(r.Body).Decode(&blogRequest)
+		if err != nil {
+			util.ErrorResponse(w, data.AppError{
+				Code:    http.StatusBadRequest,
+				Message: "Bad Data Format",
+			}, http.StatusBadRequest)
+			return
+		}
+		updatedMenu := dataloader.UpdateMenu(blogRequest.Data.Menu)
+		responseBody := data.BlogRequestBody{
+			Data: data.PredefinedDataChunk{
+				Menu: updatedMenu,
+			},
+		}
+		util.JSONResponse(http.StatusOK, responseBody, w)
 		break
 	case "DELETE":
 		fmt.Println("Delete!!!")

@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import { TableCell } from 'material-ui/Table';
@@ -5,21 +6,36 @@ import keycode from 'keycode';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
-class EditableCell extends Component {
+type Props = {
+    classes: any,
+    rowId: number,
+    cellName: string,
+    value: string,
+
+    onEnterKeyUp: (rowId: number, cellName: string, value: string | number) => void,
+    onEscKeyUp: () => void
+}
+
+type State = {
+    textValue: string
+}
+
+class EditableCell extends Component<Props, State> {
     state = {
         textValue: this.props.value
     }
 
-    handleMouseClick = event => {
+    handleMouseClick = (event: SyntheticEvent<>) => {
         event.stopPropagation();
     }
 
-    handleKeyUp = event => {
+    handleKeyUp = (event: SyntheticKeyboardEvent<>) => {
+        const { rowId, cellName } = this.props
+        const { textValue } = this.state
         switch(event.keyCode) {
             case keycode('enter'):
-                this.state.textValue === this.props.value ? 
-                    this.props.onEscKeyUp() :
-                    this.props.onEnterKeyUp();
+                this.state.textValue !== this.props.value && this.props.onEnterKeyUp(rowId, cellName, textValue)
+                this.props.onEscKeyUp()
                 break;
             case keycode('esc'):
                 this.props.onEscKeyUp();
@@ -29,16 +45,16 @@ class EditableCell extends Component {
         }
     }
 
-    handleTextChange = event => {
+    handleTextChange = (event) => {
         this.setState({
-            textValue: event.target.value
+            textValue: event.currentTarget.value
         });
     }
 
     render() {
-        const { rowId, cellIndex, classes } = this.props;
+        const { rowId, cellName, classes } = this.props;
         return (
-            <TableCell variant='body' key={`${rowId}:${cellIndex}`}>
+            <TableCell variant='body' key={`${rowId}:${cellName}`}>
                 <TextField
                     InputProps={{
                         classes: {

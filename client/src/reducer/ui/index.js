@@ -33,14 +33,14 @@ const reducer = (state = initialState, action) => {
                 }
             };
         case uiActionType.CHANGE_EDITABLE_CELL:
-            const { rowId, cellIndex} = action.payload;
+            const { rowId, cellName} = action.payload;
             return {
                 ...state,
                 menuManager: {
                     ...state.menuManager,
                     isEditable: true,
                     editableRowId: rowId,
-                    editableCellIndex: cellIndex
+                    editableCellName: cellName
                 }
             }
         case uiActionType.DISABLE_EDITABLE_CELL: 
@@ -50,7 +50,7 @@ const reducer = (state = initialState, action) => {
                     ...state.menuManager,
                     isEditable: false,
                     editableRowId: null,
-                    editableCellIndex: null
+                    editableCellName: null
                 }
             }
         default:
