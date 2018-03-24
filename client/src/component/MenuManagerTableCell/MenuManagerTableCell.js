@@ -21,8 +21,8 @@ class MenuManagerTableCell extends Component {
         this.props.changeEditableCell(menu.id, cellName)
     }
 
-    handleEnterKeyUpOnEditableCell = (value: string) => {
-        const maybeCloned = { ...this.props.menu,  value }
+    handleEnterKeyUpOnEditableCell = (cellName: string, value: string) => {
+        const maybeCloned = { ...this.props.menu,  [cellName]: value }
         this.props.updateMenu(maybeCloned)
     }
 
@@ -39,7 +39,7 @@ class MenuManagerTableCell extends Component {
                     cellName={cellName}
                     value={menu[cellName]}
                     onEnterKeyUp={this.handleEnterKeyUpOnEditableCell}
-                    onEscKeyUp={this.props.handleEscKeyUpOnEditableCell}/>
+                    onEscKeyUp={this.handleEscKeyUpOnEditableCell}/>
             )
         } else {
             return (
