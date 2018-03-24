@@ -31,3 +31,8 @@ export const mutationOperationType = {
     UPDATE: 'update',
     DELETE: 'delete'
 }
+
+export const dataName = {
+    MENU: 'menus',
+    ARTICLE: 'articles'
+}

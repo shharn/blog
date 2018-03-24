@@ -12,7 +12,7 @@ type Props = {
     cellName: string,
     value: string,
 
-    onEnterKeyUp: (rowId: number, cellName: string, value: string | number) => void,
+    onEnterKeyUp: (value: string) => void,
     onEscKeyUp: () => void
 }
 
@@ -30,11 +30,10 @@ class EditableCell extends Component<Props, State> {
     }
 
     handleKeyUp = (event: SyntheticKeyboardEvent<>) => {
-        const { rowId, cellName } = this.props
         const { textValue } = this.state
         switch(event.keyCode) {
             case keycode('enter'):
-                this.state.textValue !== this.props.value && this.props.onEnterKeyUp(rowId, cellName, textValue)
+                this.state.textValue !== this.props.value && this.props.onEnterKeyUp(textValue)
                 this.props.onEscKeyUp()
                 break;
             case keycode('esc'):

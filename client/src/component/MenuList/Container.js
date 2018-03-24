@@ -35,8 +35,7 @@ const mapDispatchToProps = dispatch => {
         changeEditableCell: (rowId: number, cellName: string) => dispatch(changeToEditableCell(rowId, cellName)),
         disableEditableCell: () => dispatch(disableEditableCell()),
         updateMenu: (menu: Menu) => dispatch(requestDataMutation(mutationOperationType.UPDATE, menu, MENU_DATA_NAME, clientToken)),
-        deleteMenu: (id: number) => dispatch(requestDataMutation(mutationOperationType.DELETE, id, MENU_DATA_NAME, clientToken)),
-        createMenu: (menu: Menu) => dispatch(requestDataMutation(mutationOperationType.CREATE, menu, MENU_DATA_NAME, clientToken))
+        deleteMenu: (id: number) => dispatch(requestDataMutation(mutationOperationType.DELETE, id, MENU_DATA_NAME, clientToken))
     }
 }
 
