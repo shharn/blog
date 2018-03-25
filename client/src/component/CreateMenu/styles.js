@@ -9,7 +9,7 @@ export default theme => ({
         backgroundColor: theme.palette.background.paper
     },
     formControl: {
-        width: '167px'
+        width: '100px'
     },
     footer: {
         alignSelf: 'center',

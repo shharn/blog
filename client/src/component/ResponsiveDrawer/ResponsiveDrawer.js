@@ -11,6 +11,7 @@ import styles from './styles';
 class ResponsiveDrawer extends Component {
     render() {
         const { classes, theme, toggleDrawer, smallScreenOpen, isAuthenticated } = this.props;
+        console.log('isAuthenticated - ' + isAuthenticated)
         return (
             <div>
                 <Hidden smUp>

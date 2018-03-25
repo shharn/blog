@@ -5,7 +5,7 @@ import CreateMenu from '../CreateMenu';
 import Dialog, {
     DialogContent,
 } from 'material-ui/Dialog';
-import MenuList from '../MenuList';
+import ResponsiveMenuList from '../ResponsiveMenuList';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
@@ -53,16 +53,17 @@ class MenuManager extends Component {
         const whichComponent = this.state.showWhich;
         switch(whichComponent) {
             case componentToDisplay.LIST:
-                return <MenuList toggleComponent={this.toggleComponent}/>;
+                return <ResponsiveMenuList toggleComponent={this.toggleComponent}/>;
             case componentToDisplay.CREATE_MENU:
                 return <CreateMenu toggleComponent={this.toggleComponent}/>;
             default:
-               return <MenuList toggleComponent={this.toggleComponent}/>;
+               return <ResponsiveMenuList toggleComponent={this.toggleComponent}/>;
         }
     }
 
     render() {
         const { classes, isDialogOpened } = this.props;
+        console.log('MenuManager was rendered')
         return (
             <div className={classes.container}>
                 <IconButton aria-label="Management" onClick={this.handleManagementButtonClick}>

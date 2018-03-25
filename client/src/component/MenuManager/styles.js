@@ -5,11 +5,11 @@ export default {
     },
     dialogContent: {
         maxHeight: '500px',
-        minWidth: '400px',
         display: 'flex',
         flexDirection: 'column',
         padding: '0px 24px',
-        alignItems: 'center'
+        alignItems: 'center',
+        minWidth: '300px'
     },
     
 }
