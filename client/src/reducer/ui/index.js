@@ -9,30 +9,10 @@ const initialState = {
     }
 };
 
-// need to split reducer to:
-// - MenuManager
-// - ArticleManager
-// - AuthManager
 const reducer = (state = initialState, action) => {
     const { type } = action;
     switch (type){
-        case uiActionType.OPEN_MENU_MANAGEMENT_DIALOG:
-            return {
-                ...state,
-                menuManager: {
-                    ...state.menuManager,
-                    isDialogOpened: true
-                }
-            };
-        case uiActionType.CLOSE_MENU_MANAGEMENT_DIALOG:
-            return {
-                ...state,
-                menuManager: {
-                    ...state.menuManager,
-                    isDialogOpened: false
-                }
-            };
-        case uiActionType.CHANGE_EDITABLE_CELL:
+        case UIActionType.CHANGE_EDITABLE_CELL:
             const { rowId, cellName} = action.payload;
             return {
                 ...state,
@@ -43,7 +23,7 @@ const reducer = (state = initialState, action) => {
                     editableCellName: cellName
                 }
             }
-        case uiActionType.DISABLE_EDITABLE_CELL: 
+        case UIActionType.DISABLE_EDITABLE_CELL: 
             return {
                 ...state,
                 menuManager: {

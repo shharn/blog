@@ -1,4 +1,4 @@
-import { data as dataActionType } from '../../action/types';
+import { Data as DataActionType } from '../../action/types';
 import { FetchStatus } from '../../constant';
 
 const initialState = {
@@ -36,7 +36,7 @@ const reducer = (state = initialState, action) => {
     const { type } = action
     const { dataName, operationType } = action.payload || {}
     switch(type) {
-        case dataActionType.REQUEST_MUTATE_DATA:
+        case DataActionType.REQUEST_MUTATE_DATA:
             return {
                 ...state,
                 [dataName]: {
@@ -47,7 +47,7 @@ const reducer = (state = initialState, action) => {
                     }
                 }
             }
-        case dataActionType.DATA_MUTATION_SUCCESS:
+        case DataActionType.DATA_MUTATION_SUCCESS:
             return {
                 ...state,
                 [dataName]: {
@@ -58,7 +58,7 @@ const reducer = (state = initialState, action) => {
                     }
                 }
             }
-        case dataActionType.DATA_MUTATION_FAIL:
+        case DataActionType.DATA_MUTATION_FAIL:
             const { error } = this.action
             return {
                 ...state,
@@ -71,7 +71,7 @@ const reducer = (state = initialState, action) => {
                         }
                     }
                 }
-        case dataActionType.CHANGE_MUTATION_STATUS:
+        case DataActionType.CHANGE_MUTATION_STATUS:
             const { statusToChange } = action.payload
             return {
                 ...state,

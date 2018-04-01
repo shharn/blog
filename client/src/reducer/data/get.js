@@ -1,4 +1,4 @@
-import { data as dataActionType } from '../../action/types';
+import { Data as DataActionType } from '../../action/types';
 import { FetchStatus, MutationOperationType } from '../../constant';
 
 const initialState = {
@@ -26,7 +26,7 @@ const reducer = (state= initialState, action) => {
     const { type } = action;
     const { dataName } = action.payload || "";
     switch (type) {
-        case dataActionType.REQUEST_GET_DATA: {
+        case DataActionType.REQUEST_GET_DATA: {
             return {
                 ...state,
                 [dataName]: {
@@ -36,7 +36,7 @@ const reducer = (state= initialState, action) => {
                 }
             };
         }
-        case dataActionType.GET_DATA_RESPONSE_SUCCESS: {
+        case DataActionType.GET_DATA_RESPONSE_SUCCESS: {
             let { data } = action.payload;
             return {
                 ...state,
@@ -48,7 +48,7 @@ const reducer = (state= initialState, action) => {
                 }
             };
         }
-        case dataActionType.GET_DATA_RESPONSE_ERROR: {
+        case DataActionType.GET_DATA_RESPONSE_ERROR: {
             let { error } = action.payload;
             return {
                 ...state,
@@ -60,7 +60,7 @@ const reducer = (state= initialState, action) => {
                 }
             };
         }
-        case dataActionType.DATA_MUTATION_SUCCESS: {
+        case DataActionType.DATA_MUTATION_SUCCESS: {
             let { data, operationType } = action.payload;
             let changedData
             if (operationType === MutationOperationType.CREATE) {

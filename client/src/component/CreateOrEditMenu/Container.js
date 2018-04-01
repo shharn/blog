@@ -4,7 +4,7 @@ import {
     requestDataMutation,
     changeMutationStatus
 } from '../../action/data'
-import { MutationOperationType, FetchStatus, Token} from '../../constant'
+import { MutationOperationType, FetchStatus, Token } from '../../constant'
 import LocalStorage from 'local-storage'
 
 const emptyMenu = {

@@ -11,7 +11,7 @@ import { MenuItem } from 'material-ui/Menu'
 import { LinearProgress } from 'material-ui/Progress'
 import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
-import { fetchStatus } from '../../constant'
+import { FetchStatus } from '../../constant'
 import keycode from 'keycode'
 import styles from './styles'
 
@@ -46,7 +46,7 @@ class CreateMenu extends Component<Props, State> {
     }
 
     componentDidUpdate() {
-        this.props.status === fetchStatus.FETCH_SUCCESS && setTimeout(this.props.toggleComponent, 1000)
+        this.props.status === FetchStatus.FETCH_SUCCESS && setTimeout(this.props.toggleComponent, 1000)
     }
 
     componentWillUnmount() {

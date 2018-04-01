@@ -38,7 +38,7 @@ class MenuManager extends Component {
         const whichComponent = this.state.showWhich;
         switch(whichComponent) {
             case MenuManagerChildComponentType.LIST:
-                return <ResponsiveMenuList toggleComponent={this.toggleComponent}/>
+                return <ResponsiveMenuList />
             case MenuManagerChildComponentType.CREATE_MENU:
                 return <CreateOrEditMenu toggleComponent={this.toggleComponent} isEditMode={false}/>
             case MenuManagerChildComponentType.UPDATE_MENU:
