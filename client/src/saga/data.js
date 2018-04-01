@@ -50,7 +50,6 @@ function* dataMutationRequestHandler(action: BlogAction) : Generator<any, any, a
         default:
         break
     }
-    console.dir(response)
     if (response.statusCode === 200) {
         const targetData = dataName.substr(0, dataName.length - 1)
         yield put(dataMutationSuccess(dataName, operationType, response.body.data[targetData]))

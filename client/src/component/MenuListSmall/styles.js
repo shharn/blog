@@ -6,7 +6,9 @@ export default {
         width: '100%'
     },
     listContainer: {
-        width: '100%'
+        width: '100%',
+        maxHeight: '400px',
+        overflow: 'auto'
     },
     addButton: {
         margin: '20px'

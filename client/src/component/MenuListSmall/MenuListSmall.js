@@ -1,22 +1,29 @@
 import React, { Component } from 'react';
-import List from 'material-ui/List'
-import Button from 'material-ui/Button'
-import ListItemWrapper from '../ListItemWrapper'
-import AddIcon from 'material-ui-icons/Add'
-import { withStyles } from 'material-ui/styles'
-import styles from './styles'
+import List from 'material-ui/List';
+import Button from 'material-ui/Button';
+import ListItemWrapper from '../ListItemWrapper';
+import AddIcon from 'material-ui-icons/Add';
+import keycode from 'keycode';
+import { withStyles } from 'material-ui/styles';
+import styles from './styles';
 
-import type { Menu } from '../../flowtype'
+import type { Menu } from '../../flowtype';
 
 type Props = {
     menus: Array<Menu>,
 
-    toggleComponent: (isEditMode, menu?: Menu) => void
-}
+    switchToEditMenu: (menu: Menu) => void,
+    switchToList: () => void,
+    switchToCreateMenu: () => void
+};
 
 class MenuListSmall extends Component {
-    switchToEditWindow = (menu: Menu) => {
-        this.props.toggleComponent(true, menu)
+    switchToEditMenu = (menu: Menu) => {
+        this.props.switchToEditMenu(menu);
+    }
+
+    onAddButtonClicked = () => {
+        this.props.switchToCreateMenu();
     }
 
     render() {
@@ -24,9 +31,9 @@ class MenuListSmall extends Component {
         return (
             <div className={classes.container}>
                 <List component="nav" className={classes.listContainer}>
-                    {menus.map(menu => <ListItemWrapper onMenuClicked={this.switchToEditWindow} menu={menu}/>)}
+                    {menus.map(menu => <ListItemWrapper key={`$MenuItem:${menu.id}`} onMenuClicked={this.switchToEditMenu} menu={menu}/>)}
                 </List>
-                <Button className={classes.addButton} variant="fab" mini color="secondary" aria-label="add" onClick={this.props.toggleComponent}>
+                <Button className={classes.addButton} variant="fab" mini color="secondary" aria-label="add" onClick={this.onAddButtonClicked}>
                     <AddIcon/>
                 </Button>
             </div>

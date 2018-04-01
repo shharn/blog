@@ -22,13 +22,15 @@ type Props = {
     classes: any,
 
     menus: Array<Menu>,
-    status: $Values<fetchStatus>,
+    status: $Values<FetchStatus>,
     isFetching: boolean,
     isEditMode: boolean,
     menu?: Menu,
     
-    toggleComponent: () => void,
+    switchToList: () => void,
+
     createMenu: (menu: Menu) => void,
+    updateMenu: (menu: Menu) => void,
     initializeStatus: () => void
 }
 
@@ -40,40 +42,41 @@ type State = {
 
 class CreateMenu extends Component<Props, State> {
     state = {
-        menuName: '',
-        menuURL: '',
-        parentMenuId: -1,
+        menuName: this.props.isEditMode === true ? this.props.menu.name : '',
+        menuURL: this.props.isEditMode === true ? this.props.menu.url : '',
+        parentMenuId: this.props.isEditMode === true ? this.props.menu.parentId: -1,
     }
 
     componentDidUpdate() {
-        this.props.status === FetchStatus.FETCH_SUCCESS && setTimeout(this.props.toggleComponent, 1000)
+        this.props.status === FetchStatus.FETCH_SUCCESS && setTimeout(this.props.switchToList, 1000);
     }
 
     componentWillUnmount() {
-        this.props.initializeStatus()
+        this.props.initializeStatus();
     }
 
     handleKeyUp = e => {
-        e.stopPropagation()
+        e.stopPropagation();
         if (e.keyCode === keycode('esc')) {
-            this.props.toggleComponent()
+            this.props.switchToList();
         } 
     }
 
     handleNameChange = event => {
-        this.setState({ menuName: event.target.value })
+        this.setState({ menuName: event.target.value });
     }
 
     handleURLChange = event => {
-        this.setState({ menuURL: event.target.value })
+        this.setState({ menuURL: event.target.value });
     }
 
     handleParentMenuChange = event => {
-        this.setState({ [event.target.name]: event.target.value })
+        this.setState({ [event.target.name]: event.target.value });
     }
 
     handleSubmitButtonClick = event => {
-        const { menuName, menuURL, parentMenuId } = this.state
+        const { menuName, menuURL, parentMenuId } = this.state;
+        const { isEditMode, menu } = this.props;
         if (menuName.length < 1) {
             // set error message on TextField of Name
         } 
@@ -82,31 +85,33 @@ class CreateMenu extends Component<Props, State> {
             
         }
 
+        const data = {
+            name: menuName,
+            url: menuURL,
+            parentId: parentMenuId
+        };
+
         if (menuName.length > 0 && menuURL.length > 0) {
-            this.props.createMenu({
-                name: menuName,
-                url: menuURL,
-                parentId: parentMenuId
-            })
+            isEditMode === true ? this.props.updateMenu({ ...data, id: menu.id }) : this.props.createMenu(data);
         }
     }
 
     handleCancelButtonClick = event => {
-        this.props.toggleComponent()
+        this.props.switchToList();
     }
     
     getExtraComponent = (isFetching, status) => {
         if (isFetching === true) {
-            return <LinearProgress/>
+            return <LinearProgress/>;
         }
 
         switch(status) {
-            case fetchStatus.FETCH_SUCCESS:
-                return <Typography variant="caption" style={{ color: 'green' }}>Success</Typography>
-            case fetchStatus.FETCH_FAIL:
-                return <Typography variant="caption" color='error'>Failed</Typography>
+            case FetchStatus.FETCH_SUCCESS:
+                return <Typography variant="caption" style={{ color: 'green' }}>Success</Typography>;
+            case FetchStatus.FETCH_FAIL:
+                return <Typography variant="caption" color='error'>Failed</Typography>;
             default:
-                return
+                return;
         }
     }
 
@@ -114,8 +119,8 @@ class CreateMenu extends Component<Props, State> {
         const { classes, menus, isFetching, status } = this.props;
         return (
             <div className={classes.createMenuContainer} onKeyUp={this.handleKeyUp}>
-                <TextField className={classes.menuName} fullWidth={true} required label="Menu Name" margin="normal" onChange={this.handleNameChange}/>
-                <TextField className={classes.menuUrl} fullWidth={true} required label="Menu's URL" margin="normal" onChange={this.handleURLChange}/>
+                <TextField className={classes.menuName} value={this.state.menuName} fullWidth={true} required label="Menu Name" margin="normal" onChange={this.handleNameChange}/>
+                <TextField className={classes.menuUrl} value={this.state.menuURL} fullWidth={true} required label="Menu's URL" margin="normal" onChange={this.handleURLChange}/>
                 <div className={classes.dropboxContainer}>
                     <FormControl margin="normal" className={classes.formControl}>
                         <InputLabel htmlFor="parentMenu">Parent Menu</InputLabel>

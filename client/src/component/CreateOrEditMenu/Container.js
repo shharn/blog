@@ -16,18 +16,26 @@ const mapStateToProps = (state, ownProps) => {
     const { data } = state.app.data.get.menus
     const menus = Object.keys(data).map(key => data[key])
     menus.splice(0, 0, emptyMenu)
-    const { status, isFetching } = state.app.data.mutation.menus[MutationOperationType.CREATE];
+    const { isEditMode, menu } = state.app.ui.createOrEditMenu;
+    const mutationType = isEditMode === true ? MutationOperationType.UPDATE : MutationOperationType.CREATE;
+    const { status, isFetching } = state.app.data.mutation.menus[mutationType];
     return {
-        ...ownProps,
+        isEditMode,
+        menu,
         menus,
         status,
-        isFetching
+        isFetching,
+        ...ownProps
     }
 }
 
 const mapDispatchToProps = dispatch => ({
     createMenu: menu => dispatch(requestDataMutation(MutationOperationType.CREATE ,menu, 'menus', LocalStorage.get(Token.key))),
-    initializeStatus: () => dispatch(changeMutationStatus('menus', MutationOperationType.CREATE, FetchStatus.FETCH_INITIAL))
+    updateMenu: menu => dispatch(requestDataMutation(MutationOperationType.UPDATE, menu, 'menus', LocalStorage.get(Token.key))),
+    initializeStatus: () => {
+        dispatch(changeMutationStatus('menus', MutationOperationType.CREATE, FetchStatus.FETCH_INITIAL));
+        dispatch(changeMutationStatus('menus', MutationOperationType.UPDATE, FetchStatus.FETCH_INITIAL));
+    }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateOrEditMenu);

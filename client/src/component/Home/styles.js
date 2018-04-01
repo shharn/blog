@@ -1,4 +1,4 @@
-import { styles } from '../../constant';
+import { Styles } from '../../constant';
 
 export default theme => ({
   homeContainer: {
@@ -20,7 +20,7 @@ export default theme => ({
     [theme.breakpoints.up('sm')]: {
       height: 'calc(100% - 64px)',
       marginTop: 64,
-      marginLeft: styles.drawerWidth
+      marginLeft: Styles.drawerWidth
     }
   }
 })

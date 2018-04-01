@@ -1,7 +1,9 @@
-import { UI as UIActionType } from '../../action/ui';
+import { UI as UIActionType } from '../../action/types';
+import { MenuManagerChildComponentType } from '../../constant'
 
 const initialState = {
     isDialogOpened: false,
+    childComponent: MenuManagerChildComponentType.LIST
 };
 
 const reducer = (state = initialState, action) => {
@@ -16,6 +18,12 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 isDialogOpened: false
+            };
+        case UIActionType.SWITCH_MENU_MANAGER_CHILD_COMPONENT:
+            const { childComponent } = action.payload;
+            return {
+                ...state,
+                childComponent
             };
         default:
             return state;

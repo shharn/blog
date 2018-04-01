@@ -1,41 +1,12 @@
-import { UI as UIActionType }  from '../../action/types';
-// import { combineReducers } from 'redux';
-const initialState = {
-    menuManager: {
-        isDialogOpened: false,
-        isEditable: false,
-        editableRowId: null,
-        editableCellIndex: null
-    }
-};
+import { combineReducers } from 'redux';
+import menuList from './menuList';
+import createOrEditMenu from './createOrEditMenu';
+import menuManager from './menuManager';
 
-const reducer = (state = initialState, action) => {
-    const { type } = action;
-    switch (type){
-        case UIActionType.CHANGE_EDITABLE_CELL:
-            const { rowId, cellName} = action.payload;
-            return {
-                ...state,
-                menuManager: {
-                    ...state.menuManager,
-                    isEditable: true,
-                    editableRowId: rowId,
-                    editableCellName: cellName
-                }
-            }
-        case UIActionType.DISABLE_EDITABLE_CELL: 
-            return {
-                ...state,
-                menuManager: {
-                    ...state.menuManager,
-                    isEditable: false,
-                    editableRowId: null,
-                    editableCellName: null
-                }
-            }
-        default:
-            return state;
-    }
-};
+const reducers = combineReducers({
+    menuList,
+    createOrEditMenu,
+    menuManager
+});
 
-export default reducer;
+export default reducers;

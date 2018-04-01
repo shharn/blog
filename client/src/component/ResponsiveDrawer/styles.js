@@ -1,8 +1,8 @@
-import { styles } from '../../constant';
+import { Styles } from '../../constant';
 
 export default theme => ({
     drawerPaper: {
-        width: styles.drawerWidth,
+        width: Styles.drawerWidth,
         display: 'flex',
         flexDirection: 'column',
         [theme.breakpoints.up('sm')]: {

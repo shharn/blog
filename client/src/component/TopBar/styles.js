@@ -1,4 +1,4 @@
-import { styles } from '../../constant';
+import { Styles } from '../../constant';
 
 export default theme => ({
   appBar: {
@@ -6,9 +6,9 @@ export default theme => ({
     flexDirection: 'column',
     justifyContent: 'center',
     position: 'absolute',
-    marginLeft: styles.drawerWidth,
+    marginLeft: Styles.drawerWidth,
     [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${styles.drawerWidth}px)`
+      width: `calc(100% - ${Styles.drawerWidth}px)`
     }
   },
   toolBar: {

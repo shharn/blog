@@ -3,14 +3,16 @@ import MenuManager from './MenuManager';
 import { 
     openMenuManagementDialog, 
     closeMenuManagementDialog,
-    disableEditableCell
+    disableEditableCell,
+    switchMenuManagerChildComponent
 } from '../../action/ui';
+import { MenueManagerChildComponentType } from '../../constant';
 
 const mapStateToProps = (state, ownProps) => {
-     const { isDialogOpened, isEditable } = state.app.ui.menuManager;
+     const { isDialogOpened, childComponent } = state.app.ui.menuManager;
     return {
         isDialogOpened,
-        isEditable
+        childComponent
     }
 }
 
@@ -19,6 +21,7 @@ const mapDispatchToProps = dispatch => {
         disableEditableCell: () => dispatch(disableEditableCell()),
         openDialog: () => dispatch(openMenuManagementDialog()),
         closeDialog: () => dispatch(closeMenuManagementDialog()),
+        changeChildComponent: (childComponent: $Values<MenueManagerChildComponentType>) => dispatch(switchMenuManagerChildComponent(childComponent))
     }
 }
 

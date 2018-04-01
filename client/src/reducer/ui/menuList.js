@@ -1,4 +1,4 @@
-import { UI as UIActionType } from '../../action/ui';
+import { UI as UIActionType } from '../../action/types';
 
 const initialState = {
     isEditable: false,

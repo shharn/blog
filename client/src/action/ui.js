@@ -9,10 +9,10 @@ export const closeMenuManagementDialog = () => ({
     type: UIActionType.CLOSE_MENU_MANAGEMENT_DIALOG
 })
 
-export const switchMenuManagerChildComponent = (showWhich: $Values<MenuManagerChildComponentType>, menu?: Menu = null) => ({
+export const switchMenuManagerChildComponent = (childComponent: $Values<MenuManagerChildComponentType>) => ({
     type: UIActionType.SWITCH_MENU_MANAGER_CHILD_COMPONENT,
     payload: {
-        menu
+        childComponent
     }
 })
 

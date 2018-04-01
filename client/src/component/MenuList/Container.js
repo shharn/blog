@@ -2,12 +2,14 @@ import { connect } from 'react-redux';
 import MenuList from './MenuList';
 import { 
     changeToEditableCell,
-    disableEditableCell
+    disableEditableCell,
+    switchMenuManagerChildComponent
 } from '../../action/ui';
 import { 
     requestDataMutation
 } from '../../action/data';
 import {
+    MenuManagerChildComponentType,
     MutationOperationType,
     Token
 } from '../../constant';
@@ -35,7 +37,7 @@ const mapDispatchToProps = dispatch => {
         changeEditableCell: (rowId: number, cellName: string) => dispatch(changeToEditableCell(rowId, cellName)),
         disableEditableCell: () => dispatch(disableEditableCell()),
         updateMenu: (menu: Menu) => dispatch(requestDataMutation(MutationOperationType.UPDATE, menu, MENU_DATA_NAME, clientToken)),
-        deleteMenu: (id: number) => dispatch(requestDataMutation(MutationOperationType.DELETE, id, MENU_DATA_NAME, clientToken))
+        deleteMenu: (id: number) => dispatch(requestDataMutation(MutationOperationType.DELETE, id, MENU_DATA_NAME, clientToken)),
     }
 }
 

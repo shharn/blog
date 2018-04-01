@@ -30,12 +30,13 @@ class EditableCell extends Component<Props, State> {
     }
 
     handleKeyUp = (event: SyntheticKeyboardEvent<>) => {
-        const { cellName } = this.props
-        const { textValue } = this.state
+        event.stopPropagation();
+        const { cellName } = this.props;
+        const { textValue } = this.state;
         switch(event.keyCode) {
             case keycode('enter'):
-                this.state.textValue !== this.props.value && this.props.onEnterKeyUp(cellName, textValue)
-                this.props.onEscKeyUp()
+                this.state.textValue !== this.props.value && this.props.onEnterKeyUp(cellName, textValue);
+                this.props.onEscKeyUp();
                 break;
             case keycode('esc'):
                 this.props.onEscKeyUp();

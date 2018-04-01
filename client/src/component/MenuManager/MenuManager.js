@@ -12,6 +12,16 @@ import styles from './styles';
 
 import type { Menu } from '../../flowtype'
 
+type Props = {
+    classes: any,
+    isDialogOpened: boolean,
+    childComponent: $Values<MenuManagerChildComponentType>,
+
+    changeChildComponent: (childComponent: $Values<MenuManagerChildComponentType>) => void,
+    closeDialog: () => void,
+    openDialog: () => void
+}
+
 class MenuManager extends Component {
     handleManagementButtonClick = () => {
         const { isDialogOpened, openDialog, closeDialog } = this.props;
@@ -19,9 +29,9 @@ class MenuManager extends Component {
     }
 
     handleDialogClose = (event) => {
-        if ((event.type === 'keydown' && event.target.tagName !== "INPUT") || event.type === 'click') {
+        if ((event.type === 'keyup' && event.target.tagName !== "INPUT") || event.type === 'click') {
+            this.props.changeChildComponent(MenuManagerChildComponentType.LIST)
             this.props.closeDialog();
-            this.setState({ showWhich: MenuManagerChildComponentType.LIST })
         }
     }
 
@@ -35,17 +45,25 @@ class MenuManager extends Component {
     }
 
     getRightComponent = () => {
-        const whichComponent = this.state.showWhich;
-        switch(whichComponent) {
+        const childComponent = this.props.childComponent;
+        console.log(`getRightComponent in MenuManager - ${childComponent}`);
+        switch(childComponent) {
             case MenuManagerChildComponentType.LIST:
-                return <ResponsiveMenuList />
+                return <ResponsiveMenuList switchToList={this.switchToList} switchToCreateMenu={this.switchToCreateMenu}/>
             case MenuManagerChildComponentType.CREATE_MENU:
-                return <CreateOrEditMenu toggleComponent={this.toggleComponent} isEditMode={false}/>
-            case MenuManagerChildComponentType.UPDATE_MENU:
-                return <CreateOrEditMenu isEditMode={true} menu={this.props.menu}/>
+            case MenuManagerChildComponentType.EDIT_MENU:
+                return <CreateOrEditMenu switchToList={this.switchToList}/>
             default:
-               return <ResponsiveMenuList toggleComponent={this.toggleComponent}/>
+               return <ResponsiveMenuList switchToList={this.switchToList} switchToCreateMenu={this.switchToCreateMenu}/>
         }
+    }
+
+    switchToList = () => {
+        this.props.changeChildComponent(MenuManagerChildComponentType.LIST);
+    }
+
+    switchToCreateMenu = () => {
+        this.props.changeChildComponent(MenuManagerChildComponentType.CREATE_MENU);
     }
 
     render() {
