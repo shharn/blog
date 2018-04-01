@@ -1,17 +1,17 @@
 // @flow
-import { auth } from './types';
+import { Auth } from './types';
 
 import type { LoginInformation, LoginResponse, BlogError } from '../flowtype'
 
 export const initializeLoginStatus = () => {
     return {
-        type: auth.INITIALISE_LOGIN_STATUS
+        type: Auth.INITIALISE_LOGIN_STATUS
     }
 }
 
 export const requestLogin = (loginInfo : LoginInformation) => {
     return {
-        type: auth.REQUEST_LOGIN,
+        type: Auth.REQUEST_LOGIN,
         payload: {
             loginInfo
         }
@@ -20,14 +20,14 @@ export const requestLogin = (loginInfo : LoginInformation) => {
 
 export const loginSuccess = (loginResponse : LoginResponse) => {
     return {
-        type: auth.LOGIN_SUCCESS,
+        type: Auth.LOGIN_SUCCESS,
         payload: loginResponse
     }
 }
 
 export const loginFailed= (error: BlogError) => {
     return {
-        type: auth.LOGIN_FAILED,
+        type: Auth.LOGIN_FAILED,
         payload: {
             error
         }
@@ -36,7 +36,7 @@ export const loginFailed= (error: BlogError) => {
 
 export const validateToken = (token: string) => {
     return {
-        type: auth.VALIDATE_TOKEN,
+        type: Auth.VALIDATE_TOKEN,
         payload: {
             token
         }
@@ -45,13 +45,13 @@ export const validateToken = (token: string) => {
 
 export const validToken = () => {
     return {
-        type: auth.VALID_TOKEN
+        type: Auth.VALID_TOKEN
     }
 }
 
 export const invalidToken = (error: BlogError) => {
     return {
-        type: auth.INVALID_TOKEN,
+        type: Auth.INVALID_TOKEN,
         payload: {
             error
         }
@@ -60,7 +60,7 @@ export const invalidToken = (error: BlogError) => {
 
 export const requestLogout = (token : string) => {
     return {
-        type: auth.REQUEST_LOGOUT,
+        type: Auth.REQUEST_LOGOUT,
         payload: {
             token
         }
@@ -69,19 +69,19 @@ export const requestLogout = (token : string) => {
 
 export const clientHasNoToken = () => {
     return {
-        type: auth.CLINET_HAS_NO_TOKEN
+        type: Auth.CLINET_HAS_NO_TOKEN
     }
 }
 
 export const logoutSuccess = () => {
     return {
-        type: auth.LOGOUT_SUCCESS
+        type: Auth.LOGOUT_SUCCESS
     }
 }
 
 export const logoutFailed = (error: BlogError) => {
     return {
-        type: auth.LOGOUT_FAILED,
+        type: Auth.LOGOUT_FAILED,
         payload: {
             error
         }

@@ -4,9 +4,9 @@ import {
     requestDataMutation
 } from '../../action/data';
 import {
-    mutationOperationType,
-    dataName,
-    token
+    MutationOperationType,
+    DataName,
+    Token
 } from '../../constant';
 import LocalStorage from 'local-storage'
 
@@ -28,9 +28,9 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => {
-    const clientToken = LocalStorage.get(token.key)
+    const clientToken = LocalStorage.get(Token.key)
     return {
-        updateMenu: (menu: Menu) => dispatch(requestDataMutation(mutationOperationType.UPDATE, menu, dataName.MENU, clientToken)),
+        updateMenu: (menu: Menu) => dispatch(requestDataMutation(MutationOperationType.UPDATE, menu, DataName.MENU, clientToken)),
     }
 }
 

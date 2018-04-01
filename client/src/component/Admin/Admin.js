@@ -6,7 +6,7 @@ import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 import { CircularProgress } from 'material-ui/Progress';
 import { withStyles } from 'material-ui/styles';
-import { loginStatus as loginStatusType, token } from '../../constant';
+import { LoginStatus as LoginStatusType, Token } from '../../constant';
 import keycode from 'keycode';
 import LocalStorage from 'local-storage';
 import styles from './styles';
@@ -17,7 +17,7 @@ type Props = {
     classes: any,
     history: any,
 
-    loginStatus: 'INITIAL' |'LOGIN_WAIT' |'LOGIN_SUCCESS' | 'LOGIN_FAIL',
+    loginStatus: $Values<LoginStatusType>,
     error: BlogError,
     isAuthenticated: boolean,
 
@@ -38,7 +38,7 @@ class Admin extends Component<Props, State> {
     }
 
     componentDidMount = () => {
-        const storedToken = LocalStorage.get(token.key);
+        const storedToken = LocalStorage.get(Token.key);
         if (storedToken) {
             this.props.validateToken(storedToken);
         } else {
@@ -47,7 +47,7 @@ class Admin extends Component<Props, State> {
     }
 
     componentDidUpdate = () => {
-        this.props.loginStatus === loginStatusType.LOGIN_SUCCESS && this.redirectToHomeWithDelay();
+        this.props.loginStatus === LoginStatusType.LOGIN_SUCCESS && this.redirectToHomeWithDelay();
     }
 
     componentWillUnmount = () => {
@@ -84,13 +84,13 @@ class Admin extends Component<Props, State> {
         let result = null;
         
         switch(loginStatus) {
-            case loginStatusType.LOGIN_WAIT:
+            case LoginStatusType.LOGIN_WAIT:
                 result = <CircularProgress className={this.props.classes.circularProgerss}/>
                 break;
-            case loginStatusType.LOGIN_SUCCESS:
+            case LoginStatusType.LOGIN_SUCCESS:
                 result = <Typography variant="caption">Confirmed. Will be redirected soon</Typography>
                 break;
-            case loginStatusType.LOGIN_FAIL:
+            case LoginStatusType.LOGIN_FAIL:
                 result = (
                     <div className={this.props.classes.bottomContainer}>
                         <Typography className={this.props.classes.errorMessage} variant="caption">{this.props.error.message}</Typography>
@@ -98,7 +98,7 @@ class Admin extends Component<Props, State> {
                     </div>
                 )
                 break;
-            case loginStatusType.INITIAL:
+            case LoginStatusType.INITIAL:
             default:
                 result = <Button variant="raised" color="primary" className={this.props.classes.button} onClick={this.handleSubmit}>Submit</Button>;
                 break;

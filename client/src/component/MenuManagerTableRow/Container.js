@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import MenuManagerTableRow from './MenuManagerTableRow'
 import { requestDataMutation } from '../../action/data';
-import { mutationOperationType, dataName, token } from '../../constant';
+import { MutationOperationType, DataName, Token } from '../../constant';
 import LocalStorage from 'local-storage'
 
 const mapStateToProps = (state, ownProps) => {
@@ -11,9 +11,9 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => {
-    const clientToken = LocalStorage.get(token.key)
+    const clientToken = LocalStorage.get(Token.key)
     return {
-        deleteMenu: (id: number) => dispatch(requestDataMutation(mutationOperationType.DELETE, id, dataName.MENU, clientToken))
+        deleteMenu: (id: number) => dispatch(requestDataMutation(MutationOperationType.DELETE, id, DataName.MENU, clientToken))
     }
 }
 

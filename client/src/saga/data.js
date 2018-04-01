@@ -5,8 +5,8 @@ import {
     dataMutationSuccess,
     dataMutationFail
  } from '../action/data'
-import { data as dataActionType } from '../action/types'
-import { mutationOperationType } from '../constant'
+import { Data as DataActionType } from '../action/types'
+import { MutationOperationType } from '../constant'
 import { 
     getData,
     createData,
@@ -38,13 +38,13 @@ function* dataMutationRequestHandler(action: BlogAction) : Generator<any, any, a
     const { operationType, dataName, data, token } = action.payload
     let response
     switch(operationType) {
-        case mutationOperationType.CREATE:
+        case MutationOperationType.CREATE:
             response = yield call(createData, dataName, data, token)
             break
-        case mutationOperationType.UPDATE:
+        case MutationOperationType.UPDATE:
             response = yield call(updateData, dataName, data, token)
             break
-        case mutationOperationType.DELETE:
+        case MutationOperationType.DELETE:
             response = yield call(deleteData, dataName, data, token)
             break
         default:
@@ -63,6 +63,6 @@ function* dataMutationRequestHandler(action: BlogAction) : Generator<any, any, a
 }
 
 export default function* watchDataRequest(): Generator<any, any, any> {
-    yield takeLatest(dataActionType.REQUEST_GET_DATA, dataGetRequestHandler)
-    yield takeLatest(dataActionType.REQUEST_MUTATE_DATA, dataMutationRequestHandler)
+    yield takeLatest(DataActionType.REQUEST_GET_DATA, dataGetRequestHandler)
+    yield takeLatest(DataActionType.REQUEST_MUTATE_DATA, dataMutationRequestHandler)
 }

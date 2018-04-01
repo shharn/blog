@@ -1,12 +1,12 @@
 // @flow
-import { data as dataActionType } from './types'
-import { fetchStatus } from '../constant'
+import { Data as DataActionType } from './types'
+import { FetchStatus } from '../constant'
 
 import type { BlogError } from '../flowtype'
 
 export const requestData = (dataName: string) => {
     return {
-        type: dataActionType.REQUEST_GET_DATA,
+        type: DataActionType.REQUEST_GET_DATA,
         payload: {
             dataName
         }
@@ -15,7 +15,7 @@ export const requestData = (dataName: string) => {
 
 export const dataResponseFailed = (error: BlogError, dataName: string) => {
     return {
-        type: dataActionType.GET_DATA_RESPONSE_ERROR,
+        type: DataActionType.GET_DATA_RESPONSE_ERROR,
         payload: {
             error,
             dataName
@@ -25,7 +25,7 @@ export const dataResponseFailed = (error: BlogError, dataName: string) => {
 
 export const dataResponseSuccess = (data: any, dataName: string) => {
     return {
-        type: dataActionType.GET_DATA_RESPONSE_SUCCESS,
+        type: DataActionType.GET_DATA_RESPONSE_SUCCESS,
         payload: {
             data,
             dataName
@@ -35,7 +35,7 @@ export const dataResponseSuccess = (data: any, dataName: string) => {
 
 export const requestDataMutation = (operationType: string, data: any, dataName: string, token: string) => {
     return {
-        type: dataActionType.REQUEST_MUTATE_DATA,
+        type: DataActionType.REQUEST_MUTATE_DATA,
         payload: {
             operationType,
             data,
@@ -47,7 +47,7 @@ export const requestDataMutation = (operationType: string, data: any, dataName: 
 
 export const dataMutationSuccess = (dataName: string, operationType: string, data: any) => {
     return {
-        type: dataActionType.DATA_MUTATION_SUCCESS,
+        type: DataActionType.DATA_MUTATION_SUCCESS,
         payload: {
             dataName,
             operationType,
@@ -58,13 +58,13 @@ export const dataMutationSuccess = (dataName: string, operationType: string, dat
 
 export const dataMutationWait = () => {
     return {
-        type: dataActionType.DATA_MUTATION_RESPONSE_WAIT
+        type: DataActionType.DATA_MUTATION_RESPONSE_WAIT
     }
 }
 
 export const dataMutationFail = (dataName: string, operationType: string, error: BlogError) => {
     return {
-        type: dataActionType.DATA_MUTATION_RESPONSE_ERROR,
+        type: DataActionType.DATA_MUTATION_RESPONSE_ERROR,
         payload: {
             dataName,
             operationType,
@@ -73,9 +73,9 @@ export const dataMutationFail = (dataName: string, operationType: string, error:
     }
 }
 
-export const changeMutationStatus = (dataName: string, operationType: string, statusToChange: $Values<fetchStatus>) => {
+export const changeMutationStatus = (dataName: string, operationType: string, statusToChange: $Values<FetchStatus>) => {
     return {
-        type: dataActionType.CHANGE_MUTATION_STATUS,
+        type: DataActionType.CHANGE_MUTATION_STATUS,
         payload: {
             dataName,
             operationType,

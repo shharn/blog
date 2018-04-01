@@ -1,20 +1,30 @@
-import { ui as uiActionType } from './types';
+import { UI as UIActionType } from './types';
+import { MenuManagerChildComponentType } from '../constant'
 
 export const openMenuManagementDialog = () => {
     return {
-        type: uiActionType.OPEN_MENU_MANAGEMENT_DIALOG
+        type: UIActionType.OPEN_MENU_MANAGEMENT_DIALOG
     }
 }
 
 export const closeMenuManagementDialog = () => {
     return {
-        type: uiActionType.CLOSE_MENU_MANAGEMENT_DIALOG
+        type: UIActionType.CLOSE_MENU_MANAGEMENT_DIALOG
+    }
+}
+
+export const switchMenuManagerChildComponent = (showWhich: $Values<MenuManagerChildComponentType>, menu?: Menu = null) => {
+    return {
+        type: UIActionType.SWITCH_MENU_MANAGER_CHILD_COMPONENT,
+        payload: {
+            menu
+        }
     }
 }
 
 export const changeToEditableCell = (rowId: number, cellName: string) => {
     return {
-        type: uiActionType.CHANGE_EDITABLE_CELL,
+        type: UIActionType.CHANGE_EDITABLE_CELL,
         payload: {
             rowId,
             cellName
@@ -24,6 +34,6 @@ export const changeToEditableCell = (rowId: number, cellName: string) => {
 
 export const disableEditableCell = () => {
     return {
-        type: uiActionType.DISABLE_EDITABLE_CELL
+        type: UIActionType.DISABLE_EDITABLE_CELL
     }
 }

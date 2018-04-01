@@ -24,6 +24,8 @@ type Props = {
     menus: Array<Menu>,
     status: $Values<fetchStatus>,
     isFetching: boolean,
+    isEditMode: boolean,
+    menu?: Menu,
     
     toggleComponent: () => void,
     createMenu: (menu: Menu) => void,

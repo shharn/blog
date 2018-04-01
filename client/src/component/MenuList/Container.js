@@ -8,8 +8,8 @@ import {
     requestDataMutation
 } from '../../action/data';
 import {
-    mutationOperationType,
-    token
+    MutationOperationType,
+    Token
 } from '../../constant';
 import LocalStorage from 'local-storage'
 
@@ -30,12 +30,12 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => {
-    const clientToken = LocalStorage.get(token.key)
+    const clientToken = LocalStorage.get(Token.key)
     return {
         changeEditableCell: (rowId: number, cellName: string) => dispatch(changeToEditableCell(rowId, cellName)),
         disableEditableCell: () => dispatch(disableEditableCell()),
-        updateMenu: (menu: Menu) => dispatch(requestDataMutation(mutationOperationType.UPDATE, menu, MENU_DATA_NAME, clientToken)),
-        deleteMenu: (id: number) => dispatch(requestDataMutation(mutationOperationType.DELETE, id, MENU_DATA_NAME, clientToken))
+        updateMenu: (menu: Menu) => dispatch(requestDataMutation(MutationOperationType.UPDATE, menu, MENU_DATA_NAME, clientToken)),
+        deleteMenu: (id: number) => dispatch(requestDataMutation(MutationOperationType.DELETE, id, MENU_DATA_NAME, clientToken))
     }
 }
 

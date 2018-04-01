@@ -1,5 +1,5 @@
 import { data as dataActionType } from '../../action/types';
-import { fetchStatus, mutationOperationType } from '../../constant';
+import { FetchStatus, MutationOperationType } from '../../constant';
 
 const initialState = {
     menus: {
@@ -8,7 +8,7 @@ const initialState = {
             code: 0,
             message: ""
         },
-        fetchStatus: fetchStatus.FETCH_INITIAL,
+        fetchStatus: FetchStatus.FETCH_INITIAL,
         fetchComplete: false
     },
     articles: {
@@ -17,7 +17,7 @@ const initialState = {
             code: 0,
             message: ""
         },
-        fetchStatus: fetchStatus.FETCH_INITIAL,
+        fetchStatus: FetchStatus.FETCH_INITIAL,
         fetchComplete: false
     }
 }
@@ -32,7 +32,7 @@ const reducer = (state= initialState, action) => {
                 [dataName]: {
                     ...state[dataName],
                     fetchComplete: false,
-                    fetchStatus: fetchStatus.FETCH_WAIT
+                    fetchStatus: FetchStatus.FETCH_WAIT
                 }
             };
         }
@@ -43,7 +43,7 @@ const reducer = (state= initialState, action) => {
                 [dataName]: {
                     ...state[dataName],
                     fetchComplete: true,
-                    fetchStatus: fetchStatus.FETCH_SUCCESS,
+                    fetchStatus: FetchStatus.FETCH_SUCCESS,
                     data: data[dataName]
                 }
             };
@@ -55,7 +55,7 @@ const reducer = (state= initialState, action) => {
                 [dataName]: {
                     ...state[dataName],
                     fetchComplete: true,
-                    fetchStatus: fetchStatus.FETCH_FAIL,
+                    fetchStatus: FetchStatus.FETCH_FAIL,
                     error
                 }
             };
@@ -63,12 +63,12 @@ const reducer = (state= initialState, action) => {
         case dataActionType.DATA_MUTATION_SUCCESS: {
             let { data, operationType } = action.payload;
             let changedData
-            if (operationType === mutationOperationType.CREATE) {
+            if (operationType === MutationOperationType.CREATE) {
                 changedData = { ...state[dataName].data, [data.id]: data}
-            } else if (operationType === mutationOperationType.DELETE) {
+            } else if (operationType === MutationOperationType.DELETE) {
                 changedData = { ...state[dataName].data }
                 delete changedData[data.id]
-            } else if (operationType === mutationOperationType.UPDATE) {
+            } else if (operationType === MutationOperationType.UPDATE) {
                 changedData = { ...state[dataName].data, [data.id]: data }
             }
             return {

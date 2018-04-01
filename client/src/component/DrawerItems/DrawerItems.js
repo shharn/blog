@@ -5,7 +5,7 @@ import styles from './styles';
 import { withStyles } from 'material-ui/styles';
 import { CircularProgress } from 'material-ui/Progress';
 import Typography from 'material-ui/Typography';
-import { fetchStatus as fetchStatusType } from '../../constant';
+import { FetchStatus as FetchStatusType } from '../../constant';
 
 class DrawerItems extends Component {
     componentDidMount() {
@@ -17,7 +17,7 @@ class DrawerItems extends Component {
         return (
             fetchComplete ? 
             <List className={classes.listContainer}>
-                {fetchStatus === fetchStatusType.FETCH_SUCCESS ?
+                {fetchStatus === FetchStatusType.FETCH_SUCCESS ?
                     menus == null ? <Typography className={classes.text}>No Menus</Typography> : menus.map(menu => <DrawerItem key={menu.id} menu={menu}/>) :
                 <Typography className={classes.text}>{error.message}</Typography>}
             </List> :

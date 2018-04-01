@@ -1,32 +1,32 @@
 import { data as dataActionType } from '../../action/types';
-import { fetchStatus } from '../../constant';
+import { FetchStatus } from '../../constant';
 
 const initialState = {
     menus: {
         create: {
-            status: fetchStatus.FETCH_INITIAL,
+            status: FetchStatus.FETCH_INITIAL,
             isFetching: false
         },
         update: {
-            state: fetchStatus.FETCH_INITIAL,
+            state: FetchStatus.FETCH_INITIAL,
             isFetching: false
         },
          delete: {
-            state: fetchStatus.FETCH_INITIAL,
+            state: FetchStatus.FETCH_INITIAL,
             isFetching: false
          }
     },
     articles: {
         create: {
-            status: fetchStatus.FETCH_INITIAL,
+            status: FetchStatus.FETCH_INITIAL,
             isFetching: false
         },
         update: {
-            state: fetchStatus.FETCH_INITIAL,
+            state: FetchStatus.FETCH_INITIAL,
             isFetching: false
         },
          delete: {
-            state: fetchStatus.FETCH_INITIAL,
+            state: FetchStatus.FETCH_INITIAL,
             isFetching: false
          }
     }
@@ -42,7 +42,7 @@ const reducer = (state = initialState, action) => {
                 [dataName]: {
                     ...state[dataName],
                     [operationType]: {
-                        status: fetchStatus.FETCH_WAIT,
+                        status: FetchStatus.FETCH_WAIT,
                         isFetching: true
                     }
                 }
@@ -53,7 +53,7 @@ const reducer = (state = initialState, action) => {
                 [dataName]: {
                     ...state[dataName],
                     [operationType]: {
-                        status: fetchStatus.FETCH_SUCCESS,
+                        status: FetchStatus.FETCH_SUCCESS,
                         isFetching: false
                     }
                 }
@@ -65,7 +65,7 @@ const reducer = (state = initialState, action) => {
                 [dataName]: {
                     ...state[dataName],
                         [operationType]: {
-                            status: fetchStatus.FETCH_FAIL,
+                            status: FetchStatus.FETCH_FAIL,
                             isFetching: false,
                             error
                         }

@@ -1,4 +1,4 @@
-import { ui as uiActionType }  from '../../action/types';
+import { UI as UIActionType }  from '../../action/types';
 // import { combineReducers } from 'redux';
 const initialState = {
     menuManager: {

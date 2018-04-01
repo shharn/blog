@@ -1,6 +1,6 @@
 // @flow
 import { put, call, takeLatest } from 'redux-saga/effects';
-import { auth as authActionType } from '../action/types';
+import { Auth as AuthActionType } from '../action/types';
 import { 
     loginSuccess,
     loginFailed,
@@ -79,7 +79,7 @@ function isNetworkOffline(response: any): boolean {
 }
 
 export default function* watchLogin(): Generator<any, any, any,> {
-    yield takeLatest(authActionType.REQUEST_LOGIN, loginProcess);
-    yield takeLatest(authActionType.REQUEST_LOGOUT, logoutProcess);
-    yield takeLatest(authActionType.VALIDATE_TOKEN, validateToken);
+    yield takeLatest(AuthActionType.REQUEST_LOGIN, loginProcess);
+    yield takeLatest(AuthActionType.REQUEST_LOGOUT, logoutProcess);
+    yield takeLatest(AuthActionType.VALIDATE_TOKEN, validateToken);
 }

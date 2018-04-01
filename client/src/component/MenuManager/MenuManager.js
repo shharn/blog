@@ -1,33 +1,18 @@
 import React, { Component } from 'react';
 import IconButton from 'material-ui/IconButton';
 import Settings from 'material-ui-icons/Settings';
-import CreateMenu from '../CreateMenu';
+import CreateOrEditMenu from '../CreateOrEditMenu';
 import Dialog, {
     DialogContent,
 } from 'material-ui/Dialog';
 import ResponsiveMenuList from '../ResponsiveMenuList';
+import { MenuManagerChildComponentType } from '../../constant'
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
-const componentToDisplay = {
-    LIST: 'LIST',
-    CREATE_MENU: 'CREATE_MENU'
-}
+import type { Menu } from '../../flowtype'
 
 class MenuManager extends Component {
-    state = {
-        showWhich: componentToDisplay.LIST
-    }
-
-    toggleComponent = () => {
-        const { showWhich } = this.state;
-        this.setState({
-            showWhich: showWhich === componentToDisplay.LIST ? 
-            componentToDisplay.CREATE_MENU : 
-            componentToDisplay.LIST
-        });
-    }
-
     handleManagementButtonClick = () => {
         const { isDialogOpened, openDialog, closeDialog } = this.props;
         isDialogOpened ? closeDialog() : openDialog();
@@ -36,7 +21,7 @@ class MenuManager extends Component {
     handleDialogClose = (event) => {
         if ((event.type === 'keydown' && event.target.tagName !== "INPUT") || event.type === 'click') {
             this.props.closeDialog();
-            this.setState({ showWhich: componentToDisplay.LIST })
+            this.setState({ showWhich: MenuManagerChildComponentType.LIST })
         }
     }
 
@@ -52,18 +37,19 @@ class MenuManager extends Component {
     getRightComponent = () => {
         const whichComponent = this.state.showWhich;
         switch(whichComponent) {
-            case componentToDisplay.LIST:
-                return <ResponsiveMenuList toggleComponent={this.toggleComponent}/>;
-            case componentToDisplay.CREATE_MENU:
-                return <CreateMenu toggleComponent={this.toggleComponent}/>;
+            case MenuManagerChildComponentType.LIST:
+                return <ResponsiveMenuList toggleComponent={this.toggleComponent}/>
+            case MenuManagerChildComponentType.CREATE_MENU:
+                return <CreateOrEditMenu toggleComponent={this.toggleComponent} isEditMode={false}/>
+            case MenuManagerChildComponentType.UPDATE_MENU:
+                return <CreateOrEditMenu isEditMode={true} menu={this.props.menu}/>
             default:
-               return <ResponsiveMenuList toggleComponent={this.toggleComponent}/>;
+               return <ResponsiveMenuList toggleComponent={this.toggleComponent}/>
         }
     }
 
     render() {
         const { classes, isDialogOpened } = this.props;
-        console.log('MenuManager was rendered')
         return (
             <div className={classes.container}>
                 <IconButton aria-label="Management" onClick={this.handleManagementButtonClick}>
