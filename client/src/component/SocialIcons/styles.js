@@ -1,4 +1,4 @@
-const styles = {
+export default {
     socialIcons: {
     bottom: 0,
     padding: '15px',
@@ -9,5 +9,3 @@ const styles = {
     alignItems: 'center'
   }
 };
-
-export default styles;

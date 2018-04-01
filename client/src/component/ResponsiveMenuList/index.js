@@ -1,3 +1,3 @@
-import ResponsiveMenuList from './ResponsiveMenuList'
+import ResponsiveMenuList from './ResponsiveMenuList';
 
-export default ResponsiveMenuList
+export default ResponsiveMenuList;

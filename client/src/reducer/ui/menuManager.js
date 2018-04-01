@@ -1,5 +1,5 @@
 import { UI as UIActionType } from '../../action/types';
-import { MenuManagerChildComponentType } from '../../constant'
+import { MenuManagerChildComponentType } from '../../constant';
 
 const initialState = {
     isDialogOpened: false,
@@ -28,6 +28,6 @@ const reducer = (state = initialState, action) => {
         default:
             return state;
     }
-}
+};
 
-export default reducer
+export default reducer;

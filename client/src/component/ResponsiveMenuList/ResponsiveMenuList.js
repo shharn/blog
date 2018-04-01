@@ -11,7 +11,7 @@ type Props = {
 
     switchToList: () => void,
     switchToCreateMenu: () => void
-}
+};
 
 class ResponsiveMenuList extends Component<Props> {
     onKeyUpOnContainer = (e) => {
@@ -26,7 +26,7 @@ class ResponsiveMenuList extends Component<Props> {
     }
 
     render() {
-        const { classes, switchToList, switchToCreateMenu } = this.props
+        const { classes, switchToList, switchToCreateMenu } = this.props;
         return (
             <div className={classes.responsiveMenuListContainer} onKeyUp={this.onKeyUpOnContainer}>
                 <Hidden xsDown>
@@ -40,4 +40,4 @@ class ResponsiveMenuList extends Component<Props> {
     }
 }
 
-export default withStyles(styles)(ResponsiveMenuList)
+export default withStyles(styles)(ResponsiveMenuList);

@@ -23,4 +23,4 @@ export default theme => ({
       marginLeft: Styles.drawerWidth
     }
   }
-})
+});

@@ -1,5 +1,5 @@
 import { UI as UIActionType } from './types';
-import { MenuManagerChildComponentType } from '../constant'
+import { MenuManagerChildComponentType } from '../constant';
 
 export const openMenuManagementDialog = () => ({
     type: UIActionType.OPEN_MENU_MANAGEMENT_DIALOG

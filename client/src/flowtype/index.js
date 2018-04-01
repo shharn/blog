@@ -3,7 +3,7 @@ export type Menu = {
     name: string,
     url: string,
     parentId: number
-}
+};
 
 export type BlogError = {
     code: number,
@@ -13,19 +13,19 @@ export type BlogError = {
 export type LoginInformation = {
     email: string,
     password: string
-}
+};
 
 export type LoginResponse = {
     isAuthenticated: boolean,
     token: string
-}
+};
 
 export type BlogAction = {
     type: string,
     payload: any
-}
+};
 
 export type BlogRequest  = {
     token: string,
     data: any   
-}
+};

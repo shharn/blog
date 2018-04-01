@@ -6,21 +6,18 @@ import { MenuManagerChildComponentType } from '../../constant';
 import type { Menu } from '../../flowtype';
 
 const mapStateToProps = (state, ownProps) => {
-    const { data } = state.app.data.get.menus
+    const { data } = state.app.data.get.menus;
     return {
         menus: Object.keys(data).map(key => data[key]),
         ...ownProps
-    }
-}
+    };
+};
 
-const mapDispatchToProps = dispatch => {
-    return {
-        switchToEditMenu: (menu: Menu) => {
-            console.dir(menu);
-            dispatch(switchMenuManagerChildComponent(MenuManagerChildComponentType.EDIT_MENU));
-            dispatch(setDataForCreateOrEditMenu(true, menu));
-        },
-    }
-}
+const mapDispatchToProps = dispatch => ({
+    switchToEditMenu: (menu: Menu) => {
+        dispatch(switchMenuManagerChildComponent(MenuManagerChildComponentType.EDIT_MENU));
+        dispatch(setDataForCreateOrEditMenu(true, menu));
+    },
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(MenuListSmall)
+export default connect(mapStateToProps, mapDispatchToProps)(MenuListSmall);

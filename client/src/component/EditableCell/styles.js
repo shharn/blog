@@ -3,4 +3,4 @@ export default theme => ({
         fontSize: theme.typography.pxToRem(13),
         width: '60px',
     }
-})
+});

@@ -26,4 +26,4 @@ export default theme => ({
   searchInput: {
       marginLeft: '10px'
   }
-})
+});

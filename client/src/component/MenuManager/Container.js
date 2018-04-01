@@ -13,16 +13,14 @@ const mapStateToProps = (state, ownProps) => {
     return {
         isDialogOpened,
         childComponent
-    }
-}
+    };
+};
 
-const mapDispatchToProps = dispatch => {
-    return {
+const mapDispatchToProps = dispatch => ({
         disableEditableCell: () => dispatch(disableEditableCell()),
         openDialog: () => dispatch(openMenuManagementDialog()),
         closeDialog: () => dispatch(closeMenuManagementDialog()),
         changeChildComponent: (childComponent: $Values<MenueManagerChildComponentType>) => dispatch(switchMenuManagerChildComponent(childComponent))
-    }
-}
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuManager);

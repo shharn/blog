@@ -1,14 +1,14 @@
 // @flow
 import React, { Component } from 'react';
-import { TableCell } from 'material-ui/Table'
+import { TableCell } from 'material-ui/Table';
 
 type Props = {
     rowId: number,
     cellName: string,
     value: string,
-    
+
     onCellClick: (rowId:number, cellName: string) => void
-}
+};
 
 class TableCellWrapper  extends Component<Props> {
     handleClick = () => {
@@ -26,4 +26,4 @@ class TableCellWrapper  extends Component<Props> {
     }
 }
 
-export default TableCellWrapper ;
+export default TableCellWrapper;

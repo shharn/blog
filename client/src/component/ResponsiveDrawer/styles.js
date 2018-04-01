@@ -8,6 +8,5 @@ export default theme => ({
         [theme.breakpoints.up('sm')]: {
             height: '100%'
         }
-    },
-    
-})
+    }
+});

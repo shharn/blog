@@ -27,7 +27,7 @@ class MenuListSmall extends Component {
     }
 
     render() {
-        const { classes, menus } = this.props
+        const { classes, menus } = this.props;
         return (
             <div className={classes.container}>
                 <List component="nav" className={classes.listContainer}>
@@ -41,4 +41,4 @@ class MenuListSmall extends Component {
     }
 }
 
-export default withStyles(styles)(MenuListSmall)
+export default withStyles(styles)(MenuListSmall);

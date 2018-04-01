@@ -14,11 +14,11 @@ type Props = {
 
     onEnterKeyUp: (value: string) => void,
     onEscKeyUp: () => void
-}
+};
 
 type State = {
     textValue: string
-}
+};
 
 class EditableCell extends Component<Props, State> {
     state = {

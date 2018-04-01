@@ -1,3 +1,3 @@
-import ListItemWrapper from './ListItemWrapper'
+import ListItemWrapper from './ListItemWrapper';
 
-export default ListItemWrapper
+export default ListItemWrapper;

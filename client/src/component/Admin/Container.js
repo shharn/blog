@@ -3,7 +3,7 @@ import Admin from './Admin';
 import { requestLogin, validateToken, initializeLoginStatus } from '../../action/auth';
 
 const mapStateToProps = (state, ownProps) => {
-    const { loginStatus, error, isAuthenticated } = state.app.auth
+    const { loginStatus, error, isAuthenticated } = state.app.auth;
     return {
         loginStatus,
         error,

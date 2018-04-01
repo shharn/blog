@@ -13,4 +13,4 @@ export default {
     addButton: {
         margin: '20px'
     }
-}
+};

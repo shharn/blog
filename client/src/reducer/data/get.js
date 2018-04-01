@@ -20,7 +20,7 @@ const initialState = {
         fetchStatus: FetchStatus.FETCH_INITIAL,
         fetchComplete: false
     }
-}
+};
 
 const reducer = (state= initialState, action) => {
     const { type } = action;
@@ -77,11 +77,11 @@ const reducer = (state= initialState, action) => {
                     ...state[dataName],
                     data: changedData
                 }
-            }
+            };
         }
         default:
             return state;
     }
-}
+};
 
 export default reducer;

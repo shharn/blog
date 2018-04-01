@@ -14,7 +14,7 @@ const mapStateToProps = (state, ownProps) => {
         isEditable: isEditable && editableRowId === menu.id && editableCellName === cellName,
         ...ownProps
     };
-}
+};
 
 const mapDispatchToProps = dispatch => {
     const clientToken = LocalStorage.get(Token.key);
@@ -23,6 +23,6 @@ const mapDispatchToProps = dispatch => {
         disableEditableCell: () => dispatch(disableEditableCell()),
         updateMenu: (menu: Menu) => dispatch(requestDataMutation(MutationOperationType.UPDATE, menu, DataName.MENU, clientToken)),
     };
-}
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(MenuManagerTableCell)
+export default connect(mapStateToProps, mapDispatchToProps)(MenuManagerTableCell);

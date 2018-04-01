@@ -1,3 +1,3 @@
-import MenuManagerTableRow from './Container'
+import MenuManagerTableRow from './Container';
 
-export default MenuManagerTableRow
+export default MenuManagerTableRow;

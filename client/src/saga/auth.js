@@ -13,7 +13,7 @@ import {
 
 import * as service from '../service';
 
-import type { BlogAction } from '../flowtype'
+import type { BlogAction } from '../flowtype';
 
 
 export function* loginProcess(action: BlogAction): Generator<any, any, any> {
@@ -60,10 +60,7 @@ export function* validateToken(action: BlogAction): Generator<any, any, any> {
 export function* logoutProcess(action: BlogAction): Generator<any, any, any> {
     const { token } = action.payload;
     if (token) {
-        // send request to server
         const { response } = yield call(service.requestLogout, token);
-        // then, server check if exsits in the token server & delete from it
-        // otherwise(no token exists in the token server), logout failure
         if (response.error) {
             put(logoutFailed(response.error));
         } else {

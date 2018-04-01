@@ -1,21 +1,21 @@
 // @flow
-import React, { Component } from 'react'
-import IconButton from 'material-ui/IconButton'
-import SaveIcon from 'material-ui-icons/Save'
-import ClearIcon from 'material-ui-icons/Clear'
-import TextField from 'material-ui/TextField'
-import { InputLabel } from 'material-ui/Input'
-import { FormControl } from 'material-ui/Form'
-import Select from 'material-ui/Select'
-import { MenuItem } from 'material-ui/Menu'
-import { LinearProgress } from 'material-ui/Progress'
-import Typography from 'material-ui/Typography'
-import { withStyles } from 'material-ui/styles'
-import { FetchStatus } from '../../constant'
-import keycode from 'keycode'
-import styles from './styles'
+import React, { Component } from 'react';
+import IconButton from 'material-ui/IconButton';
+import SaveIcon from 'material-ui-icons/Save';
+import ClearIcon from 'material-ui-icons/Clear';
+import TextField from 'material-ui/TextField';
+import { InputLabel } from 'material-ui/Input';
+import { FormControl } from 'material-ui/Form';
+import Select from 'material-ui/Select';
+import { MenuItem } from 'material-ui/Menu';
+import { LinearProgress } from 'material-ui/Progress';
+import Typography from 'material-ui/Typography';
+import { withStyles } from 'material-ui/styles';
+import { FetchStatus } from '../../constant';
+import keycode from 'keycode';
+import styles from './styles';
 
-import type { Menu } from '../../flowtype'
+import type { Menu } from '../../flowtype';
 
 type Props = {
     history: any,
@@ -32,13 +32,13 @@ type Props = {
     createMenu: (menu: Menu) => void,
     updateMenu: (menu: Menu) => void,
     initializeStatus: () => void
-}
+};
 
 type State = {
     menuName: string,
     menuURL: string,
     parentMenuId: number
-}
+};
 
 class CreateMenu extends Component<Props, State> {
     state = {

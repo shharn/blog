@@ -1,3 +1,3 @@
-import DeleteButtonCell from './DeleteButtonCell'
+import DeleteButtonCell from './DeleteButtonCell';
 
-export default DeleteButtonCell
+export default DeleteButtonCell;

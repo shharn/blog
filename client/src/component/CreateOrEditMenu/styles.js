@@ -25,4 +25,4 @@ export default theme => ({
     iconButton: {
         margin: theme.spacing.unit
     }
-})
+});

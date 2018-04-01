@@ -9,7 +9,7 @@ const mapStateToProps = (state, ownProps) => {
         error,
         fetchComplete,
         fetchStatus
-    }
+    };
 };
 
 const mapDispatchToProps = dispatch => ({

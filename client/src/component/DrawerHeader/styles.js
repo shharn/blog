@@ -10,4 +10,4 @@ export default theme =>({
         cursor: 'pointer',
         textDecoration: 'none'
     })
-})
+});

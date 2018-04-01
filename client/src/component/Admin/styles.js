@@ -45,4 +45,4 @@ export default {
     circularProgress: {
         marginTop: '20px'
     }
-}
+};

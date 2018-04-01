@@ -1,3 +1,3 @@
-import MenuManagerSelectCell from './Container'
+import MenuManagerSelectCell from './Container';
 
-export default MenuManagerSelectCell
+export default MenuManagerSelectCell;

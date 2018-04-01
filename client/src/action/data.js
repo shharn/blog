@@ -1,8 +1,8 @@
 // @flow
-import { Data as DataActionType } from './types'
-import { FetchStatus } from '../constant'
+import { Data as DataActionType } from './types';
+import { FetchStatus } from '../constant';
 
-import type { BlogError } from '../flowtype'
+import type { BlogError } from '../flowtype';
 
 export const requestData = (dataName: string) => ({
     type: DataActionType.REQUEST_GET_DATA,

@@ -1,3 +1,3 @@
-import MenuListSmall from './Container'
+import MenuListSmall from './Container';
 
-export default MenuListSmall
+export default MenuListSmall;

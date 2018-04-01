@@ -1,7 +1,7 @@
 // @flow
 import { Auth } from './types';
 
-import type { LoginInformation, LoginResponse, BlogError } from '../flowtype'
+import type { LoginInformation, LoginResponse, BlogError } from '../flowtype';
 
 export const initializeLoginStatus = () => ({
     type: Auth.INITIALISE_LOGIN_STATUS

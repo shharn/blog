@@ -10,6 +10,5 @@ export default {
         padding: '0px 24px',
         alignItems: 'center',
         minWidth: '300px'
-    },
-    
-}
+    }
+};

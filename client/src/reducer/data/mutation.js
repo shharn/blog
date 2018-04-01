@@ -30,11 +30,11 @@ const initialState = {
             isFetching: false
          }
     }
-}
+};
 
 const reducer = (state = initialState, action) => {
-    const { type } = action
-    const { dataName, operationType } = action.payload || {}
+    const { type } = action;
+    const { dataName, operationType } = action.payload || {};
     switch(type) {
         case DataActionType.REQUEST_MUTATE_DATA:
             return {
@@ -46,7 +46,7 @@ const reducer = (state = initialState, action) => {
                         isFetching: true
                     }
                 }
-            }
+            };
         case DataActionType.DATA_MUTATION_SUCCESS:
             return {
                 ...state,
@@ -57,9 +57,9 @@ const reducer = (state = initialState, action) => {
                         isFetching: false
                     }
                 }
-            }
+            };
         case DataActionType.DATA_MUTATION_FAIL:
-            const { error } = this.action
+            const { error } = this.action;
             return {
                 ...state,
                 [dataName]: {
@@ -70,9 +70,9 @@ const reducer = (state = initialState, action) => {
                             error
                         }
                     }
-                }
+                };
         case DataActionType.CHANGE_MUTATION_STATUS:
-            const { statusToChange } = action.payload
+            const { statusToChange } = action.payload;
             return {
                 ...state,
                 [dataName]: {
@@ -82,10 +82,10 @@ const reducer = (state = initialState, action) => {
                             isFetching: false
                         }
                     }
-                }
+                };
         default:
             return state;
     }
-}
+};
 
 export default reducer;

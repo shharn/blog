@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
-import { ListItem, ListItemText } from 'material-ui/List'
-import type { Menu } from '../../flowtype'
+import { ListItem, ListItemText } from 'material-ui/List';
+
+import type { Menu } from '../../flowtype';
 
 type Props = {
     menu: Menu,
     onMenuClicked: (menu: Menu) => void
-}
+};
 
 type State = {
     menuName: string,
     menuUrl: string,
     menuParentId: number
-}
+};
 
 class ListItemWrapper extends Component<Props, State> {
     state = {
@@ -19,29 +20,29 @@ class ListItemWrapper extends Component<Props, State> {
         menuUrl: this.props.menu.url,
         menuParentId: this.props.parentId
     }
-    
+
     handleListItemClick = e => {
-        this.props.onMenuClicked(this.props.menu)
+        this.props.onMenuClicked(this.props.menu);
     }
 
     handleTouchStart = e => {
-        console.log('touch start')
+        console.log('touch start');
     }
 
     handleTouchCancel = e => {
-        console.log('touch canceled')
+        console.log('touch canceled');
     }
 
     handleTouchMove = e => {
-        console.log('touch move')
+        console.log('touch move');
     }
 
     handleTouchEnd = e => {
-        console.log('touch end')
+        console.log('touch end');
     }
     
     render() {
-        const { menu } = this.props
+        const { menu } = this.props;
         return (
             <ListItem button divider={true}
                 onClick={this.handleListItemClick}

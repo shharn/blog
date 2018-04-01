@@ -6,11 +6,11 @@ import Dialog, {
     DialogContent,
 } from 'material-ui/Dialog';
 import ResponsiveMenuList from '../ResponsiveMenuList';
-import { MenuManagerChildComponentType } from '../../constant'
+import { MenuManagerChildComponentType } from '../../constant';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
-import type { Menu } from '../../flowtype'
+import type { Menu } from '../../flowtype';
 
 type Props = {
     classes: any,
@@ -20,7 +20,7 @@ type Props = {
     changeChildComponent: (childComponent: $Values<MenuManagerChildComponentType>) => void,
     closeDialog: () => void,
     openDialog: () => void
-}
+};
 
 class MenuManager extends Component {
     handleManagementButtonClick = () => {
@@ -30,7 +30,7 @@ class MenuManager extends Component {
 
     handleDialogClose = (event) => {
         if ((event.type === 'keyup' && event.target.tagName !== "INPUT") || event.type === 'click') {
-            this.props.changeChildComponent(MenuManagerChildComponentType.LIST)
+            this.props.changeChildComponent(MenuManagerChildComponentType.LIST);
             this.props.closeDialog();
         }
     }
@@ -46,13 +46,12 @@ class MenuManager extends Component {
 
     getRightComponent = () => {
         const childComponent = this.props.childComponent;
-        console.log(`getRightComponent in MenuManager - ${childComponent}`);
         switch(childComponent) {
             case MenuManagerChildComponentType.LIST:
-                return <ResponsiveMenuList switchToList={this.switchToList} switchToCreateMenu={this.switchToCreateMenu}/>
+                return <ResponsiveMenuList switchToList={this.switchToList} switchToCreateMenu={this.switchToCreateMenu}/>;
             case MenuManagerChildComponentType.CREATE_MENU:
             case MenuManagerChildComponentType.EDIT_MENU:
-                return <CreateOrEditMenu switchToList={this.switchToList}/>
+                return <CreateOrEditMenu switchToList={this.switchToList}/>;
             default:
                return <ResponsiveMenuList switchToList={this.switchToList} switchToCreateMenu={this.switchToCreateMenu}/>
         }

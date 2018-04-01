@@ -1,10 +1,8 @@
 // @flow
-import request from 'superagent'
-import env from '../config/env'
+import request from 'superagent';
+import env from '../config/env';
 
-import type { LoginInformation, BlogRequest } from '../flowtype'
-
-
+import type { LoginInformation, BlogRequest } from '../flowtype';
 
 export function requestLogin(loginInfo: LoginInformation) {
     return request
@@ -13,7 +11,7 @@ export function requestLogin(loginInfo: LoginInformation) {
             .accept('json')
             .send(JSON.stringify({ data: { loginInformation: loginInfo }}))
             .then(res => res)
-            .catch(err => err.response ? err.response : err)
+            .catch(err => err.response ? err.response : err);
 }
 
 export function validateToken(token: string) {
@@ -23,7 +21,7 @@ export function validateToken(token: string) {
         .accept('json')
         .send(JSON.stringify({ token }))
         .then(res => res)
-        .catch(err => err.response ? err.response : err)
+        .catch(err => err.response ? err.response : err);
 }
 
 export function requestLogout(token: string)  {
@@ -31,7 +29,7 @@ export function requestLogout(token: string)  {
         .post(`http://${env.apiServerDomain}/logout`)
         .send( { token } )
         .then(res => res)
-        .catch(err => err.response ? err.response : err)
+        .catch(err => err.response ? err.response : err);
 }
 
 export function getData(dataName: string) {
@@ -39,7 +37,7 @@ export function getData(dataName: string) {
         .get(`http://${env.apiServerDomain}/${dataName}`)
         .accept('json')
         .then(res => res)
-        .catch(err => err.response ? err.response : err)
+        .catch(err => err.response ? err.response : err);
 }
 
 export function createData(dataName: string, data: any, token: string) {
@@ -48,14 +46,14 @@ export function createData(dataName: string, data: any, token: string) {
         data: {
             [dataName.substr(0, dataName.length - 1)]: data
         }
-    }
+    };
     return request
         .post(`http://${env.apiServerDomain}/${dataName}`)
         .type('text/plain')
         .accept('json')
         .send(JSON.stringify(blogRequest))
         .then(res => res)
-        .catch(err => err.response ? err.response : err)
+        .catch(err => err.response ? err.response : err);
 }
 
 export function updateData(dataName: string, data: any, token: string) {
@@ -64,14 +62,14 @@ export function updateData(dataName: string, data: any, token: string) {
         data: {
             [dataName.substr(0, dataName.length - 1)]: data
         }
-    }
+    };
     return request
         .patch(`http://${env.apiServerDomain}/${dataName}`)
         .type('text/plain')
         .accept('json')
         .send(JSON.stringify(blogRequest))
         .then(res => res)
-        .catch(err => err.response ? err.response : err)
+        .catch(err => err.response ? err.response : err);
 }
 
 export function deleteData(dataName: string, id: number, token: string) {
@@ -80,12 +78,12 @@ export function deleteData(dataName: string, id: number, token: string) {
         data: {
             id
         }
-    }
+    };
     return request
         .delete(`http://${env.apiServerDomain}/${dataName}`)
         .type('text/plain')
         .accept('json')
         .send(JSON.stringify(blogRequest))
         .then(res => res)
-        .catch(err => err.response ? err.response : err)
+        .catch(err => err.response ? err.response : err);
 }

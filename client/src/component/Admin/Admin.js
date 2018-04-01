@@ -11,7 +11,7 @@ import keycode from 'keycode';
 import LocalStorage from 'local-storage';
 import styles from './styles';
 
-import type { LoginInformation, BlogError } from '../../flowtype'
+import type { LoginInformation, BlogError } from '../../flowtype';
 
 type Props = {
     classes: any,
@@ -85,10 +85,10 @@ class Admin extends Component<Props, State> {
         
         switch(loginStatus) {
             case LoginStatusType.LOGIN_WAIT:
-                result = <CircularProgress className={this.props.classes.circularProgerss}/>
+                result = <CircularProgress className={this.props.classes.circularProgerss}/>;
                 break;
             case LoginStatusType.LOGIN_SUCCESS:
-                result = <Typography variant="caption">Confirmed. Will be redirected soon</Typography>
+                result = <Typography variant="caption">Confirmed. Will be redirected soon</Typography>;
                 break;
             case LoginStatusType.LOGIN_FAIL:
                 result = (
@@ -96,7 +96,7 @@ class Admin extends Component<Props, State> {
                         <Typography className={this.props.classes.errorMessage} variant="caption">{this.props.error.message}</Typography>
                         <Button variant="raised" color="primary" className={this.props.classes.button} onClick={this.handleSubmit}>Submit</Button>           
                     </div>
-                )
+                );
                 break;
             case LoginStatusType.INITIAL:
             default:

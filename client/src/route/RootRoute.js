@@ -7,7 +7,7 @@ import Loadable from 'react-loadable';
 const Admin = Loadable({
     loader: () => import('../component/Admin'),
     loading: () => <CircularProgress size={30}/>
-})
+});
 
 class RootRoute extends Component {
     render() {

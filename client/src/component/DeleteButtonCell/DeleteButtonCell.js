@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { TableCell } from 'material-ui/Table'
+import { TableCell } from 'material-ui/Table';
 import Delete from 'material-ui-icons/Delete';
 import IconButton from 'material-ui/IconButton';
 
 type Props = {
     deleteMenu: () => void
-}
+};
 
 class DeleteButtonCell extends Component {
     handleClick = () => {
-        this.props.deleteMenu()
+        this.props.deleteMenu();
     }
 
     render() {

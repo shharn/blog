@@ -4,4 +4,4 @@ import FacebookIcon from './resources/facebook_circle_black.png';
 export default [
     { imgSrc: GithubIcon, href: "https://github.com/shharn", alt: "Github" },
     { imgSrc: FacebookIcon, href: "https://www.facebook.com/profile.php?id=100023598949770", alt: "Facebook"}
-]
+];

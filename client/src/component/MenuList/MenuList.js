@@ -20,7 +20,7 @@ type Props = {
 
     switchToList: () => void,
     switchToCreateMenu: () => void
-}
+};
 
 class MeuList extends Component<Props> {
     onAddButtonClicked = () => {
