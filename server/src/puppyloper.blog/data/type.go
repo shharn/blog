@@ -55,14 +55,42 @@ func (e AppError) Error() string {
 
 // Menu type
 type Menu struct {
-	ID       int    `json:"id"`
-	Name     string `json:"name"`
-	URL      string `json:"url"`
-	ParentID int    `json:"parentId"`
+	ID          int    `json:"id"`
+	Name        string `json:"name"`
+	URL         string `json:"url"`
+	ParentID    int    `json:"parentId"`
+	ChildrenIDs []int  `json:"childrenIDs"`
 }
 
 // Menus is a map for [id : menu] pair
 type Menus map[int]Menu
+
+// RemoveChild method removes the child from the parent menu
+func (menus Menus) RemoveChild(parentID, childID int) {
+	parentMenu := menus[parentID]
+	childrenList := parentMenu.ChildrenIDs
+	pos := -1
+	for idx, value := range childrenList {
+		if value == childID {
+			pos = idx
+			break
+		}
+	}
+	if pos != -1 {
+		if pos == len(childrenList)-1 {
+			parentMenu.ChildrenIDs = childrenList[:pos]
+		} else {
+			parentMenu.ChildrenIDs = append(childrenList[:pos], childrenList[pos+1:]...)
+		}
+	}
+}
+
+// AddChild adds child in the menu
+func (menus Menus) AddChild(parentID, childID int) {
+	parentMenu := menus[parentID]
+	childrenList := parentMenu.ChildrenIDs
+	parentMenu.ChildrenIDs = append(childrenList, childID)
+}
 
 var (
 	// TokenStorage is the storage for the session token made with jwt algorithm

@@ -1,3 +1,3 @@
-import DrawerItem from './DrawerItem';
+import DrawerItem from './Container';
 
 export default DrawerItem;

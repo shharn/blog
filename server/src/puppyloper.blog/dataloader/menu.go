@@ -8,11 +8,12 @@ import (
 
 var (
 	menus = data.Menus{
-		1: data.Menu{ID: 1, Name: "Admin", URL: "/admin", ParentID: -1},
-		2: data.Menu{ID: 2, Name: "Home", URL: "/", ParentID: -1},
-		3: data.Menu{ID: 3, Name: "Articles", URL: "/articles", ParentID: -1},
+		1: data.Menu{ID: 1, Name: "Admin", URL: "/admin", ParentID: -1, ChildrenIDs: []int{4}},
+		2: data.Menu{ID: 2, Name: "Home", URL: "/", ParentID: -1, ChildrenIDs: []int{}},
+		3: data.Menu{ID: 3, Name: "Articles", URL: "/articles", ParentID: -1, ChildrenIDs: []int{}},
+		4: data.Menu{ID: 4, Name: "Child1", URL: "/child1", ParentID: 1, ChildrenIDs: []int{}},
 	}
-	nextMenuID = 4
+	nextMenuID = 5
 )
 
 // GetMenus is service for "GET /menus"
@@ -29,7 +30,7 @@ func CreateMenu(menu data.Menu) data.Menu {
 	return menu
 }
 
-// DeleteMenu deletes the menu with id
+// DeleteMenu is service for "DELETE /menus"
 func DeleteMenu(id int) data.Menu {
 	menu := menus[id]
 	delete(menus, id)
@@ -37,8 +38,16 @@ func DeleteMenu(id int) data.Menu {
 	return menu
 }
 
-// UpdateMenu updates the menu
+// UpdateMenu is service for "PATCH /menus"
 func UpdateMenu(menu data.Menu) data.Menu {
+	oldMenu := menus[menu.ID]
+	if oldMenu.ParentID != menu.ParentID {
+		oldParentMenu := menus[oldMenu.ParentID]
+		menus.RemoveChild(oldParentMenu.ID, menu.ID)
+		if menu.ParentID != -1 {
+			menus.AddChild(menu.ParentID, menu.ID)
+		}
+	}
 	menus[menu.ID] = menu
 	return menu
 }
