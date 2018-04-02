@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import IconButton from 'material-ui/IconButton';
 import Settings from 'material-ui-icons/Settings';
@@ -10,8 +11,6 @@ import { MenuManagerChildComponentType } from '../../constant';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
-import type { Menu } from '../../flowtype';
-
 type Props = {
     classes: any,
     isDialogOpened: boolean,
@@ -22,7 +21,7 @@ type Props = {
     openDialog: () => void
 };
 
-class MenuManager extends Component {
+class MenuManager extends Component<Props> {
     handleManagementButtonClick = () => {
         const { isDialogOpened, openDialog, closeDialog } = this.props;
         isDialogOpened ? closeDialog() : openDialog();
@@ -35,8 +34,8 @@ class MenuManager extends Component {
         }
     }
 
-    handleEmptySpaceClick = (event) => {
-        (this.props.isEditable && !this.isFromEditableCell(event)) && this.props.disableEditableCell();
+    handleKeyDownOnDialog = (e) => {
+        this.props.closeDialog();
     }
 
     isFromEditableCell = (event) => {
@@ -76,7 +75,6 @@ class MenuManager extends Component {
                     open={isDialogOpened}
                     onClose={this.handleDialogClose}
                     onEscapeKeyDown={this.handleKeyDownOnDialog}
-                    onClick={this.handleEmptySpaceClick}
                     aria-labelledby="dialog-content"
                 >
                     <DialogContent id="dialog-content" className={classes.dialogContent}>

@@ -7,7 +7,7 @@ import DeleteButtonCell from '../DeleteButtonCell';
 import type { Menu } from '../../flowtype';
 
 type Props = {
-    menu: Array<Menu>,
+    menu: Menu,
 
     deleteMenu: (id: number) => void
 };

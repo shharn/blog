@@ -12,7 +12,7 @@ type Props = {
     cellName: string,
     value: string,
 
-    onEnterKeyUp: (value: string) => void,
+    onEnterKeyUp: (cellName: string, value: string) => void,
     onEscKeyUp: () => void
 };
 

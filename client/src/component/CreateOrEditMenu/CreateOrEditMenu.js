@@ -25,7 +25,7 @@ type Props = {
     status: $Values<FetchStatus>,
     isFetching: boolean,
     isEditMode: boolean,
-    menu?: Menu,
+    menu: Menu,
     
     switchToList: () => void,
 
@@ -100,7 +100,7 @@ class CreateMenu extends Component<Props, State> {
         this.props.switchToList();
     }
     
-    getExtraComponent = (isFetching, status) => {
+    getExtraComponent = (isFetching: boolean, status: $Values<FetchStatus>) => {
         if (isFetching === true) {
             return <LinearProgress/>;
         }

@@ -1,10 +1,9 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import Table, { TableHead, TableRow, TableBody, TableCell } from 'material-ui/Table';
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 import MenuTableRow from '../MenuManagerTableRow';
-import keycode from 'keycode';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
@@ -22,7 +21,7 @@ type Props = {
     switchToCreateMenu: () => void
 };
 
-class MeuList extends Component<Props> {
+class MeuList extends React.Component<Props> {
     onAddButtonClicked = () => {
         this.props.switchToCreateMenu();
     }
