@@ -55,13 +55,6 @@ class CreateMenu extends Component<Props, State> {
         this.props.initializeStatus();
     }
 
-    handleKeyUp = e => {
-        e.stopPropagation();
-        if (e.keyCode === keycode('esc')) {
-            this.props.switchToList();
-        } 
-    }
-
     handleNameChange = event => {
         this.setState({ menuName: event.target.value });
     }
@@ -118,7 +111,7 @@ class CreateMenu extends Component<Props, State> {
     render() {
         const { classes, menus, isFetching, status } = this.props;
         return (
-            <div className={classes.createMenuContainer} onKeyUp={this.handleKeyUp}>
+            <div className={classes.createMenuContainer}>
                 <TextField className={classes.menuName} value={this.state.menuName} fullWidth={true} required label="Menu Name" margin="normal" onChange={this.handleNameChange}/>
                 <TextField className={classes.menuUrl} value={this.state.menuURL} fullWidth={true} required label="Menu's URL" margin="normal" onChange={this.handleURLChange}/>
                 <div className={classes.dropboxContainer}>

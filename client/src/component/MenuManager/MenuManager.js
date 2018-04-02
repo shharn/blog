@@ -34,8 +34,9 @@ class MenuManager extends Component<Props> {
         }
     }
 
-    handleKeyDownOnDialog = (e) => {
-        this.props.closeDialog();
+    handleEscKeyDown = (e) => {
+        this.props.childComponent === MenuManagerChildComponentType.LIST ? this.props.closeDialog() :
+            this.props.changeChildComponent(MenuManagerChildComponentType.LIST);
     }
 
     isFromEditableCell = (event) => {
@@ -74,7 +75,7 @@ class MenuManager extends Component<Props> {
                 <Dialog
                     open={isDialogOpened}
                     onClose={this.handleDialogClose}
-                    onEscapeKeyDown={this.handleKeyDownOnDialog}
+                    onEscapeKeyDown={this.handleEscKeyDown}
                     aria-labelledby="dialog-content"
                 >
                     <DialogContent id="dialog-content" className={classes.dialogContent}>
