@@ -1,6 +1,10 @@
 package router
 
-import "net/http"
+import (
+	"net/http"
+
+	"puppyloper.blog/router"
+)
 
 // Filter filters or pre-processes the request
 // Can be used for handling CORS, Authentication and something like that
@@ -33,26 +37,42 @@ type RouterContext struct {
 type Router map[string]RouterContext
 
 // Get registers the handler, filters, post-filters for the path
-func (router Router) Get(path string, handler Handler, filters Filters, postFilters PostFilters) {
+func (router *Router) Get(path string, handler Handler, filters Filters, postFilters PostFilters) {
 
 }
 
 // Post registers the handler, filters, post-filters for the path
-func (router Router) Post(path string, handler Handler, filters Filters, postFilters PostFilters) {
+func (router *Router) Post(path string, handler Handler, filters Filters, postFilters PostFilters) {
 
 }
 
 // Patch registers the handler, filters, post-filters for the path
-func (router Router) Patch(path string, handler Handler, filters Filters, postFilters PostFilters) {
+func (router *Router) Patch(path string, handler Handler, filters Filters, postFilters PostFilters) {
 
 }
 
 // Put registers the handler, filters, post-filters for the path
-func (router Router) Put(path string, handler Handler, filters Filters, postFilters PostFilters) {
+func (router *Router) Put(path string, handler Handler, filters Filters, postFilters PostFilters) {
 
 }
 
 // Delete registers the handler, filters, post-filters for the path
-func (router Router) Delete(path string, handler Handler, filters Filters, postFilters PostFilters) {
+func (router *Router) Delete(path string, handler Handler, filters Filters, postFilters PostFilters) {
 
+}
+
+// ServerHTTP is the http.Handler interface method
+func (router *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
+}
+
+// NewRouter creates a new router
+func NewRouter() *Router {
+	return &Router{
+		"GET":    router.RouterContext{},
+		"POST":   router.RouterContext{},
+		"PUT":    router.RouterContext{},
+		"PATCH":  router.RouterContext{},
+		"DELETE": router.RouterContext{},
+	}
 }
