@@ -1,5 +1,5 @@
 export default theme => ({
     nested: {
-        paddingLeft: '10px'
+        paddingLeft: theme.spacing.unit * 2
     }
 });

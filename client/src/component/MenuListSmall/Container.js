@@ -8,7 +8,7 @@ import type { Menu } from '../../flowtype';
 const mapStateToProps = (state, ownProps) => {
     const { data } = state.app.data.get.menus;
     return {
-        menus: Object.keys(data).map(key => data[key]),
+        menus: Object.values(data),
         ...ownProps
     };
 };

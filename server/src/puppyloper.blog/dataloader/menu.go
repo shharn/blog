@@ -1,8 +1,6 @@
 package dataloader
 
 import (
-	"fmt"
-
 	"puppyloper.blog/data"
 )
 
@@ -27,6 +25,10 @@ func CreateMenu(menu data.Menu) data.Menu {
 	menu.ID = nextMenuID
 	nextMenuID++
 	menus[menu.ID] = menu
+
+	if menu.ParentID != -1 {
+		menus.AddChild(menu.ParentID, menu.ID)
+	}
 	return menu
 }
 
@@ -34,7 +36,6 @@ func CreateMenu(menu data.Menu) data.Menu {
 func DeleteMenu(id int) data.Menu {
 	menu := menus[id]
 	delete(menus, id)
-	fmt.Println(menus)
 	return menu
 }
 

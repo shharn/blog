@@ -83,6 +83,7 @@ func (menus Menus) RemoveChild(parentID, childID int) {
 			parentMenu.ChildrenIDs = append(childrenList[:pos], childrenList[pos+1:]...)
 		}
 	}
+	menus[parentID] = parentMenu
 }
 
 // AddChild adds child in the menu
@@ -90,6 +91,7 @@ func (menus Menus) AddChild(parentID, childID int) {
 	parentMenu := menus[parentID]
 	childrenList := parentMenu.ChildrenIDs
 	parentMenu.ChildrenIDs = append(childrenList, childID)
+	menus[parentID] = parentMenu
 }
 
 var (

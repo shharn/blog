@@ -12,7 +12,6 @@ import { LinearProgress } from 'material-ui/Progress';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import { FetchStatus } from '../../constant';
-import keycode from 'keycode';
 import styles from './styles';
 
 import type { Menu } from '../../flowtype';

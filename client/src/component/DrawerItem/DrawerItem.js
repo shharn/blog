@@ -5,6 +5,7 @@ import ExpandLess from 'material-ui-icons/ExpandLess';
 import ExpandMore from 'material-ui-icons/ExpandMore';
 import { Link } from 'react-router-dom';
 import { withStyles } from 'material-ui/styles';
+import DrawerItemSelf from './index';
 import styles from './styles';
 
 import type { Menu } from '../../flowtype';
@@ -20,33 +21,41 @@ class DrawerItem extends Component<Props> {
         openChild: false
     }
 
-    handleMouseOver = (e) => {
-        this.setState({ openChild: true });
+    handleMenuClick = (e) => {
+        e.preventDefault();
+        const { openChild } = this.state;
+        this.setState({ openChild: !openChild });
     }
 
-    handleMouseLeave = (e) => {
-        this.setState({ openChild: false });
+    getRightElement = () => {
+        const { url, name, childrenIDs } = this.props.menu;
+        const { classes, children, isChild } = this.props;
+        const hasChildren = childrenIDs.length > 0;
+        if (hasChildren) {
+            return (
+                <div>
+                    <ListItem button component={Link} to={url} onClick={this.handleMenuClick}>
+                        <ListItemText className={classes.nested} primary={name}/>
+                        {this.state.openChild ? <ExpandLess/> : <ExpandMore/>}
+                    </ListItem>
+                    <Collapse in={this.state.openChild} timeout={700} unmountOnExit>
+                        <List component="div">
+                            {children.map(child => <DrawerItemSelf key={child.id} menu={child} isChild={true}/>)}
+                        </List>
+                    </Collapse>
+                </div>
+            );
+        } else {
+            return (
+                <ListItem button component={Link} to={url}>
+                    <ListItemText primary={name}/>
+                </ListItem>
+            )
+        }
     }
 
     render() {
-        const { url, name, childrenIDs } = this.props.menu;
-        const { classes, children, isChild } = this.props;
-        console.dir(classes);
-        return (
-            <div>
-                <ListItem button component={Link} to={url} onMouseOver={this.handleMouseOver} onMouseLeave={this.handleMouseLeave}>
-                    <ListItemText className={isChild === true ? classes.nested : ''} primary={name}/>
-                    {childrenIDs.length > 0 && (this.state.openChild ? <ExpandLess/> : <ExpandMore/>)}
-                </ListItem>
-                {childrenIDs.length > 0 &&
-                <Collapse in={this.state.openChild} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding>
-                        {children.map(child => <DrawerItem key={child.id} menu={child} isChild={true}/>)}
-                    </List>
-                </Collapse>
-                }
-            </div>
-        );
+        return this.getRightElement();
     }
 }
 

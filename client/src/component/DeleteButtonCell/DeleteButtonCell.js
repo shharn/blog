@@ -7,7 +7,7 @@ type Props = {
     deleteMenu: () => void
 };
 
-class DeleteButtonCell extends Component {
+class DeleteButtonCell extends Component<Props> {
     handleClick = () => {
         this.props.deleteMenu();
     }

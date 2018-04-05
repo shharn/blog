@@ -15,7 +15,7 @@ type Props = {
     updateMenu: (menu: Menu) => void
 };
 
-class MenuManagerTableCell extends Component {
+class MenuManagerTableCell extends Component<Props> {
     handleCellClick = () => {
         const { menu, cellName } = this.props;
         this.props.changeEditableCell(menu.id, cellName);

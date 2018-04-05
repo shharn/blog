@@ -24,7 +24,7 @@ const mapStateToProps = (state, ownProps) => {
         isEditable,
         editableRowId,
         editableCellName,
-        menus: Object.keys(data).map(key => data[key]),
+        menus: Object.values(data),
         ...ownProps
     };
 };

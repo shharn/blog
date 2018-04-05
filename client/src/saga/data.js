@@ -16,11 +16,6 @@ import {
 
 import type { BlogAction } from '../action/data';
 
-type Response = {
-    statusCode?: number,
-    body?: any
-};
-
 function* dataGetRequestHandler(action: BlogAction) : Generator<any, any, any,> {
     const { dataName } = action.payload;
     const response = yield call(getData, dataName);
