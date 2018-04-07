@@ -9,10 +9,8 @@ import (
 func CorsMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Request-Method", "GET, DELETE, PATH, POST, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS")
 		w.Header().Set("Access-Control-Request-Headers", "Access-Control-Request-Headers, Access-Control-Request-Method, Origin, Content-Type, Accept")
-		w.Header().Set("Content-Type", "application/json")
 		if strings.ToLower(r.Method) == "options" {
 			return
 		}
