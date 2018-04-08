@@ -1,34 +1,13 @@
-package simplerouter
+package router
 
 import (
 	"net/http"
 )
 
-// FilterError is thrown by the Filter
-type FilterError struct {
-	Code int
-}
-
-// Errors is
-func (f FilterError) Errors() string {
-	return string(f.Code)
-}
-
-// Filter filters or pre-processes the request
-// Can be used for handling CORS, Authentication and something like that
-type Filter func(w http.ResponseWriter, r *http.Request) FilterError
-
 // Handler processes the client's request and return something
 // The argument will be the unmarshalled body & route parameter values & values in Query String
-// the object of return value({}interface) will be processed by PostFilter
-type Handler func(body interface{}, params ...interface{}) (interface{}, error)
-
-// RawHandler is a handler that has arguments same as the http.ServeHTTP's
-type RawHandler func(http.ResponseWriter, *http.Request)
-
-// Marshaller processes the result of the Handler.
-// I'll place the JSON Marshaller on it
-type Marshaller func(result interface{}) ([]byte, error)
+// the object of return value({}interface) will be processed by marshaler
+type Handler func(http.ResponseWriter, *http.Request, Params) (interface{}, error)
 
 // CORSContext includes the Headers about CORS Configs
 // It will be used at the handler for "OPTIONS" method
@@ -40,83 +19,102 @@ type CORSContext struct {
 
 // RouterContext includes the information for the routing
 type RouterContext struct {
-	Path       string
-	Filters    []Filter
-	Handler    Handler
-	RawHandler RawHandler
-	Marshaller Marshaller
+	Pattern   string
+	Filters   []Filter
+	Handler   Handler
+	Marshaler Marshaler
 }
 
 // Router is router - self-explanatory
 type Router struct {
-	CORSEnabled bool
-	CORSContext CORSContext
-	Dispatchers map[string][]RouterContext
+	RegisteredMethods []string
+	CORSEnabled       bool
+	CORSContext       CORSContext
+	Dispatchers       map[string][]RouterContext
 }
 
 // SetCORS sets the CORS Enabled mode flag
-func (r *Router) SetCORS(use bool) {
-	r.CORSEnabled = use
-	if use {
-		r.Dispatchers["OPTIONS"] = []RouterContext{
-			0: {
-				Path: "*",
-				RawHandler: func(w http.ResponseWriter, rq *http.Request) {
-					w.Header().Set("Access-Control-Allow-Origin", r.CORSContext.AllowedOrigins)
-					w.Header().Set("Access-Control-Allow-Methods", r.CORSContext.AllowedMethods)
-					w.Header().Set("Access-Control-Request-Headers", r.CORSContext.AllowedHeaders)
-				},
+func (r *Router) SetCORS() *Router {
+	r.RegisteredMethods = append(r.RegisteredMethods, "OPTIONS")
+	r.CORSEnabled = true
+	r.Dispatchers["OPTIONS"] = []RouterContext{
+		0: {
+			Pattern: "*",
+			Handler: func(w http.ResponseWriter, rq *http.Request, params Params) (interface{}, error) {
+				w.Header().Set("Access-Control-Allow-Origin", r.CORSContext.AllowedOrigins)
+				w.Header().Set("Access-Control-Allow-Methods", r.CORSContext.AllowedMethods)
+				w.Header().Set("Access-Control-Request-Headers", r.CORSContext.AllowedHeaders)
+				return nil, nil
 			},
-		}
+		},
 	}
+	return r
 }
 
 // SetAllowedOrigin sets the allowed origins
-func (r *Router) SetAllowedOrigin(origins string) {
+func (r *Router) SetAllowedOrigin(origins string) *Router {
 	r.CORSContext.AllowedOrigins = origins
+	return r
 }
 
 // SetAllowedMethod sets the allowed methods
-func (r *Router) SetAllowedMethod(methods string) {
+func (r *Router) SetAllowedMethod(methods string) *Router {
 	r.CORSContext.AllowedMethods = methods
+	return r
 }
 
 // SetAllowedHeaders sets the allowed headers
-func (r *Router) SetAllowedHeaders(headers string) {
+func (r *Router) SetAllowedHeaders(headers string) *Router {
 	r.CORSContext.AllowedHeaders = headers
+	return r
 }
 
 // Get registers the handler, filters, post-filters for the path on "GET" method
-func (r *Router) Get(path string, handler Handler, filters []Filter, marshaller Marshaller) {
-	r.add("GET", path, handler, filters, marshaller)
+func (r *Router) Get(path string, handler Handler, filters []Filter, marshaler Marshaler) {
+	if marshaler == nil {
+		marshaler = JSONMarshaler{}
+	}
+	r.add("GET", path, handler, filters, marshaler)
 }
 
 // Post registers the handler, filters, post-filters for the path on "POST" method
-func (r *Router) Post(path string, handler Handler, filters []Filter, marshaller Marshaller) {
-	r.add("POST", path, handler, filters, marshaller)
+func (r *Router) Post(path string, handler Handler, filters []Filter, marshaler Marshaler) {
+	if marshaler == nil {
+		marshaler = JSONMarshaler{}
+	}
+	r.add("POST", path, handler, filters, marshaler)
 }
 
 // Patch registers the handler, filters, post-filters for the path on "PATCH" method
-func (r *Router) Patch(path string, handler Handler, filters []Filter, marshaller Marshaller) {
-	r.add("PATCH", path, handler, filters, marshaller)
+func (r *Router) Patch(path string, handler Handler, filters []Filter, marshaler Marshaler) {
+	if marshaler == nil {
+		marshaler = JSONMarshaler{}
+	}
+	r.add("PATCH", path, handler, filters, marshaler)
 }
 
 // Put registers the handler, filters, post-filters for the path on "PUT" method
-func (r *Router) Put(path string, handler Handler, filters []Filter, marshaller Marshaller) {
-	r.add("PUT", path, handler, filters, marshaller)
+func (r *Router) Put(path string, handler Handler, filters []Filter, marshaler Marshaler) {
+	if marshaler == nil {
+		marshaler = JSONMarshaler{}
+	}
+	r.add("PUT", path, handler, filters, marshaler)
 }
 
 // Delete registers the handler, filters, post-filters for the path on "DELETE" method
-func (r *Router) Delete(path string, handler Handler, filters []Filter, marshaller Marshaller) {
-	r.add("DELETE", path, handler, filters, marshaller)
+func (r *Router) Delete(path string, handler Handler, filters []Filter, marshaler Marshaler) {
+	if marshaler == nil {
+		marshaler = JSONMarshaler{}
+	}
+	r.add("DELETE", path, handler, filters, marshaler)
 }
 
-func (r *Router) add(method, path string, handler Handler, filters []Filter, marshaller Marshaller) {
+func (r *Router) add(method, path string, handler Handler, filters []Filter, marshaler Marshaler) {
 	newCtx := RouterContext{
-		Path:       path,
-		Handler:    handler,
-		Filters:    filters,
-		Marshaller: marshaller,
+		Pattern:   path,
+		Handler:   handler,
+		Filters:   filters,
+		Marshaler: marshaler,
 	}
 	ctxs, exist := (*r).Dispatchers[method]
 	if exist == false {
@@ -128,7 +126,7 @@ func (r *Router) add(method, path string, handler Handler, filters []Filter, mar
 
 // ServerHTTP is the http.Handler interface method
 func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
-	if exists := contains(AllowedMethods, rq.Method); exists == true {
+	if exists := contains(r.RegisteredMethods, rq.Method); exists == true {
 		ctxs, ok := (*r).Dispatchers[rq.Method]
 		if ok != true {
 			w.WriteHeader(http.StatusNotFound)
@@ -155,6 +153,14 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 		// Before unmarshall Response.Body, should know the type of arguments of Handler
 		// so I'll use reflect on Handler's Arguments
 		//bodyType := reflect.TypeOf(ctx.handler).In(0)
+		params := parseURL(ctx.Pattern, path)
+		result, err := ctx.Handler(w, rq, params)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("Error occured"))
+			return
+		}
+		ctx.Marshaler.Marshal(result)
 	} else {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
@@ -172,11 +178,11 @@ func contains(list []string, value string) bool {
 func findRightContextFromPath(ctxs []RouterContext, path string) (RouterContext, bool) {
 	wildCardIdx := -1
 	for idx, ctx := range ctxs {
-		if ctx.Path == "*" {
+		if ctx.Pattern == "*" {
 			wildCardIdx = idx
 		}
 
-		if path == ctx.Path {
+		if path == ctx.Pattern {
 			return ctx, true
 		}
 	}
@@ -195,5 +201,7 @@ var (
 
 // NewRouter creates a new router
 func NewRouter() *Router {
-	return &Router{}
+	return &Router{
+		RegisteredMethods: []string{},
+	}
 }

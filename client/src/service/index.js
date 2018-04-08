@@ -4,6 +4,8 @@ import env from '../config/env';
 
 import type { LoginInformation, BlogRequest } from '../flowtype';
 
+const HEADER_NAME_FOR_TOKEN = 'X-Session-Token';
+
 export function requestLogin(loginInfo: LoginInformation) {
     return request
             .post(`http://${env.apiServerDomain}/login`)
@@ -42,13 +44,13 @@ export function getData(dataName: string) {
 
 export function createData(dataName: string, data: any, token: string) {
     const blogRequest : BlogRequest = {
-        token,
         data: {
             [dataName.substr(0, dataName.length - 1)]: data
         }
     };
     return request
         .post(`http://${env.apiServerDomain}/${dataName}`)
+        .set(HEADER_NAME_FOR_TOKEN, token)
         .type('text/plain')
         .accept('json')
         .send(JSON.stringify(blogRequest))
@@ -58,13 +60,13 @@ export function createData(dataName: string, data: any, token: string) {
 
 export function updateData(dataName: string, data: any, token: string) {
     const blogRequest : BlogRequest = {
-        token,
         data: {
             [dataName.substr(0, dataName.length - 1)]: data
         }
     };
     return request
         .patch(`http://${env.apiServerDomain}/${dataName}`)
+        .set(HEADER_NAME_FOR_TOKEN, token)
         .type('text/plain')
         .accept('json')
         .send(JSON.stringify(blogRequest))
@@ -74,13 +76,13 @@ export function updateData(dataName: string, data: any, token: string) {
 
 export function deleteData(dataName: string, id: number, token: string) {
     const blogRequest: BlogRequest = {
-        token,
         data: {
             id
         }
     };
     return request
         .delete(`http://${env.apiServerDomain}/${dataName}`)
+        .set(HEADER_NAME_FOR_TOKEN, token)
         .type('text/plain')
         .accept('json')
         .send(JSON.stringify(blogRequest))
