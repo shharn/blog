@@ -20,10 +20,8 @@ type CORSContext struct {
 
 // RouterContext includes the information for the routing
 type RouterContext struct {
-	Pattern   string
-	Filters   []Filter
-	Handler   Handler
-	Marshaler Marshaler
+	Pattern string
+	Handler Handler
 }
 
 // Router is router - self-explanatory
@@ -32,6 +30,8 @@ type Router struct {
 	CORSEnabled       bool
 	CORSContext       CORSContext
 	Dispatchers       map[string][]RouterContext
+	Middlewares       []Middleware
+	Marshaler         Marshaler
 }
 
 // SetCORS sets the CORS Enabled mode flag
@@ -70,52 +70,43 @@ func (r *Router) SetAllowedHeaders(headers string) *Router {
 	return r
 }
 
-// Get registers the handler, filters, post-filters for the path on "GET" method
-func (r *Router) Get(path string, handler Handler, filters []Filter, marshaler Marshaler) {
-	if marshaler == nil {
-		marshaler = JSONMarshaler{}
+// Use registers middleware
+func (r *Router) Use(middleware Middleware) {
+	if r.Middlewares == nil {
+		r.Middlewares = []Middleware{}
 	}
-	r.add("GET", path, handler, filters, marshaler)
+	r.Middlewares = append(r.Middlewares, middleware)
+}
+
+// Get registers the handler, filters, post-filters for the path on "GET" method
+func (r *Router) Get(path string, handler Handler) {
+	r.add("GET", path, handler)
 }
 
 // Post registers the handler, filters, post-filters for the path on "POST" method
-func (r *Router) Post(path string, handler Handler, filters []Filter, marshaler Marshaler) {
-	if marshaler == nil {
-		marshaler = JSONMarshaler{}
-	}
-	r.add("POST", path, handler, filters, marshaler)
+func (r *Router) Post(path string, handler Handler) {
+	r.add("POST", path, handler)
 }
 
 // Patch registers the handler, filters, post-filters for the path on "PATCH" method
-func (r *Router) Patch(path string, handler Handler, filters []Filter, marshaler Marshaler) {
-	if marshaler == nil {
-		marshaler = JSONMarshaler{}
-	}
-	r.add("PATCH", path, handler, filters, marshaler)
+func (r *Router) Patch(path string, handler Handler) {
+	r.add("PATCH", path, handler)
 }
 
 // Put registers the handler, filters, post-filters for the path on "PUT" method
-func (r *Router) Put(path string, handler Handler, filters []Filter, marshaler Marshaler) {
-	if marshaler == nil {
-		marshaler = JSONMarshaler{}
-	}
-	r.add("PUT", path, handler, filters, marshaler)
+func (r *Router) Put(path string, handler Handler) {
+	r.add("PUT", path, handler)
 }
 
 // Delete registers the handler, filters, post-filters for the path on "DELETE" method
-func (r *Router) Delete(path string, handler Handler, filters []Filter, marshaler Marshaler) {
-	if marshaler == nil {
-		marshaler = JSONMarshaler{}
-	}
-	r.add("DELETE", path, handler, filters, marshaler)
+func (r *Router) Delete(path string, handler Handler) {
+	r.add("DELETE", path, handler)
 }
 
-func (r *Router) add(method, path string, handler Handler, filters []Filter, marshaler Marshaler) {
+func (r *Router) add(method, path string, handler Handler) {
 	newCtx := RouterContext{
-		Pattern:   path,
-		Handler:   handler,
-		Filters:   filters,
-		Marshaler: marshaler,
+		Pattern: path,
+		Handler: handler,
 	}
 	ctxs, exist := (*r).Dispatchers[method]
 	if exist == false {
@@ -134,6 +125,12 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 			return
 		}
 
+		// pass through middlewares
+		for _, middleware := range r.Middlewares {
+			middleware(w, rq)
+		}
+
+		// Select the correct RouterContext based on (Registered Pattern, Request.URL.Path)
 		path := rq.URL.Path
 		ctx, found := findRightContextFromPath(ctxs, path)
 		if found == false {
@@ -141,16 +138,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 			return
 		}
 
-		for _, filter := range ctx.Filters {
-			// Filter Error type
-			// Filter Error { code: number, meessage: string }
-			err := filter(w, rq)
-			if err.Code != 0 {
-				w.WriteHeader(err.Code)
-				return
-			}
-		}
-
+		// Make Params by parsing
 		params := parseURL(ctx.Pattern, path)
 		result, err := ctx.Handler(w, rq, params)
 		if err != nil {
@@ -158,7 +146,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 			w.Write([]byte("Error occured"))
 			return
 		}
-		ctx.Marshaler.Marshal(result)
+		r.Marshaler.Marshal(result)
 	} else {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}

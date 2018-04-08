@@ -19,15 +19,14 @@ func LoginHandler(http.ResponseWriter, *http.Request, router.Params) (interface{
 }
 
 func main() {
-	r := router.NewRouter()
-	r.Get("/menus", GetMenusHandler, nil, nil)
-	r.Post("/login", LoginHandler, nil, nil)
-	// router.Get("/menus", GetMenusHandler, [Filters], handler)
-	// SetCors set the 'EnableCors' flag & prepare the handler for "OPTIONS" method with the configs the below SetXXX method
-	// router.SetCors().
-	// router.SetAllowedOrigin("localhost:3000")
-	// router.SetAllowedMethod("GET, DELETE, ... ")
-	// router.SetAllowedHeaders("Access-Control-Request-Headers, Access-Control-Request-Method, ...")
+	//r := router.NewRouter()
+	// r.SetCORS()
+	// 	.SetAllowedOrigin("localhost:3000")
+	// 	.SetAllowedMethod("GET, POST, DELETE, OPTIONS, PUT, PATCH")
+	// 	.SetAllowedHeaders("Access-Control-Request-Headers", "Access-Control-Request-Headers, Access-Control-Request-Method, Origin, Content-Type, Accept")
+	// r.Use(middleware.AuthMiddleware)
+	// r.Get("/menus", GetMenusHandler)
+	// r.Post("/login", LoginHandler)
 
 	http.HandleFunc("/", handler.HomeHandler)
 	http.HandleFunc("/login", middleware.CorsMiddleware(handler.LoginHandler))
