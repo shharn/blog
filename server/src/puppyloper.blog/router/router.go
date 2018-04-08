@@ -2,6 +2,7 @@ package router
 
 import (
 	"net/http"
+	"strings"
 )
 
 // Handler processes the client's request and return something
@@ -150,9 +151,6 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 			}
 		}
 
-		// Before unmarshall Response.Body, should know the type of arguments of Handler
-		// so I'll use reflect on Handler's Arguments
-		//bodyType := reflect.TypeOf(ctx.handler).In(0)
 		params := parseURL(ctx.Pattern, path)
 		result, err := ctx.Handler(w, rq, params)
 		if err != nil {
@@ -182,7 +180,11 @@ func findRightContextFromPath(ctxs []RouterContext, path string) (RouterContext,
 			wildCardIdx = idx
 		}
 
-		if path == ctx.Pattern {
+		// Should fix this line
+		// First, check the length of the splitted (pattern, path)
+		// Second, check if non-param word lay on the same position & same string value
+		// If the two predicates passed, we can say that this is the target RouterContext
+		if matchPathToPattern(ctx.Pattern, path) {
 			return ctx, true
 		}
 	}
@@ -192,12 +194,19 @@ func findRightContextFromPath(ctxs []RouterContext, path string) (RouterContext,
 	return RouterContext{}, false
 }
 
-var (
-	// AllowedMethods represents the methods processed by this router
-	AllowedMethods = []string{
-		"GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE",
+func matchPathToPattern(pattern, path string) bool {
+	splittedPattern, splittedPath := strings.Split(pattern, "/"), strings.Split(path, "/")
+	if len(splittedPattern) != len(splittedPath) {
+		return false
 	}
-)
+
+	for idx, patternSlice := range splittedPattern {
+		if patternSlice[0] != ':' && patternSlice != splittedPath[idx] {
+			return false
+		}
+	}
+	return true
+}
 
 // NewRouter creates a new router
 func NewRouter() *Router {
