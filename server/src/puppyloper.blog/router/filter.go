@@ -1,19 +1,21 @@
 package router
 
 import (
+	"fmt"
 	"net/http"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go"
 )
 
 // FilterError is thrown by the Filter
 type FilterError struct {
-	Code int
+	Code    int
+	Message string
 }
 
 // Errors is
-func (f FilterError) Errors() string {
-	return string(f.Code)
+func (f FilterError) Error() string {
+	return fmt.Sprintf("ErrorCode: %v, Message: %v", f.Code, f.Message)
 }
 
 // Filter filters or pre-processes the request
@@ -29,13 +31,13 @@ type AuthFilter struct {
 }
 
 // Filter in AuthFilter validates the token from the header
-func (af *AuthFilter) Filter(w http.ResponseWriter, r *http.Request) (bool, FilterError) {
+func (af AuthFilter) Filter(w http.ResponseWriter, r *http.Request) (bool, FilterError) {
 	tokenString := r.Header.Get("X-Session-Token")
 	isValid, err := af.validateToken(tokenString, af.Key)
-	return isValid, FilterError{Code: http.StatusBadRequest}
+	return isValid, FilterError{Code: http.StatusBadRequest, Message: err.Error()}
 }
 
-func (af *AuthFilter) validateToken(token, key string) (bool, error) {
+func (af AuthFilter) validateToken(token, key string) (bool, error) {
 	parsedToken, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
 		return []byte("secret"), nil
 	})
@@ -46,7 +48,5 @@ func (af *AuthFilter) validateToken(token, key string) (bool, error) {
 		return false, err
 	}
 
-	if parsedToken.Valid {
-		return true, nil
-	}
+	return parsedToken.Valid, err
 }
