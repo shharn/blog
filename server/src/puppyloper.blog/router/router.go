@@ -30,7 +30,7 @@ type Router struct {
 	CORSEnabled       bool
 	CORSContext       CORSContext
 	Dispatchers       map[string][]RouterContext
-	Middlewares       []Middleware
+	Filters           []Filter
 	Marshaler         Marshaler
 }
 
@@ -126,8 +126,12 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 		}
 
 		// pass through middlewares
-		for _, middleware := range r.Middlewares {
-			middleware(w, rq)
+		for _, filter := range r.Filters {
+			shouldBeFiltered, err := filter.Filter(w, rq)
+			if shouldBeFiltered {
+				w.WriteHeader(err.Code)
+				return
+			}
 		}
 
 		// Select the correct RouterContext based on (Registered Pattern, Request.URL.Path)
