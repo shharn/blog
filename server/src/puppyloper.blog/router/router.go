@@ -71,11 +71,11 @@ func (r *Router) SetAllowedHeaders(headers string) *Router {
 }
 
 // Use registers middleware
-func (r *Router) Use(middleware Middleware) {
-	if r.Middlewares == nil {
-		r.Middlewares = []Middleware{}
+func (r *Router) Use(filter Filter) {
+	if r.Filters == nil {
+		r.Filters = []Filter{}
 	}
-	r.Middlewares = append(r.Middlewares, middleware)
+	r.Filters = append(r.Filters, filter)
 }
 
 // Get registers the handler, filters, post-filters for the path on "GET" method
