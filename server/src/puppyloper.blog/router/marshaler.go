@@ -15,5 +15,8 @@ type JSONMarshaler struct{}
 
 // Marshal do marshal the object to something
 func (j JSONMarshaler) Marshal(obj interface{}) ([]byte, error) {
+	if obj == nil {
+		return nil, nil
+	}
 	return json.Marshal(obj)
 }

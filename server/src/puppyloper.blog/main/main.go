@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"puppyloper.blog/router"
@@ -16,6 +17,12 @@ func LoginHandler(http.ResponseWriter, *http.Request, router.Params) (interface{
 	return true, nil
 }
 
+// DeleteMenuHandler for test
+func DeleteMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
+	fmt.Printf("[DeleteMenuHandler] Length of Params : %v, Params: %v", len(params), params)
+	return nil, nil
+}
+
 func main() {
 	r := router.NewRouter()
 	r.SetAllowedOrigin("localhost:3000").
@@ -24,6 +31,7 @@ func main() {
 		SetCORS()
 	r.Use(router.AuthFilter{Key: "secret"})
 	r.Get("/menus", GetMenusHandler)
+	r.Delete("/menus/:id", DeleteMenuHandler)
 	r.Post("/login", LoginHandler)
 	http.ListenAndServe(":10000", r)
 

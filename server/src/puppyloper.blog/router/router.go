@@ -1,6 +1,7 @@
 package router
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 )
@@ -38,17 +39,17 @@ type Router struct {
 func (r *Router) SetCORS() *Router {
 	r.RegisteredMethods = append(r.RegisteredMethods, "OPTIONS")
 	r.CORSEnabled = true
-	r.Dispatchers["OPTIONS"] = []RouterContext{
-		0: {
-			Pattern: "*",
-			Handler: func(w http.ResponseWriter, rq *http.Request, params Params) (interface{}, error) {
-				w.Header().Set("Access-Control-Allow-Origin", r.CORSContext.AllowedOrigins)
-				w.Header().Set("Access-Control-Allow-Methods", r.CORSContext.AllowedMethods)
-				w.Header().Set("Access-Control-Request-Headers", r.CORSContext.AllowedHeaders)
-				return nil, nil
-			},
+	ctxs := []RouterContext{}
+	ctxs = append(ctxs, RouterContext{
+		Pattern: "*",
+		Handler: func(w http.ResponseWriter, rq *http.Request, params Params) (interface{}, error) {
+			w.Header().Set("Access-Control-Allow-Origin", r.CORSContext.AllowedOrigins)
+			w.Header().Set("Access-Control-Allow-Methods", r.CORSContext.AllowedMethods)
+			w.Header().Set("Access-Control-Request-Headers", r.CORSContext.AllowedHeaders)
+			return nil, nil
 		},
-	}
+	})
+	(*r).Dispatchers["OPTIONS"] = ctxs
 	return r
 }
 
@@ -104,6 +105,8 @@ func (r *Router) Delete(path string, handler Handler) {
 }
 
 func (r *Router) add(method, path string, handler Handler) {
+	fmt.Printf("Router add method - Method : %v, Path : %v\n", method, path)
+	r.RegisteredMethods = append(r.RegisteredMethods, method)
 	newCtx := RouterContext{
 		Pattern: path,
 		Handler: handler,
@@ -118,9 +121,11 @@ func (r *Router) add(method, path string, handler Handler) {
 
 // ServerHTTP is the http.Handler interface method
 func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
+	fmt.Printf("[ServeHTTP]Requested Method : %v\n", rq.Method)
 	if exists := contains(r.RegisteredMethods, rq.Method); exists == true {
 		ctxs, ok := (*r).Dispatchers[rq.Method]
 		if ok != true {
+			fmt.Println("[ServeHTTP]There is no matched route context")
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
@@ -128,7 +133,9 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 		// pass through middlewares
 		for _, filter := range r.Filters {
 			shouldBeFiltered, err := filter.Filter(w, rq)
+
 			if shouldBeFiltered {
+				fmt.Println("[ServeHTTP] Filtered")
 				w.WriteHeader(err.Code)
 				return
 			}
@@ -136,6 +143,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 
 		// Select the correct RouterContext based on (Registered Pattern, Request.URL.Path)
 		path := rq.URL.Path
+		fmt.Println("Just before the finding context with path")
 		ctx, found := findRightContextFromPath(ctxs, path)
 		if found == false {
 			w.WriteHeader(http.StatusNotFound)
@@ -144,13 +152,22 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 
 		// Make Params by parsing
 		params := parseURL(ctx.Pattern, path)
+		fmt.Printf("[ServeHTTP] Parsed Parmas : %v\n", params)
 		result, err := ctx.Handler(w, rq, params)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("Error occured"))
 			return
 		}
-		r.Marshaler.Marshal(result)
+		if bytes, err := r.Marshaler.Marshal(result); err == nil {
+			w.WriteHeader(http.StatusOK)
+			if bytes != nil {
+				_, err := w.Write(bytes)
+				if err != nil {
+					// What should I do in this case??
+				}
+			}
+		}
 	} else {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
@@ -188,12 +205,13 @@ func findRightContextFromPath(ctxs []RouterContext, path string) (RouterContext,
 
 func matchPathToPattern(pattern, path string) bool {
 	splittedPattern, splittedPath := strings.Split(pattern, "/"), strings.Split(path, "/")
+	fmt.Printf("[matchPathToPattern] splittedPattern : %v / %v\nsplittedPath : %v / %v\n", splittedPattern, len(splittedPattern), splittedPath, len(splittedPath))
 	if len(splittedPattern) != len(splittedPath) {
 		return false
 	}
 
 	for idx, patternSlice := range splittedPattern {
-		if patternSlice[0] != ':' && patternSlice != splittedPath[idx] {
+		if len(patternSlice) > 0 && patternSlice[0] != ':' && patternSlice != splittedPath[idx] {
 			return false
 		}
 	}
@@ -204,5 +222,7 @@ func matchPathToPattern(pattern, path string) bool {
 func NewRouter() *Router {
 	return &Router{
 		RegisteredMethods: []string{},
+		Dispatchers:       map[string][]RouterContext{},
+		Filters:           []Filter{},
 	}
 }
