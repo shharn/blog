@@ -224,5 +224,6 @@ func NewRouter() *Router {
 		RegisteredMethods: []string{},
 		Dispatchers:       map[string][]RouterContext{},
 		Filters:           []Filter{},
+		Marshaler:         JSONMarshaler{},
 	}
 }

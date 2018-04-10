@@ -2,6 +2,7 @@ package router
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 // Marshaler processes the result of the Handler.
@@ -16,6 +17,7 @@ type JSONMarshaler struct{}
 // Marshal do marshal the object to something
 func (j JSONMarshaler) Marshal(obj interface{}) ([]byte, error) {
 	if obj == nil {
+		fmt.Printf("[Marshal] obj is nil\n")
 		return nil, nil
 	}
 	return json.Marshal(obj)

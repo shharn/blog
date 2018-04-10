@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
+	"puppyloper.blog/data"
 	"puppyloper.blog/router"
 )
 
@@ -19,8 +21,14 @@ func LoginHandler(http.ResponseWriter, *http.Request, router.Params) (interface{
 
 // DeleteMenuHandler for test
 func DeleteMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
-	fmt.Printf("[DeleteMenuHandler] Length of Params : %v, Params: %v", len(params), params)
-	return nil, nil
+	fmt.Printf("[DeleteMenuHandler] Length of Params : %v, Params: %v\n", len(params), params)
+	id, _ := strconv.Atoi(params["id"].(string))
+	return data.Menu{
+		ID:       id,
+		Name:     "Test Menu",
+		ParentID: -1,
+		URL:      "/",
+	}, nil
 }
 
 func main() {
