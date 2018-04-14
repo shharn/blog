@@ -6,8 +6,9 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"puppyloper.blog/config"
 	"puppyloper.blog/data"
-	"puppyloper.blog/util"
+	"puppyloper.blog/router"
 )
 
 const (
@@ -16,29 +17,19 @@ const (
 	adminPassword string = `test`
 )
 
-// LoginHandler is a handler for "/login"
-func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	var blogRequest data.BlogRequestBody
-	if err := json.NewDecoder(r.Body).Decode(&blogRequest); err != nil {
-		util.ErrorResponse(w, err, http.StatusBadRequest)
-		return
+// LoginHandler is a handler for "POST /login"
+func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) (interface{}, error) {
+	var loginInfo data.LoginInformation
+	if err := json.NewDecoder(r.Body).Decode(&loginInfo); err != nil {
+		return nil, data.AppError{Code: http.StatusBadRequest, Message: err.Error()}
 	}
 
-	loginInfo := blogRequest.Data.LoginInformation
 	if len(loginInfo.Email) < 1 || len(loginInfo.Password) < 1 {
-		util.ErrorResponse(w, data.AppError{
-			Code:    http.StatusBadRequest,
-			Message: "Has no information",
-		}, http.StatusBadRequest)
-		return
+		return nil, data.AppError{Code: http.StatusBadRequest, Message: "Has no information"}
 	}
 
 	if !isAdminUser(&loginInfo) {
-		util.ErrorResponse(w, data.AppError{
-			Code:    http.StatusUnauthorized,
-			Message: "Invalid Email or Password",
-		}, http.StatusUnauthorized)
-		return
+		return nil, data.AppError{Code: http.StatusUnauthorized, Message: "Invalid Email or Password"}
 	}
 
 	token := makeToken(&loginInfo)
@@ -46,22 +37,15 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		tokenString string
 		err         error
 	)
-	if tokenString, err = token.SignedString([]byte("secret")); err != nil {
-		util.ErrorResponse(w, data.AppError{
-			Code:    http.StatusInternalServerError,
-			Message: err.Error(),
-		}, http.StatusInternalServerError)
-		return
+	if tokenString, err = token.SignedString([]byte(config.JWTSecretKey)); err != nil {
+		return nil, data.AppError{Code: http.StatusInternalServerError, Message: err.Error()}
 	}
 
 	storeToken(tokenString, loginInfo.Email)
-	responseBody := data.BlogResponseBody{
-		Authentication: data.Authentication{
-			IsAuthenticated: true,
-			Token:           tokenString,
-		},
-	}
-	util.JSONResponse(http.StatusOK, responseBody, w)
+	return data.Authentication{
+		IsAuthenticated: true,
+		Token:           tokenString,
+	}, nil
 }
 
 func isAdminUser(info *data.LoginInformation) bool {

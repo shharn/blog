@@ -43,6 +43,7 @@ func (r *Router) SetCORS() *Router {
 	ctxs = append(ctxs, RouterContext{
 		Pattern: "*",
 		Handler: func(w http.ResponseWriter, rq *http.Request, params Params) (interface{}, error) {
+			fmt.Printf("[CORS Handler] Hi")
 			w.Header().Set("Access-Control-Allow-Origin", r.CORSContext.AllowedOrigins)
 			w.Header().Set("Access-Control-Allow-Methods", r.CORSContext.AllowedMethods)
 			w.Header().Set("Access-Control-Request-Headers", r.CORSContext.AllowedHeaders)
@@ -122,6 +123,13 @@ func (r *Router) add(method, path string, handler Handler) {
 // ServerHTTP is the http.Handler interface method
 func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 	fmt.Printf("[ServeHTTP]Requested Method : %v\n", rq.Method)
+	// panic handler for resilience
+	defer func() {
+		if rcv := recover(); rcv != nil {
+			fmt.Printf("[ServeHTTP] Panic occurred.\nError - %v", rcv)
+		}
+	}()
+
 	if exists := contains(r.RegisteredMethods, rq.Method); exists == true {
 		ctxs, ok := (*r).Dispatchers[rq.Method]
 		if ok != true {
@@ -132,11 +140,16 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 
 		// pass through middlewares
 		for _, filter := range r.Filters {
+			fmt.Printf("[ServeHTTP]In Filters loop, length of filters : %v\n", len(r.Filters))
 			shouldBeFiltered, err := filter.Filter(w, rq)
 
 			if shouldBeFiltered {
 				fmt.Println("[ServeHTTP] Filtered")
-				w.WriteHeader(err.Code)
+				if err == nil {
+					w.WriteHeader(http.StatusUnauthorized)
+				} else {
+					w.WriteHeader(err.(FilterError).Code)
+				}
 				return
 			}
 		}
@@ -155,6 +168,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 		fmt.Printf("[ServeHTTP] Parsed Parmas : %v\n", params)
 		result, err := ctx.Handler(w, rq, params)
 		if err != nil {
+			// need to log error information in server
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("Error occured"))
 			return

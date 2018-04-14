@@ -23,9 +23,9 @@ func GetMenus() data.Menus {
 func CreateMenu(menu data.Menu) data.Menu {
 	// throw error when duplicate menu name exists later from DB or another way
 	menu.ID = nextMenuID
+	menu.ChildrenIDs = []int{}
 	nextMenuID++
 	menus[menu.ID] = menu
-
 	if menu.ParentID != -1 {
 		menus.AddChild(menu.ParentID, menu.ID)
 	}
