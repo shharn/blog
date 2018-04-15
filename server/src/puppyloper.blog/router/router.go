@@ -4,7 +4,19 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+
+	"puppyloper.blog/data"
 )
+
+// GlobalError is a data structure for global error handling
+type GlobalError struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
+func (ge GlobalError) Error() string {
+	return fmt.Sprintf("Code: %v, Message: %v", ge.Code, ge.Message)
+}
 
 // Handler processes the client's request and return something
 // The argument will be the unmarshalled body & route parameter values & values in Query String
@@ -43,14 +55,14 @@ func (r *Router) SetCORS() *Router {
 	ctxs = append(ctxs, RouterContext{
 		Pattern: "*",
 		Handler: func(w http.ResponseWriter, rq *http.Request, params Params) (interface{}, error) {
-			fmt.Printf("[CORS Handler] Hi")
 			w.Header().Set("Access-Control-Allow-Origin", r.CORSContext.AllowedOrigins)
 			w.Header().Set("Access-Control-Allow-Methods", r.CORSContext.AllowedMethods)
-			w.Header().Set("Access-Control-Request-Headers", r.CORSContext.AllowedHeaders)
+			w.Header().Set("Access-Control-Allow-Headers", r.CORSContext.AllowedHeaders)
 			return nil, nil
 		},
 	})
 	(*r).Dispatchers["OPTIONS"] = ctxs
+	r.Use(CORSFilter{CORSContext: r.CORSContext})
 	return r
 }
 
@@ -106,7 +118,6 @@ func (r *Router) Delete(path string, handler Handler) {
 }
 
 func (r *Router) add(method, path string, handler Handler) {
-	fmt.Printf("Router add method - Method : %v, Path : %v\n", method, path)
 	r.RegisteredMethods = append(r.RegisteredMethods, method)
 	newCtx := RouterContext{
 		Pattern: path,
@@ -122,68 +133,88 @@ func (r *Router) add(method, path string, handler Handler) {
 
 // ServerHTTP is the http.Handler interface method
 func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
-	fmt.Printf("[ServeHTTP]Requested Method : %v\n", rq.Method)
 	// panic handler for resilience
 	defer func() {
 		if rcv := recover(); rcv != nil {
+			// need to log the error information
 			fmt.Printf("[ServeHTTP] Panic occurred.\nError - %v", rcv)
 		}
 	}()
 
-	if exists := contains(r.RegisteredMethods, rq.Method); exists == true {
-		ctxs, ok := (*r).Dispatchers[rq.Method]
-		if ok != true {
-			fmt.Println("[ServeHTTP]There is no matched route context")
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-
-		// pass through middlewares
-		for _, filter := range r.Filters {
-			fmt.Printf("[ServeHTTP]In Filters loop, length of filters : %v\n", len(r.Filters))
-			shouldBeFiltered, err := filter.Filter(w, rq)
-
-			if shouldBeFiltered {
-				fmt.Println("[ServeHTTP] Filtered")
-				if err == nil {
-					w.WriteHeader(http.StatusUnauthorized)
-				} else {
-					w.WriteHeader(err.(FilterError).Code)
-				}
-				return
-			}
-		}
-
-		// Select the correct RouterContext based on (Registered Pattern, Request.URL.Path)
-		path := rq.URL.Path
-		fmt.Println("Just before the finding context with path")
-		ctx, found := findRightContextFromPath(ctxs, path)
-		if found == false {
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-
-		// Make Params by parsing
-		params := parseURL(ctx.Pattern, path)
-		fmt.Printf("[ServeHTTP] Parsed Parmas : %v\n", params)
-		result, err := ctx.Handler(w, rq, params)
-		if err != nil {
-			// need to log error information in server
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Error occured"))
-			return
-		}
-		if bytes, err := r.Marshaler.Marshal(result); err == nil {
-			w.WriteHeader(http.StatusOK)
-			if bytes != nil {
-				_, err := w.Write(bytes)
-				if err != nil {
-					// What should I do in this case??
+	w.Header().Set("Content-Type", "application/json")
+	globalError := func(w http.ResponseWriter, rq *http.Request) error {
+		if exists := contains(r.RegisteredMethods, rq.Method); exists == true {
+			ctxs, ok := (*r).Dispatchers[rq.Method]
+			if ok != true {
+				return GlobalError{
+					Code:    http.StatusNotFound,
+					Message: "Not Found",
 				}
 			}
+
+			// pass through filters
+			if rq.Method != "OPTIONS" {
+				for _, filter := range r.Filters {
+					shouldBeFiltered, err := filter.Filter(w, rq)
+					if shouldBeFiltered {
+						if err == nil {
+							w.WriteHeader(http.StatusUnauthorized)
+							return GlobalError{
+								Code:    http.StatusUnauthorized,
+								Message: "Not allowed to do",
+							}
+						}
+						return GlobalError{
+							Code:    err.(data.AppError).Code,
+							Message: err.(data.AppError).Message,
+						}
+					}
+				}
+			}
+
+			// Select the correct RouterContext based on (Registered Pattern, Request.URL.Path)
+			path := rq.URL.Path
+			ctx, found := findRightContextFromPath(ctxs, path)
+			if found == false {
+				return GlobalError{
+					Code:    http.StatusNotFound,
+					Message: "Not Found",
+				}
+			}
+
+			// Make Params by parsing
+			params := parseURL(ctx.Pattern, path)
+			result, err := ctx.Handler(w, rq, params)
+			if err != nil {
+				// need to log error information in server
+				return GlobalError{
+					Code:    err.(data.AppError).Code,
+					Message: err.(data.AppError).Message,
+				}
+			}
+
+			if bytes, err := r.Marshaler.Marshal(result); err == nil {
+				w.WriteHeader(http.StatusOK)
+				if bytes != nil {
+					w.Write(bytes)
+				}
+				return nil
+			}
+			return GlobalError{
+				Code:    http.StatusInternalServerError,
+				Message: err.Error(),
+			}
 		}
-	} else {
-		w.WriteHeader(http.StatusMethodNotAllowed)
+		return GlobalError{
+			Code:    http.StatusMethodNotAllowed,
+			Message: "Not Allowed Method",
+		}
+	}(w, rq)
+
+	if globalError != nil {
+		bytes, _ := r.Marshaler.Marshal(data.ErrorResponse{Message: globalError.(GlobalError).Message})
+		w.WriteHeader(globalError.(GlobalError).Code)
+		w.Write(bytes)
 	}
 }
 
@@ -219,7 +250,6 @@ func findRightContextFromPath(ctxs []RouterContext, path string) (RouterContext,
 
 func matchPathToPattern(pattern, path string) bool {
 	splittedPattern, splittedPath := strings.Split(pattern, "/"), strings.Split(path, "/")
-	fmt.Printf("[matchPathToPattern] splittedPattern : %v / %v\nsplittedPath : %v / %v\n", splittedPattern, len(splittedPattern), splittedPath, len(splittedPath))
 	if len(splittedPattern) != len(splittedPath) {
 		return false
 	}

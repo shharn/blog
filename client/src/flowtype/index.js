@@ -2,7 +2,8 @@ export type Menu = {
     id?: number,
     name: string,
     url: string,
-    parentId: number
+    parentId: number,
+    childrenIDs: Array<int>
 };
 
 export type BlogError = {
@@ -23,9 +24,4 @@ export type LoginResponse = {
 export type BlogAction = {
     type: string,
     payload: any
-};
-
-export type BlogRequest  = {
-    token: string,
-    data: any   
 };

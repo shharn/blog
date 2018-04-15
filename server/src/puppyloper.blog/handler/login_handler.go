@@ -43,8 +43,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) 
 
 	storeToken(tokenString, loginInfo.Email)
 	return data.Authentication{
-		IsAuthenticated: true,
-		Token:           tokenString,
+		IsValid: true,
+		Token:   tokenString,
 	}, nil
 }
 

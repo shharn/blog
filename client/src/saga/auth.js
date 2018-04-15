@@ -27,7 +27,7 @@ export function* loginProcess(action: BlogAction): Generator<any, any, any> {
         }));
     } else {
         if (response.statusCode === 200) {
-            yield put(loginSuccess(response.body.authentication));
+            yield put(loginSuccess(response.body));
         } else {
             yield put(loginFailed({
                 code: response.statusCode,
@@ -46,7 +46,7 @@ export function* validateToken(action: BlogAction): Generator<any, any, any> {
             message: 'Network is down :('
         }));
     } else {
-        if (response.statusCode === 200 && response.body.authentication.isAuthenticated === true) {
+        if (response.statusCode === 200 && response.body.isValid === true) {
             yield put(validToken());
         } else {
             yield put(invalidToken({

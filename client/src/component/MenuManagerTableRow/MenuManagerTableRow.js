@@ -18,7 +18,7 @@ class MenuManagerTableRow extends Component<Props> {
     }
 
     getCells = () => {
-        const { id: _, ...withoutId } = this.props.menu;
+        const { id: _, childrenIDs: __, ...withoutId } = this.props.menu;
         let result = [];
         for (var cellName in withoutId) {
             result.push(<MenuTableCell key={`${this.props.menu.id}:${cellName}`} menu={this.props.menu} cellName={cellName}/>);

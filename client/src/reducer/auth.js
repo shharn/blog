@@ -29,10 +29,10 @@ const reducer = (state = initialState, action) => {
                 error: action.payload.error
             };
         case AuthActionType.LOGIN_SUCCESS:
-            action.payload.Token && LocalStorage.set(Token.key, action.payload.token);
+            action.payload.token && LocalStorage.set(Token.key, action.payload.token);
             return {
                 ...state,
-                isAuthenticated: action.payload.isAuthenticated,
+                isAuthenticated: action.payload.isValid,
                 loginStatus: LoginStatusType.LOGIN_SUCCESS
             };
         case AuthActionType.VALIDATE_TOKEN: 

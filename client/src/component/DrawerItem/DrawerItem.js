@@ -29,7 +29,7 @@ class DrawerItem extends Component<Props> {
 
     getRightElement = () => {
         const { url, name, childrenIDs } = this.props.menu;
-        const { classes, children, isChild } = this.props;
+        const { classes, children } = this.props;
         const hasChildren = childrenIDs.length > 0;
         if (hasChildren) {
             return (

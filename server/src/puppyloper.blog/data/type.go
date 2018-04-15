@@ -2,36 +2,19 @@ package data
 
 import "fmt"
 
-// BlogRequestBody represents the structure of the request to blog
-type BlogRequestBody struct {
-	Token string              `json:"token"`
-	Data  PredefinedDataChunk `json:"data"`
+// ErrorResponse is a common Http Response Body format
+type ErrorResponse struct {
+	Message string `json:"message"`
 }
 
-// BlogResponseBody is wrapper for json format response
-type BlogResponseBody struct {
-	Authentication Authentication      `json:"authentication"`
-	Data           PredefinedDataChunk `json:"data"`
-	Error          AppError            `json:"error"`
+func (e ErrorResponse) Error() string {
+	return e.Message
 }
 
-// PredefinedDataChunk represents the data structure transferred between client & server for domain data
-// It includes 'Menu','Article'
-type PredefinedDataChunk struct {
-	ID               int              `json:"id"`
-	Menu             Menu             `json:"menu"`
-	Menus            Menus            `json:"menus"`
-	MenuIDList       MenuIDList       `json:"menuIdList"`
-	LoginInformation LoginInformation `json:"loginInformation"`
-}
-
-// MenuIDList is used when client request 'DELETE' operation for menu
-type MenuIDList []int
-
-// Authentication is the data about authentication
+// Authentication is the data structure used when "POST /check" handler's response
 type Authentication struct {
-	Token           string `json:"token"`
-	IsAuthenticated bool   `json:"isAuthenticated"`
+	Token   string `json:"token"`
+	IsValid bool   `json:"isValid"`
 }
 
 // LoginInformation respresents the data structure which is needed for "GET /login"

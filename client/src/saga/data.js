@@ -20,11 +20,11 @@ function* dataGetRequestHandler(action: BlogAction) : Generator<any, any, any,> 
     const { dataName } = action.payload;
     const response = yield call(getData, dataName);
     if (response.statusCode === 200) {
-        yield put(dataResponseSuccess(response.body.data, dataName));
+        yield put(dataResponseSuccess(response.body, dataName));
     } else {
         yield put(dataResponseFailed({
-            code: response.statusCode == null ? -1 : response.body.error.code,
-            message: response.statusCode == null ? "Network is Offline. Check your network :(" : response.body.error.message
+            code: response.statusCode == null ? -1 : response.statusCode,
+            message: response.statusCode == null ? "Network is Offline. Check your network :(" : response.body
         }, dataName));
     }
 }
@@ -46,12 +46,11 @@ function* dataMutationRequestHandler(action: BlogAction) : Generator<any, any, a
             break;
     }
     if (response.statusCode === 200) {
-        const targetData = dataName.substr(0, dataName.length - 1);
-        yield put(dataMutationSuccess(dataName, operationType, response.body.data[targetData]));
+        yield put(dataMutationSuccess(dataName, operationType, response.body));
     } else {
         yield put(dataMutationFail(dataName, operationType, {
-                code: response.statusCode == null ? -1 : response.body.error.code,
-                message: response.statusCode == null ? 'Network is Offline. Check your network :(' : response.body.error.messgae
+                code: response.statusCode == null ? -1 : response.statusCode,
+                message: response.statusCode == null ? 'Network is Offline. Check your network :(' : response.body.message
             }));
     }
 }

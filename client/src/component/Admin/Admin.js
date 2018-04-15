@@ -18,7 +18,7 @@ type Props = {
     history: any,
 
     loginStatus: $Values<LoginStatusType>,
-    error: BlogError,
+    errorMessage: string,
     isAuthenticated: boolean,
 
     login: (loginInfo: LoginInformation) => void,

@@ -1,37 +1,26 @@
 package handler
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
+	"puppyloper.blog/config"
 	"puppyloper.blog/data"
-	"puppyloper.blog/util"
+	"puppyloper.blog/router"
 )
 
 // CheckHandler is handler for "/check"
-func CheckHandler(w http.ResponseWriter, r *http.Request) {
-	var blogRequest data.BlogRequestBody
-	if err := json.NewDecoder(r.Body).Decode(&blogRequest); err != nil {
-		util.ErrorResponse(w, err, http.StatusBadRequest)
-		return
+func CheckHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
+	clientToken := rq.Header.Get("X-Session-Token")
+	isValid, err := validateToken(clientToken)
+	if err == nil {
+		return data.Authentication{
+			Token:   clientToken,
+			IsValid: isValid,
+		}, nil
 	}
-
-	blogToken := blogRequest.Token
-	if len(blogToken) > 0 {
-		var (
-			isValid bool
-			err     error
-		)
-		if isValid, err = validateToken(blogToken); err != nil {
-			util.ErrorResponse(w, data.AppError{Code: 400, Message: "Invalid Token"}, http.StatusBadRequest)
-			return
-		}
-		responseBody := data.BlogResponseBody{}
-		responseBody.Authentication.IsAuthenticated = isValid
-		util.JSONResponse(http.StatusOK, responseBody, w)
-	}
+	return nil, data.AppError{Code: http.StatusInternalServerError, Message: err.Error()}
 }
 
 func validateToken(tokenString string) (bool, error) {
@@ -39,7 +28,7 @@ func validateToken(tokenString string) (bool, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte("secret"), nil
+		return []byte(config.JWTSecretKey), nil
 	})
 	if token.Valid {
 		return true, nil

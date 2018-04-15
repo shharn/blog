@@ -44,7 +44,7 @@ const reducer = (state= initialState, action) => {
                     ...state[dataName],
                     fetchComplete: true,
                     fetchStatus: FetchStatus.FETCH_SUCCESS,
-                    data: data[dataName]
+                    data: data
                 }
             };
         }
