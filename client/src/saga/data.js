@@ -3,7 +3,8 @@ import {
     dataResponseSuccess, 
     dataResponseFailed,
     dataMutationSuccess,
-    dataMutationFail
+    dataMutationFail,
+    requestData
  } from '../action/data';
 import { Data as DataActionType } from '../action/types';
 import { MutationOperationType } from '../constant';
@@ -46,6 +47,7 @@ function* dataMutationRequestHandler(action: BlogAction) : Generator<any, any, a
             break;
     }
     if (response.statusCode === 200) {
+        yield put(requestData(dataName))
         yield put(dataMutationSuccess(dataName, operationType, response.body));
     } else {
         yield put(dataMutationFail(dataName, operationType, {

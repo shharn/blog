@@ -7,13 +7,13 @@ import (
 	"strconv"
 
 	"puppyloper.blog/data"
-	"puppyloper.blog/dataloader"
 	"puppyloper.blog/router"
+	"puppyloper.blog/service"
 )
 
 // GetMenusHandler is a handler for "GET /menus"
 func GetMenusHandler(w http.ResponseWriter, r *http.Request, params router.Params) (interface{}, error) {
-	menus := dataloader.GetMenus()
+	menus := service.GetMenus()
 	return menus, nil
 }
 
@@ -24,7 +24,7 @@ func CreateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Pa
 	if err != nil {
 		return nil, data.AppError{Code: http.StatusBadRequest, Message: err.Error()}
 	}
-	createdMenu := dataloader.CreateMenu(menu)
+	createdMenu := service.CreateMenu(menu)
 	return createdMenu, nil
 }
 
@@ -35,7 +35,7 @@ func UpdateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Pa
 	if err != nil {
 		return nil, data.AppError{Code: http.StatusBadRequest, Message: err.Error()}
 	}
-	updatedMenu := dataloader.UpdateMenu(menu)
+	updatedMenu := service.UpdateMenu(menu)
 	return updatedMenu, nil
 }
 
@@ -46,6 +46,6 @@ func DeleteMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Pa
 	if err != nil {
 		return nil, data.AppError{Code: http.StatusBadRequest, Message: err.Error()}
 	}
-	deletedMenu := dataloader.DeleteMenu(id)
+	deletedMenu := service.DeleteMenu(id)
 	return deletedMenu, nil
 }

@@ -1,5 +1,5 @@
 import { Data as DataActionType } from '../../action/types';
-import { FetchStatus, MutationOperationType } from '../../constant';
+import { FetchStatus } from '../../constant';
 
 const initialState = {
     menus: {
@@ -57,25 +57,6 @@ const reducer = (state= initialState, action) => {
                     fetchComplete: true,
                     fetchStatus: FetchStatus.FETCH_FAIL,
                     error
-                }
-            };
-        }
-        case DataActionType.DATA_MUTATION_SUCCESS: {
-            let { data, operationType } = action.payload;
-            let changedData
-            if (operationType === MutationOperationType.CREATE) {
-                changedData = { ...state[dataName].data, [data.id]: data}
-            } else if (operationType === MutationOperationType.DELETE) {
-                changedData = { ...state[dataName].data }
-                delete changedData[data.id]
-            } else if (operationType === MutationOperationType.UPDATE) {
-                changedData = { ...state[dataName].data, [data.id]: data }
-            }
-            return {
-                ...state,
-                [dataName]: {
-                    ...state[dataName],
-                    data: changedData
                 }
             };
         }

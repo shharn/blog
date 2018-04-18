@@ -77,14 +77,17 @@ class CreateMenu extends Component<Props, State> {
             
         }
 
-        const data = {
+        let data = {
             name: menuName,
             url: menuURL,
             parentId: parentMenuId
         };
+        if (isEditMode) {
+            data = { ...menu, ...data }
+        }
 
         if (menuName.length > 0 && menuURL.length > 0) {
-            isEditMode === true ? this.props.updateMenu({ ...data, id: menu.id }) : this.props.createMenu(data);
+            isEditMode === true ? this.props.updateMenu(data) : this.props.createMenu(data);
         }
     }
 
@@ -108,7 +111,7 @@ class CreateMenu extends Component<Props, State> {
     }
 
     render() {
-        const { classes, menus, isFetching, status } = this.props;
+        const { classes, menus, menu, isFetching, status } = this.props;
         return (
             <div className={classes.createMenuContainer}>
                 <TextField className={classes.menuName} value={this.state.menuName} fullWidth={true} required label="Menu Name" margin="normal" onChange={this.handleNameChange}/>
@@ -124,7 +127,7 @@ class CreateMenu extends Component<Props, State> {
                                 id: 'parentMenu'
                             }}
                         >
-                            {menus.map(menu => <MenuItem key={menu.id} value={menu.id}>{menu.name}</MenuItem>)}
+                            {menus.filter(item => item.id !== menu.id).map(menu => <MenuItem key={menu.id} value={menu.id}>{menu.name}</MenuItem>)}
                         </Select>
                     </FormControl>
                 </div>
