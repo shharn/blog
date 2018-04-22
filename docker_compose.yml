@@ -1,0 +1,54 @@
+version: "3"
+services:
+    static-server:
+       image: puppyloper/blog-front # or ./client/dockerfile
+       deploy:
+           repicas: 2
+           restart_policy:
+               condition: on-failure
+            resources:
+                limits:
+                    cpus: '0.2'
+                    memory: 256M
+        networks:
+            - frontend
+        depends_in:
+            - api-server
+    api-server:
+        image: puppyloper/blog-apiserver # or ./server/dockerfile
+        depends_on:
+            - redis
+            - db
+        networks:
+            - frontend
+            - backend
+        env_file: # Add environment variables from a file. $GOPATH & $GOROOT
+            - .apiserver_env
+        environment: # Use the above one or this one
+            GOROOT: /var
+            GOPATH: ~/app
+    redis:
+        image: redis
+        networks:
+            - backend
+        deploy:
+           mode: global
+           placement: 
+               constraints:
+                   - node.role == manager
+          resources:
+              limits:
+                  cpus: '0.1'
+                  memory: 128M
+    db:
+        image: dgraph/dgraph:1.0.3
+        networks:
+            - backend
+        deploy:
+            placement:
+                constraints:
+                    - node.role == manager
+            resource:
+                imits:
+                    cpus: '0.5'
+                    memory: 2048M
