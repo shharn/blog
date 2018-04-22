@@ -52,3 +52,6 @@ services:
                 imits:
                     cpus: '0.5'
                     memory: 2048M
+networks:
+    - frontend
+    - backend
