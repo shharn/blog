@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"puppyloper.blog/config"
-	"puppyloper.blog/data"
-	"puppyloper.blog/router"
+	"github.com/shharn/blog/config"
+	"github.com/shharn/blog/data"
+	"github.com/shharn/blog/router"
 )
 
 const (

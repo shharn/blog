@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"puppyloper.blog/data"
+	"github.com/shharn/blog/data"
 )
 
 // GlobalError is a data structure for global error handling

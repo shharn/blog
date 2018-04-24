@@ -3,9 +3,9 @@ package main
 import (
 	"net/http"
 
-	"puppyloper.blog/config"
-	"puppyloper.blog/handler"
-	"puppyloper.blog/router"
+	"github.com/shharn/blog/config"
+	"github.com/shharn/blog/handler"
+	"github.com/shharn/blog/router"
 )
 
 const (

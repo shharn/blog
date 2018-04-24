@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
-	"puppyloper.blog/data"
+	"github.com/shharn/blog/data"
 )
 
 // Filter filters or pre-processes the request

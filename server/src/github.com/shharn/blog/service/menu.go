@@ -3,7 +3,7 @@ package service
 import (
 	"fmt"
 
-	"puppyloper.blog/data"
+	"github.com/shharn/blog/data"
 )
 
 var (

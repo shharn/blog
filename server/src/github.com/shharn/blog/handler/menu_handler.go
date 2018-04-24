@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"puppyloper.blog/data"
-	"puppyloper.blog/router"
-	"puppyloper.blog/service"
+	"github.com/shharn/blog/data"
+	"github.com/shharn/blog/router"
+	"github.com/shharn/blog/service"
 )
 
 // GetMenusHandler is a handler for "GET /menus"
