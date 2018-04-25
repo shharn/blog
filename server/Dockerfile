@@ -1,11 +1,13 @@
-FROM golang:1.9.5-alpine3.7
+FROM golang:1.9.5
 
-WORKDIR /go/src/app
+WORKDIR /go
 
-COPY . .
+COPY ./src .
 
 RUN go get github.com/dgrijalva/jwt-go
 RUN go get -u -v github.com/dgraph-io/dgo
-RUN go install ./puppyloper.blog/main
+RUN go install github.com/shharn/blog/main
 
-CMD ["main"]
+EXPOSE 10000
+
+CMD ["../bin/main"]`

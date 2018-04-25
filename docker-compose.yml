@@ -1,0 +1,74 @@
+version: "3.6"
+services:
+    # static-server:
+    #     build:
+    #         context: ./client # place where dockerfile is
+    #     deploy:
+    #         repicas: 2
+    #         restart_policy:
+    #             condition: on-failure
+    #         resources:
+    #             limits:
+    #                 cpus: '0.2'
+    #                 memory: 256M
+    #     networks:
+    #         - frontend
+    #     depends_on:
+    #         - api-server
+    #     ports:
+    #         - "80:80"
+    visualizer:
+        image: dockersamples/visualizer:stable
+        ports:
+            - "8080:8080"
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock"
+        deploy:
+            placement:
+                constraints: [node.role == manager]
+        networks:
+            - backend
+            - frontend
+
+    api-server:
+        image: puppyloper/blog-api-server:test
+        depends_on:
+            - redis
+            # - db
+        networks:
+            - frontend
+            - backend
+        # env_file: # Add environment variables from a file. $GOPATH & $GOROOT
+        #     - apiserver_env
+        # environment: # Use the above one or this one
+        #     GOROOT: /var
+        #     GOPATH: ~/app
+        ports:
+            - "10000:10000"
+
+    redis:
+        image: redis
+        networks:
+            - backend
+        deploy:
+          resources:
+              limits:
+                  cpus: '0.1'
+                  memory: 128M
+        ports:
+            - "6379:6379"
+
+    # db-zero:
+    #     image: dgraph/dgraph:1.0.3
+    #     networks:
+    #         - backend
+    #     deploy:
+    #         resource:
+    #             imits:
+    #                 cpus: '0.5'
+    #                 memory: 2048M
+    #     ports:
+    #         - 
+networks:
+    frontend:
+    backend:
