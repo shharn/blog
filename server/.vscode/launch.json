@@ -16,6 +16,14 @@
             "env": {},
             "args": [],
             "showLog": true
+        },
+        {
+            "name": "Remote-Docker",
+            "mode": "debug",
+            "type": "go",
+            "request": "launch",
+            "port": 2345,
+            "remotePath": "/go/src/github.com/shharn/blog"
         }
     ]
 }

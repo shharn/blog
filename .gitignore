@@ -1,2 +1,5 @@
 # binary
-**/bin
+**/bin/**/*
+**/pkg/**/*
+**/tmp/**/*
+**/.vscode/**/*

@@ -2,12 +2,14 @@ FROM golang:1.9.5
 
 WORKDIR /go
 
-COPY ./src .
+COPY . .
 
-RUN go get github.com/dgrijalva/jwt-go
-RUN go get -u -v github.com/dgraph-io/dgo
-RUN go install github.com/shharn/blog/main
+RUN go get -u -v github.com/dgraph-io/dgo \ 
+&& go get github.com/pilu/fresh
+# && go get -u -v github.com/derekparker/delve/cmd/delve \
 
+# EXPOSE 2345
 EXPOSE 10000
 
-CMD ["../bin/main"]`
+# CMD ["div", "debug", "--headless", "--listen=:2345", "--log"]
+CMD ["./bin/fresh", "-c",  "runner.conf"]

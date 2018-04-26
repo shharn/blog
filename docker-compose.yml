@@ -17,27 +17,21 @@ services:
     #         - api-server
     #     ports:
     #         - "80:80"
-    visualizer:
-        image: dockersamples/visualizer:stable
-        ports:
-            - "8080:8080"
-        volumes:
-            - "/var/run/docker.sock:/var/run/docker.sock"
-        deploy:
-            placement:
-                constraints: [node.role == manager]
-        networks:
-            - backend
-            - frontend
 
     api-server:
         image: puppyloper/blog-api-server:test
+        volumes:
+            - ./server/src:/go/src
         depends_on:
             - redis
             # - db
         networks:
             - frontend
             - backend
+        deploy:
+            replicas: 1
+            restart_policy:
+                condition: on-failure
         # env_file: # Add environment variables from a file. $GOPATH & $GOROOT
         #     - apiserver_env
         # environment: # Use the above one or this one
