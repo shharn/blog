@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Table, { TableHead, TableRow, TableBody, TableCell } from 'material-ui/Table';
 import Button from 'material-ui/Button';
-import AddIcon from 'material-ui-icons/Add';
+import AddIcon from '@material-ui/icons/Add';
 import MenuTableRow from '../MenuManagerTableRow';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';

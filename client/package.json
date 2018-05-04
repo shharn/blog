@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/icons": "^1.0.0-beta.43",
     "autoprefixer": "7.1.6",
     "babel-core": "6.26.0",
     "babel-eslint": "7.2.3",
@@ -36,8 +37,7 @@
     "js-cookie": "^2.2.0",
     "keycode": "^2.1.9",
     "local-storage": "^1.4.2",
-    "material-ui": "^1.0.0-beta.33",
-    "material-ui-icons": "^1.0.0-beta.17",
+    "material-ui": "^1.0.0-beta.44",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",

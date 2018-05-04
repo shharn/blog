@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import IconButton from 'material-ui/IconButton';
-import Settings from 'material-ui-icons/Settings';
+import Settings from '@material-ui/icons/Settings';
 import CreateOrEditMenu from '../CreateOrEditMenu';
 import Dialog, {
     DialogContent,

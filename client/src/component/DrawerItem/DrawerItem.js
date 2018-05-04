@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import Collapse from 'material-ui/transitions/Collapse';
-import ExpandLess from 'material-ui-icons/ExpandLess';
-import ExpandMore from 'material-ui-icons/ExpandMore';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 import { Link } from 'react-router-dom';
 import { withStyles } from 'material-ui/styles';
 import DrawerItemSelf from './index';

@@ -1,8 +1,8 @@
 // @flow
 import React, { Component } from 'react';
 import IconButton from 'material-ui/IconButton';
-import SaveIcon from 'material-ui-icons/Save';
-import ClearIcon from 'material-ui-icons/Clear';
+import SaveIcon from '@material-ui/icons/Save';
+import ClearIcon from '@material-ui/icons/Clear';
 import TextField from 'material-ui/TextField';
 import { InputLabel } from 'material-ui/Input';
 import { FormControl } from 'material-ui/Form';

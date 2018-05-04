@@ -1,5 +1,6 @@
 # binary
-**/bin/**/*
-**/pkg/**/*
-**/tmp/**/*
-**/.vscode/**/*
+**/bin/
+**/pkg/
+**/tmp/
+**/.vscode/
+!/server/src/github.com/shharn

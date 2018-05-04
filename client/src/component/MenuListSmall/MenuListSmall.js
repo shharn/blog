@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import List from 'material-ui/List';
 import Button from 'material-ui/Button';
 import ListItemWrapper from '../ListItemWrapper';
-import AddIcon from 'material-ui-icons/Add';
+import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 

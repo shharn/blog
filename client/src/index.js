@@ -10,7 +10,7 @@ import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-r
 import appReducer from './reducer';
 import rootSaga from './saga';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import Reboot from 'material-ui/Reboot';
+import CssBaseline from 'material-ui/CssBaseline';
 import blue from 'material-ui/colors/blue';
 import pink from 'material-ui/colors/pink';
 import './index.scss';
@@ -45,7 +45,7 @@ ReactDOM.render(
         <ConnectedRouter history={history}>
             <MuiThemeProvider theme={theme}>
                 <div>
-                    <Reboot />
+                    <CssBaseline />
                     <RootRoute />
                 </div>
             </MuiThemeProvider>

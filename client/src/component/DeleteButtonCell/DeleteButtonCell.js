@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { TableCell } from 'material-ui/Table';
-import Delete from 'material-ui-icons/Delete';
+import Delete from '@material-ui/icons/Delete';
 import IconButton from 'material-ui/IconButton';
 
 type Props = {

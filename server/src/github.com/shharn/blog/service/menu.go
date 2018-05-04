@@ -11,7 +11,7 @@ var (
 		1: data.Menu{ID: 1, Name: "Admin", URL: "/admin", ParentID: -1, ChildrenIDs: []int{}},
 		2: data.Menu{ID: 2, Name: "Home", URL: "/", ParentID: -1, ChildrenIDs: []int{4}},
 		3: data.Menu{ID: 3, Name: "Articles", URL: "/articles", ParentID: -1, ChildrenIDs: []int{}},
-		4: data.Menu{ID: 4, Name: "Child1", URL: "/child1", ParentID: 2, ChildrenIDs: []int{}},
+	 	4: data.Menu{ID: 4, Name: "Child1", URL: "/child1", ParentID: 2, ChildrenIDs: []int{}},
 	}
 	nextMenuID = 5
 )
