@@ -24,8 +24,8 @@ func CreateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Pa
 	if err != nil {
 		return nil, data.AppError{Code: http.StatusBadRequest, Message: err.Error()}
 	}
-	createdMenu := service.CreateMenu(menu)
-	return createdMenu, nil
+	err := service.CreateMenu(menu)
+	return nil, err
 }
 
 // UpdateMenuHandler is a handler for "PATCH /menus"
@@ -35,8 +35,8 @@ func UpdateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Pa
 	if err != nil {
 		return nil, data.AppError{Code: http.StatusBadRequest, Message: err.Error()}
 	}
-	updatedMenu := service.UpdateMenu(menu)
-	return updatedMenu, nil
+	err := service.UpdateMenu(menu)
+	return nil, err
 }
 
 // DeleteMenuHandler is handler for "DELETE /menus/:id"
@@ -46,6 +46,6 @@ func DeleteMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Pa
 	if err != nil {
 		return nil, data.AppError{Code: http.StatusBadRequest, Message: err.Error()}
 	}
-	deletedMenu := service.DeleteMenu(id)
-	return deletedMenu, nil
+	err := service.DeleteMenu(id)
+	return nil, err
 }

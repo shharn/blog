@@ -1,6 +1,7 @@
 export default {
     listContainer: {
-        overflowY: 'scroll'
+        overflowY: 'scroll',
+        height: '100%'
     },
     circularProgress: {
         flex: '1 1 auto',

@@ -22,7 +22,7 @@ services:
     api-server:
         build: "./server"
         volumes:
-            - "./server/src/github.com/shharn/blog:/go/src/github.com/shharn/blog"
+            - ./server/src:/go/src
         depends_on:
             - redis
             - dgraph-zero
@@ -46,20 +46,27 @@ services:
                   memory: 128M
         ports:
             - "6379:6379"
+
     dgraph-zero:
         image: dgraph/dgraph:v1.0.5
         volumes:
             - dgraph:/dgraph
+        networks:
+            - backend
+            - database
         ports:
             - 5080:5080 # For grpc
             - 6080:6080 # For http
         restart: on-failure
         command: dgraph zero --my=dgraph-zero:5080
         # https://github.com/dgraph-io/dgraph/blob/master/dgraph/cmd/zero/run.go
+
     dgraph-server:
         image: dgraph/dgraph:v1.0.5
         volumes:
             - dgraph:/dgraph
+        networks:
+            - database
         ports:
             - 7080:7080 # For internal usage
             - 8080:8080 # For http
@@ -67,10 +74,13 @@ services:
         restart: on-failure
         command: dgraph server --my=dgraph-server:7080 --lru_mb=2048 --zero=dgraph-zero:5080
         # https://github.com/dgraph-io/dgraph/blob/master/dgraph/cmd/server/run.go#L59-L124
+
     dgraph-ratel:
         image: dgraph/dgraph:v1.0.5
         volumes:
             - dgraph:/dgraph
+        networks:
+            - database
         ports:
             - 8000:8000
         command: dgraph-ratel
@@ -78,6 +88,7 @@ services:
 networks:
     frontend:
     backend:
+    database:
 
 volumes:
     dgraph:
