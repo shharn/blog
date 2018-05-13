@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/dgraph-io/dgo"
@@ -14,7 +15,7 @@ import (
 type subFunc func(*dgo.Txn, context.Context) (interface{}, error)
 
 const (
-	dgraphAddress = "localhost:9080"
+	dgraphAddress = "172.18.0.2:9080"
 )
 
 func base(fn subFunc) (interface{}, error) {
@@ -26,25 +27,32 @@ func base(fn subFunc) (interface{}, error) {
 	dc := api.NewDgraphClient(conn)
 	dg := dgo.NewDgraphClient(dc)
 	tx, ctx := dg.NewTxn(), context.Background()
-	tx.Discard(ctx)
+	defer tx.Discard(ctx)
 	return fn(tx, ctx)
 }
 
 // QueryData send a request for querying to dgraph server
-func QueryData(q string, vars map[string]string) (res interface{}, err error) {
+func QueryData(q string, vars map[string]string) (*api.Response, error) {
 	querySubFunc := func(tx *dgo.Txn, ctx context.Context) (interface{}, error) {
-		if len(vars) > 0 {
+		var (
+			res *api.Response
+			err error
+		)
+		if vars != nil && len(vars) > 0 {
+			fmt.Println("[db.QueryData] QueryWithVars will be invoked")
 			res, err = tx.QueryWithVars(ctx, q, vars)
 		} else {
+			fmt.Println("[db.QueryData] Query will be invoked")
 			res, err = tx.Query(ctx, q)
 		}
 		return res, err
 	}
-	return base(querySubFunc)
+	resp, err := base(querySubFunc)
+	return resp.(*api.Response), err
 }
 
 // MutateData send a request for mutation to dgraph server
-func MutateData(data interface{}) (interface{}, error) {
+func MutateData(data interface{}) (*api.Assigned, error) {
 	mutationSubFunc := func(tx *dgo.Txn, ctx context.Context) (interface{}, error) {
 		mu := &api.Mutation{
 			CommitNow: true,
@@ -56,11 +64,12 @@ func MutateData(data interface{}) (interface{}, error) {
 		mu.SetJson = md
 		return tx.Mutate(ctx, mu)
 	}
-	return base(mutationSubFunc)
+	resp, err := base(mutationSubFunc)
+	return resp.(*api.Assigned), err
 }
 
 // DeleteData send a request for deletion to dgraph server
-func DeleteData(uid int) (interface{}, error) {
+func DeleteData(uid int) error {
 	deleteSubFunc := func(tx *dgo.Txn, ctx context.Context) (interface{}, error) {
 		d := map[string]string{"uid": strconv.Itoa(uid)}
 		md, err := json.Marshal(d)
@@ -73,5 +82,6 @@ func DeleteData(uid int) (interface{}, error) {
 		}
 		return tx.Mutate(ctx, mu)
 	}
-	return base(deleteSubFunc)
+	_, err := base(deleteSubFunc)
+	return err
 }

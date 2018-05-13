@@ -137,7 +137,8 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 	defer func() {
 		if rcv := recover(); rcv != nil {
 			// need to log the error information
-			fmt.Printf("[ServeHTTP] Panic occurred.\nError - %v", rcv)
+			fmt.Printf("[ServeHTTP] Panic occurred.Error : ")
+			fmt.Println(rcv)
 		}
 	}()
 

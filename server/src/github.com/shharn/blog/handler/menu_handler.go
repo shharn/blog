@@ -13,29 +13,37 @@ import (
 
 // GetMenusHandler is a handler for "GET /menus"
 func GetMenusHandler(w http.ResponseWriter, r *http.Request, params router.Params) (interface{}, error) {
-	menus := service.GetMenus()
-	return menus, nil
+	menus, err := service.GetMenus()
+	fmt.Println(menus)
+	fmt.Println(err)
+	return menus, err
 }
 
 // CreateMenuHandler is a handler for "POST /menus"
 func CreateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
-	var menu data.Menu
-	err := json.NewDecoder(rq.Body).Decode(&menu)
+	var (
+		menu data.Menu
+		err  error
+	)
+	err = json.NewDecoder(rq.Body).Decode(&menu)
 	if err != nil {
 		return nil, data.AppError{Code: http.StatusBadRequest, Message: err.Error()}
 	}
-	err := service.CreateMenu(menu)
+	err = service.CreateMenu(menu)
 	return nil, err
 }
 
 // UpdateMenuHandler is a handler for "PATCH /menus"
 func UpdateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
-	var menu data.Menu
-	err := json.NewDecoder(rq.Body).Decode(&menu)
+	var (
+		menu data.Menu
+		err  error
+	)
+	err = json.NewDecoder(rq.Body).Decode(&menu)
 	if err != nil {
 		return nil, data.AppError{Code: http.StatusBadRequest, Message: err.Error()}
 	}
-	err := service.UpdateMenu(menu)
+	err = service.UpdateMenu(menu)
 	return nil, err
 }
 
@@ -46,6 +54,6 @@ func DeleteMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Pa
 	if err != nil {
 		return nil, data.AppError{Code: http.StatusBadRequest, Message: err.Error()}
 	}
-	err := service.DeleteMenu(id)
+	err = service.DeleteMenu(id)
 	return nil, err
 }

@@ -1,35 +1,55 @@
 package service
 
 import (
+	"encoding/json"
+	"fmt"
+
 	"github.com/shharn/blog/data"
 	"github.com/shharn/blog/db"
 )
 
+type Root struct {
+	Menus []data.Menu `json:"menus,omitempty"`
+}
+
 // GetMenus is service for "GET /menus"
-func GetMenus() (data.Menus, error) {
-	menus, err := db.QueryData(`
-		data(func: has(url)) {
-			uid
-			name
-			url
-			parent {
+func GetMenus() ([]data.Menu, error) {
+	res, err := db.QueryData(`
+		query {
+			menus(func: has(url)) {
 				uid
+				name
+				url
+				parent {
+					uid
+				}
+				children
 			}
-			children
 		}
 		`, nil)
-	return menus.(data.Menus), err
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(string(res.Json))
+	var root Root
+	err = json.Unmarshal(res.Json, &root)
+	fmt.Println(root)
+	return root.Menus, err
 }
 
 // CreateMenu is service for "POST /menus"
 func CreateMenu(menu data.Menu) error {
-	uid, err := db.MutateData(menu)
+	fmt.Printf("[CreateMenu] menu : ")
+	fmt.Println(menu)
+	_, err := db.MutateData(menu)
+	fmt.Println(err)
 	return err
 }
 
 // DeleteMenu is service for "DELETE /menus"
 func DeleteMenu(id int) error {
-	return db.DeleteData(id)
+	err := db.DeleteData(id)
+	return err
 }
 
 // UpdateMenu is service for "PATCH /menus"

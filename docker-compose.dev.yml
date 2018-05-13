@@ -1,4 +1,4 @@
-version: "3"
+version: "3.2"
 services:
     front-app:
         build: ./client
@@ -25,10 +25,11 @@ services:
             - ./server/src:/go/src
         depends_on:
             - redis
-            - dgraph-zero
+            - dgraph-server
         networks:
             - frontend
             - backend
+            - database
         deploy:
             replicas: 1
         ports:
@@ -48,41 +49,40 @@ services:
             - "6379:6379"
 
     dgraph-zero:
-        image: dgraph/dgraph:v1.0.5
+        image: dgraph/dgraph:latest
         volumes:
             - dgraph:/dgraph
-        networks:
-            - backend
-            - database
         ports:
             - 5080:5080 # For grpc
             - 6080:6080 # For http
         restart: on-failure
+        networks:
+            - database
         command: dgraph zero --my=dgraph-zero:5080
         # https://github.com/dgraph-io/dgraph/blob/master/dgraph/cmd/zero/run.go
 
     dgraph-server:
-        image: dgraph/dgraph:v1.0.5
+        image: dgraph/dgraph:latest
         volumes:
             - dgraph:/dgraph
-        networks:
-            - database
         ports:
-            - 7080:7080 # For internal usage
             - 8080:8080 # For http
             - 9080:9080 # For grpc
         restart: on-failure
+        networks:
+            - database
+            - backend
         command: dgraph server --my=dgraph-server:7080 --lru_mb=2048 --zero=dgraph-zero:5080
         # https://github.com/dgraph-io/dgraph/blob/master/dgraph/cmd/server/run.go#L59-L124
 
     dgraph-ratel:
-        image: dgraph/dgraph:v1.0.5
+        image: dgraph/dgraph:latest
         volumes:
             - dgraph:/dgraph
-        networks:
-            - database
         ports:
             - 8000:8000
+        networks:
+            - database
         command: dgraph-ratel
     
 networks:
