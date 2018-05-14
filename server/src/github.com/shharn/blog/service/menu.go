@@ -17,13 +17,15 @@ func GetMenus() ([]data.Menu, error) {
 	res, err := db.QueryData(`
 		query {
 			menus(func: has(url)) {
-				uid
+				id: uid
 				name
 				url
 				parent {
-					uid
+					id: uid
 				}
-				children
+				children: child {
+					id: uid
+				}
 			}
 		}
 		`, nil)

@@ -3,7 +3,7 @@ import { FetchStatus } from '../../constant';
 
 const initialState = {
     menus: {
-        data: {},
+        data: [],
         error: {
             code: 0,
             message: ""
@@ -12,7 +12,7 @@ const initialState = {
         fetchComplete: false
     },
     articles: {
-        data: {},
+        data: [],
         error: {
             code: 0,
             message: ""

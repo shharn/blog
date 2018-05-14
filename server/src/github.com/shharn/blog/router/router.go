@@ -139,6 +139,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 			// need to log the error information
 			fmt.Printf("[ServeHTTP] Panic occurred.Error : ")
 			fmt.Println(rcv)
+			w.WriteHeader(http.StatusInternalServerError)
 		}
 	}()
 

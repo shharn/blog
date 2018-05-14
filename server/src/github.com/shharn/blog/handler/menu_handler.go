@@ -14,7 +14,6 @@ import (
 // GetMenusHandler is a handler for "GET /menus"
 func GetMenusHandler(w http.ResponseWriter, r *http.Request, params router.Params) (interface{}, error) {
 	menus, err := service.GetMenus()
-	fmt.Println(menus)
 	fmt.Println(err)
 	return menus, err
 }

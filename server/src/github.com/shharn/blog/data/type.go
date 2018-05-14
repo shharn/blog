@@ -36,18 +36,13 @@ func (e AppError) Error() string {
 	return fmt.Sprintf("%v", e.Message)
 }
 
-// ParentMenu is for Nested Parent Menu
-type ParentMenu struct {
-	ID int `json:"uid"`
-}
-
 // Menu type
 type Menu struct {
-	ID       int        `json:"id"`
-	Name     string     `json:"name"`
-	URL      string     `json:"url"`
-	Parent   ParentMenu `json:"parent"`
-	Children []int      `json:"children"`
+	ID       string  `json:"id"`
+	Name     string  `json:"name"`
+	URL      string  `json:"url"`
+	Parent   *[]Menu `json:"parent"`
+	Children *[]Menu `json:"children"`
 }
 
 // Menus is a map for [id : menu] pair

@@ -3,11 +3,10 @@ import DrawerItem from './DrawerItem';
 
 const mapStateToProps = (state, ownProps) => {
     const menus = state.app.data.get.menus.data;
-    const { childrenIDs } = ownProps.menu;
-    const filteredIDs = Object.keys(menus).filter(id => childrenIDs.includes(parseInt(id, 10)));
-    const children = filteredIDs.map(id => menus[id]);
+    const childIDs = (ownProps.menu.children || []).map(child => child.id);
+    const childMenus = menus.filter(menu => childIDs.includes(menu.id));
     return {
-        children,
+        childMenus,
         ...ownProps
     }
 };

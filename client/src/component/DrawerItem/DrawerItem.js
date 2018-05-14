@@ -5,7 +5,7 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { Link } from 'react-router-dom';
 import { withStyles } from 'material-ui/styles';
-import DrawerItemSelf from './index';
+import NestedDrawerItem from './index';
 import styles from './styles';
 
 import type { Menu } from '../../flowtype';
@@ -28,9 +28,9 @@ class DrawerItem extends Component<Props> {
     }
 
     getRightElement = () => {
-        const { url, name, childrenIDs } = this.props.menu;
-        const { classes, children } = this.props;
-        const hasChildren = childrenIDs.length > 0;
+        const { url, name } = this.props.menu;
+        const { classes, childMenus } = this.props;
+        const hasChildren = childMenus && childMenus.length > 0;
         if (hasChildren) {
             return (
                 <div>
@@ -40,7 +40,7 @@ class DrawerItem extends Component<Props> {
                     </ListItem>
                     <Collapse in={this.state.openChild} timeout={700} unmountOnExit>
                         <List component="div">
-                            {children.map(child => <DrawerItemSelf key={child.id} menu={child} isChild={true}/>)}
+                            {childMenus.map(child => <NestedDrawerItem key={child.id} menu={child} isChild={true}/>)}
                         </List>
                     </Collapse>
                 </div>

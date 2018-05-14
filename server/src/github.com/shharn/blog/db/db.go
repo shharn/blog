@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"strconv"
 
 	"github.com/dgraph-io/dgo"
@@ -39,10 +38,8 @@ func QueryData(q string, vars map[string]string) (*api.Response, error) {
 			err error
 		)
 		if vars != nil && len(vars) > 0 {
-			fmt.Println("[db.QueryData] QueryWithVars will be invoked")
 			res, err = tx.QueryWithVars(ctx, q, vars)
 		} else {
-			fmt.Println("[db.QueryData] Query will be invoked")
 			res, err = tx.Query(ctx, q)
 		}
 		return res, err

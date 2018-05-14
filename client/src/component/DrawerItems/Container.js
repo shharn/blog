@@ -5,7 +5,7 @@ import {  requestData } from '../../action/data';
 const mapStateToProps = (state, ownProps) => {
     const { data, error, fetchComplete, fetchStatus } = state.app.data.get.menus;
     return {
-        menus: Object.keys(data).map(key => data[key]),
+        menus: data,
         error,
         fetchComplete,
         fetchStatus

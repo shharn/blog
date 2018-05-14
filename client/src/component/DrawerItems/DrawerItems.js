@@ -14,7 +14,7 @@ class DrawerItems extends Component {
 
     render() {
         const { menus, fetchStatus, fetchComplete, classes, error } = this.props;
-        const notChildMenus =  menus.filter(menu => menu.parentId === -1);
+        const notChildMenus =  menus.filter(menu => !menu.parent);
         return (
             fetchComplete ? 
             <List className={classes.listContainer}>
