@@ -37,7 +37,7 @@ class MeuList extends React.Component<Props> {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {menus.map(menu => <React.Fragment key={menu.id}><MenuTableRow key={menu.id} menu={menu}/></React.Fragment>)}
+                        {menus.map(menu => <React.Fragment key={menu.uid}><MenuTableRow key={menu.uid} menu={menu}/></React.Fragment>)}
                     </TableBody>
                 </Table>
                 <Button className={classes.addButton} variant="fab" mini color="secondary" aria-label="add" onClick={this.onAddButtonClicked}>

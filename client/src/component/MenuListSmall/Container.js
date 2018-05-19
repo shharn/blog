@@ -6,9 +6,9 @@ import { MenuManagerChildComponentType } from '../../constant';
 import type { Menu } from '../../flowtype';
 
 const mapStateToProps = (state, ownProps) => {
-    const { data } = state.app.data.get.menus;
+    const menus = [ ...state.app.data.get.menus.data ];
     return {
-        menus: data,
+        menus,
         ...ownProps
     };
 };

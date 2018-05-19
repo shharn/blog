@@ -17,14 +17,14 @@ func GetMenus() ([]data.Menu, error) {
 	res, err := db.QueryData(`
 		query {
 			menus(func: has(url)) {
-				id: uid
+				uid
 				name
 				url
 				parent {
-					id: uid
+					uid
 				}
 				children: child {
-					id: uid
+					uid
 				}
 			}
 		}
@@ -32,24 +32,28 @@ func GetMenus() ([]data.Menu, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(string(res.Json))
 	var root Root
 	err = json.Unmarshal(res.Json, &root)
-	fmt.Println(root)
 	return root.Menus, err
 }
 
 // CreateMenu is service for "POST /menus"
 func CreateMenu(menu data.Menu) error {
 	fmt.Printf("[CreateMenu] menu : ")
-	fmt.Println(menu)
+	if menu.Parent != nil {
+		fmt.Printf("%v\n", menu.Parent)
+	}
+	////////////////////////////////////////////////////////
+	// need to add child uid to parent's children predicate
+	// (combine into the same transaction)
+	////////////////////////////////////////////////////////
 	_, err := db.MutateData(menu)
 	fmt.Println(err)
 	return err
 }
 
 // DeleteMenu is service for "DELETE /menus"
-func DeleteMenu(id int) error {
+func DeleteMenu(id string) error {
 	err := db.DeleteData(id)
 	return err
 }

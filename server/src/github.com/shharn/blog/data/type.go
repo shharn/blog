@@ -38,11 +38,11 @@ func (e AppError) Error() string {
 
 // Menu type
 type Menu struct {
-	ID       string  `json:"id"`
-	Name     string  `json:"name"`
-	URL      string  `json:"url"`
-	Parent   *[]Menu `json:"parent"`
-	Children *[]Menu `json:"children"`
+	UID      string  `json:"uid,omitempty"`
+	Name     string  `json:"name,omitempty"`
+	URL      string  `json:"url,omitempty"`
+	Parent   *[]Menu `json:"parent,omitempty"`
+	Children *[]Menu `json:"children,omitempty"`
 }
 
 // Menus is a map for [id : menu] pair

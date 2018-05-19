@@ -11,7 +11,7 @@ const mapStateToProps = (state, ownProps) => {
     const { isEditable, editableRowId, editableCellName } = state.app.ui.menuList;
     const { menu, cellName } = ownProps;
     return {
-        isEditable: isEditable && editableRowId === menu.id && editableCellName === cellName,
+        isEditable: isEditable && editableRowId === menu.uid && editableCellName === cellName,
         ...ownProps
     };
 };

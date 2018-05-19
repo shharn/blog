@@ -6,24 +6,23 @@ import DeleteButtonCell from '../DeleteButtonCell';
  
 import type { Menu } from '../../flowtype';
 
+const cellNames : Array<string> = [ 'name', 'url', 'parent' ];
+
 type Props = {
     menu: Menu,
 
-    deleteMenu: (id: number) => void
+    deleteMenu: (uid: number) => void
 };
 
 class MenuManagerTableRow extends Component<Props> {
     deleteMenu = () => {
-        this.props.deleteMenu(this.props.menu.id);
+        this.props.deleteMenu(this.props.menu.uid);
     }
 
     getCells = () => {
-        const { id: _, childrenIDs: __, ...withoutId } = this.props.menu;
         let result = [];
-        for (var cellName in withoutId) {
-            result.push(<MenuTableCell key={`${this.props.menu.id}:${cellName}`} menu={this.props.menu} cellName={cellName}/>);
-        }
-        result.push(<DeleteButtonCell  key={`'deleteButton:${this.props.menu.id}`} deleteMenu={this.deleteMenu} />);
+        result = cellNames.map(cellName => <MenuTableCell key={`${this.props.menu.uid}:${cellName}`} menu={this.props.menu} cellName={cellName}/>);
+        result.push(<DeleteButtonCell  key={`'deleteButton:${this.props.menu.uid}`} deleteMenu={this.deleteMenu} />);
         return result;
     }
 

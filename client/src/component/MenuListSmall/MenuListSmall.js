@@ -30,7 +30,7 @@ class MenuListSmall extends Component<Props> {
         return (
             <div className={classes.container}>
                 <List component="nav" className={classes.listContainer}>
-                    {menus.map(menu => <ListItemWrapper key={`$MenuItem:${menu.id}`} onMenuClicked={this.switchToEditMenu} menu={menu}/>)}
+                    {menus.map(menu => <ListItemWrapper key={`$MenuItem:${menu.uid}`} onMenuClicked={this.switchToEditMenu} menu={menu}/>)}
                 </List>
                 <Button className={classes.addButton} variant="fab" mini color="secondary" aria-label="add" onClick={this.onAddButtonClicked}>
                     <AddIcon/>

@@ -7,13 +7,14 @@ import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux';
+import logger from 'redux-logger';
 import appReducer from './reducer';
 import rootSaga from './saga';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import CssBaseline from 'material-ui/CssBaseline';
 import blue from 'material-ui/colors/blue';
 import pink from 'material-ui/colors/pink';
-import './index.scss';
+import './index.css';
 
 const history = createHistory();
 const routeMiddleware = routerMiddleware(history);
@@ -23,7 +24,7 @@ const store = createStore(
         router: routerReducer,
         app: appReducer
     }),
-    applyMiddleware(routeMiddleware, sagaMiddleware)
+    applyMiddleware(routeMiddleware, sagaMiddleware, logger)
 );
 sagaMiddleware.run(rootSaga);
 

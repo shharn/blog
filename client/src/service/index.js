@@ -64,9 +64,9 @@ export function updateData(dataName: string, data: any, token: string) {
         .catch(err => err.response ? err.response : err);
 }
 
-export function deleteData(dataName: string, id: number, token: string) {
+export function deleteData(dataName: string, uid: number, token: string) {
     return request
-        .delete(`http://${env.apiServerDomain}/${dataName}/${id}`)
+        .delete(`http://${env.apiServerDomain}/${dataName}/${uid}`)
         .set(HEADER_NAME_FOR_TOKEN, token)
         .type('text/plain')
         .accept('json')

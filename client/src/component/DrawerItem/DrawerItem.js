@@ -40,7 +40,7 @@ class DrawerItem extends Component<Props> {
                     </ListItem>
                     <Collapse in={this.state.openChild} timeout={700} unmountOnExit>
                         <List component="div">
-                            {childMenus.map(child => <NestedDrawerItem key={child.id} menu={child} isChild={true}/>)}
+                            {childMenus.map(child => <NestedDrawerItem key={child.uid} menu={child} isChild={true}/>)}
                         </List>
                     </Collapse>
                 </div>

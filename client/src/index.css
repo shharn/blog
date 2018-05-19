@@ -1,0 +1,17 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+div#root {
+  width: 100%;
+  height: 100%;
+}
+
+div#root > div,  
+div#root > div > div {
+  width: 100%;
+  height: 100%;
+}

@@ -39,11 +39,11 @@ type State = {
     parentMenuId: number
 };
 
-class CreateMenu extends Component<Props, State> {
+class CreateOrEditMenu extends Component<Props, State> {
     state = {
         menuName: this.props.isEditMode === true ? this.props.menu.name : '',
         menuURL: this.props.isEditMode === true ? this.props.menu.url : '',
-        parentMenuId: this.props.isEditMode === true ? this.props.menu.parentId: -1,
+        parentMenuId: this.props.isEditMode === true ? this.props.menu.parent ? this.props.menu.parent.uid : '0' : '0',
     }
 
     componentDidUpdate() {
@@ -71,19 +71,26 @@ class CreateMenu extends Component<Props, State> {
         const { isEditMode, menu } = this.props;
         if (menuName.length < 1) {
             // set error message on TextField of Name
+            return;
         } 
         if (menuURL.length < 1) {
             // set error message on TextField of URL
-            
+            return;
         }
 
-        let data = {
-            name: menuName,
-            url: menuURL,
-            parentId: parentMenuId
-        };
-        if (isEditMode) {
-            data = { ...menu, ...data }
+        // If no parent, should not include the parent property
+        let data;
+        if (isEditMode === true) {
+            data = { ...menu, name: menuName, url: menuURL };
+            if ( (!data.parent && parentMenuId !== '0') || (data.parent && data.parent[0].uid !== parentMenuId)) {
+                data.parent = [ { uid: parentMenuId } ];
+            } 
+        } else {
+            data = {
+                name: menuName,
+                url: menuURL
+            };
+            parentMenuId !== '0' && (data.parent = [  { uid: parentMenuId } ]);
         }
 
         if (menuName.length > 0 && menuURL.length > 0) {
@@ -111,7 +118,8 @@ class CreateMenu extends Component<Props, State> {
     }
 
     render() {
-        const { classes, menus, menu, isFetching, status } = this.props;
+        const { classes, menus, menu, isFetching, isEditMode, status } = this.props;
+        const showableMenus = isEditMode === true ? menus.filter(item => item.uid === '0' || item.uid !== menu.uid) : menus;
         return (
             <div className={classes.createMenuContainer}>
                 <TextField className={classes.menuName} value={this.state.menuName} fullWidth={true} required label="Menu Name" margin="normal" onChange={this.handleNameChange}/>
@@ -127,7 +135,7 @@ class CreateMenu extends Component<Props, State> {
                                 id: 'parentMenu'
                             }}
                         >
-                            {menus.filter(item => item.id !== menu.id).map(menu => <MenuItem key={menu.id} value={menu.id}>{menu.name}</MenuItem>)}
+                            {showableMenus.map(menu => <MenuItem key={menu.uid} value={menu.uid}>{menu.name}</MenuItem>)}
                         </Select>
                     </FormControl>
                 </div>
@@ -147,4 +155,4 @@ class CreateMenu extends Component<Props, State> {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(CreateMenu);
+export default withStyles(styles, { withTheme: true })(CreateOrEditMenu);

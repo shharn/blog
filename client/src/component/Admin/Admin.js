@@ -11,8 +11,6 @@ import keycode from 'keycode';
 import LocalStorage from 'local-storage';
 import styles from './styles';
 
-import type { LoginInformation, BlogError } from '../../flowtype';
-
 type Props = {
     classes: any,
     history: any,

@@ -13,24 +13,33 @@ type Props = {
 
 class MenuManagerSelectCell extends Component<Props> {
     handleChange = event => {
-        if (this.props.menu.parentId !== event.target.value) {
-            let maybeCloned = { ...this.props.menu, parentId: event.target.value };
+        const parent = this.props.menu.parent == null ?  { uid: '0' } : this.props.menu.parent[0];
+        if (parent.uid !== event.target.value) {
+            let maybeCloned = { ...this.props.menu, 
+                parent: [
+                    {
+                        ...this.props.menu.parent,
+                        uid: event.target.value 
+                    }
+                ]
+            };
             this.props.updateMenu(maybeCloned);
         }
     }
 
     render() {
+        const parent = this.props.menu.parent == null ?  { uid: '0' } : this.props.menu.parent[0];
         return (
             <TableCell>
                 <Select
-                    value={this.props.menu.parentId}
+                    value={parent.uid}
                     onChange={this.handleChange}
                     inputProps={{
                         name: 'selectedParentId',
                         id: 'parentId'
                     }}
                 >
-                    {this.props.menus.map(menu => <MenuItem key={`select:${menu.id}`} value={menu.id}>{menu.name}</MenuItem>)}
+                    {this.props.menus.map(menu => <MenuItem key={`select:${menu.uid}`} value={menu.uid}>{menu.name}</MenuItem>)}
                 </Select>
             </TableCell>
         );

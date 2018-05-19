@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"strconv"
+	"fmt"
 
 	"github.com/dgraph-io/dgo"
 	"github.com/dgraph-io/dgo/protos/api"
@@ -14,7 +14,7 @@ import (
 type subFunc func(*dgo.Txn, context.Context) (interface{}, error)
 
 const (
-	dgraphAddress = "172.18.0.2:9080"
+	dgraphAddress = "172.18.0.3:9080"
 )
 
 func base(fn subFunc) (interface{}, error) {
@@ -50,6 +50,7 @@ func QueryData(q string, vars map[string]string) (*api.Response, error) {
 
 // MutateData send a request for mutation to dgraph server
 func MutateData(data interface{}) (*api.Assigned, error) {
+	fmt.Printf("[MutateData] data - %v\n", data)
 	mutationSubFunc := func(tx *dgo.Txn, ctx context.Context) (interface{}, error) {
 		mu := &api.Mutation{
 			CommitNow: true,
@@ -66,9 +67,9 @@ func MutateData(data interface{}) (*api.Assigned, error) {
 }
 
 // DeleteData send a request for deletion to dgraph server
-func DeleteData(uid int) error {
+func DeleteData(uid string) error {
 	deleteSubFunc := func(tx *dgo.Txn, ctx context.Context) (interface{}, error) {
-		d := map[string]string{"uid": strconv.Itoa(uid)}
+		d := map[string]string{"uid": uid}
 		md, err := json.Marshal(d)
 		if err != nil {
 			return nil, err

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/shharn/blog/data"
 	"github.com/shharn/blog/router"
@@ -14,7 +13,6 @@ import (
 // GetMenusHandler is a handler for "GET /menus"
 func GetMenusHandler(w http.ResponseWriter, r *http.Request, params router.Params) (interface{}, error) {
 	menus, err := service.GetMenus()
-	fmt.Println(err)
 	return menus, err
 }
 
@@ -49,10 +47,7 @@ func UpdateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Pa
 // DeleteMenuHandler is handler for "DELETE /menus/:id"
 func DeleteMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
 	fmt.Printf("[DeleteMenuHandler] Length of Params : %v, Params: %v\n", len(params), params)
-	id, err := strconv.Atoi(params["id"].(string))
-	if err != nil {
-		return nil, data.AppError{Code: http.StatusBadRequest, Message: err.Error()}
-	}
-	err = service.DeleteMenu(id)
+	id := params["id"].(string)
+	err := service.DeleteMenu(id)
 	return nil, err
 }

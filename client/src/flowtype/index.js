@@ -1,9 +1,9 @@
 export type Menu = {
-    id?: number,
+    uid?: string,
     name: string,
     url: string,
-    parentId: number,
-    childrenIDs: Array<int>
+    parent: Array<Menu>,
+    children: Array<Menu>
 };
 
 export type BlogError = {

@@ -18,7 +18,7 @@ type Props = {
 class MenuManagerTableCell extends Component<Props> {
     handleCellClick = () => {
         const { menu, cellName } = this.props;
-        this.props.changeEditableCell(menu.id, cellName);
+        this.props.changeEditableCell(menu.uid, cellName);
     }
 
     handleEnterKeyUpOnEditableCell = (cellName: string, value: string) => {
@@ -35,7 +35,7 @@ class MenuManagerTableCell extends Component<Props> {
         if (isEditable) {
             return (
                 <EditableCell
-                    rowId={menu.id} 
+                    rowId={menu.uid} 
                     cellName={cellName}
                     value={menu[cellName]}
                     onEnterKeyUp={this.handleEnterKeyUpOnEditableCell}
@@ -44,7 +44,7 @@ class MenuManagerTableCell extends Component<Props> {
         } else {
             return (
                 <TableCellWrapper 
-                    rowId={menu.id} 
+                    rowId={menu.uid} 
                     cellName={cellName} 
                     value={menu[cellName]} 
                     onCellClick={this.handleCellClick}/>
@@ -55,7 +55,7 @@ class MenuManagerTableCell extends Component<Props> {
     render() {
         const { cellName, menu } = this.props;
         return (
-            cellName === 'parentId' ?  <SelectCell menu={menu}/> : this.getEditableOrPlainText()
+            cellName === 'parent' ?  <SelectCell menu={menu}/> : this.getEditableOrPlainText()
         );
     }   
 }

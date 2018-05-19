@@ -18,13 +18,13 @@ import type { Menu } from '../../flowtype';
 const MENU_DATA_NAME = 'menus';
 
 const mapStateToProps = (state, ownProps) => {
-    const { data } = state.app.data.get.menus;
+    const menus =  [ ...state.app.data.get.menus.data ];
     const { isEditable, editableRowId, editableCellName } = state.app.ui.menuManager;
     return {
         isEditable,
         editableRowId,
         editableCellName,
-        menus: data,
+        menus,
         ...ownProps
     };
 };
@@ -35,7 +35,7 @@ const mapDispatchToProps = dispatch => {
         changeEditableCell: (rowId: number, cellName: string) => dispatch(changeToEditableCell(rowId, cellName)),
         disableEditableCell: () => dispatch(disableEditableCell()),
         updateMenu: (menu: Menu) => dispatch(requestDataMutation(MutationOperationType.UPDATE, menu, MENU_DATA_NAME, clientToken)),
-        deleteMenu: (id: number) => dispatch(requestDataMutation(MutationOperationType.DELETE, id, MENU_DATA_NAME, clientToken)),
+        deleteMenu: (uid: number) => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, MENU_DATA_NAME, clientToken)),
     };
 };
 

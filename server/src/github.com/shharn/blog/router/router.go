@@ -133,6 +133,12 @@ func (r *Router) add(method, path string, handler Handler) {
 
 // ServerHTTP is the http.Handler interface method
 func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
+	// 	%s    print the error. If the error has a Cause it will be
+	//       printed recursively
+	// %v    see %s
+	// %+v   extended format. Each Frame of the error's StackTrace will
+	// be printed in detail.
+
 	// panic handler for resilience
 	defer func() {
 		if rcv := recover(); rcv != nil {
