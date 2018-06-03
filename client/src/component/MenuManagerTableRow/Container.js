@@ -13,7 +13,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
     const clientToken = LocalStorage.get(Token.key);
     return {
-        deleteMenu: (uid: number) => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, DataName.MENU, clientToken))
+        deleteMenu: (uid: string) => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, DataName.MENU, clientToken))
     };
 };
 

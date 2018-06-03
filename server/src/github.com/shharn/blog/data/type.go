@@ -38,7 +38,7 @@ func (e AppError) Error() string {
 
 // Menu type
 type Menu struct {
-	UID      string  `json:"uid,omitempty"`
+	ID       string  `json:"uid,omitempty"`
 	Name     string  `json:"name,omitempty"`
 	URL      string  `json:"url,omitempty"`
 	Parent   *[]Menu `json:"parent,omitempty"`

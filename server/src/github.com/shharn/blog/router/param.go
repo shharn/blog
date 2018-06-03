@@ -10,6 +10,9 @@ type Params map[string]interface{}
 func parseURL(pattern, path string) Params {
 	if pattern[0] == '/' {
 		pattern = pattern[1:]
+
+	}
+	if path[0] == '/' {
 		path = path[1:]
 	}
 

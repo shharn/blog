@@ -14,15 +14,16 @@ type Props = {
 class MenuManagerSelectCell extends Component<Props> {
     handleChange = event => {
         const parent = this.props.menu.parent == null ?  { uid: '0' } : this.props.menu.parent[0];
-        if (parent.uid !== event.target.value) {
-            let maybeCloned = { ...this.props.menu, 
-                parent: [
-                    {
-                        ...this.props.menu.parent,
-                        uid: event.target.value 
-                    }
-                ]
-            };
+        const selectedParentId = event.target.value;
+        if (parent.uid !== selectedParentId) {
+            let maybeCloned = { ...this.props.menu };
+            // -1/0을 보내면 parent를 없애겠다로 하자
+            maybeCloned.parent = selectedParentId === '0' ? null : [
+                {
+                    ...this.props.menu.parent,
+                    uid: event.target.value 
+                }
+            ];
             this.props.updateMenu(maybeCloned);
         }
     }

@@ -6,7 +6,7 @@
 # COPY . .
 # RUN go get ./src/github.com/shharn/blog && go install github.com/shharn/blog 
 
-FROM golang:1.9.5
+FROM golang:1.10.2
 WORKDIR /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 COPY ./src/github.com/shharn/blog /go/src/github.com/shharn/blog

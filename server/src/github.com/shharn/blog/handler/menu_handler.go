@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/shharn/blog/data"
@@ -46,7 +45,6 @@ func UpdateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Pa
 
 // DeleteMenuHandler is handler for "DELETE /menus/:id"
 func DeleteMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
-	fmt.Printf("[DeleteMenuHandler] Length of Params : %v, Params: %v\n", len(params), params)
 	id := params["id"].(string)
 	err := service.DeleteMenu(id)
 	return nil, err
