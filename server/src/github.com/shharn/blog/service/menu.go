@@ -138,6 +138,7 @@ func DeleteMenu(id string) error {
 		}
 	}
 
+	// need to test
 	if exists, res := hasChildMenuWithQuery(c, id, getChildMenusQuery); exists {
 		children := res.Children
 		for idx := 0; idx < len(children); idx++ {
