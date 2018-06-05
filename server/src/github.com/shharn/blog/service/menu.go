@@ -131,33 +131,17 @@ func DeleteMenu(id string) error {
 	dn := deleteNodeInput{ID: id}
 	mds = append(mds, dn)
 
-	if res, exists, err := getParentMenuWithQuery(c, id, getParentMenusQuery); err == nil {
+	if pmd, exists, err := getMutationDataForUpdatingParent(c, id, getParentMenusQuery); err == nil {
 		if exists {
-			parents := res.Parents
-			for idx := 0; idx < len(parents); idx++ {
-				mds = append(mds, deleteChildMenuInput{
-					ID: parents[idx].ID,
-					Child: data.Menu{
-						ID: id,
-					},
-				})
-			}
+			mds = append(mds, pmd)
 		}
 	} else {
 		return err
 	}
 
-	if res, exists, err := getChildMenuWithQuery(c, id, getChildMenusQuery); err == nil {
+	if cmd, exists, err := getMutationDataForUpdatingChildren(c, id, getChildMenusQuery); err == nil {
 		if exists {
-			children := res.Children
-			for idx := 0; idx < len(children); idx++ {
-				mds = append(mds, deleteParentMenuInput{
-					ID: children[idx].ID,
-					Parent: data.Menu{
-						ID: id,
-					},
-				})
-			}
+			mds = append(mds, cmd)
 		}
 	} else {
 		return err
@@ -208,4 +192,52 @@ func getChildMenuWithQuery(c *db.Client, id string, q string) (getChildMenusPayl
 		return children, false, err
 	}
 	return children, children.Children != nil && len(children.Children) > 0, nil
+}
+
+func getMutationDataForUpdatingParent(c *db.Client, id string, q string) (db.MutationData, bool, error) {
+	var (
+		mds    = db.MutationData{}
+		res    getParentMenusPayload
+		exists bool
+		err    error
+	)
+	if res, exists, err = getParentMenuWithQuery(c, id, getParentMenusQuery); err == nil {
+		if exists {
+			parents := res.Parents
+			for idx := 0; idx < len(parents); idx++ {
+				mds = append(mds, deleteChildMenuInput{
+					ID: parents[idx].ID,
+					Child: data.Menu{
+						ID: id,
+					},
+				})
+			}
+		}
+		return mds, exists, nil
+	}
+	return mds, false, err
+}
+
+func getMutationDataForUpdatingChildren(c *db.Client, id string, q string) (db.MutationData, bool, error) {
+	var (
+		mds    = db.MutationData{}
+		res    getChildMenusPayload
+		exists bool
+		err    error
+	)
+	if res, exists, err = getChildMenuWithQuery(c, id, getChildMenusQuery); err == nil {
+		if exists {
+			children := res.Children
+			for idx := 0; idx < len(children); idx++ {
+				mds = append(mds, deleteParentMenuInput{
+					ID: children[idx].ID,
+					Parent: data.Menu{
+						ID: id,
+					},
+				})
+			}
+		}
+		return mds, exists, nil
+	}
+	return mds, false, err
 }
