@@ -20,11 +20,9 @@ type MutationData []interface{}
 
 // Client is wrapper object for easy operation between application and dgraph
 type Client struct {
-	conn     *grpc.ClientConn
-	tx       *dgo.Txn
-	ctx      context.Context
-	Response interface{}
-	Error    error
+	conn *grpc.ClientConn
+	tx   *dgo.Txn
+	ctx  context.Context
 }
 
 // Init make a underlying resources
@@ -42,120 +40,80 @@ func Init() (*Client, error) {
 }
 
 // Query sends a request for query without vars
-func (c *Client) Query(q string) *api.Response {
-	if c.Error != nil {
-		return nil
-	}
-	res, err := c.tx.Query(c.ctx, q)
-	c.Error = err
-	return res
+func (c *Client) Query(q string) (*api.Response, error) {
+	return c.tx.Query(c.ctx, q)
 }
 
 // QueryWithVars sends a request for query with vars
-func (c *Client) QueryWithVars(q string, vars map[string]string) *api.Response {
-	if c.Error != nil {
-		return nil
-	}
-	res, err := c.tx.QueryWithVars(c.ctx, q, vars)
-	c.Error = err
-	return res
+func (c *Client) QueryWithVars(q string, vars map[string]string) (*api.Response, error) {
+	return c.tx.QueryWithVars(c.ctx, q, vars)
 }
 
 // Mutate sends a request for a single mutation task
-func (c *Client) Mutate(data interface{}) *api.Assigned {
-	if c.Error != nil {
-		return nil
-	}
-
+func (c *Client) Mutate(data interface{}) (*api.Assigned, error) {
 	mu := &api.Mutation{}
 	mmd, err := json.Marshal(data)
 	if err != nil {
-		c.Error = err
-		return nil
+		return nil, err
 	}
 	fmt.Printf("Json string : %v\n", string(mmd))
 	mu.SetJson = mmd
-	res, err := c.tx.Mutate(c.ctx, mu)
-	c.Error = err
-	return res
+	return c.tx.Mutate(c.ctx, mu)
 }
 
 // MutateTheMultiple sends a request for more than one mutation tasks
-func (c *Client) MutateTheMultiple(md MutationData) *api.Assigned {
+func (c *Client) MutateTheMultiple(md MutationData) (*api.Assigned, error) {
 	mu := &api.Mutation{}
 	mmd, err := json.Marshal(md)
 	fmt.Printf("Json string : %v\n", string(mmd))
 	if err != nil {
-		c.Error = err
-		return nil
+		return nil, err
 	}
 	mu.SetJson = mmd
 	assigned, err := c.tx.Mutate(c.ctx, mu)
 	if err != nil {
-		c.Error = err
-		return nil
+		return nil, err
 	}
-	fmt.Println(assigned)
-	return assigned
+	return assigned, nil
 }
 
 // DeleteNode sends a request for a single task which deletes a node
-func (c *Client) DeleteNode(uid string) *api.Assigned {
-	if c.Error != nil {
-		return nil
-	}
-
+func (c *Client) DeleteNode(uid string) (*api.Assigned, error) {
 	d := map[string]string{"uid": uid}
 	md, err := json.Marshal(d)
 	if err != nil {
-		c.Error = err
-		return nil
+		return nil, err
 	}
 
 	mu := &api.Mutation{
 		DeleteJson: md,
 	}
-	res, err := c.tx.Mutate(c.ctx, mu)
-	c.Error = err
-	return res
+	return c.tx.Mutate(c.ctx, mu)
 }
 
 // DeleteEdge sends a request for a single task which deletes a edge between nodes
-func (c *Client) DeleteEdge(data interface{}) *api.Assigned {
-	if c.Error != nil {
-		return nil
-	}
-
+func (c *Client) DeleteEdge(data interface{}) (*api.Assigned, error) {
 	dd, err := json.Marshal(data)
 	if err != nil {
-		c.Error = err
-		return nil
+		return nil, err
 	}
 	mu := &api.Mutation{
 		DeleteJson: dd,
 	}
-	res, err := c.tx.Mutate(c.ctx, mu)
-	c.Error = err
-	return res
+	return c.tx.Mutate(c.ctx, mu)
 }
 
 // DeleteTheMultiple makes a request for multiple tasks at once
-func (c *Client) DeleteTheMultiple(md MutationData) *api.Assigned {
-	if c.Error != nil {
-		return nil
-	}
+func (c *Client) DeleteTheMultiple(md MutationData) (*api.Assigned, error) {
 	dd, err := json.Marshal(md)
 	fmt.Println("[DeleteTheMultiple] JSONT string : " + string(dd))
 	if err != nil {
-		c.Error = err
-		return nil
+		return nil, err
 	}
 	mu := &api.Mutation{
 		DeleteJson: dd,
 	}
-	res, err := c.tx.Mutate(c.ctx, mu)
-	c.Error = err
-	return res
+	return c.tx.Mutate(c.ctx, mu)
 }
 
 // Commit DOES commit the transaction
@@ -165,8 +123,8 @@ func (c *Client) Commit() error {
 }
 
 // CleanUp releases the underlying resources
-func (c *Client) CleanUp() {
-	c.conn.Close()
+func (c *Client) CleanUp() error {
+	return c.conn.Close()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -78,18 +78,22 @@ type getChildMenusPayload struct {
 // GetMenus is service for "GET /menus"
 func GetMenus() ([]data.Menu, error) {
 	c, err := db.Init()
-	res := c.Query(getMenusQuery)
-	if c.Error != nil {
-		return nil, c.Error
+	res, err := c.Query(getMenusQuery)
+	if err != nil {
+		return nil, err
 	}
 	var root getMenusPayload
-	err = json.Unmarshal(res.Json, &root)
-	return root.Menus, err
+	if err := json.Unmarshal(res.Json, &root); err != nil {
+		return nil, err
+	}
+	return root.Menus, nil
 }
 
 // CreateMenu is service for "POST /menus"
 func CreateMenu(menu data.Menu) error {
 	c, err := db.Init()
+	defer c.CleanUp()
+
 	if err != nil {
 		return err
 	}
@@ -107,54 +111,63 @@ func CreateMenu(menu data.Menu) error {
 		}
 		mds = append(mds, input)
 	}
-	c.MutateTheMultiple(mds)
-	c.Commit()
-	c.CleanUp()
-	return c.Error
+	if _, err := c.MutateTheMultiple(mds); err != nil {
+		return err
+	}
+	defer c.Commit()
+	return nil
 }
 
 // DeleteMenu is service for "DELETE /menus"
 func DeleteMenu(id string) error {
 	c, err := db.Init()
+	defer c.CleanUp()
+
 	if err != nil {
 		return err
 	}
 
 	mds := db.MutationData{}
-
-	// Make a task for deleting node
 	dn := deleteNodeInput{ID: id}
 	mds = append(mds, dn)
 
-	if exists, res := hasParentMenuWithQuery(c, id, getParentMenusQuery); exists {
-		parents := res.Parents
-		for idx := 0; idx < len(parents); idx++ {
-			mds = append(mds, deleteChildMenuInput{
-				ID: parents[idx].ID,
-				Child: data.Menu{
-					ID: id,
-				},
-			})
+	if res, exists, err := getParentMenuWithQuery(c, id, getParentMenusQuery); err == nil {
+		if exists {
+			parents := res.Parents
+			for idx := 0; idx < len(parents); idx++ {
+				mds = append(mds, deleteChildMenuInput{
+					ID: parents[idx].ID,
+					Child: data.Menu{
+						ID: id,
+					},
+				})
+			}
 		}
+	} else {
+		return err
 	}
 
-	// need to test
-	if exists, res := hasChildMenuWithQuery(c, id, getChildMenusQuery); exists {
-		children := res.Children
-		for idx := 0; idx < len(children); idx++ {
-			mds = append(mds, deleteParentMenuInput{
-				ID: children[idx].ID,
-				Parent: data.Menu{
-					ID: id,
-				},
-			})
+	if res, exists, err := getChildMenuWithQuery(c, id, getChildMenusQuery); err == nil {
+		if exists {
+			children := res.Children
+			for idx := 0; idx < len(children); idx++ {
+				mds = append(mds, deleteParentMenuInput{
+					ID: children[idx].ID,
+					Parent: data.Menu{
+						ID: id,
+					},
+				})
+			}
 		}
+	} else {
+		return err
 	}
 
-	c.DeleteTheMultiple(mds)
-	c.Commit()
-	c.CleanUp()
-	return err
+	if _, err := c.DeleteTheMultiple(mds); err != nil {
+		return err
+	}
+	defer c.Commit()
+	return nil
 }
 
 // UpdateMenu is service for "PATCH /menus"
@@ -169,32 +182,30 @@ func hasParentMenu(menu data.Menu) bool {
 	return menu.Parent != nil && len(*menu.Parent) > 0
 }
 
-func hasParentMenuWithQuery(c *db.Client, id string, q string) (bool, getParentMenusPayload) {
+func getParentMenuWithQuery(c *db.Client, id string, q string) (getParentMenusPayload, bool, error) {
 	vars := map[string]string{"$id": id}
 	parents := getParentMenusPayload{}
-	res := c.QueryWithVars(q, vars)
-	if c.Error != nil {
-		return false, parents
-	}
-	err := json.Unmarshal(res.Json, &parents)
+	res, err := c.QueryWithVars(q, vars)
 	if err != nil {
-		c.Error = err
-		return false, parents
+		return parents, false, err
 	}
-	return parents.Parents != nil && len(parents.Parents) > 0, parents
+	err = json.Unmarshal(res.Json, &parents)
+	if err != nil {
+		return parents, false, err
+	}
+	return parents, parents.Parents != nil && len(parents.Parents) > 0, nil
 }
 
-func hasChildMenuWithQuery(c *db.Client, id string, q string) (bool, getChildMenusPayload) {
+func getChildMenuWithQuery(c *db.Client, id string, q string) (getChildMenusPayload, bool, error) {
 	vars := map[string]string{"$id": id}
 	children := getChildMenusPayload{}
-	res := c.QueryWithVars(q, vars)
-	if c.Error != nil {
-		return false, children
-	}
-	err := json.Unmarshal(res.Json, &children)
+	res, err := c.QueryWithVars(q, vars)
 	if err != nil {
-		c.Error = err
-		return false, children
+		return children, false, err
 	}
-	return children.Children != nil && len(children.Children) > 0, children
+	err = json.Unmarshal(res.Json, &children)
+	if err != nil {
+		return children, false, err
+	}
+	return children, children.Children != nil && len(children.Children) > 0, nil
 }
