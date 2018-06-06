@@ -133,7 +133,7 @@ func DeleteMenu(id string) error {
 
 	if pmd, exists, err := getMutationDataForUpdatingParent(c, id, getParentMenusQuery); err == nil {
 		if exists {
-			mds = append(mds, pmd)
+			mds = append(mds, pmd...)
 		}
 	} else {
 		return err
@@ -141,7 +141,7 @@ func DeleteMenu(id string) error {
 
 	if cmd, exists, err := getMutationDataForUpdatingChildren(c, id, getChildMenusQuery); err == nil {
 		if exists {
-			mds = append(mds, cmd)
+			mds = append(mds, cmd...)
 		}
 	} else {
 		return err
@@ -166,34 +166,6 @@ func hasParentMenu(menu data.Menu) bool {
 	return menu.Parent != nil && len(*menu.Parent) > 0
 }
 
-func getParentMenuWithQuery(c *db.Client, id string, q string) (getParentMenusPayload, bool, error) {
-	vars := map[string]string{"$id": id}
-	parents := getParentMenusPayload{}
-	res, err := c.QueryWithVars(q, vars)
-	if err != nil {
-		return parents, false, err
-	}
-	err = json.Unmarshal(res.Json, &parents)
-	if err != nil {
-		return parents, false, err
-	}
-	return parents, parents.Parents != nil && len(parents.Parents) > 0, nil
-}
-
-func getChildMenuWithQuery(c *db.Client, id string, q string) (getChildMenusPayload, bool, error) {
-	vars := map[string]string{"$id": id}
-	children := getChildMenusPayload{}
-	res, err := c.QueryWithVars(q, vars)
-	if err != nil {
-		return children, false, err
-	}
-	err = json.Unmarshal(res.Json, &children)
-	if err != nil {
-		return children, false, err
-	}
-	return children, children.Children != nil && len(children.Children) > 0, nil
-}
-
 func getMutationDataForUpdatingParent(c *db.Client, id string, q string) (db.MutationData, bool, error) {
 	var (
 		mds    = db.MutationData{}
@@ -201,21 +173,23 @@ func getMutationDataForUpdatingParent(c *db.Client, id string, q string) (db.Mut
 		exists bool
 		err    error
 	)
-	if res, exists, err = getParentMenuWithQuery(c, id, getParentMenusQuery); err == nil {
-		if exists {
-			parents := res.Parents
-			for idx := 0; idx < len(parents); idx++ {
-				mds = append(mds, deleteChildMenuInput{
-					ID: parents[idx].ID,
-					Child: data.Menu{
-						ID: id,
-					},
-				})
-			}
-		}
-		return mds, exists, nil
+
+	if res, exists, err = getParentMenuWithQuery(c, id, getParentMenusQuery); err != nil {
+		return mds, false, err
 	}
-	return mds, false, err
+
+	if exists {
+		parents := res.Parents
+		for idx := 0; idx < len(parents); idx++ {
+			mds = append(mds, deleteChildMenuInput{
+				ID: parents[idx].ID,
+				Child: data.Menu{
+					ID: id,
+				},
+			})
+		}
+	}
+	return mds, exists, nil
 }
 
 func getMutationDataForUpdatingChildren(c *db.Client, id string, q string) (db.MutationData, bool, error) {
@@ -225,19 +199,51 @@ func getMutationDataForUpdatingChildren(c *db.Client, id string, q string) (db.M
 		exists bool
 		err    error
 	)
-	if res, exists, err = getChildMenuWithQuery(c, id, getChildMenusQuery); err == nil {
-		if exists {
-			children := res.Children
-			for idx := 0; idx < len(children); idx++ {
-				mds = append(mds, deleteParentMenuInput{
-					ID: children[idx].ID,
-					Parent: data.Menu{
-						ID: id,
-					},
-				})
-			}
-		}
-		return mds, exists, nil
+
+	if res, exists, err = getChildMenuWithQuery(c, id, q); err != nil {
+		return mds, false, err
 	}
-	return mds, false, err
+
+	if exists {
+		children := res.Children
+		for idx := 0; idx < len(children); idx++ {
+			mds = append(mds, deleteParentMenuInput{
+				ID: children[idx].ID,
+				Parent: data.Menu{
+					ID: id,
+				},
+			})
+		}
+	}
+	return mds, exists, nil
+
+}
+
+func getParentMenuWithQuery(c *db.Client, id string, q string) (getParentMenusPayload, bool, error) {
+	parents := getParentMenusPayload{}
+	if err := getConnectedNodesWithUID(c, id, q, &parents); err != nil {
+		return parents, false, err
+	}
+	return parents, parents.Parents != nil && len(parents.Parents) > 0, nil
+}
+
+func getChildMenuWithQuery(c *db.Client, id string, q string) (getChildMenusPayload, bool, error) {
+	children := getChildMenusPayload{}
+	if err := getConnectedNodesWithUID(c, id, q, &children); err != nil {
+		return children, false, err
+	}
+	return children, children.Children != nil && len(children.Children) > 0, nil
+}
+
+func getConnectedNodesWithUID(c *db.Client, id string, q string, ptr interface{}) error {
+	vars := map[string]string{"$id": id}
+	res, err := c.QueryWithVars(q, vars)
+	if err != nil {
+		return err
+	}
+	err = json.Unmarshal(res.Json, ptr)
+	if err != nil {
+		return err
+	}
+	return nil
 }

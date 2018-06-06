@@ -196,8 +196,8 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 			if err != nil {
 				// need to log error information in server
 				return GlobalError{
-					Code:    err.(data.AppError).Code,
-					Message: err.(data.AppError).Message,
+					Code:    http.StatusInternalServerError,
+					Message: err.Error(),
 				}
 			}
 
