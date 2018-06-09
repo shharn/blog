@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"log"
 
 	"github.com/shharn/blog/data"
 	"github.com/shharn/blog/db"
@@ -111,7 +112,7 @@ func CreateMenu(menu data.Menu) error {
 		}
 		mds = append(mds, input)
 	}
-	if _, err := c.MutateTheMultiple(mds); err != nil {
+	if _, err := c.Mutate(mds); err != nil {
 		return err
 	}
 	defer c.Commit()
@@ -147,7 +148,7 @@ func DeleteMenu(id string) error {
 		return err
 	}
 
-	if _, err := c.DeleteTheMultiple(mds); err != nil {
+	if _, err := c.Delete(mds); err != nil {
 		return err
 	}
 	defer c.Commit()
@@ -155,10 +156,66 @@ func DeleteMenu(id string) error {
 }
 
 // UpdateMenu is service for "PATCH /menus"
+// If the client wants to delete a parent, send a no parent field within Menu structure(so, results in nil of menu.Parent)
 func UpdateMenu(menu data.Menu) error {
-	// if menu's parent is mutated, Should mutate the parent menu data
-	// md := append(db.MutationData{}, menu)
-	_, err := db.MutateData(nil)
+	c, err := db.Init()
+	defer c.CleanUp()
+
+	if err != nil {
+		return err
+	}
+
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	parents, exists, err := getParentMenuWithQuery(c, menu.ID, getParentMenusQuery)
+	if err != nil {
+		log.Printf("[error] %v", err)
+		return err
+	}
+
+	dmd := db.MutationData{}
+	mmd := db.MutationData{
+		0: menu,
+	}
+
+	if exists {
+		if menu.Parent == nil || (*menu.Parent)[0].ID != parents.Parents[0].ID {
+			// delete old child menu id from the old parent menu
+			dmd = append(dmd, deleteChildMenuInput{
+				ID: parents.Parents[0].ID,
+				Child: data.Menu{
+					ID: menu.ID,
+				},
+			})
+			// delete old parent menu id from it
+			dmd = append(dmd, deleteParentMenuInput{
+				ID: menu.ID,
+				Parent: data.Menu{
+					ID: parents.Parents[0].ID,
+				},
+			})
+		}
+	}
+	if len(dmd) > 0 {
+		_, err = c.Delete(dmd)
+		if err != nil {
+			log.Printf("[error] %v", err)
+			return err
+		}
+	}
+
+	if menu.Parent != nil && (!exists || (*menu.Parent)[0].ID != parents.Parents[0].ID) {
+		mmd = append(mmd, addChildMenuInput{
+			ID: (*menu.Parent)[0].ID,
+			Child: data.Menu{
+				ID: menu.ID,
+			},
+		})
+	}
+	_, err = c.Mutate(mmd)
+	defer c.Commit()
+	if err != nil {
+		log.Printf("[error] %v", err)
+	}
 	return err
 }
 

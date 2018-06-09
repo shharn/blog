@@ -17,13 +17,7 @@ class MenuManagerSelectCell extends Component<Props> {
         const selectedParentId = event.target.value;
         if (parent.uid !== selectedParentId) {
             let maybeCloned = { ...this.props.menu };
-            // -1/0을 보내면 parent를 없애겠다로 하자
-            maybeCloned.parent = selectedParentId === '0' ? null : [
-                {
-                    ...this.props.menu.parent,
-                    uid: event.target.value 
-                }
-            ];
+            maybeCloned.parent = selectedParentId === '0' ? null : [{ uid: event.target.value }];
             this.props.updateMenu(maybeCloned);
         }
     }
