@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/pkg/errors"
 	"github.com/shharn/blog/data"
 	"github.com/shharn/blog/router"
 	"github.com/shharn/blog/service"
@@ -21,9 +22,8 @@ func CreateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Pa
 		menu data.Menu
 		err  error
 	)
-	err = json.NewDecoder(rq.Body).Decode(&menu)
-	if err != nil {
-		return nil, data.AppError{Code: http.StatusBadRequest, Message: err.Error()}
+	if err = json.NewDecoder(rq.Body).Decode(&menu); err != nil {
+		return nil, errors.WithStack(err)
 	}
 	err = service.CreateMenu(menu)
 	return nil, err
@@ -35,9 +35,8 @@ func UpdateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Pa
 		menu data.Menu
 		err  error
 	)
-	err = json.NewDecoder(rq.Body).Decode(&menu)
-	if err != nil {
-		return nil, data.AppError{Code: http.StatusBadRequest, Message: err.Error()}
+	if err = json.NewDecoder(rq.Body).Decode(&menu); err != nil {
+		return nil, err
 	}
 	err = service.UpdateMenu(menu)
 	return nil, err

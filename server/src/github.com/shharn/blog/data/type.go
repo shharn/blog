@@ -2,15 +2,6 @@ package data
 
 import "fmt"
 
-// ErrorResponse is a common Http Response Body format
-type ErrorResponse struct {
-	Message string `json:"message"`
-}
-
-func (e ErrorResponse) Error() string {
-	return e.Message
-}
-
 // Authentication is the data structure used when "POST /check" handler's response
 type Authentication struct {
 	Token   string `json:"token"`

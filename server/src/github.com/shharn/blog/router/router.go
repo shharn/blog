@@ -2,20 +2,21 @@ package router
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"runtime/debug"
 	"strings"
-
-	"github.com/shharn/blog/data"
 )
 
 // GlobalError is a data structure for global error handling
 type GlobalError struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
+	code             int
+	MessageForClient string `json:"message,omitempty"`
+	innerError       error
 }
 
 func (ge GlobalError) Error() string {
-	return fmt.Sprintf("Code: %v, Message: %v", ge.Code, ge.Message)
+	return fmt.Sprintf("StatusCode: %v, Message: %v", ge.code, ge.MessageForClient)
 }
 
 // Handler processes the client's request and return something
@@ -133,18 +134,11 @@ func (r *Router) add(method, path string, handler Handler) {
 
 // ServerHTTP is the http.Handler interface method
 func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
-	// 	%s    print the error. If the error has a Cause it will be
-	//       printed recursively
-	// %v    see %s
-	// %+v   extended format. Each Frame of the error's StackTrace will
-	// be printed in detail.
+	log.Printf("%s  %s %s %s", rq.Method, rq.URL, rq.Header.Get("X-Session-Token"), rq.RemoteAddr)
 
-	// panic handler for resilience
 	defer func() {
 		if rcv := recover(); rcv != nil {
-			// need to log the error information
-			fmt.Printf("[ServeHTTP] Panic occurred.Error : ")
-			fmt.Println(rcv)
+			log.Printf("[Error] : %s\nStackTrace : %s", rcv, debug.Stack())
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 	}()
@@ -155,8 +149,9 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 			ctxs, ok := (*r).Dispatchers[rq.Method]
 			if ok != true {
 				return GlobalError{
-					Code:    http.StatusNotFound,
-					Message: "Not Found",
+					code:             http.StatusNotFound,
+					MessageForClient: "Not Found",
+					innerError:       nil,
 				}
 			}
 
@@ -168,13 +163,15 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 						if err == nil {
 							w.WriteHeader(http.StatusUnauthorized)
 							return GlobalError{
-								Code:    http.StatusUnauthorized,
-								Message: "Not allowed to do",
+								code:             http.StatusUnauthorized,
+								MessageForClient: "Not allowed to use this method",
+								innerError:       nil,
 							}
 						}
 						return GlobalError{
-							Code:    err.(data.AppError).Code,
-							Message: err.(data.AppError).Message,
+							code:             http.StatusInternalServerError,
+							MessageForClient: "Server is temporarily unavailable. Please try later",
+							innerError:       err,
 						}
 					}
 				}
@@ -185,8 +182,9 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 			ctx, found := findRightContextFromPath(ctxs, path)
 			if found == false {
 				return GlobalError{
-					Code:    http.StatusNotFound,
-					Message: "Not Found",
+					code:             http.StatusNotFound,
+					MessageForClient: "Not Found",
+					innerError:       nil,
 				}
 			}
 
@@ -196,32 +194,35 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 			if err != nil {
 				// need to log error information in server
 				return GlobalError{
-					Code:    http.StatusInternalServerError,
-					Message: err.Error(),
+					code:             http.StatusInternalServerError,
+					MessageForClient: "Server is temporarily unavailable. Please try later",
+					innerError:       err,
 				}
 			}
 
-			if bytes, err := r.Marshaler.Marshal(result); err == nil {
-				w.WriteHeader(http.StatusOK)
-				if bytes != nil {
-					w.Write(bytes)
+			bytes, err := r.Marshaler.Marshal(result)
+			if err != nil {
+				return GlobalError{
+					code:             http.StatusInternalServerError,
+					MessageForClient: "",
+					innerError:       err,
 				}
-				return nil
 			}
-			return GlobalError{
-				Code:    http.StatusInternalServerError,
-				Message: err.Error(),
+			w.WriteHeader(http.StatusOK)
+			if bytes != nil {
+				w.Write(bytes)
 			}
+			return nil
 		}
 		return GlobalError{
-			Code:    http.StatusMethodNotAllowed,
-			Message: "Not Allowed Method",
+			code:             http.StatusMethodNotAllowed,
+			MessageForClient: "Not Allowed Method",
 		}
 	}(w, rq)
 
 	if globalError != nil {
-		bytes, _ := r.Marshaler.Marshal(data.ErrorResponse{Message: globalError.(GlobalError).Message})
-		w.WriteHeader(globalError.(GlobalError).Code)
+		bytes, _ := r.Marshaler.Marshal(globalError)
+		w.WriteHeader(globalError.(GlobalError).code)
 		w.Write(bytes)
 	}
 }

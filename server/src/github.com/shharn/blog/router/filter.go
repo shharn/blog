@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/shharn/blog/data"
+	"github.com/pkg/errors"
 )
 
 // Filter filters or pre-processes the request
@@ -30,7 +30,7 @@ func (af AuthFilter) Filter(w http.ResponseWriter, r *http.Request) (bool, error
 
 	isValid, err := af.validateToken(clientToken, af.Key)
 	if err != nil {
-		return !isValid, data.AppError{Code: http.StatusBadRequest, Message: err.Error()}
+		return !isValid, errors.WithStack(err)
 	}
 	return !isValid, nil
 }
@@ -44,12 +44,9 @@ func (af AuthFilter) validateToken(token, key string) (bool, error) {
 	})
 
 	if err != nil {
-		// should log the information
-		// but how?? and what??
-		return false, err
+		return false, errors.WithStack(err)
 	}
-
-	return parsedToken.Valid, err
+	return parsedToken.Valid, nil
 }
 
 // CORSFilter just set CORS headers

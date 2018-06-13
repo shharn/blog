@@ -3,10 +3,10 @@ package db
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 
 	"github.com/dgraph-io/dgo"
 	"github.com/dgraph-io/dgo/protos/api"
+	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 )
 
@@ -29,7 +29,7 @@ func Init() (*Client, error) {
 	c := &Client{}
 	conn, err := grpc.Dial(dgraphAddress, grpc.WithInsecure())
 	if err != nil {
-		return nil, err
+		return nil, errors.New(err.Error())
 	}
 	dc := api.NewDgraphClient(conn)
 	dg := dgo.NewDgraphClient(dc)
@@ -40,38 +40,33 @@ func Init() (*Client, error) {
 
 // Query sends a request for query without vars
 func (c *Client) Query(q string) (*api.Response, error) {
-	return c.tx.Query(c.ctx, q)
+	res, err := c.tx.Query(c.ctx, q)
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+	return res, nil
 }
 
 // QueryWithVars sends a request for query with vars
 func (c *Client) QueryWithVars(q string, vars map[string]string) (*api.Response, error) {
-	return c.tx.QueryWithVars(c.ctx, q, vars)
-}
-
-// MutateDeprecated will be removed
-func (c *Client) MutateDeprecated(data interface{}) (*api.Assigned, error) {
-	mu := &api.Mutation{}
-	mmd, err := json.Marshal(data)
+	res, err := c.tx.QueryWithVars(c.ctx, q, vars)
 	if err != nil {
-		return nil, err
+		return nil, errors.New(err.Error())
 	}
-	fmt.Printf("Json string : %v\n", string(mmd))
-	mu.SetJson = mmd
-	return c.tx.Mutate(c.ctx, mu)
+	return res, nil
 }
 
 // Mutate sends a request for more than one mutation tasks
 func (c *Client) Mutate(md MutationData) (*api.Assigned, error) {
 	mu := &api.Mutation{}
 	mmd, err := json.Marshal(md)
-	fmt.Printf("Json string : %v\n", string(mmd))
 	if err != nil {
-		return nil, err
+		return nil, errors.New(err.Error())
 	}
 	mu.SetJson = mmd
 	assigned, err := c.tx.Mutate(c.ctx, mu)
 	if err != nil {
-		return nil, err
+		return nil, errors.New(err.Error())
 	}
 	return assigned, nil
 }
@@ -81,47 +76,65 @@ func (c *Client) DeleteNode(uid string) (*api.Assigned, error) {
 	d := map[string]string{"uid": uid}
 	md, err := json.Marshal(d)
 	if err != nil {
-		return nil, err
+		return nil, errors.New(err.Error())
 	}
 
 	mu := &api.Mutation{
 		DeleteJson: md,
 	}
-	return c.tx.Mutate(c.ctx, mu)
+
+	res, err := c.tx.Mutate(c.ctx, mu)
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+	return res, nil
 }
 
 // DeleteEdge sends a request for a single task which deletes a edge between nodes
 func (c *Client) DeleteEdge(data interface{}) (*api.Assigned, error) {
 	dd, err := json.Marshal(data)
 	if err != nil {
-		return nil, err
+		return nil, errors.New(err.Error())
 	}
 	mu := &api.Mutation{
 		DeleteJson: dd,
 	}
-	return c.tx.Mutate(c.ctx, mu)
+	res, err := c.tx.Mutate(c.ctx, mu)
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+	return res, nil
 }
 
 // Delete makes a request for multiple tasks at once
 func (c *Client) Delete(md MutationData) (*api.Assigned, error) {
 	dd, err := json.Marshal(md)
-	fmt.Println("[DeleteTheMultiple] JSONT string : " + string(dd))
 	if err != nil {
-		return nil, err
+		return nil, errors.New(err.Error())
 	}
 	mu := &api.Mutation{
 		DeleteJson: dd,
 	}
-	return c.tx.Mutate(c.ctx, mu)
+	res, err := c.tx.Mutate(c.ctx, mu)
+	if err != nil {
+		return nil, errors.New(err.Error())
+	}
+	return res, nil
 }
 
 // Commit DOES commit the transaction
 func (c *Client) Commit() error {
 	defer c.tx.Discard(c.ctx)
-	return c.tx.Commit(c.ctx)
+	if err := c.tx.Commit(c.ctx); err != nil {
+		return errors.New(err.Error())
+	}
+	return nil
 }
 
 // CleanUp releases the underlying resources
 func (c *Client) CleanUp() error {
-	return c.conn.Close()
+	if err := c.conn.Close(); err != nil {
+		return errors.New(err.Error())
+	}
+	return nil
 }

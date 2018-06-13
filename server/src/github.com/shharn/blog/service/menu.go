@@ -2,8 +2,9 @@ package service
 
 import (
 	"encoding/json"
-	"log"
+	"reflect"
 
+	"github.com/pkg/errors"
 	"github.com/shharn/blog/data"
 	"github.com/shharn/blog/db"
 )
@@ -85,7 +86,7 @@ func GetMenus() ([]data.Menu, error) {
 	}
 	var root getMenusPayload
 	if err := json.Unmarshal(res.Json, &root); err != nil {
-		return nil, err
+		return nil, errors.New(err.Error())
 	}
 	return root.Menus, nil
 }
@@ -165,10 +166,8 @@ func UpdateMenu(menu data.Menu) error {
 		return err
 	}
 
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	parents, exists, err := getParentMenuWithQuery(c, menu.ID, getParentMenusQuery)
 	if err != nil {
-		log.Printf("[error] %v", err)
 		return err
 	}
 
@@ -196,14 +195,12 @@ func UpdateMenu(menu data.Menu) error {
 		}
 	}
 	if len(dmd) > 0 {
-		_, err = c.Delete(dmd)
-		if err != nil {
-			log.Printf("[error] %v", err)
+		if _, err = c.Delete(dmd); err != nil {
 			return err
 		}
 	}
 
-	if menu.Parent != nil && (!exists || (*menu.Parent)[0].ID != parents.Parents[0].ID) {
+	if menu.Parent != nil && !(exists && (*menu.Parent)[0].ID == parents.Parents[0].ID) {
 		mmd = append(mmd, addChildMenuInput{
 			ID: (*menu.Parent)[0].ID,
 			Child: data.Menu{
@@ -213,9 +210,6 @@ func UpdateMenu(menu data.Menu) error {
 	}
 	_, err = c.Mutate(mmd)
 	defer c.Commit()
-	if err != nil {
-		log.Printf("[error] %v", err)
-	}
 	return err
 }
 
@@ -293,6 +287,10 @@ func getChildMenuWithQuery(c *db.Client, id string, q string) (getChildMenusPayl
 }
 
 func getConnectedNodesWithUID(c *db.Client, id string, q string, ptr interface{}) error {
+	tp := reflect.TypeOf(ptr)
+	if tp.Kind() != reflect.Ptr {
+		return errors.New("The target object you want to deserialize from the bytes must be pointer type")
+	}
 	vars := map[string]string{"$id": id}
 	res, err := c.QueryWithVars(q, vars)
 	if err != nil {
@@ -300,7 +298,7 @@ func getConnectedNodesWithUID(c *db.Client, id string, q string, ptr interface{}
 	}
 	err = json.Unmarshal(res.Json, ptr)
 	if err != nil {
-		return err
+		return errors.New(err.Error())
 	}
 	return nil
 }
