@@ -25,7 +25,7 @@ function* dataGetRequestHandler(action: BlogAction) : Generator<any, any, any,> 
     } else {
         yield put(dataResponseFailed({
             code: response.statusCode == null ? -1 : response.statusCode,
-            message: response.statusCode == null ? "Network is Offline. Check your network :(" : response.body
+            message: response.statusCode == null ? "Network is Offline. Check your network :(" : response.body.message
         }, dataName));
     }
 }

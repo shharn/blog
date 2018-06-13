@@ -80,6 +80,10 @@ type getChildMenusPayload struct {
 // GetMenus is service for "GET /menus"
 func GetMenus() ([]data.Menu, error) {
 	c, err := db.Init()
+	defer c.CleanUp()
+	if err != nil {
+		return nil, err
+	}
 	res, err := c.Query(getMenusQuery)
 	if err != nil {
 		return nil, err

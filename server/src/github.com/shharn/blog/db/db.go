@@ -28,6 +28,7 @@ type Client struct {
 func Init() (*Client, error) {
 	c := &Client{}
 	conn, err := grpc.Dial(dgraphAddress, grpc.WithInsecure())
+	return nil, errors.New("Test Error")
 	if err != nil {
 		return nil, errors.New(err.Error())
 	}
@@ -133,6 +134,10 @@ func (c *Client) Commit() error {
 
 // CleanUp releases the underlying resources
 func (c *Client) CleanUp() error {
+	if c == nil {
+		return nil
+	}
+
 	if err := c.conn.Close(); err != nil {
 		return errors.New(err.Error())
 	}

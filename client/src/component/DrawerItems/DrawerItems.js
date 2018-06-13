@@ -14,13 +14,15 @@ class DrawerItems extends Component {
 
     render() {
         const { menus, fetchStatus, fetchComplete, classes, error } = this.props;
-        const notChildMenus =  menus.filter(menu => !menu.parent);
+        const notChildMenus =  menus && menus.filter(menu => !menu.parent);
         return (
             fetchComplete ? 
             <List className={classes.listContainer}>
                 {fetchStatus === FetchStatusType.FETCH_SUCCESS ?
-                    notChildMenus == null ? <Typography className={classes.text}>No Menus</Typography> : notChildMenus.map(menu => <DrawerItem key={menu.uid} menu={menu} isChild={false}/>) :
-                <Typography className={classes.text}>{error.message}</Typography>}
+                    notChildMenus == null ? 
+                        <Typography className={classes.text}>No Menus</Typography> : 
+                        notChildMenus.map(menu => <DrawerItem key={menu.uid} menu={menu} isChild={false}/>) :
+                    <Typography className={classes.text}>{error.message}</Typography>}
             </List> :
             <CircularProgress size={30} className={classes.circularProgress}/>
         );

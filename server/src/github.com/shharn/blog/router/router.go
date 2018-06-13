@@ -138,7 +138,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 
 	defer func() {
 		if rcv := recover(); rcv != nil {
-			log.Printf("[Error] : %s\nStackTrace : %s", rcv, debug.Stack())
+			log.Printf("[Unhandled Error] : %s\nStackTrace : %s", rcv, debug.Stack())
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 	}()
@@ -221,6 +221,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 	}(w, rq)
 
 	if globalError != nil {
+		log.Printf("[Error] %v", fmt.Sprintf("%+v", globalError.(GlobalError).innerError))
 		bytes, _ := r.Marshaler.Marshal(globalError)
 		w.WriteHeader(globalError.(GlobalError).code)
 		w.Write(bytes)
