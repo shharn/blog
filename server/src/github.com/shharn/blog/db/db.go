@@ -28,7 +28,6 @@ type Client struct {
 func Init() (*Client, error) {
 	c := &Client{}
 	conn, err := grpc.Dial(dgraphAddress, grpc.WithInsecure())
-	return nil, errors.New("Test Error")
 	if err != nil {
 		return nil, errors.New(err.Error())
 	}

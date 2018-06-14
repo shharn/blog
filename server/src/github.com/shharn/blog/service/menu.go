@@ -41,8 +41,12 @@ const (
 	`
 )
 
-type getMenusPayload struct {
-	Menus []data.Menu `json:"menus,omitempty"`
+var factory = map[string]inputFactory{
+	"addChildMenuInput":     addChildMenuInputFactory,
+	"updateChildMenuInput":  updateChildMenuInputFactory,
+	"deleteNodeInput":       deleteNodeInputFactory,
+	"deleteChildMenuInput":  deleteChildMenuInputFactory,
+	"deleteParentMenuInput": deleteParentMenuInputFactory,
 }
 
 type addChildMenuInput struct {
@@ -69,12 +73,79 @@ type deleteParentMenuInput struct {
 	Parent data.Menu `json:"parent,omitempty"`
 }
 
+type getMenusPayload struct {
+	Menus []data.Menu `json:"menus,omitempty"`
+}
+
 type getParentMenusPayload struct {
 	Parents []data.Menu `json:"parents,omitempty"`
 }
 
 type getChildMenusPayload struct {
 	Children []data.Menu `json:"children,omitempty"`
+}
+
+type inputFactory func(prop ...interface{}) (interface{}, error)
+
+func registerFactory(name string, f inputFactory) {
+	factory[name] = f
+}
+
+func addChildMenuInputFactory(props ...interface{}) (interface{}, error) {
+	if len(props) != 2 {
+		return nil, errors.New("Need exactly 2 properties")
+	}
+	return addChildMenuInput{
+		ID: props[0].(string),
+		Child: data.Menu{
+			ID: props[1].(string),
+		},
+	}, nil
+}
+
+func updateChildMenuInputFactory(props ...interface{}) (interface{}, error) {
+	if len(props) != 2 {
+		return nil, errors.New("Need exactly 2 properties")
+	}
+	return updateChildMenuInput{
+		ID: props[0].(string),
+		Child: data.Menu{
+			ID: props[1].(string),
+		},
+	}, nil
+}
+
+func deleteNodeInputFactory(props ...interface{}) (interface{}, error) {
+	if len(props) != 1 {
+		return nil, errors.New("Need exactly 1 property")
+	}
+	return deleteNodeInput{
+		ID: props[0].(string),
+	}, nil
+}
+
+func deleteChildMenuInputFactory(props ...interface{}) (interface{}, error) {
+	if len(props) != 2 {
+		return nil, errors.New("Need exactly 2 properties")
+	}
+	return deleteChildMenuInput{
+		ID: props[0].(string),
+		Child: data.Menu{
+			ID: props[1].(string),
+		},
+	}, nil
+}
+
+func deleteParentMenuInputFactory(props ...interface{}) (interface{}, error) {
+	if len(props) != 2 {
+		return nil, errors.New("Need exactly 2 properties")
+	}
+	return deleteParentMenuInput{
+		ID: props[0].(string),
+		Parent: data.Menu{
+			ID: props[1].(string),
+		},
+	}, nil
 }
 
 // GetMenus is service for "GET /menus"
@@ -85,6 +156,7 @@ func GetMenus() ([]data.Menu, error) {
 		return nil, err
 	}
 	res, err := c.Query(getMenusQuery)
+	defer c.Commit()
 	if err != nil {
 		return nil, err
 	}
@@ -109,11 +181,9 @@ func CreateMenu(menu data.Menu) error {
 		0: menu,
 	}
 	if hasParentMenu(menu) {
-		input := addChildMenuInput{
-			ID: (*menu.Parent)[0].ID,
-			Child: data.Menu{
-				ID: menu.ID,
-			},
+		input, err := factory["addChildMenuInput"]((*menu.Parent)[0].ID, menu.ID)
+		if err != nil {
+			return err
 		}
 		mds = append(mds, input)
 	}
@@ -182,20 +252,21 @@ func UpdateMenu(menu data.Menu) error {
 
 	if exists {
 		if menu.Parent == nil || (*menu.Parent)[0].ID != parents.Parents[0].ID {
+			var (
+				input interface{}
+				err   error
+			)
 			// delete old child menu id from the old parent menu
-			dmd = append(dmd, deleteChildMenuInput{
-				ID: parents.Parents[0].ID,
-				Child: data.Menu{
-					ID: menu.ID,
-				},
-			})
+			if input, err = factory["deleteChildMenuInput"](parents.Parents[0].ID, menu.ID); err != nil {
+				return err
+			}
+			dmd = append(dmd, input)
+
 			// delete old parent menu id from it
-			dmd = append(dmd, deleteParentMenuInput{
-				ID: menu.ID,
-				Parent: data.Menu{
-					ID: parents.Parents[0].ID,
-				},
-			})
+			if input, err = factory["deleteParentMenuInput"](menu.ID, parents.Parents[0].ID); err != nil {
+				return err
+			}
+			dmd = append(dmd, input)
 		}
 	}
 	if len(dmd) > 0 {
@@ -205,12 +276,11 @@ func UpdateMenu(menu data.Menu) error {
 	}
 
 	if menu.Parent != nil && !(exists && (*menu.Parent)[0].ID == parents.Parents[0].ID) {
-		mmd = append(mmd, addChildMenuInput{
-			ID: (*menu.Parent)[0].ID,
-			Child: data.Menu{
-				ID: menu.ID,
-			},
-		})
+		input, err := factory["addChildMenuInput"]((*menu.Parent)[0].ID, menu.ID)
+		if err != nil {
+			return err
+		}
+		mmd = append(mmd, input)
 	}
 	_, err = c.Mutate(mmd)
 	defer c.Commit()
@@ -236,12 +306,11 @@ func getMutationDataForUpdatingParent(c *db.Client, id string, q string) (db.Mut
 	if exists {
 		parents := res.Parents
 		for idx := 0; idx < len(parents); idx++ {
-			mds = append(mds, deleteChildMenuInput{
-				ID: parents[idx].ID,
-				Child: data.Menu{
-					ID: id,
-				},
-			})
+			input, err := factory["deleteChildMenuInput"](parents[idx].ID, id)
+			if err != nil {
+				return nil, false, err
+			}
+			mds = append(mds, input)
 		}
 	}
 	return mds, exists, nil
@@ -262,16 +331,14 @@ func getMutationDataForUpdatingChildren(c *db.Client, id string, q string) (db.M
 	if exists {
 		children := res.Children
 		for idx := 0; idx < len(children); idx++ {
-			mds = append(mds, deleteParentMenuInput{
-				ID: children[idx].ID,
-				Parent: data.Menu{
-					ID: id,
-				},
-			})
+			input, err := factory["deleteParentMenuInput"](children[idx].ID, id)
+			if err != nil {
+				return nil, false, err
+			}
+			mds = append(mds, input)
 		}
 	}
 	return mds, exists, nil
-
 }
 
 func getParentMenuWithQuery(c *db.Client, id string, q string) (getParentMenusPayload, bool, error) {
