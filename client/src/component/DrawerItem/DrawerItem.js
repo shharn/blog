@@ -29,17 +29,17 @@ class DrawerItem extends Component<Props> {
 
     getRightElement = () => {
         const { url, name } = this.props.menu;
-        const { classes, childMenus } = this.props;
+        const { classes, childMenus, isChild } = this.props;
         const hasChildren = childMenus && childMenus.length > 0;
         if (hasChildren) {
             return (
                 <div>
                     <ListItem button component={Link} to={url} onClick={this.handleMenuClick}>
-                        <ListItemText className={classes.nested} primary={name}/>
+                        <ListItemText primary={name}/>
                         {this.state.openChild ? <ExpandLess/> : <ExpandMore/>}
                     </ListItem>
                     <Collapse in={this.state.openChild} timeout={700} unmountOnExit>
-                        <List component="div">
+                        <List className={classes.nested} component="div">
                             {childMenus.map(child => <NestedDrawerItem key={child.uid} menu={child} isChild={true}/>)}
                         </List>
                     </Collapse>
@@ -48,7 +48,7 @@ class DrawerItem extends Component<Props> {
         } else {
             return (
                 <ListItem button component={Link} to={url}>
-                    <ListItemText primary={name}/>
+                    <ListItemText className={isChild && classes.nested} primary={name}/>
                 </ListItem>
             )
         }

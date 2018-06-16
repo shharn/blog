@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	dgraphAddress = "172.18.0.3:9080"
+	dgraphAddress = "172.18.0.2:9080"
 )
 
 // MutationData represents a struct to execute multiple mutation at a single network request
@@ -29,7 +29,7 @@ func Init() (*Client, error) {
 	c := &Client{}
 	conn, err := grpc.Dial(dgraphAddress, grpc.WithInsecure())
 	if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, errors.WithStack(err)
 	}
 	dc := api.NewDgraphClient(conn)
 	dg := dgo.NewDgraphClient(dc)
@@ -42,7 +42,7 @@ func Init() (*Client, error) {
 func (c *Client) Query(q string) (*api.Response, error) {
 	res, err := c.tx.Query(c.ctx, q)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, errors.WithStack(err)
 	}
 	return res, nil
 }
@@ -51,7 +51,7 @@ func (c *Client) Query(q string) (*api.Response, error) {
 func (c *Client) QueryWithVars(q string, vars map[string]string) (*api.Response, error) {
 	res, err := c.tx.QueryWithVars(c.ctx, q, vars)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, errors.WithStack(err)
 	}
 	return res, nil
 }
@@ -61,12 +61,12 @@ func (c *Client) Mutate(md MutationData) (*api.Assigned, error) {
 	mu := &api.Mutation{}
 	mmd, err := json.Marshal(md)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, errors.WithStack(err)
 	}
 	mu.SetJson = mmd
 	assigned, err := c.tx.Mutate(c.ctx, mu)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, errors.WithStack(err)
 	}
 	return assigned, nil
 }
@@ -76,7 +76,7 @@ func (c *Client) DeleteNode(uid string) (*api.Assigned, error) {
 	d := map[string]string{"uid": uid}
 	md, err := json.Marshal(d)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, errors.WithStack(err)
 	}
 
 	mu := &api.Mutation{
@@ -85,7 +85,7 @@ func (c *Client) DeleteNode(uid string) (*api.Assigned, error) {
 
 	res, err := c.tx.Mutate(c.ctx, mu)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, errors.WithStack(err)
 	}
 	return res, nil
 }
@@ -94,14 +94,14 @@ func (c *Client) DeleteNode(uid string) (*api.Assigned, error) {
 func (c *Client) DeleteEdge(data interface{}) (*api.Assigned, error) {
 	dd, err := json.Marshal(data)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, errors.WithStack(err)
 	}
 	mu := &api.Mutation{
 		DeleteJson: dd,
 	}
 	res, err := c.tx.Mutate(c.ctx, mu)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, errors.WithStack(err)
 	}
 	return res, nil
 }
@@ -110,14 +110,14 @@ func (c *Client) DeleteEdge(data interface{}) (*api.Assigned, error) {
 func (c *Client) Delete(md MutationData) (*api.Assigned, error) {
 	dd, err := json.Marshal(md)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, errors.WithStack(err)
 	}
 	mu := &api.Mutation{
 		DeleteJson: dd,
 	}
 	res, err := c.tx.Mutate(c.ctx, mu)
 	if err != nil {
-		return nil, errors.New(err.Error())
+		return nil, errors.WithStack(err)
 	}
 	return res, nil
 }
@@ -126,7 +126,7 @@ func (c *Client) Delete(md MutationData) (*api.Assigned, error) {
 func (c *Client) Commit() error {
 	defer c.tx.Discard(c.ctx)
 	if err := c.tx.Commit(c.ctx); err != nil {
-		return errors.New(err.Error())
+		return errors.WithStack(err)
 	}
 	return nil
 }
@@ -138,7 +138,7 @@ func (c *Client) CleanUp() error {
 	}
 
 	if err := c.conn.Close(); err != nil {
-		return errors.New(err.Error())
+		return errors.WithStack(err)
 	}
 	return nil
 }
