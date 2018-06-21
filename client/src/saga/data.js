@@ -10,6 +10,7 @@ import { Data as DataActionType } from '../action/types';
 import { MutationOperationType } from '../constant';
 import { 
     getData,
+    getDataWithURL,
     createData,
     deleteData,
     updateData
@@ -24,6 +25,20 @@ function* dataGetRequestHandler(action: BlogAction) : Generator<any, any, any,> 
         yield put(dataResponseSuccess(response.body, dataName));
     } else {
         yield put(dataResponseFailed({
+            code: response.statusCode == null ? -1 : response.statusCode,
+            message: response.statusCode == null ? "Network is Offline. Check your network :(" : response.body.message
+        }, dataName));
+    }
+}
+
+function* dataGetRequestWithURLHandler(action: BlogAction) : Generator<any, any, any> {
+    const { dataName, url } = action.payload;
+    const response = yield call(getDataWithURL, url);
+    if (response.statusCode == 200) {
+        yield put(dataResponseSuccess(response.body, dataName));
+    } else {
+        yield put(dataResponseFailed({ 
+            // eslint-disable-next-line
             code: response.statusCode == null ? -1 : response.statusCode,
             message: response.statusCode == null ? "Network is Offline. Check your network :(" : response.body.message
         }, dataName));
@@ -59,5 +74,6 @@ function* dataMutationRequestHandler(action: BlogAction) : Generator<any, any, a
 
 export default function* watchDataRequest(): Generator<any, any, any> {
     yield takeLatest(DataActionType.REQUEST_GET_DATA, dataGetRequestHandler);
+    yield takeLatest(DataActionType.REQUEST_GET_DATA_WITH_URL, dataGetRequestWithURLHandler);
     yield takeLatest(DataActionType.REQUEST_MUTATE_DATA, dataMutationRequestHandler);
 }

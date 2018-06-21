@@ -15,6 +15,7 @@ class RootRoute extends Component {
             <div>
                 <Route exact path="/" component={Home}/>
                 <Route path="/admin" component={Admin}/>
+                <Route path="/menus/:id/articles" component={Home}/>
             </div>
         );
     }

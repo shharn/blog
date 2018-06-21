@@ -11,6 +11,14 @@ export const requestData = (dataName: string) => ({
     }
 })
 
+export const requestDataWithURL = (dataName: string, url: string) => ({
+    type: DataActionType.REQUEST_GET_DATA_WITH_URL,
+    payload: {
+        dataName,
+        url
+    }
+})
+
 export const dataResponseFailed = (error: BlogError, dataName: string) => ({
     type: DataActionType.GET_DATA_RESPONSE_ERROR,
     payload: {

@@ -1,7 +1,5 @@
 package data
 
-import "fmt"
-
 // Authentication is the data structure used when "POST /check" handler's response
 type Authentication struct {
 	Token   string `json:"token"`
@@ -17,27 +15,27 @@ type LoginInformation struct {
 // SessionStorage is memory-based storage for session data
 type SessionStorage map[string]string
 
-// AppError is for custom error
-type AppError struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
-}
-
-func (e AppError) Error() string {
-	return fmt.Sprintf("%v", e.Message)
-}
-
-// Menu type
+// Menu entity type
 type Menu struct {
 	ID       string  `json:"uid,omitempty"`
 	Name     string  `json:"name,omitempty"`
-	URL      string  `json:"url,omitempty"`
+	URL      string  `json:"url"`
 	Parent   *[]Menu `json:"parent,omitempty"`
 	Children *[]Menu `json:"children,omitempty"`
 }
 
 // Menus is a map for [id : menu] pair
 type Menus map[int]Menu
+
+// Article entity type
+type Article struct {
+	ID          string  `json:"uid,omitempty"`
+	Title       string  `json:"title,omitempty"`
+	ImageSource string  `json:"imageSource,omitempty"`
+	Summary     string  `json:"summary,omitempty"`
+	Content     string  `json:"content,omitempty"`
+	Menu        *[]Menu `json:"menu,omitempty"`
+}
 
 var (
 	// TokenStorage is the storage for the session token made with jwt algorithm

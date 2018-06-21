@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/pkg/errors"
 	"github.com/shharn/blog/config"
 	"github.com/shharn/blog/data"
 	"github.com/shharn/blog/router"
@@ -20,18 +20,21 @@ func CheckHandler(w http.ResponseWriter, rq *http.Request, params router.Params)
 			IsValid: isValid,
 		}, nil
 	}
-	return nil, data.AppError{Code: http.StatusInternalServerError, Message: err.Error()}
+	return nil, err
 }
 
 func validateToken(tokenString string) (bool, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			return nil, errors.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
 		return []byte(config.JWTSecretKey), nil
 	})
 	if token.Valid {
 		return true, nil
 	}
-	return false, err
+	if err != nil {
+		return false, errors.WithStack(err)
+	}
+	return false, nil
 }

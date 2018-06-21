@@ -19,6 +19,15 @@ const initialState = {
         },
         fetchStatus: FetchStatus.FETCH_INITIAL,
         fetchComplete: false
+    },
+    hottestArticles: {
+        data: [],
+        error: {
+            code: 0,
+            message: ""
+        },
+        fetchStatus: FetchStatus.FETCH_INITIAL,
+        fetchComplete: false
     }
 };
 
@@ -26,7 +35,8 @@ const reducer = (state= initialState, action) => {
     const { type } = action;
     const { dataName } = action.payload || "";
     switch (type) {
-        case DataActionType.REQUEST_GET_DATA: {
+        case DataActionType.REQUEST_GET_DATA:
+        case DataActionType.REQUEST_GET_DATA_WITH_URL: {
             return {
                 ...state,
                 [dataName]: {

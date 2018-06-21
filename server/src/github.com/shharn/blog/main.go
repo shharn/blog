@@ -31,5 +31,7 @@ func main() {
 	r.Patch("/menus", handler.UpdateMenuHandler)
 	r.Delete("/menus/:id", handler.DeleteMenuHandler)
 
+	r.Get("/menus/:id/articles", handler.GetArticlesOnMenuHandler)
+	r.Get("/articles/hottest", handler.GetTheHottestArticlesHandler)
 	http.ListenAndServe(":10000", r)
 }

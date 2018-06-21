@@ -42,6 +42,14 @@ export function getData(dataName: string) {
         .catch(err => err.response ? err.response : err);
 }
 
+export function getDataWithURL(url: string) {
+    return request
+        .get(`http://${env.apiServerDomain}/${url}`)
+        .accept('json')
+        .then(res => res)
+        .catch(err => err.response ? err.response : err);
+}
+
 export function createData(dataName: string, data: any, token: string) {
     return request
         .post(`http://${env.apiServerDomain}/${dataName}`)

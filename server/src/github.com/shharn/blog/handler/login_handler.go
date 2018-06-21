@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/pkg/errors"
 	"github.com/shharn/blog/config"
 	"github.com/shharn/blog/data"
 	"github.com/shharn/blog/router"
@@ -21,15 +22,19 @@ const (
 func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) (interface{}, error) {
 	var loginInfo data.LoginInformation
 	if err := json.NewDecoder(r.Body).Decode(&loginInfo); err != nil {
-		return nil, data.AppError{Code: http.StatusBadRequest, Message: err.Error()}
+		return nil, errors.WithStack(err)
 	}
 
 	if len(loginInfo.Email) < 1 || len(loginInfo.Password) < 1 {
-		return nil, data.AppError{Code: http.StatusBadRequest, Message: "Has no information"}
+		return data.Authentication{
+			IsValid: false,
+		}, nil
 	}
 
 	if !isAdminUser(&loginInfo) {
-		return nil, data.AppError{Code: http.StatusUnauthorized, Message: "Invalid Email or Password"}
+		return data.Authentication{
+			IsValid: false,
+		}, nil
 	}
 
 	token := makeToken(&loginInfo)
@@ -38,7 +43,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) 
 		err         error
 	)
 	if tokenString, err = token.SignedString([]byte(config.JWTSecretKey)); err != nil {
-		return nil, data.AppError{Code: http.StatusInternalServerError, Message: err.Error()}
+		return nil, errors.WithStack(err)
 	}
 
 	storeToken(tokenString, loginInfo.Email)
