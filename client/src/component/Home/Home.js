@@ -3,6 +3,7 @@ import TopBar from '../TopBar';
 import { withStyles } from 'material-ui/styles';
 import ResponsiveDrawer from '../ResponsiveDrawer';
 import MainArea from '../MainArea';
+
 import styles from './styles';
 
 type Props = {

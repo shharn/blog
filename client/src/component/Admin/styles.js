@@ -2,13 +2,12 @@ import red from 'material-ui/colors/red';
 
 export default {
     root: {
-        width: '100%',
         minWidth: '300px',
         minHeight: '300px',
-        height: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)'
     },
     paper: {
         width: '300px',

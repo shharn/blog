@@ -45,10 +45,10 @@ ReactDOM.render(
     <Provider store={store}>
         <ConnectedRouter history={history}>
             <MuiThemeProvider theme={theme}>
-                <div>
+                <React.Fragment>
                     <CssBaseline />
                     <RootRoute />
-                </div>
+                </React.Fragment>
             </MuiThemeProvider>
         </ConnectedRouter>
     </Provider>,

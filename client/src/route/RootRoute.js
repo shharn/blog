@@ -12,11 +12,11 @@ const Admin = Loadable({
 class RootRoute extends Component {
     render() {
         return (
-            <div>
+            <React.Fragment>
                 <Route exact path="/" component={Home}/>
                 <Route path="/admin" component={Admin}/>
                 <Route path="/menus/:id/articles" component={Home}/>
-            </div>
+            </React.Fragment>
         );
     }
 }

@@ -1,3 +1,3 @@
-import Component  from './Container';
+import Component  from './MainArea';
 
 export default Component;
