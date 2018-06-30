@@ -35,7 +35,7 @@ function* dataGetRequestWithURLHandler(action: BlogAction) : Generator<any, any,
     const { dataName, url } = action.payload;
     const urlWithoutLeadingSlash = url[0] === '/' ? url.substr(1) : url;
     const response = yield call(getDataWithURL, urlWithoutLeadingSlash);
-    if (response.statusCode == 200) {
+    if (response.statusCode === 200) {
         yield put(dataResponseSuccess(response.body, dataName));
     } else {
         yield put(dataResponseFailed({ 

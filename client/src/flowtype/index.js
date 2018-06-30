@@ -6,6 +6,16 @@ export type Menu = {
     children: Array<Menu>
 };
 
+export type Article = {
+    uid?: string,
+    title: string,
+    content: string,
+    summary: string,
+    createdAt: string,
+    views: number,
+    menu: ?Menu
+}
+
 export type BlogError = {
     code: number,
     message: string

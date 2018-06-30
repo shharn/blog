@@ -16,15 +16,7 @@ const HottestArticleList = Loadable({
     loading: () => <CircularProgress size={30}/>
   });
 
-type Article = {
-    uid?: string,
-    title: string,
-    content: string,
-    summary: string,
-    createdAt: string,
-    views: number,
-    menu: ?Menu
-}
+
 
 type Props = {
     classes: any,
@@ -32,25 +24,12 @@ type Props = {
 }
 
 class MainArea extends Component<Props> {
-    // componentDidMount() {
-    //     const { path } = this.props;
-    //     const isHome = path.length < 2;
-    //     const menuId = path.split('/')[2];
-    //     isHome ? this.props.getTheHottestArticles() : this.props.getArticlesOnMenu(menuId);
-    // }
-
     render() {
-        const { classes, articles, fetchComplete, fetchStatus, path } = this.props;
-        const isHome = path.length < 2;
-        // const isHome = path.length < 2;
+        const { classes } = this.props;
         return (
             <main className={classes.content}>
                 <Route exact path="/" component={HottestArticleList}/>
                 <Route path="/menus/:id/articles" component={ArticleList}/>
-                {/* {isHome ?  */}
-                {/* {fetchComplete ? 
-                    FetchStatusType : 
-                    <CircularProgress size={30}/> */}
             </main>
         );
     }

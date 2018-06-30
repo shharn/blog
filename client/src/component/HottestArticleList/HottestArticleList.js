@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { CircularProgress } from 'material-ui/Progress';
-import { Typography } from 'material-ui';
-import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList';
-import IconButton from 'material-ui/IconButton';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
+import Card, { CardMedia, CardContent } from 'material-ui/Card';
+import Typography from 'material-ui/Typography';
 import { FetchStatus } from '../../constant';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
@@ -34,19 +32,19 @@ class HottestArticleList extends Component<Props> {
                 return <CircularProgress size={40}/>
             case FetchStatus.FETCH_SUCCESS:
                 return (
-                    // must be responsive later (> xm, <= xm)
-                    <GridList cellHeight={200} spacing={2} className={classes.gridList}>
-                        {articles.map((article, index) => (
-                            <GridListTile key={article.uid} cols={index === 0 ? 2 : 1} rows={index === 0 ? 2 : 1}>
-                                <img src={article.imageSource} alt={article.title}/>
-                                <GridListTileBar title={article.title} titlePosition="bottom" actionIcon={
-                                    <IconButton className={classes.gridListTitleIcon}>
-                                        <StarBorderIcon />
-                                    </IconButton>
-                                } actionPosition="left" className={classes.titleBar}/>
-                            </GridListTile>
-                        ))}
-                    </GridList>
+                    articles.map((article, index) => (
+                        <Card key={`hottestArticle:${article.uid}`} className={index === 0 ? classes.cardFirst : classes.card}>
+                            <CardMedia className={index === 0 ? classes.cardMediaFirst : classes.cardMedia} image={article.imageSource} title={article.title}/>
+                            <CardContent>
+                                <Typography gutterBottom variant="headline" component="h2">
+                                    {article.title}
+                                </Typography>
+                                <Typography component="p">
+                                    {article.summary}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    ))
                 );
             case FetchStatus.FETCH_FAIL:
             default:
@@ -55,12 +53,13 @@ class HottestArticleList extends Component<Props> {
     }
 
     render() {
+        const { classes } = this.props;
         return (
-            <div>
+            <div className={classes.container}>
                 {this.getRightElementsOnFetchStatus()}
             </div>
         );
     }
 }
 
-export default withStyles(styles)(HottestArticleList);
+export default withStyles(styles, { withTheme: true })(HottestArticleList);
