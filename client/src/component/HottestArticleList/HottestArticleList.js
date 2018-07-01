@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { CircularProgress } from 'material-ui/Progress';
 import Card, { CardMedia, CardContent } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
+import Article from './Article';
 import { FetchStatus } from '../../constant';
 import { withStyles } from 'material-ui/styles';
 import styles from './styles';
-
+import { Paper } from 'material-ui';
 
 type Props = {
     classes: any,
@@ -32,19 +33,14 @@ class HottestArticleList extends Component<Props> {
                 return <CircularProgress size={40}/>
             case FetchStatus.FETCH_SUCCESS:
                 return (
-                    articles.map((article, index) => (
-                        <Card key={`hottestArticle:${article.uid}`} className={index === 0 ? classes.cardFirst : classes.card}>
-                            <CardMedia className={index === 0 ? classes.cardMediaFirst : classes.cardMedia} image={article.imageSource} title={article.title}/>
-                            <CardContent>
-                                <Typography gutterBottom variant="headline" component="h2">
-                                    {article.title}
-                                </Typography>
-                                <Typography component="p">
-                                    {article.summary}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    ))
+                    articles.length > 0 ? 
+                        <React.Fragment>
+                            <Article classes={{ root: classes.firstCard, media: classes.largeMedia}} article={articles[0]}/>
+                            <div className={classes.remainingRoot}>
+                                {articles.slice(1).map(article => <Article key={`hottestArticle:${article.uid}`} classes={{ root: classes.card, media: classes.smallMedia }} article={article}/>)}
+                            </div>
+                        </React.Fragment> :
+                        <span>Empty</span>
                 );
             case FetchStatus.FETCH_FAIL:
             default:
