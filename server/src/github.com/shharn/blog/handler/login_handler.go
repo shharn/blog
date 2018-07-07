@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -19,7 +20,7 @@ const (
 )
 
 // LoginHandler is a handler for "POST /login"
-func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) (interface{}, error) {
+func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params, queryParams url.Values) (interface{}, error) {
 	var loginInfo data.LoginInformation
 	if err := json.NewDecoder(r.Body).Decode(&loginInfo); err != nil {
 		return nil, errors.WithStack(err)

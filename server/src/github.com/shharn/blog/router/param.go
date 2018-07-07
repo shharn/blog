@@ -7,6 +7,9 @@ import (
 // Params represents the param values on URL
 type Params map[string]interface{}
 
+// QueryParams represents the query object on query string
+type QueryParams map[string]interface{}
+
 func parseURL(pattern, path string) Params {
 	if pattern[0] == '/' {
 		pattern = pattern[1:]

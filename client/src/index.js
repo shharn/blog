@@ -14,7 +14,6 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import CssBaseline from 'material-ui/CssBaseline';
 import blue from 'material-ui/colors/blue';
 import pink from 'material-ui/colors/pink';
-import './index.css';
 
 const history = createHistory();
 const routeMiddleware = routerMiddleware(history);

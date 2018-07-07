@@ -2,7 +2,6 @@ package service
 
 import (
 	"encoding/json"
-	"strconv"
 
 	"github.com/pkg/errors"
 	"github.com/shharn/blog/data"
@@ -11,8 +10,8 @@ import (
 
 const (
 	getTheHottestArticlesQuery = `
-		query getTheHottestArticles($count: int) {
-			articles (func: has(title), orderdesc: views, first: $count){
+		query getTheHottestArticles($offset: int, $count: int) {
+			articles (func: has(title), orderdesc: views, offset: $offset, first: $count){
 				uid
 				title
 				content
@@ -21,6 +20,7 @@ const (
 				}
 				imageSource
 				summary
+				createdAt
 				views
 			}
 		}`
@@ -31,7 +31,7 @@ type getTheHottestArticlesPayload struct {
 }
 
 // GetTheHottestArticles is a service for "GET /articles/hottest"
-func GetTheHottestArticles(numOfArticles int) (interface{}, error) {
+func GetTheHottestArticles(offset, numOfArticles string) (interface{}, error) {
 	c, err := db.Init()
 	defer c.CleanUp()
 	if err != nil {
@@ -39,7 +39,8 @@ func GetTheHottestArticles(numOfArticles int) (interface{}, error) {
 	}
 
 	vars := map[string]string{
-		"$count": strconv.Itoa(numOfArticles),
+		"$offset": offset,
+		"$count":  numOfArticles,
 	}
 	res, err := c.QueryWithVars(getTheHottestArticlesQuery, vars)
 	defer c.Commit()

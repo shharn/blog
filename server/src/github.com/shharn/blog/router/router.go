@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"runtime/debug"
 	"strings"
 )
@@ -22,7 +23,7 @@ func (ge GlobalError) Error() string {
 // Handler processes the client's request and return something
 // The argument will be the unmarshalled body & route parameter values & values in Query String
 // the object of return value({}interface) will be processed by marshaler
-type Handler func(http.ResponseWriter, *http.Request, Params) (interface{}, error)
+type Handler func(http.ResponseWriter, *http.Request, Params, url.Values) (interface{}, error)
 
 // CORSContext includes the Headers about CORS Configs
 // It will be used at the handler for "OPTIONS" method
@@ -55,7 +56,7 @@ func (r *Router) SetCORS() *Router {
 	ctxs := []RouterContext{}
 	ctxs = append(ctxs, RouterContext{
 		Pattern: "*",
-		Handler: func(w http.ResponseWriter, rq *http.Request, params Params) (interface{}, error) {
+		Handler: func(w http.ResponseWriter, rq *http.Request, params Params, queryParams url.Values) (interface{}, error) {
 			w.Header().Set("Access-Control-Allow-Origin", r.CORSContext.AllowedOrigins)
 			w.Header().Set("Access-Control-Allow-Methods", r.CORSContext.AllowedMethods)
 			w.Header().Set("Access-Control-Allow-Headers", r.CORSContext.AllowedHeaders)
@@ -190,9 +191,8 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 
 			// Make Params by parsing
 			params := parseURL(ctx.Pattern, path)
-			result, err := ctx.Handler(w, rq, params)
+			result, err := ctx.Handler(w, rq, params, rq.URL.Query())
 			if err != nil {
-				// need to log error information in server
 				return GlobalError{
 					code:             http.StatusInternalServerError,
 					MessageForClient: "Server is temporarily unavailable. Please try later",

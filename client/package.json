@@ -37,7 +37,6 @@
     "js-cookie": "^2.2.0",
     "keycode": "^2.1.9",
     "local-storage": "^1.4.2",
-    "material-ui": "^1.0.0-beta.44",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
