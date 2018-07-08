@@ -1,9 +1,9 @@
 // @flow
 import React, { Component } from 'react';
-import TextField from 'material-ui/TextField';
-import { TableCell } from 'material-ui/Table';
+import TextField from '@material-ui/core/TextField';
+import TableCell from '@material-ui/core/TableCell';
+import { withStyles } from '@material-ui/core/styles';
 import keycode from 'keycode';
-import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
 type Props = {

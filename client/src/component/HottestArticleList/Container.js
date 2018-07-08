@@ -10,13 +10,14 @@ const mapStateToProps = (state, ownProps) => {
         articles: data,
         error,
         fetchStatus,
-        fetchComplete
+        fetchComplete,
+        ...ownProps
     };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        getTheHottestArticles: () => dispatch(requestDataWithURL('hottestArticles', '/articles/hottest')),
+        getTheHottestArticles: (offset?: number, count?: number) => dispatch(requestDataWithURL('hottestArticles', '/articles/hottest')),
     }
 }
 

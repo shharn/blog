@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Select from 'material-ui/Select';
-import { MenuItem } from 'material-ui/Menu';
-import { TableCell } from 'material-ui/Table';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import TableCell from '@material-ui/core/TableCell';
 import type { Menu } from '../../flowtype';
 
 type Props = {

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Hidden from 'material-ui/Hidden';
+import Hidden from '@material-ui/core/Hidden';
 import MenuList from '../MenuList';
 import MenuListSmall from '../MenuListSmall';
 import keycode from 'keycode';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 
 type Props = {

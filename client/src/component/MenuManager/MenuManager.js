@@ -1,14 +1,13 @@
 // @flow
 import React, { Component } from 'react';
-import IconButton from 'material-ui/IconButton';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
 import Settings from '@material-ui/icons/Settings';
+import { withStyles } from '@material-ui/core/styles';
 import CreateOrEditMenu from '../CreateOrEditMenu';
-import Dialog, {
-    DialogContent,
-} from 'material-ui/Dialog';
 import ResponsiveMenuList from '../ResponsiveMenuList';
 import { MenuManagerChildComponentType } from '../../constant';
-import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
 type Props = {
@@ -69,9 +68,9 @@ class MenuManager extends Component<Props> {
         const { classes, isDialogOpened } = this.props;
         return (
             <div className={classes.container}>
-                <IconButton aria-label="Management" onClick={this.handleManagementButtonClick}>
+                <Button aria-label="Management" onClick={this.handleManagementButtonClick}>
                     <Settings/> 
-                </IconButton>
+                </Button>
                 <Dialog
                     open={isDialogOpened}
                     onClose={this.handleDialogClose}

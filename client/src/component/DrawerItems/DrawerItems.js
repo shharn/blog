@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import List from 'material-ui/List';
+import List from '@material-ui/core/List';
+import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
 import DrawerItem from '../DrawerItem';
 import styles from './styles';
-import { withStyles } from 'material-ui/styles';
-import { CircularProgress } from 'material-ui/Progress';
-import Typography from 'material-ui/Typography';
 import { FetchStatus as FetchStatusType } from '../../constant';
 
 class DrawerItems extends Component {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Home from '../component/Home';
-import { CircularProgress } from 'material-ui/Progress';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { Route } from 'react-router';
 import Loadable from 'react-loadable';
 

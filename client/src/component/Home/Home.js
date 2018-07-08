@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import TopBar from '../TopBar';
-import { withStyles } from 'material-ui/styles';
 import ResponsiveDrawer from '../ResponsiveDrawer';
 import MainArea from '../MainArea';
-
+import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 
 type Props = {

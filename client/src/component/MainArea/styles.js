@@ -8,8 +8,8 @@ export default theme => ({
         height: `calc(100% - 56px)`,
         marginTop: 56,
         [theme.breakpoints.up('sm')]: {
-          height: 'calc(100% - 60px)',
-          marginTop: 60,
+          height: 'calc(100% - 64px)',
+          marginTop: 64,
           marginLeft: Styles.drawerWidth
         }
       }

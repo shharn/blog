@@ -1,10 +1,14 @@
 // @flow
 import * as React from 'react';
-import Table, { TableHead, TableRow, TableBody, TableCell } from 'material-ui/Table';
-import Button from 'material-ui/Button';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import { withStyles } from '@material-ui/core/styles';
 import MenuTableRow from '../MenuManagerTableRow';
-import { withStyles } from 'material-ui/styles';
 import styles from './styles';
 
 import type { Menu } from '../../flowtype';

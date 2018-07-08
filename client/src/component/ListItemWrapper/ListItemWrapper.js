@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { ListItem, ListItemText } from 'material-ui/List';
+import ListItem from '@material-ui/core/List';
+import ListItemText from '@material-ui/core/ListItemText';
 
 import type { Menu } from '../../flowtype';
 

@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { TableRow } from 'material-ui/Table';
+import TableRow from '@material-ui/core/TableRow';
 import MenuTableCell from '../MenuManagerTableCell';
 import DeleteButtonCell from '../DeleteButtonCell';
  

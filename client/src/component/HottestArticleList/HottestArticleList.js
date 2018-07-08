@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { CircularProgress } from 'material-ui/Progress';
-import InfiniteScrollable from '../InfiniteScrollable';
-import Typography from 'material-ui/Typography';
-import Article from './Article';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
 import { FetchStatus } from '../../constant';
-import { withStyles } from 'material-ui/styles';
+import Article from './Article';
 import styles from './styles';
 
 type Props = {
@@ -20,19 +19,8 @@ type Props = {
 }
 
 class HottestArticleList extends Component<Props> {
-    constructor(props) {
-        super(props);
-        this.state = {
-            height: 0
-        };
-    }
-
     componentDidMount() {
         this.props.getTheHottestArticles();
-    }
-
-    componentDidUpdate() {
-        console.log('height : ' + this.containerElement.offsetHeight);
     }
 
     getRightElementsOnFetchStatus() {
@@ -46,14 +34,8 @@ class HottestArticleList extends Component<Props> {
                     articles.length > 0 ? 
                         <React.Fragment>
                             <Article classes={{ root: classes.firstCard, media: classes.largeMedia}} article={articles[0]}/>
-                            <div className={classes.remainingRoot}>
-                             {articles.slice(1).map(article => <Article key={`hottestArticle:${article.uid}`} classes={{ root: classes.card, media: classes.smallMedia }} article={article}/>)}
-                                {/* <InfiniteScrollable
-
-                                >
-                                    {articles.slice(1).map(article => <Article key={`hottestArticle:${article.uid}`} classes={{ root: classes.card, media: classes.smallMedia }} article={article}/>)}
-                                </InfiniteScrollable> */}
-                                {/* <InfiniteScrollable hasMore={() => } */}
+                            <div className={classes.remainingRoot} ref={container => this.innerContainer = container}>
+                                {articles.slice(1).map(article => <Article key={`hottestArticle:${article.uid}`} classes={{ root: classes.card, media: classes.smallMedia }} article={article}/>)}
                             </div>
                         </React.Fragment> :
                         <span>Empty</span>
@@ -65,9 +47,9 @@ class HottestArticleList extends Component<Props> {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, ref } = this.props;
         return (
-            <div className={classes.container} ref={container => this.containerElement = container}>
+            <div className={classes.container} ref={ref}>
                 {this.getRightElementsOnFetchStatus()}
             </div>
         );

@@ -10,10 +10,10 @@ import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-r
 import logger from 'redux-logger';
 import appReducer from './reducer';
 import rootSaga from './saga';
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import CssBaseline from 'material-ui/CssBaseline';
-import blue from 'material-ui/colors/blue';
-import pink from 'material-ui/colors/pink';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import blue from '@material-ui/core/colors/blue';
+import pink from '@material-ui/core/colors/pink';
 
 const history = createHistory();
 const routeMiddleware = routerMiddleware(history);
@@ -36,6 +36,13 @@ const theme = createMuiTheme({
         secondary: {
             light: pink[400],
             main: pink[500]
+        }
+    },
+    breakpoints: {
+        values: {
+            sm: 600,
+            md: 900,
+            lg: 1100
         }
     }
 });

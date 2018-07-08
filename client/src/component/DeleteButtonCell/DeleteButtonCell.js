@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { TableCell } from 'material-ui/Table';
+import TableCell from '@material-ui/core/TableCell';
 import Delete from '@material-ui/icons/Delete';
-import IconButton from 'material-ui/IconButton';
+import Button from '@material-ui/core/Button';
 
 type Props = {
     deleteMenu: () => void
@@ -15,9 +15,9 @@ class DeleteButtonCell extends Component<Props> {
     render() {
         return (
             <TableCell>
-                <IconButton aria-label="Delete" onClick={this.handleClick} >
+                <Button aria-label="Delete" onClick={this.handleClick} >
                     <Delete/>
-                </IconButton>
+                </Button>
             </TableCell>
         );
     }

@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	dgraphAddress = "172.18.0.2:9080"
+	dgraphAddress = "172.18.0.3:9080"
 )
 
 // MutationData represents a struct to execute multiple mutation at a single network request

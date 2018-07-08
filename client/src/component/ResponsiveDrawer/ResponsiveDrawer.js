@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import SocialIcons from '../SocialIcons';
-import Hidden from 'material-ui/Hidden';
-import Drawer from 'material-ui/Drawer';
+import Hidden from '@material-ui/core/Hidden';
+import Drawer from '@material-ui/core/Drawer';
+import { withStyles } from '@material-ui/core/styles';
 import DrawerHeader from '../DrawerHeader';
 import DrawerItems from '../DrawerItems';
 import MenuManager from '../MenuManager';
-import { withStyles } from 'material-ui/styles';
+import SocialIcons from '../SocialIcons';
 import styles from './styles';
 
 class ResponsiveDrawer extends Component {

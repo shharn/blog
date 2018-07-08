@@ -1,16 +1,16 @@
 // @flow
 import React, { Component } from 'react';
-import IconButton from 'material-ui/IconButton';
+import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
-import TextField from 'material-ui/TextField';
-import { InputLabel } from 'material-ui/Input';
-import { FormControl } from 'material-ui/Form';
-import Select from 'material-ui/Select';
-import { MenuItem } from 'material-ui/Menu';
-import { LinearProgress } from 'material-ui/Progress';
-import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
+import TextField from '@material-ui/core/TextField';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
 import { FetchStatus } from '../../constant';
 import styles from './styles';
 
@@ -142,12 +142,12 @@ class CreateOrEditMenu extends Component<Props, State> {
                 <div className={classes.footer}>
                     {this.getExtraComponent(isFetching, status)}
                     <div className={classes.buttonContainer}>
-                        <IconButton className={classes.iconButton} aria-label="confirm" color="default" onClick={this.handleSubmitButtonClick}>
+                        <Button className={classes.iconButton} aria-label="confirm" color="default" onClick={this.handleSubmitButtonClick}>
                             <SaveIcon/>
-                        </IconButton>
-                        <IconButton className={classes.iconButton} aria-label="cancel" onClick={this.handleCancelButtonClick} color="default">
+                        </Button>
+                        <Button className={classes.iconButton} aria-label="cancel" onClick={this.handleCancelButtonClick} color="default">
                             <ClearIcon/>
-                        </IconButton>
+                        </Button>
                     </div>
                 </div>
             </div>

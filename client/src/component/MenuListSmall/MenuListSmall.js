@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import List from 'material-ui/List';
-import Button from 'material-ui/Button';
-import ListItemWrapper from '../ListItemWrapper';
+import List from '@material-ui/core/List';
+import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
-import { withStyles } from 'material-ui/styles';
+import ListItemWrapper from '../ListItemWrapper';
 import styles from './styles';
 
 import type { Menu } from '../../flowtype';

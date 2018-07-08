@@ -1,13 +1,17 @@
 // @flow
 import React, { Component } from 'react';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { withStyles } from '@material-ui/core/styles';
 import { Route } from 'react-router';
-import { CircularProgress } from 'material-ui/Progress';
-import { withStyles } from 'material-ui/styles';
 import Loadable from 'react-loadable';
+import { makeInfiniteScrollable } from '../InfiniteScrollable';
 import styles from './styles';
 
 const HottestArticleList = Loadable({
-    loader: () => import('../HottestArticleList'),
+    loader: () => import('../HottestArticleList').then(loaded => {
+        console.dir(loaded);
+        return makeInfiniteScrollable(loaded);
+    }),
     loading: () => <CircularProgress size={30}/>
   });
   

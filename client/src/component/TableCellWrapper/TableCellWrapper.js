@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { TableCell } from 'material-ui/Table';
+import TableCell from '@material-ui/core/TableCell';
 
 type Props = {
     rowId: number,
