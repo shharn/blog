@@ -1,22 +1,20 @@
-import React, { Component } from 'react';
-import CC from './InfiniteScrollable';
+//@flow
+import React from 'react';
 
-export default CC;
-
-export function makeInfiniteScrollable(Component) {
-    return class InfiniteScrollable extends React.Component{
+export function makeInfiniteScrollable(WrappedComponent) {
+    class InfiniteScrollable extends React.Component{
         constructor(props) {
             super(props);
-            this.target = React.createRef();
+            this.handleScroll = this.handleScroll.bind(this);
+            this.handleEndOfScroll = this.handleEndOfScroll.bind(this);
+            this.isEndOfScroll = this.isEndOfScroll.bind(this);
         }
 
-        componentDidMount() {
-            this.target.current.addEventListener('scroll', this.handleScroll);
-        }
-
-        handleScroll() : void {
-            console.log(`offsetHeight(${this.props.target.offsetHeight}) + scrollTop(${this.props.target.offsetHeight}) = scrollHeight(${this.props.target.scrollHeight})`);
-            if (this.isEndOfScroll()) {
+        handleScroll(e) : void {
+            e.stopPropagation();
+            const target = e.target;
+            console.log(`offsetHeight(${target.offsetHeight}) + scrollTop(${target.scrollTop}) = scrollHeight(${target.scrollHeight})`);
+            if (this.isEndOfScroll(target)) {
                 this.handleEndOfScroll();
             }
         }
@@ -28,14 +26,19 @@ export function makeInfiniteScrollable(Component) {
             }
         }
     
-        isEndOfScroll() : boolean {
-            const { target } = this.target.current;
+        isEndOfScroll(target: HTMLElement) : boolean {
             const { offsetHeight, scrollTop, scrollHeight } = target;
             return offsetHeight + scrollTop >= scrollHeight;
         }
 
-        render() {
-            return React.forwardRef((props, ref) => <Component {...props} ref={this.target}/>)
+        render() : React.Node {
+            return (
+                <div style={{position: 'relative'}} onScroll={this.handleScroll}>
+                    <WrappedComponent {...this.props}/>
+                </div>
+            );
         }
     }
+
+    return InfiniteScrollable;
 }

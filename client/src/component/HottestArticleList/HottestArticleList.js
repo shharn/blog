@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import { makeInfiniteScrollable } from '../InfiniteScrollable';
 import { FetchStatus } from '../../constant';
 import Article from './Article';
 import styles from './styles';
@@ -47,13 +48,13 @@ class HottestArticleList extends Component<Props> {
     }
 
     render() {
-        const { classes, ref } = this.props;
+        const { classes } = this.props;
         return (
-            <div className={classes.container} ref={ref}>
+            <div className={classes.container}>
                 {this.getRightElementsOnFetchStatus()}
             </div>
         );
     }
 }
 
-export default withStyles(styles, { withTheme: true })(HottestArticleList);
+export default withStyles(styles, { withTheme: true })(makeInfiniteScrollable(HottestArticleList));

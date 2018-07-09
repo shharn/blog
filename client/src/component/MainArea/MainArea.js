@@ -8,10 +8,7 @@ import { makeInfiniteScrollable } from '../InfiniteScrollable';
 import styles from './styles';
 
 const HottestArticleList = Loadable({
-    loader: () => import('../HottestArticleList').then(loaded => {
-        console.dir(loaded);
-        return makeInfiniteScrollable(loaded);
-    }),
+    loader: () =>  import('../HottestArticleList'),
     loading: () => <CircularProgress size={30}/>
   });
   
@@ -19,8 +16,6 @@ const HottestArticleList = Loadable({
     loader: () => import('../ArticleList'),
     loading: () => <CircularProgress size={30}/>
   });
-
-
 
 type Props = {
     classes: any,
