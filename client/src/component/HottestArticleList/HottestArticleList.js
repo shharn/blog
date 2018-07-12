@@ -4,6 +4,9 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { makeInfiniteScrollable } from '../InfiniteScrollable';
 import { FetchStatus } from '../../constant';
+import { 
+    requestDataWithURL
+} from '../../action/data';
 import Article from './Article';
 import styles from './styles';
 
@@ -20,12 +23,13 @@ type Props = {
 }
 
 class HottestArticleList extends Component<Props> {
-    componentDidMount() {
-        this.props.getTheHottestArticles();
-    }
+    // componentDidMount() {
+    //     this.props.getTheHottestArticles();
+    // }
 
     getRightElementsOnFetchStatus() {
-        const {  fetchStatus, articles, classes } = this.props;
+        const {  fetchStatus, articles } = this.props;
+        const { classes } = this.props;
         switch(fetchStatus) {
             case FetchStatus.FETCH_INITIAL:
             case FetchStatus.FETCH_WAIT:
@@ -57,4 +61,23 @@ class HottestArticleList extends Component<Props> {
     }
 }
 
-export default withStyles(styles, { withTheme: true })(makeInfiniteScrollable(HottestArticleList));
+const infScrOptions = {
+    countPerRequest: 5,
+    reduxProvider: (state, ownProps) => {
+        const { data, error, fetchStatus, fetchComplete } = state.app.data.get.hottestArticles
+        return {
+            articles: data,
+            error,
+            fetchStatus,
+            fetchComplete,
+            ...ownProps
+        };
+    },
+    loader: (offset, count) => {
+        console.log(`[loader] offset : ${offset}, count : ${count}`);
+        return requestDataWithURL('hottestArticles', `/articles/hottest?offset=${offset}&count=${count}`)
+    },
+    useRedux: true,
+}
+
+export default withStyles(styles, { withTheme: true })(makeInfiniteScrollable(infScrOptions)(HottestArticleList));
