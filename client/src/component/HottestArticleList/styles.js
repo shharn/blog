@@ -46,12 +46,12 @@ export default theme => ({
         }
     },
     smallMedia: {
-        height: '200px',
+        height: '250px',
     },
     largeMedia: {
-        height: '200px',
+        height: '250px',
         [theme.breakpoints.up('md')]: {
-            height: '300px'
+            height: '320px'
         },
         [theme.breakpoints.up('lg')]: {
             height: '70vh',

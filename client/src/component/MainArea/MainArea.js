@@ -4,7 +4,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
 import { Route } from 'react-router';
 import Loadable from 'react-loadable';
-import { makeInfiniteScrollable } from '../InfiniteScrollable';
 import styles from './styles';
 
 const HottestArticleList = Loadable({

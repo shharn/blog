@@ -2,11 +2,7 @@ import React, { Component } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import { makeInfiniteScrollable } from '../InfiniteScrollable';
 import { FetchStatus } from '../../constant';
-import { 
-    requestDataWithURL
-} from '../../action/data';
 import Article from './Article';
 import styles from './styles';
 
@@ -18,17 +14,17 @@ type Props = {
     error: any,
     fetchStatus: $Values<FetchStatus>,
     fetchComplete: boolean,
-
-    getTheHottestArticles: (void) => void
 }
 
 class HottestArticleList extends Component<Props> {
-    // componentDidMount() {
-    //     this.props.getTheHottestArticles();
-    // }
+    componentDidUpdate() {
+        console.log('[HottestArticleList] componentDidUpdate');
+        console.dir(this.props.data);
+    }
 
     getRightElementsOnFetchStatus() {
-        const {  fetchStatus, articles } = this.props;
+        const {  fetchStatus } = this.props;
+        const articles = this.props.data;
         const { classes } = this.props;
         switch(fetchStatus) {
             case FetchStatus.FETCH_INITIAL:
@@ -61,23 +57,4 @@ class HottestArticleList extends Component<Props> {
     }
 }
 
-const infScrOptions = {
-    countPerRequest: 5,
-    reduxProvider: (state, ownProps) => {
-        const { data, error, fetchStatus, fetchComplete } = state.app.data.get.hottestArticles
-        return {
-            articles: data,
-            error,
-            fetchStatus,
-            fetchComplete,
-            ...ownProps
-        };
-    },
-    loader: (offset, count) => {
-        console.log(`[loader] offset : ${offset}, count : ${count}`);
-        return requestDataWithURL('hottestArticles', `/articles/hottest?offset=${offset}&count=${count}`)
-    },
-    useRedux: true,
-}
-
-export default withStyles(styles, { withTheme: true })(makeInfiniteScrollable(infScrOptions)(HottestArticleList));
+export default withStyles(styles, { withTheme: true })(HottestArticleList);

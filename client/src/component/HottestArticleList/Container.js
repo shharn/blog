@@ -1,24 +1,28 @@
 import Component from './HottestArticleList';
-import { connect } from 'react-redux';
+import { makeInfiniteScrollable } from '../InfiniteScrollable';
 import { 
     requestDataWithURL
 } from '../../action/data';
 
-const mapStateToProps = (state, ownProps) => {
-    const { data, error, fetchStatus, fetchComplete } = state.app.data.get.hottestArticles
-    return {
-        articles: data,
-        error,
-        fetchStatus,
-        fetchComplete,
-        ...ownProps
-    };
+const infScrOptions = {
+    countPerRequest: 5,
+    reduxProvider: (state, ownProps) => {
+        const { data, error, fetchStatus, fetchComplete } = state.app.data.get.hottestArticles
+        return {
+            articles: data,
+            error,
+            fetchStatus,
+            fetchComplete,
+            ...ownProps
+        };
+    },
+    // need to additional processing for appending new data to old data
+    // create new reducer & action for it
+    loader: (offset, count) => {
+        return requestDataWithURL('hottestArticles', `/articles/hottest?offset=${offset}&count=${count}`)
+    },
+    relayedDataName: 'articles',
+    useRedux: true,
 }
 
-const mapDispatchToProps = dispatch => {
-    return {
-        getTheHottestArticles: (offset?: number, count?: number) => dispatch(requestDataWithURL('hottestArticles', '/articles/hottest')),
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Component);
+export default makeInfiniteScrollable(infScrOptions)(Component);

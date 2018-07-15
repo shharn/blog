@@ -2,82 +2,94 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-export function makeInfiniteScrollable(options) {
-    const { loader, provider, useRedux, offset, countPerRequest, reduxProvider } = options;
-    return function innerFunc(WrappedComponent) {
-        class InfiniteScrollable extends React.Component{
-            constructor(props) {
-                super(props);
+export const makeInfiniteScrollable = options => WrappedComponent => {
+    class InfiniteScrollable extends React.Component{
+        constructor(props) {
+            super(props);
+            const { countPerRequest, offset } = options;
+            this.handleScroll = this.handleScroll.bind(this);
+            this.handleEndOfScroll = this.handleEndOfScroll.bind(this);
+            this.isEndOfScroll = this.isEndOfScroll.bind(this);
+            this.load = this.load.bind(this);
+            this.hasMore = true;
+            this.countPerRequest = countPerRequest || 5;
+            this.state = {
+                offset: offset || 0,
+                numberOfPrevData: 0
+            };
+            this.internalStorage = { relayedData: [] };
+        }
 
-                this.handleScroll = this.handleScroll.bind(this);
-                this.handleEndOfScroll = this.handleEndOfScroll.bind(this);
-                this.isEndOfScroll = this.isEndOfScroll.bind(this);
-                this.load = this.load.bind(this);
+        componentDidMount() {
+            this.load();
+        }
 
+        componentDidUpdate(prevProps, prevState, snapshot) {
+            const { relayedDataName } = options;
+            let { relayedData } = this.internalStorage;
+            const addedData = this.props[relayedDataName];
+            if (addedData && addedData.length > 0) {
+                this.internalStorage.relayedData = relayedData.concat(addedData);
                 this.hasMore = true;
-                this.countPerRequest = countPerRequest || 5;
-                this.state = {
-                    offset: offset || 0,
-                    numberOfPrevData: 0
-                };
-                this.innerStorage = null;
+            } else {
+                console.log('no more data');
+                this.hasMore = false;
             }
+        }
 
-            componentDidMount() {
+        // stop watching the event during fetching the new data
+        // after fetching complete, resume the listening
+        handleScroll(e) : void {
+            const target = e.target;
+            if (this.isEndOfScroll(target)) {
+                this.handleEndOfScroll();
+            }
+        }
+    
+        handleEndOfScroll() : void {
+            console.log('[handleEndOfScroll] hasMore : ' + this.hasMore);
+            if (this.hasMore) {
                 this.load();
             }
+        } 
 
-            handleScroll(e) : void {
-                const target = e.target;
-                if (this.isEndOfScroll(target)) {
-                    console.log('End of scroll');
-                    this.handleEndOfScroll();
-                }
-            }
-        
-            handleEndOfScroll() : void {
-                if (this.hasMore) {
-                    this.load();
-                }
-            } 
-
-            load() {
-                const countPerRequest = this.countPerRequest;
-                const { offset } = this.state;
-                this.props.loader(offset, countPerRequest);
-                // offset = offset + number of added data
-                // should fix !!
-                this.setState({
-                    offset: offset + countPerRequest
-                });
-            }
-        
-            isEndOfScroll(target: HTMLElement) : boolean {
-                const { offsetHeight, scrollTop, scrollHeight } = target;
-                return offsetHeight + scrollTop >= scrollHeight;
-            }
-
-            render() : React.Node {
-                return (
-                    <div onScroll={this.handleScroll}>
-                        {useRedux ? 
-                            <WrappedComponent {...this.props}/> :
-                            <WrappedComponent {...this.props} {...provider(this.innerStorage)}/>}
-                    </div>
-                );
-            }
+        load() {
+            const countPerRequest = this.countPerRequest;
+            const { offset } = this.state;
+            this.props.loader(offset, countPerRequest);
+            // offset = offset + number of added data
+            // should fix !!
+            this.setState({
+                offset: offset + countPerRequest
+            });
+        }
+    
+        isEndOfScroll(target: HTMLElement) : boolean {
+            const { offsetHeight, scrollTop, scrollHeight } = target;
+            return offsetHeight + scrollTop >= scrollHeight;
         }
 
-        if (useRedux) {
-            const mdtp = dispatch => {
-                return {
-                    loader: (offset, count) => dispatch(loader(offset, count))
-                };
+        render() : React.Node {
+            const { relayedDataName } = options;
+            const {[relayedDataName]: data, ...rest } = this.props;
+            return (
+                <div onScroll={this.handleScroll}>
+                    <WrappedComponent {...rest} data={data}/>
+                </div>
+            );
+        }
+    }
+
+    const { loader, useRedux } = options;
+    if (useRedux) {
+        const mdtp = dispatch => {
+            return {
+                loader: (offset, count) => dispatch(loader(offset, count))
             };
-            return connect(reduxProvider, mdtp)(InfiniteScrollable)
-        } else {
-            return InfiniteScrollable;
-        }
+        };
+        return connect(options.reduxProvider, mdtp)(InfiniteScrollable)
+    } else {
+        return InfiniteScrollable;
     }
 }
 
