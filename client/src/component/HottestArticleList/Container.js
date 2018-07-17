@@ -2,7 +2,8 @@ import React from 'react';
 import Component from './HottestArticleList';
 import { FetchStatus } from '../../constant';
 import { makeInfiniteScrollable } from '../InfiniteScrollable';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Typography from '@material-ui/core/Typography';
 import { 
     requestDataWithURL
 } from '../../action/data';
@@ -15,9 +16,9 @@ const infScrOptions = {
     statusWait: FetchStatus.WAIT,
     statusSuccess: FetchStatus.SUCCESS,
     statusFail: FetchStatus.FAIL,
-    error: () => {}, // react component or function that returns react component
+    error: error => <Typography variant="subheading">Fail to load Articles. :(</Typography>, 
     loader: (offset, count) => requestDataWithURL('hottestArticles', `/articles/hottest?offset=${offset}&count=${count}`),
-    loading: () => <CircularProgress size={30} />,
+    loading: () => <LinearProgress />,
     useRedux: true
 }
 

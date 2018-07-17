@@ -12,10 +12,10 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
             this.isEndOfScroll = this.isEndOfScroll.bind(this);
             this.load = this.load.bind(this);
             this.countPerRequest = options.countPerRequest || 5;
-            this.hasMore = true;
-            this.offset = options.offset || 0;
             this.state = {
-                relayedData: []
+                relayedData: [],
+                offset: options.offset || 0,
+                hasMore: false
             };
         }
 
@@ -24,17 +24,18 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
         }
 
         componentDidUpdate(prevProps, prevState, snapshot) {
-            console.log('componentDidUpdate');
             if (this.props.data.status === options.statusSuccess && this.props.data.relayed !== prevProps.data.relayed) {
                 const addedData = this.props.data.relayed;
                 if (addedData && addedData.length > 0) {
                     this.setState({
-                        relayedData: this.state.relayedData.concat(addedData)
+                        relayedData: this.state.relayedData.concat(addedData),
+                        hasMore:  addedData.length >= this.countPerRequest,
+                        offset: this.state.offset + addedData.length
                     });
-                    this.hasMore = addedData.length >= this.countPerRequest
-                    this.offset = this.offset + addedData.length;
                 } else {
-                    this.hasMore = false;
+                    this.setState({
+                        hasMore: false
+                    });
                 }
             }
         }
@@ -50,15 +51,14 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
     
         handleEndOfScroll() : void {
             const isFetching = this.props.data.status === options.statusWait;
-            console.log(`[handleEndOfScroll]isFetching : ${isFetching}, hasMore : ${this.hasMore}`);
-            if (this.hasMore && !isFetching) {
+            if (this.state.hasMore && !isFetching) {
                 this.load();
             }
         } 
 
         load() {
             const countPerRequest = this.countPerRequest;
-            const offset = this.offset;
+            const { offset } = this.state;
             this.props.loader(offset, countPerRequest);
         }
     
@@ -69,11 +69,13 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
 
         render() : React.Node {
             const { data, ...rest } = this.props;
-            console.dir(this.state.relayedData);
+            const { relayedData } = this.state;
             return (
                 <div onScroll={this.handleScroll}>
-                    <WrappedComponent {...rest} data={this.state.relayedData}/>
-                    {this.props.status === options.statusWait && options.loading()}
+                    <WrappedComponent {...rest} data={relayedData}>
+                        {this.props.data.status === options.statusWait && options.loading()}
+                        {this.props.data.status === options.statusError && options.error(this.props.data.error)}
+                    </WrappedComponent>
                 </div>
             );
         }
