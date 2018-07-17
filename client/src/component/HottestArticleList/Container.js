@@ -1,28 +1,24 @@
+import React from 'react';
 import Component from './HottestArticleList';
+import { FetchStatus } from '../../constant';
 import { makeInfiniteScrollable } from '../InfiniteScrollable';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { 
     requestDataWithURL
 } from '../../action/data';
 
 const infScrOptions = {
     countPerRequest: 5,
-    reduxProvider: (state, ownProps) => {
-        const { data, error, fetchStatus, fetchComplete } = state.app.data.get.hottestArticles
-        return {
-            articles: data,
-            error,
-            fetchStatus,
-            fetchComplete,
-            ...ownProps
-        };
-    },
-    // need to additional processing for appending new data to old data
-    // create new reducer & action for it
-    loader: (offset, count) => {
-        return requestDataWithURL('hottestArticles', `/articles/hottest?offset=${offset}&count=${count}`)
-    },
-    relayedDataName: 'articles',
-    useRedux: true,
+    dataProvider: state => state.app.data.get.hottestArticles.data,
+    statusProvider: state => state.app.data.get.hottestArticles.fetchStatus,
+    errorProvider: (state, ownProps) => state.app.data.get.hottestArticles.error,
+    statusWait: FetchStatus.WAIT,
+    statusSuccess: FetchStatus.SUCCESS,
+    statusFail: FetchStatus.FAIL,
+    error: () => {}, // react component or function that returns react component
+    loader: (offset, count) => requestDataWithURL('hottestArticles', `/articles/hottest?offset=${offset}&count=${count}`),
+    loading: () => <CircularProgress size={30} />,
+    useRedux: true
 }
 
 export default makeInfiniteScrollable(infScrOptions)(Component);

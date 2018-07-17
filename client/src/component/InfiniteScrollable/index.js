@@ -1,23 +1,22 @@
 //@flow
 import React from 'react';
 import { connect } from 'react-redux';
+import { reduxProviderTemplate, dispatchProviderTemplate } from './provider';
 
 export const makeInfiniteScrollable = options => WrappedComponent => {
     class InfiniteScrollable extends React.Component{
         constructor(props) {
             super(props);
-            const { countPerRequest, offset } = options;
             this.handleScroll = this.handleScroll.bind(this);
             this.handleEndOfScroll = this.handleEndOfScroll.bind(this);
             this.isEndOfScroll = this.isEndOfScroll.bind(this);
             this.load = this.load.bind(this);
+            this.countPerRequest = options.countPerRequest || 5;
             this.hasMore = true;
-            this.countPerRequest = countPerRequest || 5;
+            this.offset = options.offset || 0;
             this.state = {
-                offset: offset || 0,
-                numberOfPrevData: 0
+                relayedData: []
             };
-            this.internalStorage = { relayedData: [] };
         }
 
         componentDidMount() {
@@ -25,15 +24,18 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
         }
 
         componentDidUpdate(prevProps, prevState, snapshot) {
-            const { relayedDataName } = options;
-            let { relayedData } = this.internalStorage;
-            const addedData = this.props[relayedDataName];
-            if (addedData && addedData.length > 0) {
-                this.internalStorage.relayedData = relayedData.concat(addedData);
-                this.hasMore = true;
-            } else {
-                console.log('no more data');
-                this.hasMore = false;
+            console.log('componentDidUpdate');
+            if (this.props.data.status === options.statusSuccess && this.props.data.relayed !== prevProps.data.relayed) {
+                const addedData = this.props.data.relayed;
+                if (addedData && addedData.length > 0) {
+                    this.setState({
+                        relayedData: this.state.relayedData.concat(addedData)
+                    });
+                    this.hasMore = addedData.length >= this.countPerRequest
+                    this.offset = this.offset + addedData.length;
+                } else {
+                    this.hasMore = false;
+                }
             }
         }
 
@@ -47,21 +49,17 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
         }
     
         handleEndOfScroll() : void {
-            console.log('[handleEndOfScroll] hasMore : ' + this.hasMore);
-            if (this.hasMore) {
+            const isFetching = this.props.data.status === options.statusWait;
+            console.log(`[handleEndOfScroll]isFetching : ${isFetching}, hasMore : ${this.hasMore}`);
+            if (this.hasMore && !isFetching) {
                 this.load();
             }
         } 
 
         load() {
             const countPerRequest = this.countPerRequest;
-            const { offset } = this.state;
+            const offset = this.offset;
             this.props.loader(offset, countPerRequest);
-            // offset = offset + number of added data
-            // should fix !!
-            this.setState({
-                offset: offset + countPerRequest
-            });
         }
     
         isEndOfScroll(target: HTMLElement) : boolean {
@@ -70,27 +68,21 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
         }
 
         render() : React.Node {
-            const { relayedDataName } = options;
-            const {[relayedDataName]: data, ...rest } = this.props;
+            const { data, ...rest } = this.props;
+            console.dir(this.state.relayedData);
             return (
                 <div onScroll={this.handleScroll}>
-                    <WrappedComponent {...rest} data={data}/>
+                    <WrappedComponent {...rest} data={this.state.relayedData}/>
+                    {this.props.status === options.statusWait && options.loading()}
                 </div>
             );
         }
     }
 
-    const { loader, useRedux } = options;
-    if (useRedux) {
-        const mdtp = dispatch => {
-            return {
-                loader: (offset, count) => dispatch(loader(offset, count))
-            };
-        };
-        return connect(options.reduxProvider, mdtp)(InfiniteScrollable)
-    } else {
-        return InfiniteScrollable;
-    }
+    const { loader, useRedux, dataProvider, statusProvider, errorProvider } = options;
+    return useRedux ?
+        connect(reduxProviderTemplate({ dataProvider, statusProvider, errorProvider }), dispatchProviderTemplate(loader))(InfiniteScrollable) :
+        InfiniteScrollable;
 }
 
 // const provider = innerStorage => {

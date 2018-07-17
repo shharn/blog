@@ -18,8 +18,6 @@ type Props = {
 
 class HottestArticleList extends Component<Props> {
     componentDidUpdate() {
-        console.log('[HottestArticleList] componentDidUpdate');
-        console.dir(this.props.data);
     }
 
     getRightElementsOnFetchStatus() {

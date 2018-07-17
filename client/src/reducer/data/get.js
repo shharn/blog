@@ -42,7 +42,7 @@ const reducer = (state= initialState, action) => {
                 [dataName]: {
                     ...state[dataName],
                     fetchComplete: false,
-                    fetchStatus: FetchStatus.FETCH_WAIT
+                    fetchStatus: FetchStatus.WAIT
                 }
             };
         }
@@ -53,7 +53,7 @@ const reducer = (state= initialState, action) => {
                 [dataName]: {
                     ...state[dataName],
                     fetchComplete: true,
-                    fetchStatus: FetchStatus.FETCH_SUCCESS,
+                    fetchStatus: FetchStatus.SUCCESS,
                     data: data
                 }
             };
@@ -65,7 +65,7 @@ const reducer = (state= initialState, action) => {
                 [dataName]: {
                     ...state[dataName],
                     fetchComplete: true,
-                    fetchStatus: FetchStatus.FETCH_FAIL,
+                    fetchStatus: FetchStatus.FAIL,
                     error
                 }
             };

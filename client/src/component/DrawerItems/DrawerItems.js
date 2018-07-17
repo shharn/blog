@@ -18,7 +18,7 @@ class DrawerItems extends Component {
         return (
             fetchComplete ? 
             <List className={classes.listContainer}>
-                {fetchStatus === FetchStatusType.FETCH_SUCCESS ?
+                {fetchStatus === FetchStatusType.SUCCESS ?
                     notChildMenus == null ? 
                         <Typography className={classes.text}>No Menus</Typography> : 
                         notChildMenus.map(menu => <DrawerItem key={menu.uid} menu={menu} isChild={false}/>) :

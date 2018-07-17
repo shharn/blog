@@ -12,10 +12,10 @@ export const LogoutStatus = {
 };
 
 export const FetchStatus = {
-    FETCH_INITIAL: 'FETCH_INITIAL',
-    FETCH_WAIT: 'FETCH_WAIT',
-    FETCH_SUCCESS: 'FETCH_SUCCESS',
-    FETCH_FAIL: 'FETCH_FAIL'
+    INITIAL: 'FETCH_INITIAL',
+    WAIT: 'FETCH_WAIT',
+    SUCCESS: 'FETCH_SUCCESS',
+    FAIL: 'FETCH_FAIL'
 };
 
 export const Token = {
