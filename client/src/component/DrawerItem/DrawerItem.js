@@ -29,7 +29,7 @@ class DrawerItem extends Component<Props> {
     }
 
     getRightElement = () => {
-        const { name, uid, url } = this.props.menu;
+        const { name, url } = this.props.menu;
         const { classes, childMenus } = this.props;
         const hasChildren = childMenus && childMenus.length > 0;
         if (hasChildren) {
@@ -47,7 +47,7 @@ class DrawerItem extends Component<Props> {
                 </div>
             );
         } else {
-            let to = url && url.length > 0 ? url : `/menus/${uid}/articles`;
+            let to = url && url.length > 0 ? url : `/menus/${name.toLowerCase().replace(' ', '-')}/articles`;
             return (
                 <ListItem button component={Link} to={to}>
                     <ListItemText primary={name}/>

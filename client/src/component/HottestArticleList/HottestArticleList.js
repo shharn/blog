@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { FetchStatus } from '../../constant';
-import Article from './Article';
+import Article from '../Article';
 import styles from './styles';
 
 type Props = {
@@ -22,9 +22,9 @@ class HottestArticleList extends Component<Props> {
             <div className={classes.container}>
                 {articles.length > 0 ? 
                     <React.Fragment>
-                        <Article classes={{ root: classes.firstCard, media: classes.largeMedia}} article={articles[0]}/>
+                        <Article customClasses={{ root: classes.firstCard, cardMedia: classes.largeMedia}} article={articles[0]}/>
                         <div className={classes.remainingRoot} ref={container => this.innerContainer = container}>
-                            {articles.slice(1).map(article => <Article key={`hottestArticle:${article.uid}`} classes={{ root: classes.card, media: classes.smallMedia }} article={article}/>)}
+                            {articles.slice(1).map(article => <Article key={`hottestArticle:${article.uid}`} customClasses={{ root: classes.card, cardMedia: classes.smallMedia }} article={article}/>)}
                         </div>
                         {this.props.children}
                     </React.Fragment> :

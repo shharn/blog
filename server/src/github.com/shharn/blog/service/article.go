@@ -17,6 +17,7 @@ const (
 				content
 				menu {
 					uid
+					name
 				}
 				imageSource
 				summary
