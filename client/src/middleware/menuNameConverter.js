@@ -4,7 +4,7 @@ import { PLACEHOLDER_NAME_TO_CONVERT } from '../constant';
 const NAME_SEPERATOR = '-';
 const WHITE_SPACE = ' ';
 
-export const menuNameToUID = (action, srcData) => {
+export const menuNameToUIDConverter = (action, srcData) => {
     // 'name' is always lowercase
     const { name,  dataName, propName } = action.payload;
     let { url } = action.payload;

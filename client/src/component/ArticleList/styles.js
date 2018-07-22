@@ -3,6 +3,7 @@ const secondBreakpoint = 1450
 
 export default theme => ({
     listContainer: {
+        position: 'relative',
         overflow: 'auto',
         display: 'grid',
         height: 'calc(100vh - 112px)',
@@ -15,9 +16,6 @@ export default theme => ({
         [theme.breakpoints.up(secondBreakpoint)]: {
             gridTemplateColumns: 'repeat(3, 1fr)'
         }
-    },
-    article: {
-        
     },
     articleImage: {
         height: '200px',
@@ -33,5 +31,11 @@ export default theme => ({
         [theme.breakpoints.up(1240)]: {
             height: '340px'
         }
+    },
+    emptyText: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
     }
 });

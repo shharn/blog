@@ -11,8 +11,8 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
             this.handleEndOfScroll = this.handleEndOfScroll.bind(this);
             this.isEndOfScroll = this.isEndOfScroll.bind(this);
             this.load = this.load.bind(this);
+            this.initLoader = this.initLoader.bind(this);
             this.countPerRequest = options.countPerRequest || 5;
-            this.args = 
             this.state = {
                 relayedData: [],
                 offset: options.offset || 0,
@@ -62,6 +62,16 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
             const args = loaderArgs && loaderArgs.call(this);
             this.props.loader(offset, countPerRequest, args);
         }
+
+        initLoader() {
+            // initialize offset & relayedData
+            this.setState({
+                offset: 0,
+                relayedData: []
+            });
+            // load data
+            this.load();
+        }
     
         isEndOfScroll(target: HTMLElement) : boolean {
             const { offsetHeight, scrollTop, scrollHeight } = target;
@@ -73,7 +83,7 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
             const { relayedData } = this.state;
             return (
                 <div onScroll={this.handleScroll}>
-                    <WrappedComponent {...rest} data={relayedData}>
+                    <WrappedComponent {...rest} data={relayedData} initLoader={this.initLoader}>
                         {this.props.data.status === options.statusWait && options.loading()}
                         {this.props.data.status === options.statusError && options.error(this.props.data.error)}
                     </WrappedComponent>
