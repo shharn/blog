@@ -12,6 +12,7 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
             this.isEndOfScroll = this.isEndOfScroll.bind(this);
             this.load = this.load.bind(this);
             this.countPerRequest = options.countPerRequest || 5;
+            this.args = 
             this.state = {
                 relayedData: [],
                 offset: options.offset || 0,
@@ -40,8 +41,6 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
             }
         }
 
-        // stop watching the event during fetching the new data
-        // after fetching complete, resume the listening
         handleScroll(e) : void {
             const target = e.target;
             if (this.isEndOfScroll(target)) {
@@ -58,8 +57,10 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
 
         load() {
             const countPerRequest = this.countPerRequest;
+            const { loaderArgs } = options;
             const { offset } = this.state;
-            this.props.loader(offset, countPerRequest);
+            const args = loaderArgs && loaderArgs.call(this);
+            this.props.loader(offset, countPerRequest, args);
         }
     
         isEndOfScroll(target: HTMLElement) : boolean {

@@ -27,7 +27,7 @@ class MainArea extends Component<Props> {
         return (
             <main className={classes.content}>
                 <Route exact path="/" component={HottestArticleList}/>
-                <Route path="/menus/:id/articles" component={ArticleList}/>
+                <Route path="/menus/:menuName/articles" component={ArticleList}/>
             </main>
         );
     }

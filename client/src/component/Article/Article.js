@@ -5,6 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+// import { nameTo}
 import styles from './styles';
 
 class Article extends Component {
@@ -19,7 +20,7 @@ class Article extends Component {
                         title={article.title}/>
                     <CardContent>
                         <Typography component="p">
-                            {article.content.substr(0, 200) + ' ... '}
+                            {article.content.length > 200 ? article.content.substr(0, 200) + ' ... ' : article.content}
                         </Typography>
                     </CardContent>
                 </Card>

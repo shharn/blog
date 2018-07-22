@@ -4,6 +4,7 @@ export default theme => ({
         position: 'relative',
         height: 'calc(100vh - 112px)',
         overflow: 'auto',
+        padding: '2px',
         [theme.breakpoints.up('lg')]: {
             overflow: 'hidden'
         }

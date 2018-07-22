@@ -25,9 +25,29 @@ const (
 				views
 			}
 		}`
+	getArticlesOnMenuQuery = `
+		query getArticlesOnMenu($menuID: string, $offset: int, $count: int) {
+			articles (func: has(title), orderdesc: createdAt, offset: $offset, first: $count) @filter(uid_in(menu, $menuID)) {
+				uid
+				title
+				content
+				menu {
+					uid
+					name
+				}
+				imageSource
+				summary
+				createdAt
+				views
+			}
+		}`
 )
 
 type getTheHottestArticlesPayload struct {
+	Articles []data.Article `json:"articles"`
+}
+
+type getArticlesOnMenusPayload struct {
 	Articles []data.Article `json:"articles"`
 }
 
@@ -49,6 +69,32 @@ func GetTheHottestArticles(offset, numOfArticles string) (interface{}, error) {
 		return nil, errors.WithStack(err)
 	}
 	articles := getTheHottestArticlesPayload{}
+	if err := json.Unmarshal(res.Json, &articles); err != nil {
+		return nil, errors.WithStack(err)
+	}
+	return articles.Articles, nil
+}
+
+// GetArticlesOnMenu returns articles belong to the menu
+func GetArticlesOnMenu(menuID, offset, count string) (interface{}, error) {
+	c, err := db.Init()
+	defer c.CleanUp()
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	vars := map[string]string{
+		"$menuID": menuID,
+		"$offset": offset,
+		"$count":  count,
+	}
+
+	res, err := c.QueryWithVars(getArticlesOnMenuQuery, vars)
+	defer c.Commit()
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	articles := getArticlesOnMenusPayload{}
 	if err := json.Unmarshal(res.Json, &articles); err != nil {
 		return nil, errors.WithStack(err)
 	}

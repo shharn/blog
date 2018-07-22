@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 	"net/url"
 
@@ -14,8 +13,22 @@ const defaultNumberOfHottestArticles = "5"
 // GetArticlesOnMenuHandler is for "GET /menus/:id/articles"
 // Get all articles related to a menu by id
 func GetArticlesOnMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params, queryParams url.Values) (interface{}, error) {
-	log.Printf("[GetArticlesOnMenuHandler] Params : %v\n", params)
-	return nil, nil
+	var realOffset, realCount string
+	rawOffset, exists := queryParams["offset"]
+	if exists {
+		realOffset = rawOffset[0]
+	} else {
+		realOffset = "0"
+	}
+
+	rawCount, exists := queryParams["count"]
+	if exists {
+		realCount = rawCount[0]
+	} else {
+		realCount = defaultNumberOfHottestArticles
+	}
+	articles, err := service.GetArticlesOnMenu(params["id"].(string), realOffset, realCount)
+	return articles, err
 }
 
 // GetTheHottestArticlesHandler is for "GET /articles/hottest

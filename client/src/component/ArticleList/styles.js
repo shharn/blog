@@ -5,6 +5,7 @@ export default theme => ({
     listContainer: {
         overflow: 'auto',
         display: 'grid',
+        height: 'calc(100vh - 112px)',
         gridGap: '15px',
         padding: '2px',
         gridTemplateColumns: 'repeat(1, 1fr)',

@@ -12,7 +12,7 @@ const infScrOptions = {
     countPerRequest: 5,
     dataProvider: state => state.app.data.get.hottestArticles.data,
     statusProvider: state => state.app.data.get.hottestArticles.fetchStatus,
-    errorProvider: (state, ownProps) => state.app.data.get.hottestArticles.error,
+    errorProvider: state => state.app.data.get.hottestArticles.error,
     statusWait: FetchStatus.WAIT,
     statusSuccess: FetchStatus.SUCCESS,
     statusFail: FetchStatus.FAIL,

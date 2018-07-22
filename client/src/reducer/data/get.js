@@ -28,7 +28,7 @@ const initialState = {
         },
         fetchStatus: FetchStatus.FETCH_INITIAL,
         fetchComplete: false
-    }
+    },
 };
 
 const reducer = (state= initialState, action) => {

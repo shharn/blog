@@ -9,4 +9,6 @@ export const reduxProviderTemplate = ({ dataProvider, statusProvider, errorProvi
     };
 };
 
-export const dispatchProviderTemplate = loader => dispatch => ({ loader: (offset, count) => dispatch(loader(offset, count)) });
+export const dispatchProviderTemplate = loader => dispatch => ({ 
+    loader: (offset, count, ...args) => dispatch(loader(offset, count, args))
+ });

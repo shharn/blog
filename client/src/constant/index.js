@@ -42,3 +42,5 @@ export const MenuManagerChildComponentType = {
     CREATE_MENU: 'CREATE_MENU',
     EDIT_MENU: 'EDIT_MENU'
 };
+
+export const PLACEHOLDER_NAME_TO_CONVERT = '{{uid}}';
