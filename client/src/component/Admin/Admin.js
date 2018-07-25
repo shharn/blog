@@ -53,7 +53,7 @@ class Admin extends Component<Props, State> {
     }
 
     redirectToHomeWithDelay = () => {
-        setTimeout(() => this.props.history.push('/'), 2000);
+        setTimeout(() => this.props.history.push('/'), 1000);
     }
 
     handleSubmit = () => {

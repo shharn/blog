@@ -11,14 +11,18 @@ const HottestArticleList = Loadable({
     loading: () => <CircularProgress size={30}/>
   });
   
-  const ArticleList  = Loadable({
-    loader: () => import('../ArticleList'),
+  const ArticleListWrapper  = Loadable({
+    loader: () => import('../ArticleListWrapper'),
     loading: () => <CircularProgress size={30}/>
   });
 
+  const CreateArticle = Loadable({
+    loader: () => import('../CreateArticle'),
+    loading: () => <CircularProgress size={30}/>
+});
+
 type Props = {
     classes: any,
-    path: string,
 }
 
 class MainArea extends Component<Props> {
@@ -27,7 +31,8 @@ class MainArea extends Component<Props> {
         return (
             <main className={classes.content}>
                 <Route exact path="/" component={HottestArticleList}/>
-                <Route path="/menus/:menuName/articles" component={ArticleList}/>
+                <Route path="/menus/:menuName/articles" component={ArticleListWrapper}/>
+                <Route path="/articles/create" component={CreateArticle}/>
             </main>
         );
     }

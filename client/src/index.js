@@ -34,11 +34,13 @@ const theme = createMuiTheme({
     palette: {
         primary: {
             light: blue[400],
-            main: blue[500]
+            main: blue[500],
+            dark: blue[600]
         },
         secondary: {
             light: pink[400],
-            main: pink[500]
+            main: pink[500],
+            dark: pink[600]
         }
     },
     breakpoints: {
