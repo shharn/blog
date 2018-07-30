@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/pkg/errors"
@@ -70,7 +69,19 @@ func CreateArticleHandler(w http.ResponseWriter, rq *http.Request, params router
 	if err = json.NewDecoder(rq.Body).Decode(&article); err != nil {
 		return nil, errors.WithStack(err)
 	}
-	log.Printf("[CreateArticleHandler] article : %v, menu id : %v", article, (*article.Menu)[0].ID)
 	err = service.CreateArticle(article)
 	return nil, err
+}
+
+// GetArticleHandler is for "GET /articles/:id"
+func GetArticleHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
+	id, exists := params["id"]
+	if !exists {
+		return nil, nil
+	}
+	if article, err := service.GetArticle(id.(string)); err != nil {
+		return nil, err
+	} else {
+		return article, nil
+	}
 }

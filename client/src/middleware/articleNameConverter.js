@@ -4,11 +4,11 @@ import { PLACEHOLDER_NAME_TO_CONVERT } from '../constant';
 const NAME_SEPERATOR = '-';
 const WHITE_SPACE = ' ';
 
-export const menuNameToUIDConverter = (action, srcData) => {
+export const articleNameToUIDConverter = (action, srcData) => {
     // 'name' is always lowercase
     const { name,  dataName, propName } = action.payload;
     let { url } = action.payload;
-    const data = menuDataProvider(srcData);
+    const data = articleDataProvider(srcData);
     let splitted = name.toLowerCase().split(NAME_SEPERATOR); // some_menu_example => ['some', 'name', example']
     let result = data.filter(datum => {
         // ex) Some Menu Example => some menu example => ['some', 'menu', 'example']
@@ -30,8 +30,8 @@ export const menuNameToUIDConverter = (action, srcData) => {
     };
 };
 
-function menuDataProvider(state) {
-    return state.app.data.get.menus.data;
+function articleDataProvider(state) {
+    return state.app.data.get.articles.data;
 }
 
-export const menuConverterChecker = action => action.type === DataActionType.REQUEST_GET_DATA_WITH_NAME_AND_URL;
+export const articleConverterChecker = action => action.type === DataActionType.REQUEST_GET_DATA_WITH_NAME_AND_URL;

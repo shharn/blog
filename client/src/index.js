@@ -8,7 +8,8 @@ import createSagaMiddleware from 'redux-saga';
 import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux';
 import { createActionConverter } from './middleware/actionConverter';
-import { menuNameToUIDConverter, isTargetAction } from './middleware/menuNameConverter';
+import { menuNameToUIDConverter, menuConverterChecker } from './middleware/menuNameConverter';
+import { articleNameToUIDConverter, articleConverterChecker } from './middleware/articleNameConverter';
 import logger from 'redux-logger';
 import appReducer from './reducer';
 import rootSaga from './saga';
@@ -20,13 +21,14 @@ import pink from '@material-ui/core/colors/pink';
 const history = createHistory();
 const routeMiddleware = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware();
-const actionConverter = createActionConverter(isTargetAction, menuNameToUIDConverter);
+const actionConverterForMenu = createActionConverter(menuConverterChecker, menuNameToUIDConverter);
+const actionConverterForArticle = createActionConverter(articleConverterChecker, articleNameToUIDConverter);
 const store = createStore(
     combineReducers({
         router: routerReducer,
         app: appReducer
     }),
-    applyMiddleware(routeMiddleware, actionConverter, sagaMiddleware, logger)
+    applyMiddleware(routeMiddleware, actionConverterForMenu, actionConverterForArticle, sagaMiddleware, logger)
 );
 sagaMiddleware.run(rootSaga);
 

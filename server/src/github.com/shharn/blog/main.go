@@ -34,5 +34,7 @@ func main() {
 	r.Get("/menus/:id/articles", handler.GetArticlesOnMenuHandler)
 	r.Get("/articles/hottest", handler.GetTheHottestArticlesHandler)
 	r.Post("/articles", handler.CreateArticleHandler)
+	r.Get("/articles/:id", handler.GetArticleHandler)
+
 	http.ListenAndServe(":10000", r)
 }

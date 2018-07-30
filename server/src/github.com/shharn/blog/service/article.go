@@ -23,7 +23,6 @@ const (
 				imageSource
 				summary
 				createdAt
-				views
 			}
 		}`
 	getArticlesOnMenuQuery = `
@@ -39,9 +38,19 @@ const (
 				imageSource
 				summary
 				createdAt
-				views
 			}
 		}`
+	getArticleQuery = `
+		query getArticle($articleID: string) {
+			articles (func: uid($articleID)) {
+				uid
+				title
+				content
+				imageSource
+				createdAt
+			}
+		}
+	`
 )
 
 type getTheHottestArticlesPayload struct {
@@ -49,6 +58,10 @@ type getTheHottestArticlesPayload struct {
 }
 
 type getArticlesOnMenusPayload struct {
+	Articles []data.Article `json:"articles"`
+}
+
+type getArticlePayload struct {
 	Articles []data.Article `json:"articles"`
 }
 
@@ -121,4 +134,29 @@ func CreateArticle(article data.Article) error {
 		return err
 	}
 	return nil
+}
+
+// GetArticle will give you a article which has the id
+func GetArticle(id string) (interface{}, error) {
+	c, err := db.Init()
+	defer c.CleanUp()
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	defer c.Commit()
+
+	vars := map[string]string{"$articleID": id}
+	res, err := c.QueryWithVars(getArticleQuery, vars)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	articles := getArticlePayload{}
+	if err := json.Unmarshal(res.Json, &articles); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	if len(articles.Articles) > 0 {
+		return articles.Articles[0], nil
+	}
+	return nil, nil
 }

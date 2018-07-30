@@ -11,6 +11,7 @@ const initialState = {
         fetchStatus: FetchStatus.INITIAL,
         fetchComplete: false
     },
+    article: null,
     articles: {
         data: [],
         error: {
