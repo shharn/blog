@@ -1,11 +1,13 @@
-export const reduxProviderTemplate = ({ dataProvider, statusProvider, errorProvider }) => (state, ownProps) => {
+export const reduxProviderTemplate = ({ dataProvider, statusProvider, errorProvider, reduxPropsProvider }) => (state, ownProps) => {
+    const reduxProps = typeof reduxPropsProvider === 'function' && reduxPropsProvider(state, ownProps);
     return {
         ...ownProps,
         data: {
             status: statusProvider(state),
             error: errorProvider(state),
-            relayed: dataProvider(state)
-        }
+            relayed: dataProvider(state),
+        },
+        reduxProps
     };
 };
 

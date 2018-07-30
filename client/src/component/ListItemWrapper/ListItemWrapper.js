@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ListItem from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import type { Menu } from '../../flowtype';
@@ -45,7 +45,9 @@ class ListItemWrapper extends Component<Props, State> {
     render() {
         const { menu } = this.props;
         return (
-            <ListItem button divider={true}
+            <ListItem 
+                button
+                divider={true}
                 onClick={this.handleListItemClick}
                 onTouchStart={this.handleTouchStart}
                 onTouchMove={this.handleTouchMove}

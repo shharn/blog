@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
-	"net/url"
 
 	"github.com/pkg/errors"
 	"github.com/shharn/blog/data"
@@ -12,13 +11,13 @@ import (
 )
 
 // GetMenusHandler is a handler for "GET /menus"
-func GetMenusHandler(w http.ResponseWriter, r *http.Request, params router.Params, queryParams url.Values) (interface{}, error) {
+func GetMenusHandler(w http.ResponseWriter, r *http.Request, params router.Params) (interface{}, error) {
 	menus, err := service.GetMenus()
 	return menus, err
 }
 
 // CreateMenuHandler is a handler for "POST /menus"
-func CreateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params, queryParams url.Values) (interface{}, error) {
+func CreateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
 	var (
 		menu data.Menu
 		err  error
@@ -31,7 +30,7 @@ func CreateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Pa
 }
 
 // UpdateMenuHandler is a handler for "PATCH /menus"
-func UpdateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params, queryParams url.Values) (interface{}, error) {
+func UpdateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
 	var (
 		menu data.Menu
 		err  error
@@ -44,7 +43,7 @@ func UpdateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Pa
 }
 
 // DeleteMenuHandler is handler for "DELETE /menus/:id"
-func DeleteMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params, queryParams url.Values) (interface{}, error) {
+func DeleteMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
 	id := params["id"].(string)
 	err := service.DeleteMenu(id)
 	return nil, err

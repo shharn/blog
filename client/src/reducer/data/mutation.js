@@ -4,29 +4,29 @@ import { FetchStatus } from '../../constant';
 const initialState = {
     menus: {
         create: {
-            status: FetchStatus.FETCH_INITIAL,
+            status: FetchStatus.INITIAL,
             isFetching: false
         },
         update: {
-            state: FetchStatus.FETCH_INITIAL,
+            status: FetchStatus.INITIAL,
             isFetching: false
         },
          delete: {
-            state: FetchStatus.FETCH_INITIAL,
+            status: FetchStatus.INITIAL,
             isFetching: false
          }
     },
     articles: {
         create: {
-            status: FetchStatus.FETCH_INITIAL,
+            status: FetchStatus.INITIAL,
             isFetching: false
         },
         update: {
-            state: FetchStatus.FETCH_INITIAL,
+            status: FetchStatus.INITIAL,
             isFetching: false
         },
          delete: {
-            state: FetchStatus.FETCH_INITIAL,
+            status: FetchStatus.INITIAL,
             isFetching: false
          }
     }
@@ -42,7 +42,7 @@ const reducer = (state = initialState, action) => {
                 [dataName]: {
                     ...state[dataName],
                     [operationType]: {
-                        status: FetchStatus.FETCH_WAIT,
+                        status: FetchStatus.WAIT,
                         isFetching: true
                     }
                 }
@@ -53,7 +53,7 @@ const reducer = (state = initialState, action) => {
                 [dataName]: {
                     ...state[dataName],
                     [operationType]: {
-                        status: FetchStatus.FETCH_SUCCESS,
+                        status: FetchStatus.SUCCESS,
                         isFetching: false
                     }
                 }
@@ -65,7 +65,7 @@ const reducer = (state = initialState, action) => {
                 [dataName]: {
                     ...state[dataName],
                         [operationType]: {
-                            status: FetchStatus.FETCH_FAIL,
+                            status: FetchStatus.FAIL,
                             isFetching: false,
                             error
                         }

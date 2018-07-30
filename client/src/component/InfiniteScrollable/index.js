@@ -92,9 +92,9 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
         }
     }
 
-    const { loader, useRedux, dataProvider, statusProvider, errorProvider } = options;
+    const { loader, useRedux, dataProvider, statusProvider, errorProvider, reduxPropsProvider } = options;
     return useRedux ?
-        connect(reduxProviderTemplate({ dataProvider, statusProvider, errorProvider }), dispatchProviderTemplate(loader))(InfiniteScrollable) :
+        connect(reduxProviderTemplate({ dataProvider, statusProvider, errorProvider, reduxPropsProvider }), dispatchProviderTemplate(loader))(InfiniteScrollable) :
         InfiniteScrollable;
 }
 

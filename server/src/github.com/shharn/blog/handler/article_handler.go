@@ -1,9 +1,12 @@
 package handler
 
 import (
+	"encoding/json"
+	"log"
 	"net/http"
-	"net/url"
 
+	"github.com/pkg/errors"
+	"github.com/shharn/blog/data"
 	"github.com/shharn/blog/router"
 	"github.com/shharn/blog/service"
 )
@@ -12,7 +15,8 @@ const defaultNumberOfHottestArticles = "5"
 
 // GetArticlesOnMenuHandler is for "GET /menus/:id/articles"
 // Get all articles related to a menu by id
-func GetArticlesOnMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params, queryParams url.Values) (interface{}, error) {
+func GetArticlesOnMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
+	queryParams := rq.URL.Query()
 	var realOffset, realCount string
 	rawOffset, exists := queryParams["offset"]
 	if exists {
@@ -33,7 +37,8 @@ func GetArticlesOnMenuHandler(w http.ResponseWriter, rq *http.Request, params ro
 
 // GetTheHottestArticlesHandler is for "GET /articles/hottest
 // Get the hottest articles
-func GetTheHottestArticlesHandler(w http.ResponseWriter, rq *http.Request, params router.Params, queryParams url.Values) (interface{}, error) {
+func GetTheHottestArticlesHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
+	queryParams := rq.URL.Query()
 	var realOffset, realCount string
 	rawOffset, exists := queryParams["offset"]
 	if exists {
@@ -54,4 +59,18 @@ func GetTheHottestArticlesHandler(w http.ResponseWriter, rq *http.Request, param
 		return nil, err
 	}
 	return articles, nil
+}
+
+// CreateArticleHandler is for "POST /articles"
+func CreateArticleHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
+	var (
+		article data.Article
+		err     error
+	)
+	if err = json.NewDecoder(rq.Body).Decode(&article); err != nil {
+		return nil, errors.WithStack(err)
+	}
+	log.Printf("[CreateArticleHandler] article : %v, menu id : %v", article, (*article.Menu)[0].ID)
+	err = service.CreateArticle(article)
+	return nil, err
 }

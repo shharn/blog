@@ -19,15 +19,34 @@ export default theme => ({
         }
     },
     formContainer: {
-        marginTop: '20px',
+        marginTop: '10px',
+    },
+    multilineRoot: {
+        padding: 0
     },
     selectContainer: {
         width: '100px',
+        marginTop: '20px',
     },
     shrinkLabel: {
         transform: 'translate(0, 0)'
     },
     selectRoot: {
         marginTop: '6px',
+    },
+    footer: {
+        marginTop: '10px',
+        position: 'relatvie',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    buttonsContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+    },
+    button: {
+        margin: theme.spacing.unit
     }
 });

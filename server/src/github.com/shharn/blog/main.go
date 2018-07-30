@@ -28,10 +28,11 @@ func main() {
 
 	r.Get("/menus", handler.GetMenusHandler)
 	r.Post("/menus", handler.CreateMenuHandler)
-	r.Patch("/menus", handler.UpdateMenuHandler)
+	r.Patch("/menus/:id", handler.UpdateMenuHandler)
 	r.Delete("/menus/:id", handler.DeleteMenuHandler)
 
 	r.Get("/menus/:id/articles", handler.GetArticlesOnMenuHandler)
 	r.Get("/articles/hottest", handler.GetTheHottestArticlesHandler)
+	r.Post("/articles", handler.CreateArticleHandler)
 	http.ListenAndServe(":10000", r)
 }

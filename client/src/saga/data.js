@@ -1,4 +1,5 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
+import LocalStorage from 'local-storage';
 import { 
     dataResponseSuccess, 
     dataResponseFailed,
@@ -7,7 +8,7 @@ import {
     requestData
  } from '../action/data';
 import { Data as DataActionType } from '../action/types';
-import { MutationOperationType } from '../constant';
+import { MutationOperationType, Token } from '../constant';
 import { 
     getData,
     getDataWithURL,
@@ -47,7 +48,8 @@ function* dataGetRequestWithURLHandler(action: BlogAction) : Generator<any, any,
 }
 
 function* dataMutationRequestHandler(action: BlogAction) : Generator<any, any, any> {
-    const { operationType, dataName, data, token } = action.payload;
+    const { operationType, dataName, data } = action.payload;
+    const token = LocalStorage.get(Token.key);
     let response;
     switch(operationType) {
         case MutationOperationType.CREATE:
@@ -63,7 +65,6 @@ function* dataMutationRequestHandler(action: BlogAction) : Generator<any, any, a
             break;
     }
     if (response.statusCode === 200) {
-        yield put(requestData(dataName))
         yield put(dataMutationSuccess(dataName, operationType, response.body));
     } else {
         yield put(dataMutationFail(dataName, operationType, {

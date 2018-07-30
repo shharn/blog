@@ -63,7 +63,7 @@ export function createData(dataName: string, data: any, token: string) {
 
 export function updateData(dataName: string, data: any, token: string) {
     return request
-        .patch(`http://${env.apiServerDomain}/${dataName}`)
+        .patch(`http://${env.apiServerDomain}/${dataName}/${data.uid}`)
         .set(HEADER_NAME_FOR_TOKEN, token)
         .type('text/plain')
         .accept('json')

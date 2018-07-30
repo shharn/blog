@@ -12,7 +12,7 @@ class ArticleListWrapper extends Component {
         return (
             <div>
                 {isAuthenticated && 
-                    <Button component={Link} to="/articles/create" className={classes.createButton} variant="fab" mini color="secondary" aria-label="create article">
+                    <Button component={Link} to="/admin/article" className={classes.createButton} variant="fab" mini color="secondary" aria-label="create article">
                         <AddIcon/>
                     </Button>}
                 <ArticleList {...rest}/>

@@ -46,18 +46,12 @@ class Home extends Component<Props, State> {
 
   render() {
     const { classes, isAuthenticated } = this.props;
-    console.dir(this.props);
     return (
       <div className={classes.homeContainer}>
           <div className={classes.appFrame}>
               <TopBar toggleDrawer={this.handleDrawerToggle} isAuthenticated={isAuthenticated}/>
               <ResponsiveDrawer toggleDrawer={this.handleDrawerToggle} smallScreenOpen={this.state.smallScreenOpen} isAuthenticated={isAuthenticated}/>
               <MainArea/>
-              {/* <main className={classes.mainArea}>
-                <Route exact path="/" component={HottestArticleList}/>
-                <Route path="menus/:menuName/articles" component={ArticleListWrapper}/>
-                {/* <Route path="/createArticle" component={CreateArticle}/> */}
-              {/* </main> */}
           </div>
       </div>
     );

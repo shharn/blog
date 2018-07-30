@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/shharn/blog/data"
@@ -82,6 +83,7 @@ func GetArticlesOnMenu(menuID, offset, count string) (interface{}, error) {
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
+	defer c.Commit()
 
 	vars := map[string]string{
 		"$menuID": menuID,
@@ -90,7 +92,7 @@ func GetArticlesOnMenu(menuID, offset, count string) (interface{}, error) {
 	}
 
 	res, err := c.QueryWithVars(getArticlesOnMenuQuery, vars)
-	defer c.Commit()
+
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -99,4 +101,24 @@ func GetArticlesOnMenu(menuID, offset, count string) (interface{}, error) {
 		return nil, errors.WithStack(err)
 	}
 	return articles.Articles, nil
+}
+
+// CreateArticle creates a new article
+func CreateArticle(article data.Article) error {
+	var c *db.Client
+	var err error
+	c, err = db.Init()
+	defer c.CleanUp()
+	if err != nil {
+		return err
+	}
+	defer c.Commit()
+
+	article.CreatedAt = time.Now().Format(time.RFC3339)
+	md := db.MutationData{article}
+	_, err = c.Mutate(md)
+	if err != nil {
+		return err
+	}
+	return nil
 }

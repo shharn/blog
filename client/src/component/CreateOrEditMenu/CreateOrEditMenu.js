@@ -28,6 +28,7 @@ type Props = {
     
     switchToList: () => void,
 
+    getMenus: () => void,
     createMenu: (menu: Menu) => void,
     updateMenu: (menu: Menu) => void,
     initializeStatus: () => void
@@ -41,17 +42,29 @@ type State = {
 
 class CreateOrEditMenu extends Component<Props, State> {
     state = {
-        menuName: this.props.isEditMode === true ? this.props.menu.name : '',
-        menuURL: this.props.isEditMode === true ? this.props.menu.url : '',
-        parentMenuId: this.props.isEditMode === true ? this.props.menu.parent ? this.props.menu.parent.uid : '0' : '0',
+        menuName: '',
+        menuURL: '',
+        parentMenuId: '0',
+    }
+
+    componentDidMount() {
+        if (this.props.isEditMode) {
+            const { menu } = this.props;
+            this.setState({
+                menuName: menu.name,
+                menuURL: menu.url,
+                parentMenuId: menu.parent ? menu.parent[0].uid : '0'
+            });
+        }
     }
 
     componentDidUpdate() {
-        this.props.status === FetchStatus.FETCH_SUCCESS && setTimeout(this.props.switchToList, 1000);
+        this.props.status === FetchStatus.SUCCESS && setTimeout(this.props.switchToList, 1000);
     }
 
     componentWillUnmount() {
         this.props.initializeStatus();
+        this.props.status === FetchStatus.SUCCESS && this.props.getMenus();
     }
 
     handleNameChange = event => {
@@ -73,18 +86,16 @@ class CreateOrEditMenu extends Component<Props, State> {
             // set error message on TextField of Name
             return;
         } 
-        if (menuURL.length < 1) {
-            // set error message on TextField of URL
-            return;
-        }
 
         // If no parent, should not include the parent property
         let data;
         if (isEditMode === true) {
             data = { ...menu, name: menuName, url: menuURL };
-            if ( (!data.parent && parentMenuId !== '0') || (data.parent && data.parent[0].uid !== parentMenuId)) {
+            if (!data.parent && parentMenuId !== '0') { // parent menu : None -> Some menu
                 data.parent = [ { uid: parentMenuId } ];
-            } 
+            } else if (data.parent && data.parent[0].uid !== parentMenuId) { // parent menu : Some menu -> Other menu
+                data.parent = parentMenuId === '0' ? null : [ { uid: parentMenuId } ];
+            }
         } else {
             data = {
                 name: menuName,
@@ -92,25 +103,20 @@ class CreateOrEditMenu extends Component<Props, State> {
             };
             parentMenuId !== '0' && (data.parent = [  { uid: parentMenuId } ]);
         }
-
-        if (menuName.length > 0 && menuURL.length > 0) {
-            isEditMode === true ? this.props.updateMenu(data) : this.props.createMenu(data);
-        }
+        isEditMode === true ? this.props.updateMenu(data) : this.props.createMenu(data);
     }
 
     handleCancelButtonClick = event => {
         this.props.switchToList();
     }
     
-    getExtraComponent = (isFetching: boolean, status: $Values<FetchStatus>) => {
-        if (isFetching === true) {
-            return <LinearProgress/>;
-        }
-
+    getExtraComponent = (status: $Values<FetchStatus>) => {
         switch(status) {
-            case FetchStatus.FETCH_SUCCESS:
+            case FetchStatus.WAIT:
+                return <LinearProgress/>;
+            case FetchStatus.SUCCESS:
                 return <Typography variant="caption" style={{ color: 'green' }}>Success</Typography>;
-            case FetchStatus.FETCH_FAIL:
+            case FetchStatus.FAIL:
                 return <Typography variant="caption" color='error'>Failed</Typography>;
             default:
                 return;
@@ -118,7 +124,7 @@ class CreateOrEditMenu extends Component<Props, State> {
     }
 
     render() {
-        const { classes, menus, menu, isFetching, isEditMode, status } = this.props;
+        const { classes, menus, menu, isEditMode, status } = this.props;
         const showableMenus = isEditMode === true ? menus.filter(item => item.uid === '0' || item.uid !== menu.uid) : menus;
         return (
             <div className={classes.createMenuContainer}>
@@ -140,7 +146,7 @@ class CreateOrEditMenu extends Component<Props, State> {
                     </FormControl>
                 </div>
                 <div className={classes.footer}>
-                    {this.getExtraComponent(isFetching, status)}
+                    {this.getExtraComponent(status)}
                     <div className={classes.buttonContainer}>
                         <Button className={classes.iconButton} aria-label="confirm" color="default" onClick={this.handleSubmitButtonClick}>
                             <SaveIcon/>

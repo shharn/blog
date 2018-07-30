@@ -8,7 +8,7 @@ const initialState = {
             code: 0,
             message: ""
         },
-        fetchStatus: FetchStatus.FETCH_INITIAL,
+        fetchStatus: FetchStatus.INITIAL,
         fetchComplete: false
     },
     articles: {
@@ -17,7 +17,7 @@ const initialState = {
             code: 0,
             message: ""
         },
-        fetchStatus: FetchStatus.FETCH_INITIAL,
+        fetchStatus: FetchStatus.INITIAL,
         fetchComplete: false
     },
     hottestArticles: {
@@ -26,7 +26,7 @@ const initialState = {
             code: 0,
             message: ""
         },
-        fetchStatus: FetchStatus.FETCH_INITIAL,
+        fetchStatus: FetchStatus.INITIAL,
         fetchComplete: false
     },
 };

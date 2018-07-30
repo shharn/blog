@@ -45,13 +45,12 @@ export const dataResponseSuccess = (data: any, dataName: string) => ({
     }
 })
 
-export const requestDataMutation = (operationType: string, data: any, dataName: string, token: string) => ({
+export const requestDataMutation = (operationType: string, data: any, dataName: string) => ({
     type: DataActionType.REQUEST_MUTATE_DATA,
     payload: {
         operationType,
         data,
         dataName,
-        token
     }
 })
 

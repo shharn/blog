@@ -2,7 +2,6 @@ package handler
 
 import (
 	"net/http"
-	"net/url"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
@@ -12,7 +11,7 @@ import (
 )
 
 // CheckHandler is handler for "/check"
-func CheckHandler(w http.ResponseWriter, rq *http.Request, params router.Params, queryParams url.Values) (interface{}, error) {
+func CheckHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
 	clientToken := rq.Header.Get("X-Session-Token")
 	isValid, err := validateToken(clientToken)
 	if err == nil {

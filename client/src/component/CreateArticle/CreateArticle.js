@@ -1,21 +1,46 @@
 import React, { Component } from 'react';
 import Paper from '@material-ui/core/Paper';
 import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
+import Button from '@material-ui/core/Button';
+import SaveIcon from '@material-ui/icons/Save';
+import ClearIcon from '@material-ui/icons/Clear';
+import { formatString } from '../../util';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
+
+const errorMessageFormat = 'Should input the %s';
+const listToValidate = [ 'title', 'summary', 'content' ];
 
 class CreateArticle extends Component {
     constructor(props) {
         super(props);
-        this.handleSelectMenuChange = this.handleSelectMenuChange.bind(this);
+        this.handleSubmitButtonClick = this.handleSubmitButtonClick.bind(this);
+        this.handleCancelButtonClick = this.handleCancelButtonClick.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.checkForms = this.checkForms.bind(this);
+        this.state = {
+            data: {
+                title: '',
+                summary: '',
+                content: '',
+                imageSource: '',
+                menuID: (this.props.menus && this.props.menus.length > 0) ? this.props.menus[0].uid : ''
+            },
+            error: {
+                title: null,
+                summary: null,
+                content: null,
+            }
+        };
     }
 
     componentDidMount() {
-        const { menus, isAuthenticated } = this.props;
+        const { menus, isAuthenticated, isEditMode } = this.props;
         if (!isAuthenticated) {
             this.props.history.goBack();
         }
@@ -24,69 +49,151 @@ class CreateArticle extends Component {
             alert('There should be at least one Menu.\nFirst, create a menu :)');
             this.props.history.goBack();
         }
+
+        if (isEditMode) {
+            this.setState({
+                data: { ...this.prop.article }
+            });
+        }
     }
 
-    handleSelectMenuChange() {
+    handleInputChange(e) {
+        this.setState({
+            data: {
+                ...this.state.data,
+                [e.target.name]: e.target.value
+            }
+        });
+    }
 
+    handleSubmitButtonClick() {
+        if (!this.checkForms()) {
+            return;
+        }
+
+        const { isEditMode, submitNewArticle, submitUpdatedArticle } = this.props
+        const { data } = this.state;
+        const dataToSend = {
+            title: data.title,
+            summary: data.summary,
+            content: data.content,
+            imageSource: data.imageSource,
+            menu: [{
+                uid: data.menuID
+            }]
+        };
+        isEditMode ? submitUpdatedArticle(dataToSend) : submitNewArticle(dataToSend);
+    }
+
+    handleCancelButtonClick() {
+        this.props.history.goBack();
+    }
+
+    checkForms() {
+        let pass = true;
+        let tmpError = {};
+        listToValidate.forEach(val => {
+            if (this.state.data[val].length < 1) {
+                pass = false;
+                tmpError[val] = formatString(errorMessageFormat, val);
+            } 
+        });
+        this.setState({ error: tmpError });
+        return pass;
     }
 
     render() {
         const { classes, menus } = this.props;
+        const { title, summary, content, imageSource, menuID } = this.state.data;
+        const { error } = this.state;
         return (
             <Paper className={classes.container} elevation={4}>
-                <FormControl fullWidth>
+                <FormControl fullWidth error={(error.title && error.title.length > 0)}>
                     <div>Title</div>
                     <Input 
+                        value={title}
                         autoFocus
                         disableUnderline={true}
-                        margin='normal'
+                        onChange={this.handleInputChange}
                         placeholder='Enter the title !'
                         classes={{
                             input: classes.input
+                        }}
+                        inputProps={{
+                            name: 'title'
                         }}/>
+                    <FormHelperText>{(error.title && error.title.length > 0) && error.title}</FormHelperText>
                 </FormControl>
-                <FormControl fullWidth classes={{
-                    root: classes.formContainer
-                }}>
+                <FormControl fullWidth 
+                    classes={{
+                        root: classes.formContainer
+                    }}
+                    error={(error.summary && error.summary.length > 0)}
+                >
                     <div>Summary</div>
                     <Input
                         className={classes.summaryRoot}
+                        value={summary}
                         disableUnderline={true}
                         multiline
                         rows={3}
                         placeholder='Enter the summary of it !'
+                        onChange={this.handleInputChange}
                         classes={{
+                            root: classes.multilineRoot,
                             inputMultiline: classes.input
                         }}
+                        inputProps={{
+                            name: 'summary'
+                        }}
                     />
+                    <FormHelperText>{(error.summary && error.summary.length > 0) && error.summary}</FormHelperText>
                 </FormControl>
-                <FormControl fullWidth classes={{
-                    root: classes.formContainer
-                }}>
+                <FormControl 
+                    fullWidth 
+                    classes={{
+                        root: classes.formContainer
+                    }}
+                    error={(error.content && error.content.length > 0)}
+                >
                     <div>Content</div>
                     <Input
                         disableUnderline={true}
+                        value={content}
                         multiline
-                        rows={20}
+                        rows={26}
                         placeholder='Fill the blank with your brilliant idea :)'
+                        onChange={this.handleInputChange}
                         classes={{
+                            root: classes.multilineRoot,
                             inputMultiline: classes.input,
                         }}
+                        inputProps={{
+                            name: 'content'
+                        }}
                     />
+                    <FormHelperText>{(error.content && error.content.length > 0) && error.content}</FormHelperText>
                 </FormControl>
-                <FormControl fullWidth classes={{
-                    root: classes.formContainer
-                }}>
+                <FormControl 
+                    fullWidth
+                    classes={{
+                        root: classes.formContainer
+                    }}
+                >
                     <div>Main Image URL</div>
                     <Input 
                         classes={{
                             input: classes.input
                         }}
-                        margin='normal'
+                        inputProps={{
+                            name: 'imageSource'
+                        }}
+                        value={imageSource}
+                        onChange={this.handleInputChange}
                         disableUnderline={true}
                         placeholder='Enter the image url !'/>
                 </FormControl>
-                <FormControl className={`${classes.formContainer} ${classes.selectContainer}`}>
+                <FormControl className={classes.selectContainer}>
                     <InputLabel 
                         shrink={false}
                         classes={{
@@ -95,19 +202,30 @@ class CreateArticle extends Component {
                         htmlFor='menuID'>Select Menu</InputLabel>
                     <Select
                         classes={{
-                            root: classes.selectRoot
+                            root: classes.selectRoot,
                         }}
                         autoWidth={true}
-                        value={menus[0].uid}
-                        onChange={this.handleSelectMenuChange}
+                        value={menuID.length > 0 ? menuID : menus[0].uid}
+                        onChange={this.handleInputChange}
                         inputProps={{
-                            name: 'selectedMenuID',
+                            name: 'menuID',
                             id: 'menuID'
                         }}
                     >
                         {this.props.menus.map(menu => <MenuItem key={`select:${menu.uid}`} value={menu.uid}>{menu.name}</MenuItem>)}
                     </Select>
                 </FormControl>
+                <div className={classes.footer}>
+                    {/* {this.getExtraComponent(isFetching, status)} */}
+                    <div className={classes.buttonContainer}>
+                        <Button className={classes.button} aria-label="confirm" color="default" onClick={this.handleSubmitButtonClick}>
+                            <SaveIcon/>
+                        </Button>
+                        <Button className={classes.button} aria-label="cancel" onClick={this.handleCancelButtonClick} color="default">
+                            <ClearIcon/>
+                        </Button>
+                    </div>
+                </div>
             </Paper>
         );
     }

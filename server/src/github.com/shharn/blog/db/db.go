@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"encoding/json"
+	"log"
 
 	"github.com/dgraph-io/dgo"
 	"github.com/dgraph-io/dgo/protos/api"
@@ -11,7 +12,7 @@ import (
 )
 
 const (
-	dgraphAddress = "172.18.0.3:9080"
+	dgraphAddress = "172.18.0.4:9080"
 )
 
 // MutationData represents a struct to execute multiple mutation at a single network request
@@ -71,6 +72,23 @@ func (c *Client) Mutate(md MutationData) (*api.Assigned, error) {
 	return assigned, nil
 }
 
+// AddEdge sends a request for adding a edge between the nodes
+func (c *Client) AddEdge(subject, predicate, objID string) (*api.Assigned, error) {
+	mu := &api.Mutation{}
+	mu.Set = append(mu.Set, &api.NQuad{
+		Subject:   subject,
+		Predicate: predicate,
+		ObjectId:  objID,
+	})
+
+	res, err := c.tx.Mutate(c.ctx, mu)
+	log.Printf("[AddEdge] res : %v\n", res)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	return res, nil
+}
+
 // DeleteNode sends a request for a single task which deletes a node
 func (c *Client) DeleteNode(uid string) (*api.Assigned, error) {
 	d := map[string]string{"uid": uid}
@@ -90,15 +108,14 @@ func (c *Client) DeleteNode(uid string) (*api.Assigned, error) {
 	return res, nil
 }
 
-// DeleteEdge sends a request for a single task which deletes a edge between nodes
-func (c *Client) DeleteEdge(data interface{}) (*api.Assigned, error) {
-	dd, err := json.Marshal(data)
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-	mu := &api.Mutation{
-		DeleteJson: dd,
-	}
+// DeleteEdge sends a request for a single task which deletes a edge between the nodes
+func (c *Client) DeleteEdge(subject, predicate, objValue string) (*api.Assigned, error) {
+	mu := &api.Mutation{}
+	mu.Del = append(mu.Del, &api.NQuad{
+		Subject:   subject,
+		Predicate: predicate,
+		ObjectId:  objValue,
+	})
 	res, err := c.tx.Mutate(c.ctx, mu)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -108,6 +125,7 @@ func (c *Client) DeleteEdge(data interface{}) (*api.Assigned, error) {
 
 // Delete makes a request for multiple tasks at once
 func (c *Client) Delete(md MutationData) (*api.Assigned, error) {
+	log.Printf("[Delete] %v\n", md)
 	dd, err := json.Marshal(md)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -121,6 +139,15 @@ func (c *Client) Delete(md MutationData) (*api.Assigned, error) {
 	}
 	return res, nil
 }
+
+// func (c *Client) DeleteEdgeWithNQuads(id, predicate, edgeID string) (*api.Assigned, error) {
+// 	mu.Del = append(mu.Del, &api.NQuad{
+// 		Subject:   uid,
+// 		Predicate: predicate,
+// 		// _STAR_ALL is defined as x.Star in x package.
+// 		ObjectValue: &api.Value{&api.Value_DefaultVal{"_STAR_ALL"}},
+// 	})
+// }
 
 // Commit DOES commit the transaction
 func (c *Client) Commit() error {

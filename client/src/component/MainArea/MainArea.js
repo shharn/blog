@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
-import { Route } from 'react-router';
+import { Route, Switch } from 'react-router';
+import PrivateRoute from '../PrivateRoute';
 import Loadable from 'react-loadable';
 import styles from './styles';
 
@@ -30,9 +31,11 @@ class MainArea extends Component<Props> {
         const { classes } = this.props;
         return (
             <main className={classes.content}>
-                <Route exact path="/" component={HottestArticleList}/>
-                <Route path="/menus/:menuName/articles" component={ArticleListWrapper}/>
-                <Route path="/articles/create" component={CreateArticle}/>
+                <Switch>
+                    <Route exact path="/" component={HottestArticleList}/>
+                    <Route path="/menus/:menuName/articles" component={ArticleListWrapper}/>
+                    <PrivateRoute path="/admin/article" component={CreateArticle}/>
+                </Switch>
             </main>
         );
     }

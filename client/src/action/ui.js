@@ -29,7 +29,7 @@ export const disableEditableCell = () => ({
 })
 
 export const setDataForCreateOrEditMenu = (isEditMode: boolean, menu: Menu = null) => ({
-    type: UIActionType.SET_DATA_FOR_CREATE_EDIT_MENU,
+    type: UIActionType.SET_DATA_FOR_CREATE_OR_EDIT_MENU,
     payload: {
         isEditMode,
         menu
