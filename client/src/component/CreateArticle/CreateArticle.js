@@ -23,6 +23,7 @@ class CreateArticle extends Component {
         this.handleCancelButtonClick = this.handleCancelButtonClick.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.checkForms = this.checkForms.bind(this);
+        this.getPrevURLFromQueryString = this.getPrevURLFromQueryString.bind(this);
         this.state = {
             data: {
                 title: '',
@@ -83,10 +84,11 @@ class CreateArticle extends Component {
             }]
         };
         isEditMode ? submitUpdatedArticle(dataToSend) : submitNewArticle(dataToSend);
+        this.props.history.push(this.getPrevURLFromQueryString());
     }
 
     handleCancelButtonClick() {
-        this.props.history.goBack();
+        this.props.history.push(this.getPrevURLFromQueryString());
     }
 
     checkForms() {
@@ -100,6 +102,11 @@ class CreateArticle extends Component {
         });
         this.setState({ error: tmpError });
         return pass;
+    }
+
+    getPrevURLFromQueryString() {
+        let prevURL = decodeURI(this.props.location.search.split('=')[1]);
+        return prevURL;
     }
 
     render() {

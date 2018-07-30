@@ -17,6 +17,9 @@ export default theme => ({
             gridTemplateColumns: 'repeat(3, 1fr)'
         }
     },
+    article: {
+        height: '100%',
+    },
     articleImage: {
         height: '200px',
         [theme.breakpoints.up(750)]: {

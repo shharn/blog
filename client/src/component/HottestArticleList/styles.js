@@ -25,6 +25,7 @@ export default theme => ({
             display: 'grid',
             gridGap: '10px',
             gridTemplateColumns: 'repeat(2, 1fr)',
+            gridAutoRows: 'minmax(430px, max-content)',
             marginTop: '10px',
         },
         [theme.breakpoints.up('lg')]: {
@@ -39,9 +40,11 @@ export default theme => ({
         width: '100%',
         marginBottom: '10px',
         [theme.breakpoints.up('md')]: {
+            height: '100%',
             marginBottom: 0,
         },
         [theme.breakpoints.up('lg')]: {
+            height: 'auto',
             width: '99%',
             marginBottom: '10px',
         }

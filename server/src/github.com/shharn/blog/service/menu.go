@@ -2,7 +2,6 @@ package service
 
 import (
 	"encoding/json"
-	"log"
 	"reflect"
 
 	"github.com/pkg/errors"
@@ -125,7 +124,6 @@ func DeleteMenu(id string) error {
 // UpdateMenu is service for "PATCH /menus"
 // If the client wants to delete a parent, send a no parent field within Menu structure(so, results in nil of menu.Parent)
 func UpdateMenu(menu data.Menu) error {
-	log.Printf("[UpdateMenu] %v\n", menu.ID)
 	c, err := db.Init()
 	defer c.CleanUp()
 	if err != nil {

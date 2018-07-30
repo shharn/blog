@@ -25,6 +25,7 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
         }
 
         componentDidUpdate(prevProps, prevState, snapshot) {
+            // The fetching data succeeded when the scroll is at the bottom of the container
             if (this.props.data.status === options.statusSuccess && this.props.data.relayed !== prevProps.data.relayed) {
                 const addedData = this.props.data.relayed;
                 if (addedData && addedData.length > 0) {
@@ -55,10 +56,10 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
             }
         } 
 
-        load() {
+        load(initialized: bool) {
             const countPerRequest = this.countPerRequest;
             const { loaderArgs } = options;
-            const { offset } = this.state;
+            const offset = initialized ? 0 : this.state.offset ;
             const args = loaderArgs && loaderArgs.call(this);
             this.props.loader(offset, countPerRequest, args);
         }
@@ -69,8 +70,7 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
                 offset: 0,
                 relayedData: []
             });
-            // load data
-            this.load();
+            this.load(true);
         }
     
         isEndOfScroll(target: HTMLElement) : boolean {
