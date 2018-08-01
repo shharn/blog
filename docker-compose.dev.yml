@@ -3,8 +3,7 @@ services:
     front-app:
         build: ./client
         volumes:
-            - "./client/src:/app/src"
-            - "./client/node_modules:/app/node_modules"
+            - "./client:/app"
         deploy:
             replicas: 1
             restart_policy:

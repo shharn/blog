@@ -9,6 +9,7 @@ import Input from '@material-ui/core/Input';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
+import Editor from '../CreateArticleEditor';
 import { formatString } from '../../util';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
@@ -156,7 +157,7 @@ class CreateArticle extends Component {
                     />
                     <FormHelperText>{(error.summary && error.summary.length > 0) && error.summary}</FormHelperText>
                 </FormControl>
-                <FormControl 
+                {/* <FormControl 
                     fullWidth 
                     classes={{
                         root: classes.formContainer
@@ -180,7 +181,8 @@ class CreateArticle extends Component {
                         }}
                     />
                     <FormHelperText>{(error.content && error.content.length > 0) && error.content}</FormHelperText>
-                </FormControl>
+                </FormControl> */}
+                <Editor/>
                 <FormControl 
                     fullWidth
                     classes={{
