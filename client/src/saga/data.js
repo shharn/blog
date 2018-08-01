@@ -5,7 +5,6 @@ import {
     dataResponseFailed,
     dataMutationSuccess,
     dataMutationFail,
-    requestData
  } from '../action/data';
 import { Data as DataActionType } from '../action/types';
 import { MutationOperationType, Token } from '../constant';

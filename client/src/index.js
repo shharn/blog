@@ -28,7 +28,7 @@ const store = createStore(
         router: routerReducer,
         app: appReducer
     }),
-    applyMiddleware(routeMiddleware, actionConverterForMenu, actionConverterForArticle, sagaMiddleware, logger)
+    applyMiddleware(logger, routeMiddleware, actionConverterForMenu, actionConverterForArticle, sagaMiddleware)
 );
 sagaMiddleware.run(rootSaga);
 

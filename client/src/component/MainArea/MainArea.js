@@ -17,8 +17,13 @@ const HottestArticleList = Loadable({
     loading: () => <CircularProgress size={30}/>
   });
 
-  const CreateArticle = Loadable({
+const CreateArticle = Loadable({
     loader: () => import('../CreateArticle'),
+    loading: () => <CircularProgress size={30}/>
+});
+
+const ArticleDetail = Loadable({
+    loader: () => import('../ArticleDetail'),
     loading: () => <CircularProgress size={30}/>
 });
 
@@ -33,7 +38,8 @@ class MainArea extends Component<Props> {
             <main className={classes.content}>
                 <Switch>
                     <Route exact path="/" component={HottestArticleList}/>
-                    <Route path="/menus/:menuName/articles" component={ArticleListWrapper}/>
+                    <Route exact path="/menus/:menuName/articles" component={ArticleListWrapper}/>
+                    <Route path="/menus/:menuName/articles/:articleName" component={ArticleDetail}/>
                     <PrivateRoute path="/admin/article" component={CreateArticle}/>
                 </Switch>
             </main>

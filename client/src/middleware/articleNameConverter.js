@@ -15,7 +15,9 @@ export const articleNameToUIDConverter = (action, srcData) => {
         let splitted2 = datum[propName].toLowerCase().split(WHITE_SPACE);
         if (splitted.length !== splitted2.length) return false;
         for (let i = 0; i < splitted.length; i++) {
-            if (splitted[i] !== splitted2[i]) return false;
+            if (splitted[i] !== splitted2[i]) {
+                return false;
+            }
         }
         return true;
     });
@@ -34,4 +36,4 @@ function articleDataProvider(state) {
     return state.app.data.get.articles.data;
 }
 
-export const articleConverterChecker = action => action.type === DataActionType.REQUEST_GET_DATA_WITH_NAME_AND_URL;
+export const articleConverterChecker = action => action.type === DataActionType.REQUEST_GET_DATA_WITH_NAME_AND_URL && action.payload.propName === 'title';

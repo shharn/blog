@@ -6,13 +6,18 @@ import {
 } from '../../action/data';
 
 const mapStateToProps = (state, ownProps) => {
+    const { data: article, error, fetchStatus } =   { ...state.app.data.get.article };
+    const { isAuthenticated } = state.app.auth;
     return {
-        
+        article,
+        error,
+        fetchStatus,
+        isAuthenticated
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    getArticle: (articleName: string) => dispatch(requestDataWithNameAndURL(articleName, `articles`, 'title', `/articles/${PLACEHOLDER_NAME_TO_CONVERT}`))
+    getArticle: (articleName: string) => dispatch(requestDataWithNameAndURL(articleName, `article`, 'title', `/articles/${PLACEHOLDER_NAME_TO_CONVERT}`))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Component);

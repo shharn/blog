@@ -2,7 +2,6 @@ import { Styles } from '../../constant';
 
 export default theme => ({
     content: {
-        backgroundColor: theme.palette.background.default,
         width: '100%',
         padding: theme.spacing.unit * 2,
         height: `calc(100% - 56px)`,

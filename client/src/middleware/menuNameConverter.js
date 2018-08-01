@@ -34,4 +34,4 @@ function menuDataProvider(state) {
     return state.app.data.get.menus.data;
 }
 
-export const menuConverterChecker = action => action.type === DataActionType.REQUEST_GET_DATA_WITH_NAME_AND_URL;
+export const menuConverterChecker = action => action.type === DataActionType.REQUEST_GET_DATA_WITH_NAME_AND_URL && action.payload.propName === 'name';

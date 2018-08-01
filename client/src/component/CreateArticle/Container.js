@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import {
     requestDataMutation
 } from '../../action/data';
-import { Data as DataActionType } from '../../action/types';
-import { MutationOperationType, FetchStatus } from '../../constant';
+import { MutationOperationType } from '../../constant';
 
 const mapStateToProps = (state, ownProps) => {
     const { status: createStatus } = state.app.data.mutation.articles.create;
