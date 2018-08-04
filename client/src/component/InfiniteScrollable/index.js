@@ -25,7 +25,7 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
         }
 
         componentDidUpdate(prevProps, prevState, snapshot) {
-            // The fetching data succeeded when the scroll is at the bottom of the container
+            // The data fetch succeeded when the scroll is at the bottom of the container
             if (this.props.data.status === options.statusSuccess && this.props.data.relayed !== prevProps.data.relayed) {
                 const addedData = this.props.data.relayed;
                 if (addedData && addedData.length > 0) {
@@ -97,9 +97,3 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
         connect(reduxProviderTemplate({ dataProvider, statusProvider, errorProvider, reduxPropsProvider }), dispatchProviderTemplate(loader))(InfiniteScrollable) :
         InfiniteScrollable;
 }
-
-// const provider = innerStorage => {
-    // some processing
-    // and ...
-    // return the reesult
-//}
