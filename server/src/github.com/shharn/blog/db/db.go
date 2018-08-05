@@ -11,8 +11,8 @@ import (
 	"google.golang.org/grpc"
 )
 
-const (
-	dgraphAddress = "172.18.0.3:9080"
+var (
+	dgraphAddress = "dgraph-server:9080"
 )
 
 // MutationData represents a struct to execute multiple mutation at a single network request

@@ -36,7 +36,7 @@ services:
             - "10000:10000"
             - "2345:2345"
         restart: always
-
+        
     redis:
         image: redis
         networks:
