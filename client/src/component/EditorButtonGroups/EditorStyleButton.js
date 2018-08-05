@@ -15,7 +15,7 @@ class EditorStyleButton extends Component {
     render() {
         const { icon: Icon} = this.props;
         return (
-            <Button mini onClick={this.onToggle} style={{ padding: '0', minWidth: '0' }}>
+            <Button mini onClick={this.onToggle} style={{ padding: '0 5px', minWidth: '0' }}>
                 {React.createElement(Icon)}
             </Button>
         );

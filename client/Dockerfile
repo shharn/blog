@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm install && \
-    npm rebuild node-sass
+RUN yarn install
 
-CMD ["npm", "start"]
+CMD ["yarn", "start"]

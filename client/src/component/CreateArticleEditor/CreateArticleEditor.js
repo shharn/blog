@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Editor, EditorState, RichUtils } from 'draft-js'
 import EditorButtonGroups from '../EditorButtonGroups';
-import './styles.sass';
+import './styles.css';
 
 class CreateArticleEditor extends Component {
     constructor(props) {
@@ -10,6 +10,7 @@ class CreateArticleEditor extends Component {
         this.onChange = (editorState) => this.setState({editorState});
         this.onBlockStyleToggle = this.onBlockStyleToggle.bind(this);
         this.onInlineStyleToggle = this.onInlineStyleToggle.bind(this);
+        this.onEditorClick = this.onEditorClick.bind(this);
     }
 
     onBlockStyleToggle(blockType) {
@@ -30,6 +31,10 @@ class CreateArticleEditor extends Component {
         );
     }
 
+    onEditorClick() {
+        this.refs.editor.focus();
+    }
+
     hasContent(): bool {
         const { editorState } = this.state;
         var contentState = editorState.getCurrentContent();
@@ -47,13 +52,15 @@ class CreateArticleEditor extends Component {
         return (
             <div className="editor-root">
                 <div>Content</div>
-                <EditorButtonGroups onBlockStyleToggle={this.onBlockStyleToggle} onInlineStyleToggle={this.onInlineStyleToggle} editorState={editorState}/>
-                <div className="editor">
-                    <Editor editorState={this.state.editorState} onChange={this.onChange} placeholder="Enjoy your ideas :)"/>
+                <div className="content-border">
+                    <EditorButtonGroups onBlockStyleToggle={this.onBlockStyleToggle} onInlineStyleToggle={this.onInlineStyleToggle} editorState={editorState}/>
+                    <div className="editor" onClick={this.onEditorClick}>
+                        <Editor ref="editor" editorState={this.state.editorState} onChange={this.onChange} placeholder="Enjoy your ideas :)"/>
+                    </div>
                 </div>
             </div>
         );
     }
 }
 
-export default CreateArticleEditor;
+export default CreateArticleEditor; 

@@ -1,24 +1,26 @@
-.RichEditor-root 
-    background: #fff
-    border: 1px solid #ddd
-    font-family: 'Georgia', serif
-    font-size: 14px
-    padding: 15px
-
-.RichEditor-editor 
-    border-top: 1px solid #ddd
-    cursor: text
-    font-size: 16px
+.editor-root 
+    background: #ffffff
+    margin-bottom: 10px
+    
+.content-border
+    border: 1px solid #ced4da
+    border-radius: 5px
     margin-top: 10px
 
-    .public-DraftEditorPlaceholder-root, .public-DraftEditor-content
-        margin: 0 -15px -15px
+.editor 
+    cursor: text
+
+    .public-DraftEditorPlaceholder-root,
+        position: absolute
         padding: 15px
+        color: #ced4da
+        z-index: 1
 
     .public-DraftEditor-content
-        min-height: 500px
+        height: 500px
+        padding: 15px
 
-    .RichEditor-blockquote 
+    .blockquote 
         border-left: 5px solid #eee
         color: #666
         font-family: 'Hoefler Text', 'Georgia', serif
@@ -32,22 +34,22 @@
         font-size: 16px
         padding: 20px
 
-.RichEditor-hidePlaceholder
+.hidePlaceholder
     .public-DraftEditorPlaceholder-root
         display: none
 
-.RichEditor-controls 
+.controls 
   font-family: 'Helvetica', sans-serif
   font-size: 14px
   margin-bottom: 5px
   user-select: none
 
-.RichEditor-styleButton 
+.styleButton 
   color: #999
   cursor: pointer
   margin-right: 16px
   padding: 2px 0
   display: inline-block
 
-.RichEditor-activeButton 
+.activeButton 
   color: #5890ff

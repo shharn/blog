@@ -120,4 +120,4 @@ class Admin extends Component<Props, State> {
     }
 }
 
-export default withStyles(styles)(Admin)
+export default withStyles(styles)(Admin) 

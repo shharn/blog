@@ -6,6 +6,9 @@
 # testing
 /coverage
 
+# artifact of sass file
+**/src/**/*.css
+
 # production
 /build
 

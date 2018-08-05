@@ -46,7 +46,6 @@ module.exports = {
     // require.resolve('webpack-dev-server/client') + '?/',
     // require.resolve('webpack/hot/dev-server'),
     require.resolve('react-dev-utils/webpackHotDevClient'),
-    'react-hot-loader/patch',
     // Finally, this is your app's code:
     paths.appIndexJs,
     // We include the app code last so that if there is a runtime error during
@@ -111,7 +110,7 @@ module.exports = {
       {
         test: /\.(js|jsx|mjs)$/,
         enforce: 'pre',
-        use: [
+        use: [ 
           {
             options: {
               formatter: eslintFormatter,
@@ -158,7 +157,7 @@ module.exports = {
           // In production, we use a plugin to extract that CSS to a file, but
           // in development "style" loader enables hot editing of CSS.
           {
-            test: /\.sass$/,
+            test: /\.css$/,
             use: [
               require.resolve('style-loader'),
               {
@@ -186,9 +185,6 @@ module.exports = {
                     }),
                   ],
                 },
-              },
-              {
-                loader: require.resolve('sass-loader')
               }
             ],
           },
