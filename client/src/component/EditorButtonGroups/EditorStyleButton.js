@@ -4,18 +4,22 @@ import Button from '@material-ui/core/Button';
 class EditorStyleButton extends Component {
     constructor(props) {
         super(props);
-        this.onToggle = this.onToggle.bind(this);
+        this.onClick = this.onClick.bind(this);
     }
 
-    onToggle(e) {
+    onClick(e) {
         e.preventDefault();
         this.props.onToggle(this.props.style);
     }
 
     render() {
-        const { icon: Icon} = this.props;
+        const { icon: Icon, active } = this.props;
+        let className = 'editor-button';
+        if (active) {
+            className += ' active-button';
+        }
         return (
-            <Button mini onClick={this.onToggle} style={{ padding: '0 5px', minWidth: '0' }}>
+            <Button mini onClick={this.onClick} className={className}>
                 {React.createElement(Icon)}
             </Button>
         );

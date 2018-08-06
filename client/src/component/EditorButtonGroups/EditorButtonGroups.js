@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import BlockStyleButtons from './BlockStyleButtons';
 import InlineStyleButtons from './InlineStyleButtons';
+import StrategyButtons from './StrategyButtons';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 
@@ -17,6 +18,7 @@ class EditorButtonGroups extends Component<Props> {
             <div className={classes.root}>
                 <BlockStyleButtons classes={{ container: classes.buttonContainer }} editorState={editorState} onToggle={onBlockStyleToggle}/>
                 <InlineStyleButtons classes={{ container: classes.buttonContainer}} editorState={editorState} onToggle={onInlineStyleToggle}/>
+                <StrategyButtons classes={{ container: classes.buttonContainer }} editorState={editorState} onLinkClick={() => {}} onImageClick={() => {}} />
             </div>
         );
     }

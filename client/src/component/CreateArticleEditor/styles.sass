@@ -1,7 +1,14 @@
 .editor-root 
     background: #ffffff
     margin-bottom: 10px
+
+    .editor-button
+        min-width: 0
+        padding: 0 5px
     
+    .active-button
+        color: #5890ff
+
 .content-border
     border: 1px solid #ced4da
     border-radius: 5px
@@ -17,39 +24,20 @@
         z-index: 1
 
     .public-DraftEditor-content
-        height: 500px
+        height: 450px
         padding: 15px
+        overflow: scroll
 
-    .blockquote 
+    h1, h2
+        margin: 15px 0
+
+    blockquote 
         border-left: 5px solid #eee
         color: #666
-        font-family: 'Hoefler Text', 'Georgia', serif
-        font-style: italic
         margin: 16px 0
         padding: 10px 20px
 
-    .public-DraftStyleDefault-pre 
+    .editor-codeblock
         background-color: rgba(0, 0, 0, 0.05)
-        font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace
         font-size: 16px
-        padding: 20px
-
-.hidePlaceholder
-    .public-DraftEditorPlaceholder-root
-        display: none
-
-.controls 
-  font-family: 'Helvetica', sans-serif
-  font-size: 14px
-  margin-bottom: 5px
-  user-select: none
-
-.styleButton 
-  color: #999
-  cursor: pointer
-  margin-right: 16px
-  padding: 2px 0
-  display: inline-block
-
-.activeButton 
-  color: #5890ff
+        padding: 15px

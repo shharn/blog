@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import Bold from '@material-ui/icons/FormatBold';
 import Italic from '@material-ui/icons/FormatItalic';
 import Underline from '@material-ui/icons/FormatUnderlined';
-import Monospace from '@material-ui/icons/InsertComment';
 import EditorStyleButton from './EditorStyleButton';
 
-var INLINE_STYLES = [
+const INLINE_STYLES = [
     {icon: Bold, style: 'BOLD'},
     {icon: Italic, style: 'ITALIC'},
-    {icon: Underline, style: 'UNDERLINE'},
-    {icon: Monospace, style: 'CODE'},
+    {icon: Underline, style: 'UNDERLINE'}
   ];
 
 class InlineStyleButtons extends Component {
