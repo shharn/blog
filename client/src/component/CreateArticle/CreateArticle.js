@@ -112,7 +112,7 @@ class CreateArticle extends Component {
 
     render() {
         const { classes, menus } = this.props;
-        const { title, summary, content, imageSource, menuID } = this.state.data;
+        const { title, summary, imageSource, menuID } = this.state.data;
         const { error } = this.state;
         return (
             <Paper className={classes.container} elevation={4}>
@@ -157,32 +157,7 @@ class CreateArticle extends Component {
                     />
                     <FormHelperText>{(error.summary && error.summary.length > 0) && error.summary}</FormHelperText>
                 </FormControl>
-                {/* <FormControl 
-                    fullWidth 
-                    classes={{
-                        root: classes.formContainer
-                    }}
-                    error={(error.content && error.content.length > 0)}
-                >
-                    <div>Content</div>
-                    <Input
-                        disableUnderline={true}
-                        value={content}
-                        multiline
-                        rows={26}
-                        placeholder='Fill the blank with your brilliant idea :)'
-                        onChange={this.handleInputChange}
-                        classes={{
-                            root: classes.multilineRoot,
-                            inputMultiline: classes.input,
-                        }}
-                        inputProps={{
-                            name: 'content'
-                        }}
-                    />
-                    <FormHelperText>{(error.content && error.content.length > 0) && error.content}</FormHelperText>
-                </FormControl> */}
-                <Editor/>
+                <Editor />
                 <FormControl 
                     fullWidth
                     classes={{

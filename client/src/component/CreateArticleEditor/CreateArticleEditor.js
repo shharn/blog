@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Editor, EditorState, RichUtils, getDefaultKeyBinding } from 'draft-js'
+import URLDialog from '../CreatArticleURLDialog';
 import EditorButtonGroups from '../EditorButtonGroups';
 import keycode from 'keycode';
 import './styles.css';
@@ -12,6 +13,8 @@ class CreateArticleEditor extends Component {
         this.onBlockStyleToggle = this.onBlockStyleToggle.bind(this);
         this.onInlineStyleToggle = this.onInlineStyleToggle.bind(this);
         this.onEditorClick = this.onEditorClick.bind(this);
+        this.onLinkClick = this.onLinkClick.bind(this);
+        this.onImageClick = this.onImageClick.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.blockStyleFn = this.blockStyleFn.bind(this);
@@ -29,6 +32,8 @@ class CreateArticleEditor extends Component {
                 case keycode('b'): return 'BOLD';
                 case keycode('i'): return 'ITALIC';
                 case keycode('u'): return 'UNDERLINE';
+                // case keycode('l'): return 'make-link';
+                // case keycode('m'): return 'make-image';
                 default: break;
             }
         }
@@ -50,6 +55,10 @@ class CreateArticleEditor extends Component {
             case 'UNDERLINE':
                 this.onInlineStyleToggle(command);
                 return 'handled';
+            // case 'make-link':
+            //     return 'handled';
+            // case 'make-image':
+            //     return 'handled';
             default:
                 return 'not-handled';
         }
@@ -84,6 +93,47 @@ class CreateArticleEditor extends Component {
         this.refs.editor.focus();
     }
 
+    onLinkClick(e) {
+
+    }
+
+    onImageClick(e) {
+
+    }
+
+    confirmLink(url) {
+        const { editorState } = this.state;
+        const contentState = editorState.getCurrentContent();
+        const contentStateWithEntity = contentState.createEntity(
+            'LINK',
+            'MUTABLE',
+            { url }
+        );
+        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+        const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
+        this.setState({
+            editorState: RichUtils.toggleLink(
+                newEditorState,
+                newEditorState.getSelection(),
+                entityKey
+            ),
+            showURLDialog: false,
+        }, () => {
+            setTimeout(() => this.refs.editor.focus(), 0);
+        });
+    }
+
+    removeLink(e) {
+        e.preventDefault();
+        const { editorState } = this.state;
+        const selection = editorState.getSelection();
+        if (!selection.isCollapsed()) {
+            this.setState({
+                editorState: RichUtils.toggleLink(editorState, selection, null)
+            });
+        }
+    }
+
     hasContent(): bool {
         const { editorState } = this.state;
         var contentState = editorState.getCurrentContent();
@@ -97,12 +147,18 @@ class CreateArticleEditor extends Component {
     }
 
     render() {
-        const { editorState } = this.state;
+        const { editorState, showURLDialog } = this.state;
         return (
             <div className="editor-root">
                 <div>Content</div>
                 <div className="content-border">
-                    <EditorButtonGroups onBlockStyleToggle={this.onBlockStyleToggle} onInlineStyleToggle={this.onInlineStyleToggle} editorState={editorState}/>
+                    <EditorButtonGroups 
+                        onBlockStyleToggle={this.onBlockStyleToggle} 
+                        onInlineStyleToggle={this.onInlineStyleToggle}
+                        onLinkClick={this.onLinkClick}
+                        onImageClick={this.onImageClick}
+                        editorState={editorState}
+                    />
                     <div className="editor" onClick={this.onEditorClick}>
                         <Editor 
                             blockStyleFn={this.blockStyleFn}
@@ -114,6 +170,11 @@ class CreateArticleEditor extends Component {
                             placeholder="Enjoy your ideas :)"/>
                     </div>
                 </div>
+                <URLDialog 
+                    showURLDialog={showURLDialog} 
+                    disableDialog={this.disableDialog} 
+                    onConfirm={this.confirmLink}
+                />
             </div>
         );
     }
