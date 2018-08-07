@@ -18,7 +18,7 @@ class EditorButtonGroups extends Component<Props> {
             <div className={classes.root}>
                 <BlockStyleButtons classes={{ container: classes.buttonContainer }} editorState={editorState} onToggle={onBlockStyleToggle}/>
                 <InlineStyleButtons classes={{ container: classes.buttonContainer}} editorState={editorState} onToggle={onInlineStyleToggle}/>
-                <StrategyButtons classes={{ container: classes.buttonContainer }} editorState={editorState} onLinkClick={() => {}} onImageClick={() => {}} />
+                <StrategyButtons classes={{ container: classes.buttonContainer }} editorState={editorState} onLinkClick={this.props.onLinkClick} onImageClick={this.props.onImageClick} />
             </div>
         );
     }

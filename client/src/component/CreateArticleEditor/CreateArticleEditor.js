@@ -1,14 +1,46 @@
 import React, { Component } from 'react';
-import { Editor, EditorState, RichUtils, getDefaultKeyBinding } from 'draft-js'
+import { 
+    Editor, 
+    EditorState, 
+    RichUtils, 
+    getDefaultKeyBinding,
+    CompositeDecorator
+} from 'draft-js'
 import URLDialog from '../CreatArticleURLDialog';
 import EditorButtonGroups from '../EditorButtonGroups';
+import LinkText from './LinkText';
 import keycode from 'keycode';
 import './styles.css';
+
+function findLinkEntities(contentBlock, callback, contentState) {
+    contentBlock.findEntityRanges(
+        character => {
+            const entityKey = character.getEntity();
+            return (
+                entityKey !== null &&
+                contentState.getEntity(entityKey).getType() === 'LINK'
+            );
+        },
+        callback
+    );
+}
 
 class CreateArticleEditor extends Component {
     constructor(props) {
         super(props);
-        this.state = { editorState: EditorState.createEmpty()};
+
+        const decorator = new CompositeDecorator([
+            {
+                strategy: findLinkEntities,
+                component: LinkText
+            },
+        ]);
+
+        this.state = { 
+            editorState: EditorState.createEmpty(decorator),
+            showURLDialog: false
+        };
+
         this.onChange = (editorState) => this.setState({editorState});
         this.onBlockStyleToggle = this.onBlockStyleToggle.bind(this);
         this.onInlineStyleToggle = this.onInlineStyleToggle.bind(this);
@@ -18,6 +50,8 @@ class CreateArticleEditor extends Component {
         this.keyBindingFn = this.keyBindingFn.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.blockStyleFn = this.blockStyleFn.bind(this);
+        this.disableDialog = this.disableDialog.bind(this);
+        this.confirmLink = this.confirmLink.bind(this);
     }
 
     keyBindingFn(e: SyntheticKeyboardEvent): string {
@@ -32,7 +66,7 @@ class CreateArticleEditor extends Component {
                 case keycode('b'): return 'BOLD';
                 case keycode('i'): return 'ITALIC';
                 case keycode('u'): return 'UNDERLINE';
-                // case keycode('l'): return 'make-link';
+                case keycode('l'): return 'make-link';
                 // case keycode('m'): return 'make-image';
                 default: break;
             }
@@ -55,8 +89,9 @@ class CreateArticleEditor extends Component {
             case 'UNDERLINE':
                 this.onInlineStyleToggle(command);
                 return 'handled';
-            // case 'make-link':
-            //     return 'handled';
+            case 'make-link':
+                this.onLinkClick();
+                return 'handled';
             // case 'make-image':
             //     return 'handled';
             default:
@@ -94,11 +129,31 @@ class CreateArticleEditor extends Component {
     }
 
     onLinkClick(e) {
+        const { showURLDialog, editorState } = this.state;
+        const selection = editorState.getSelection();
+        if (selection.isCollapsed()) {
+            return;
+        }
 
+        if (RichUtils.currentBlockContainsLink(editorState)) {
+            this.setState({
+                editorState: RichUtils.toggleLink(editorState, selection, null)
+            });
+        } else {
+            this.setState({
+                showURLDialog: !showURLDialog
+            });
+        }
     }
 
     onImageClick(e) {
+        console.log('onImageClick');
+    }
 
+    disableDialog() {
+        this.setState({
+            showURLDialog: false
+        });
     }
 
     confirmLink(url) {
