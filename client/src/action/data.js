@@ -84,4 +84,3 @@ export const changeMutationStatus = (dataName: string, operationType: string, st
         statusToChange
     }
 })
-

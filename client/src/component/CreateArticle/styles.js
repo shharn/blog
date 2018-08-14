@@ -1,7 +1,7 @@
 export default theme => ({
     container: {
         position: 'relative',
-        height: 'calc(100% - 112px)',
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
