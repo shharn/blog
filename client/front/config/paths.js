@@ -7,7 +7,8 @@ const url = require('url');
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebookincubator/create-react-app/issues/637
 const appDirectory = fs.realpathSync(process.cwd());
-const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+const resolveRoot = relativePath => path.resolve(appDirectory, relativePath);
+const resolveApp = relativePath => path.resolve(appDirectory, 'front', relativePath);
 
 const envPublicUrl = process.env.PUBLIC_URL;
 
@@ -44,17 +45,17 @@ function getApiServerDomain(appPackageJson) {
 
 // config after eject: we're in ./config/
 module.exports = {
-  dotenv: resolveApp('.env'),
-  appBuild: resolveApp('build'),
+  dotenv: resolveRoot('.env'),
+  appBuild: resolveRoot('public/app'),
   appPublic: resolveApp('public'),
   appHtml: resolveApp('public/index.html'),
   appIndexJs: resolveApp('src/index.js'),
-  appPackageJson: resolveApp('package.json'),
+  appPackageJson: resolveRoot('package.json'),
   appSrc: resolveApp('src'),
-  yarnLockFile: resolveApp('yarn.lock'),
+  yarnLockFile: resolveRoot('yarn.lock'),
   testsSetup: resolveApp('src/setupTests.js'),
-  appNodeModules: resolveApp('node_modules'),
-  publicUrl: getPublicUrl(resolveApp('package.json')),
-  servedPath: getServedPath(resolveApp('package.json')),
-  apiServerDomain: getApiServerDomain(resolveApp('package.json'))
+  appNodeModules: resolveRoot('node_modules'),
+  publicUrl: getPublicUrl(resolveRoot('package.json')),
+  servedPath: getServedPath(resolveRoot('package.json')),
+  apiServerDomain: getApiServerDomain(resolveRoot('package.json'))
 };

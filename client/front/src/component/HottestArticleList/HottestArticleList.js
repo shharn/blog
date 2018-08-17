@@ -28,7 +28,7 @@ class HottestArticleList extends Component<Props> {
                         </div>
                         {this.props.children}
                     </React.Fragment> :
-                    <span>Empty</span>
+                    <span>Empty !!</span>
                 }
             </div>
         );
