@@ -83,4 +83,23 @@ export const changeMutationStatus = (dataName: string, operationType: string, st
         operationType,
         statusToChange
     }
-})
+});
+
+export const uploadImage = (files: Array<File>) => ({
+    type: DataActionType.UPLOAD_IMAGE,
+    payload: {
+        files
+    }
+});
+
+export const uploadImageSuccess = () => ({
+    type: DataActionType.UPLOAD_IMAGE_SUCCESS
+});
+
+export const uploadImageFail = () => ({
+    type: DataActionType.UPLOAD_IMAGE_FAIL
+});
+
+export const initializeImageDialogStatus = () => ({
+    type: DataActionType.INITIALIZE_IMAGE_DIALOG_STATUS
+});

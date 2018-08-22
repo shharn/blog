@@ -5,6 +5,9 @@ import {
     dataResponseFailed,
     dataMutationSuccess,
     dataMutationFail,
+    uploadImageSuccess,
+    uploadImageFail,
+    updateImageUploadProgress
  } from '../action/data';
 import { Data as DataActionType } from '../action/types';
 import { MutationOperationType, Token } from '../constant';
@@ -13,7 +16,8 @@ import {
     getDataWithURL,
     createData,
     deleteData,
-    updateData
+    updateData,
+    uploadImage
 } from '../service';
 
 import type { BlogAction } from '../action/data';
@@ -73,8 +77,20 @@ function* dataMutationRequestHandler(action: BlogAction) : Generator<any, any, a
     }
 }
 
+function* uploadImageRequestHandler(action: BlogAction) : Generator<any, any, any> {
+    const { files } = action.payload;
+    const token = LocalStorage.get(Token.key);
+    let response = yield call(uploadImage, files, token);
+    if (response.statusCode === 200) {
+        yield put(uploadImageSuccess());
+    } else {
+        yield put(uploadImageFail());
+    }
+}
+
 export default function* watchDataRequest(): Generator<any, any, any> {
     yield takeLatest(DataActionType.REQUEST_GET_DATA, dataGetRequestHandler);
     yield takeLatest(DataActionType.REQUEST_GET_DATA_WITH_URL, dataGetRequestWithURLHandler);
     yield takeLatest(DataActionType.REQUEST_MUTATE_DATA, dataMutationRequestHandler);
+    yield takeLatest(DataActionType.UPLOAD_IMAGE, uploadImageRequestHandler);
 }

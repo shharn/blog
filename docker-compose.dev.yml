@@ -5,6 +5,7 @@ services:
         volumes:
             - "./client:/app"
             - /app/node_modules/
+            - /app/public
         networks:
             - frontend
         depends_on:

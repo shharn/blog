@@ -1,3 +1,3 @@
-import Component from './CreateArticleImageDialog';
+import Component from './Container';
 
 export default Component;

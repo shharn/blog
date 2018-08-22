@@ -1,21 +1,23 @@
+import { createUnique } from '../util';
+
 export const LoginStatus = {
-    INITIAL: 'INITIAL',
-    LOGIN_WAIT: 'LOGIN_WAIT',
-    LOGIN_SUCCESS: 'LOGIN_SUCCESS',
-    LOGIN_FAIL: 'LOGIN_FAIL'
+    INITIAL: createUnique('INITIAL'),
+    LOGIN_WAIT: createUnique('LOGIN_WAIT'),
+    LOGIN_SUCCESS: createUnique('LOGIN_SUCCESS'),
+    LOGIN_FAIL: createUnique('LOGIN_FAIL')
 };
 
 export const LogoutStatus = {
-    LOGOUT_WAIT: 'LOGOUT_WAIT',
-    LOGOUT_SUCCESS: 'LOGOUT_SUCCESS',
-    LOGOUT_FAIL: 'LOGOUT_FAIL'
+    LOGOUT_WAIT: createUnique('LOGOUT_WAIT'),
+    LOGOUT_SUCCESS: createUnique('LOGOUT_SUCCESS'),
+    LOGOUT_FAIL: createUnique('LOGOUT_FAIL')
 };
 
 export const FetchStatus = {
-    INITIAL: 'FETCH_INITIAL',
-    WAIT: 'FETCH_WAIT',
-    SUCCESS: 'FETCH_SUCCESS',
-    FAIL: 'FETCH_FAIL'
+    INITIAL: createUnique('FETCH_INITIAL'),
+    WAIT: createUnique('FETCH_WAIT'),
+    SUCCESS: createUnique('FETCH_SUCCESS'),
+    FAIL: createUnique('FETCH_FAIL')
 };
 
 export const Token = {
@@ -44,3 +46,10 @@ export const MenuManagerChildComponentType = {
 };
 
 export const PLACEHOLDER_NAME_TO_CONVERT = '{{uid}}';
+
+export const ImageUploadStatus = {
+    INITIAL: createUnique('INITIAL'),
+    UPLOADING: createUnique('UPLOADING'),
+    SUCCESS: createUnique('SUCCESS'),
+    FAIL: createUnique('FAIL')
+}

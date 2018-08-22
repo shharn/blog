@@ -81,3 +81,13 @@ export function deleteData(dataName: string, uid: string, token: string) {
         .then(res => res)
         .catch(err => err.response ? err.response : err);
 }
+
+export function uploadImage(files: Array<File>, token: string) {
+    let req = request.post(`/upload`);
+    for (let file of files) {
+        req = req.attach(file.name, file);
+    }
+    return req
+        .then(res => res)
+        .catch(err => err.response ? err.response : err);
+}

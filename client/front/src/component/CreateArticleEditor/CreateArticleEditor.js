@@ -3,14 +3,19 @@ import {
     Editor, 
     EditorState, 
     RichUtils, 
+    AtomicBlockUtils,
     getDefaultKeyBinding,
     CompositeDecorator
 } from 'draft-js'
 import URLDialog from '../CreatArticleURLDialog';
+import ImageDialog from '../CreateArticleImageDialog';
 import EditorButtonGroups from '../EditorButtonGroups';
+import EditorContentImage from '../EditorContentImage';
 import LinkText from './LinkText';
 import keycode from 'keycode';
 import './styles.css';
+
+const IMAGE_BASE_URL = '/image';
 
 function findLinkEntities(contentBlock, callback, contentState) {
     contentBlock.findEntityRanges(
@@ -38,7 +43,8 @@ class CreateArticleEditor extends Component {
 
         this.state = { 
             editorState: EditorState.createEmpty(decorator),
-            showURLDialog: false
+            showURLDialog: false,
+            showImageDialog: false
         };
 
         this.onChange = (editorState) => this.setState({editorState});
@@ -50,8 +56,11 @@ class CreateArticleEditor extends Component {
         this.keyBindingFn = this.keyBindingFn.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.blockStyleFn = this.blockStyleFn.bind(this);
-        this.disableDialog = this.disableDialog.bind(this);
+        this.mediaBlockRenderer = this.mediaBlockRenderer.bind(this);
+        this.disableURLDialog = this.disableURLDialog.bind(this);
+        this.disableImageDialog = this.disableImageDialog.bind(this);
         this.confirmLink = this.confirmLink.bind(this);
+        this.confirmImage = this.confirmImage.bind(this);
     }
 
     keyBindingFn(e: SyntheticKeyboardEvent): string {
@@ -92,8 +101,9 @@ class CreateArticleEditor extends Component {
             case 'make-link':
                 this.onLinkClick();
                 return 'handled';
-            // case 'make-image':
-            //     return 'handled';
+            case 'make-image':
+                this.onImageClick();
+                return 'handled';
             default:
                 return 'not-handled';
         }
@@ -101,8 +111,22 @@ class CreateArticleEditor extends Component {
 
     blockStyleFn(block) {
         switch (block.getType()) {
-            case 'code-block': return 'editor-codeblock';
-            default: return null;
+            case 'code-block': 
+                return 'editor-codeblock';
+            default: 
+                return null;
+        }
+    }
+
+    mediaBlockRenderer(block) {
+        switch (block.getType()) {
+            case 'atomic':
+                return {
+                    component: EditorContentImage,
+                    editable: false
+                };
+            default:
+                return null;
         }
     }
 
@@ -147,12 +171,50 @@ class CreateArticleEditor extends Component {
     }
 
     onImageClick(e) {
-        console.log('onImageClick');
+        const { showImageDialog } = this.state;
+        this.setState({
+            showImageDialog: !showImageDialog
+        });
     }
 
-    disableDialog() {
+    confirmImage(files) {
+        let { editorState: newEditorState } = this.state;
+        for (let file of files) {
+            const contentState = newEditorState.getCurrentContent();
+            const contentStateWithEntity = contentState.createEntity(
+                'image',
+                'IMMUTABLE',
+                { src: `${IMAGE_BASE_URL}/${file.name}` }
+            );
+            const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+            newEditorState = EditorState.set(
+                newEditorState,
+                { currentContent: contentStateWithEntity }
+            );
+
+            newEditorState = AtomicBlockUtils.insertAtomicBlock(
+                newEditorState,
+                entityKey,
+                ' '
+            );
+        }
+
+        this.setState({
+            editorState: newEditorState
+        }, () => {
+            setTimeout(() => this.refs.editor.focus(), 0);
+        });
+    }
+
+    disableURLDialog() {
         this.setState({
             showURLDialog: false
+        });
+    }
+
+    disableImageDialog() {
+        this.setState({
+            showImageDialog: false
         });
     }
 
@@ -202,7 +264,7 @@ class CreateArticleEditor extends Component {
     }
 
     render() {
-        const { editorState, showURLDialog } = this.state;
+        const { editorState, showURLDialog, showImageDialog } = this.state;
         return (
             <div className="editor-root">
                 <div>Content</div>
@@ -217,6 +279,7 @@ class CreateArticleEditor extends Component {
                     <div className="editor" onClick={this.onEditorClick}>
                         <Editor 
                             blockStyleFn={this.blockStyleFn}
+                            blockRendererFn={this.mediaBlockRenderer}
                             keyBindingFn={this.keyBindingFn}
                             handleKeyCommand={this.handleKeyCommand}
                             ref="editor" 
@@ -227,8 +290,13 @@ class CreateArticleEditor extends Component {
                 </div>
                 <URLDialog 
                     showURLDialog={showURLDialog} 
-                    disableDialog={this.disableDialog} 
+                    disableDialog={this.disableURLDialog} 
                     onConfirm={this.confirmLink}
+                />
+                <ImageDialog
+                    showImageDialog={showImageDialog}
+                    disableDialog={this.disableImageDialog}
+                    onConfirm={this.confirmImage}
                 />
             </div>
         );

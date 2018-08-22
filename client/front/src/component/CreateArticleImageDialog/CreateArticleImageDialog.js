@@ -5,8 +5,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
-import PlaylistAdd from '@material-ui/icons/PlaylistAdd';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
+import { ImageUploadStatus } from '../../constant';
 import styles from './styles';
 
 class CreateArticleImageDialog extends Component {
@@ -18,48 +19,69 @@ class CreateArticleImageDialog extends Component {
         this.onCancelClick = this.onCancelClick.bind(this);
         this.onSubmitClick = this.onSubmitClick.bind(this);
         this.onEscKeyDown = this.onEscKeyDown.bind(this);
-        this.onDeleteFile = this.onDeleteFile.bind(this);
-        this.onClickEmptyText = this.onClickEmptyText.bind(this);
         this.state = {
             files: []
         };
     }
 
+    componentDidUpdate(prevProps) {
+        if (!prevProps.showImageDialog && this.props.showImageDialog) {
+            this.setState({
+                files: []
+            });
+        }
+
+        if (prevProps.uploadStatus !== ImageUploadStatus.SUCCESS &&
+            this.props.uploadStatus === ImageUploadStatus.SUCCESS) {
+            this.props.onConfirm(this.state.files);
+            this.props.initializeStatus();
+            this.props.disableDialog();
+        }
+    }
+
     onFileChange(e) {
         const { files: oldFiles } = this.state;
         const { files } = e.target;
-        this.setState({
-            files: [ ...oldFiles, ...files ]
-        });
+        setTimeout(() => 
+            this.setState({
+                files: [ ...oldFiles, ...files ]
+            }) 
+        , 0);
     }
 
     onDialogClose() {
-        this.props.disableImageDialog();
+        this.props.disableDialog();
     }
 
-    onEscKeyDown() {
-        this.props.disableImageDialog();
+    onEscKeyDown(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this.props.disableDialog();
     }
 
     onCancelClick() {
-        this.props.disableImageDialog();
+        this.props.disableDialog();
     }
 
     onSubmitClick() {
-        // const { files } = this.state;
-        // this.props.uploadImage(files);
+        if (this.props.uploadStatus === ImageUploadStatus.SUCCESS) {
+            alert(`You've already submitted files`);
+            return;
+        }
+        const { files } = this.state;
+        this.props.uploadImage(files);
     }
 
-    onDeleteFile(e) {
-        console.log(e.target);
-    }
-
-    onClickEmptyText() {
-
+    onDeleteFile = (name) => () => {
+        const { files } = this.state;
+        const filtered = files.filter(file => file.name !== name);
+        this.setState({
+            files: filtered
+        });
     }
 
     render() {
-        const { classes, showImageDialog } = this.props;
+        const { classes, showImageDialog, uploadStatus } = this.props;
         const { files } = this.state;
         return (
             <Dialog
@@ -70,11 +92,14 @@ class CreateArticleImageDialog extends Component {
             >
                 <DialogContent id="dialog-content" className={classes.content}>
                     {files.length > 0 ? 
-                        // chips & file picker button
-                        files.map(file => <Chip 
-                            color="primary"
-                            label={file.filename}
-                            onDelete={this.onDeleteFile}/>) :
+                        <div className={classes.filesContainer}>
+                            {files.map(file => <Chip
+                                className={classes.chip}
+                                key={`filechip:${file.name}`}
+                                color="primary"
+                                label={file.name}
+                                onDelete={this.onDeleteFile(file.name)}/>)}
+                        </div> :
                         <React.Fragment>
                             <Typography 
                                 className={classes.emptyText} 
@@ -82,19 +107,21 @@ class CreateArticleImageDialog extends Component {
                                 onClick={this.onClickEmptyText}>
                                     Click to add images
                             </Typography>
-                            <input className={classes.inputFile} type="file" accept="image/*" multiple/>
+                            <input onChange={this.onFileChange} className={classes.inputFile} type="file" accept="image/*" multiple/>
                         </React.Fragment>
                     }
                 </DialogContent>
                 {files.length > 0 &&
                     <DialogActions>
                         <Button onClick={this.onCancelClick} color="primary">
-                            Cancel
+                            {uploadStatus === ImageUploadStatus.SUCCESS ? 'Exit' : 'Cancel'}
                         </Button>
                         <Button onClick={this.onSubmitClick} color="primary">
                             Submit
                         </Button>
                     </DialogActions>}
+                {uploadStatus === ImageUploadStatus.UPLOADING && 
+                    <LinearProgress variant="indeterminate" color="secondary"/>}
             </Dialog>
         );
     }
