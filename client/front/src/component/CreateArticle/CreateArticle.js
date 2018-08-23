@@ -25,11 +25,11 @@ class CreateArticle extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.checkForms = this.checkForms.bind(this);
         this.getPrevURLFromQueryString = this.getPrevURLFromQueryString.bind(this);
+        this.getRawDataFromEditor = this.getRawDataFromEditor.bind(this);
         this.state = {
             data: {
                 title: '',
                 summary: '',
-                content: '',
                 imageSource: '',
                 menuID: (this.props.menus && this.props.menus.length > 0) ? this.props.menus[0].uid : ''
             },
@@ -69,34 +69,40 @@ class CreateArticle extends Component {
     }
 
     handleSubmitButtonClick() {
-        if (!this.checkForms()) {
-            return;
-        }
-
-        const { isEditMode, submitNewArticle, submitUpdatedArticle } = this.props
         const { data } = this.state;
+        const content = this.editorRef.getContentWithHTML();
         const dataToSend = {
             title: data.title,
             summary: data.summary,
-            content: data.content,
+            content,
             imageSource: data.imageSource,
             menu: [{
                 uid: data.menuID
             }]
         };
+        if (!this.checkForms(dataToSend)) {
+            return;
+        }
+
+        const { isEditMode, submitNewArticle, submitUpdatedArticle } = this.props
+        console.dir(dataToSend);
         isEditMode ? submitUpdatedArticle(dataToSend) : submitNewArticle(dataToSend);
         this.props.history.push(this.getPrevURLFromQueryString());
+    }
+
+    getRawDataFromEditor() {
+        return this.editorRef.getRawData();
     }
 
     handleCancelButtonClick() {
         this.props.history.push(this.getPrevURLFromQueryString());
     }
 
-    checkForms() {
+    checkForms(data) {
         let pass = true;
         let tmpError = {};
         listToValidate.forEach(val => {
-            if (this.state.data[val].length < 1) {
+            if (data[val].length < 1) {
                 pass = false;
                 tmpError[val] = formatString(errorMessageFormat, val);
             } 
@@ -157,7 +163,7 @@ class CreateArticle extends Component {
                     />
                     <FormHelperText>{(error.summary && error.summary.length > 0) && error.summary}</FormHelperText>
                 </FormControl>
-                <Editor />
+                <Editor ref={ref => this.editorRef = ref}/>
                 <FormControl 
                     fullWidth
                     classes={{

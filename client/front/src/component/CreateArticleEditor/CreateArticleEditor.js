@@ -5,7 +5,8 @@ import {
     RichUtils, 
     AtomicBlockUtils,
     getDefaultKeyBinding,
-    CompositeDecorator
+    CompositeDecorator,
+    convertToRaw
 } from 'draft-js'
 import URLDialog from '../CreatArticleURLDialog';
 import ImageDialog from '../CreateArticleImageDialog';
@@ -61,6 +62,7 @@ class CreateArticleEditor extends Component {
         this.disableImageDialog = this.disableImageDialog.bind(this);
         this.confirmLink = this.confirmLink.bind(this);
         this.confirmImage = this.confirmImage.bind(this);
+        this.getContentWithHTML = this.getContentWithHTML.bind(this);
     }
 
     keyBindingFn(e: SyntheticKeyboardEvent): string {
@@ -261,6 +263,10 @@ class CreateArticleEditor extends Component {
         return false;
         }
         return true;
+    }
+
+    getContentWithHTML() {
+        return this.refs.editor.editor.children[0].innerHTML;
     }
 
     render() {

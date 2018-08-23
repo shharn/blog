@@ -20,7 +20,7 @@ class Article extends Component {
                         title={article.title}/>
                     <CardContent>
                         <Typography component="p">
-                            {article.content.length > 200 ? article.content.substr(0, 200) + ' ... ' : article.content}
+                            {article.summary.length > 200 ? article.summary.substr(0, 200) + ' ... ' : article.summary}
                         </Typography>
                     </CardContent>
                 </Card>

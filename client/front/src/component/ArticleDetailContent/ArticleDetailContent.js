@@ -6,8 +6,8 @@ class ArticleDetailContent extends Component {
     render() {
         const { classes, content } = this.props;
         return (
-            <div className={classes.container}>
-                {content}
+            <div className={classes.container} dangerouslySetInnerHTML={{__html: content}} >
+                {/* {content} */}
             </div>
         );
     }

@@ -78,7 +78,7 @@
     "start:front-server": "nodemon --watch front-server/ --exec yarn run:front-server",
     "watch:css": "npm run build:css && node-sass-chokidar front/src/ -o front/src/ --watch --recursive",
     "watch:js": "npm run build:js:dev && nodemon --watch front --exec yarn build:js:dev",
-    "build:css": "node-sass-chokidar front/src/ -o front/src && yarn build:js:dev",
+    "build:css": "node-sass-chokidar front/src/ -o front/src",
     "build:js:dev": "node front/scripts/build.dev.js",
     "build:js:prod": "node front/scripts/build.js",
     "run:front-server": "node front-server/server.js",
