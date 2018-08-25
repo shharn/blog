@@ -160,3 +160,23 @@ func GetArticle(id string) (interface{}, error) {
 	}
 	return nil, nil
 }
+
+// DeleteArticle removes an article node with uid
+func DeleteArticle(id string) error {
+	var (
+		err error
+		c   *db.Client
+	)
+	c, err = db.Init()
+	defer c.CleanUp()
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	_, err = c.DeleteNode(id)
+	defer c.Commit()
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
+}

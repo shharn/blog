@@ -85,3 +85,16 @@ func GetArticleHandler(w http.ResponseWriter, rq *http.Request, params router.Pa
 		return article, nil
 	}
 }
+
+// DeleteArticleHandler is for "DELETE /articles/:id"
+func DeleteArticleHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
+	id, exists := params["id"]
+	if !exists {
+		return nil, nil
+	}
+
+	if err := service.DeleteArticle(id.(string)); err != nil {
+		return nil, err
+	}
+	return nil, nil
+}

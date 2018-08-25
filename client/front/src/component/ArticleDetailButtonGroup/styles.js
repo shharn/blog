@@ -10,7 +10,7 @@ export default ({
     listButton: {
         fontSize: '2rem',
     },
-    editButton: {
+    iconButton: {
         fontSize: '1.5rem',
     }
 })
