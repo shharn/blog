@@ -16,7 +16,7 @@ class RootRoute extends Component {
                 <Switch>
                     <Route exact path="/" component={Home}/>
                     <Route exact path="/menus/:menuName/articles" component={Home}/>
-                    <Route path="/menus/:menuName/articles/:articleName" component={Home}/>
+                    <Route exact path="/menus/:menuName/articles/:articleName" component={Home}/>
                     <Route path="/admin/article" component={Home}/>
                     <Route path="/admin/login" component={Admin}/>
                     <Redirect to="/"/>

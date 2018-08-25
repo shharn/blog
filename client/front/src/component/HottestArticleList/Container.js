@@ -9,6 +9,7 @@ import {
 } from '../../action/data';
 
 const infScrOptions = {
+    initialCountPerRequest: 10,
     countPerRequest: 5,
     dataProvider: state => state.app.data.get.hottestArticles.data,
     statusProvider: state => state.app.data.get.hottestArticles.fetchStatus,

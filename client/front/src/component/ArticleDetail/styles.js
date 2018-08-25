@@ -1,7 +1,9 @@
 export default theme => ({
     container: {
         position: 'relative',
-        padding: '30px 30px 5px 30px'
+        padding: '30px 30px 5px 30px',
+        maxWidth: '1000px',
+        margin: '0 auto'
     },
     title: {
         color: theme.palette.common.black,

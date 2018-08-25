@@ -13,6 +13,7 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
             this.load = this.load.bind(this);
             this.initLoader = this.initLoader.bind(this);
             this.countPerRequest = options.countPerRequest || 5;
+            this.initialCountPerRequest = options.initialCountPerRequest || this.countPerRequest;
             this.state = {
                 relayedData: [],
                 offset: options.offset || 0,
@@ -21,7 +22,7 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
         }
 
         componentDidMount() {
-            this.load();
+            this.load(this.initialCountPerRequest);
         }
 
         componentDidUpdate(prevProps, prevState, snapshot) {
@@ -52,16 +53,15 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
         handleEndOfScroll() : void {
             const isFetching = this.props.data.status === options.statusWait;
             if (this.state.hasMore && !isFetching) {
-                this.load();
+                this.load(this.countPerRequest);
             }
         } 
 
-        load(initialized: bool) {
-            const countPerRequest = this.countPerRequest;
+        load(count: number) {
             const { loaderArgs } = options;
-            const offset = initialized ? 0 : this.state.offset ;
+            const offset = this.state.offset;
             const args = loaderArgs && loaderArgs.call(this);
-            this.props.loader(offset, countPerRequest, args);
+            this.props.loader(offset, count, args);
         }
 
         initLoader() {
@@ -69,8 +69,7 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
             this.setState({
                 offset: 0,
                 relayedData: []
-            });
-            this.load(true);
+            }, () => this.load(this.initialCountPerRequest));
         }
     
         isEndOfScroll(target: HTMLElement) : boolean {

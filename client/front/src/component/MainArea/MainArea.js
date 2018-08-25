@@ -39,7 +39,7 @@ class MainArea extends Component<Props> {
                 <Switch>
                     <Route exact path="/" component={HottestArticleList}/>
                     <Route exact path="/menus/:menuName/articles" component={ArticleListWrapper}/>
-                    <Route path="/menus/:menuName/articles/:articleName" component={ArticleDetail}/>
+                    <Route exact path="/menus/:menuName/articles/:articleName" component={ArticleDetail}/>
                     <PrivateRoute path="/admin/article" component={CreateArticle}/>
                 </Switch>
             </main>

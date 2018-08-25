@@ -33,7 +33,11 @@ export const articleNameToUIDConverter = (action, srcData) => {
 };
 
 function articleDataProvider(state) {
-    return state.app.data.get.articles.data;
+    let data = state.app.data.get.articles.data;
+    if (data.length < 1) {
+        data = state.app.data.get.hottestArticles.data;
+    }
+    return data;
 }
 
 export const articleConverterChecker = action => action.type === DataActionType.REQUEST_GET_DATA_WITH_NAME_AND_URL && action.payload.propName === 'title';
