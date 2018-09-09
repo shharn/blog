@@ -13,7 +13,7 @@ class ArticleDetailButtonGroup extends Component {
         const { classes, isAuthenticated, parentURL } = this.props;
         return (
             <div className={classes.container}>
-                <Button component={Link} to={parentURL} className={classes.button + ' ' + classes.listButton}><ListIcon fontSize='inherit'/></Button>
+                <Button component={Link} to={parentURL} className={cn(classes.button, classes.listButton)}><ListIcon fontSize='inherit'/></Button>
                 {isAuthenticated && 
                     <Button 
                         classes={{ root: cn(classes.button, classes.iconButton)}}

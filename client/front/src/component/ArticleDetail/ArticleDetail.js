@@ -34,9 +34,12 @@ class ArticleDetail extends Component {
     }
 
     getParentURL(currPath) {
+        if (this.parentURL) 
+            return this.parentURL;
+
         let idx = currPath.lastIndexOf('/');
-        let url = currPath.substring(0, idx);
-        return url;
+        this.parentURL = currPath.substring(0, idx);
+        return this.parentURL;
     }
 
     onDeleteButtonClicked() {
@@ -44,7 +47,8 @@ class ArticleDetail extends Component {
     }
 
     onEditButtonClicked() {
-        console.log('edit button is clicked');
+        this.props.setArticleToEdit(this.props.article);
+        this.props.history.push(`/admin/article?prevURL=${encodeURI(this.parentURL)}`);
     }
 
     render() {

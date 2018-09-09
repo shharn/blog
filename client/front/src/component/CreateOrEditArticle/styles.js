@@ -6,8 +6,11 @@ export default theme => ({
         flexDirection: 'column',
         justifyContent: 'center',
         padding: '20px',
+        maxWidth: '1000px',
+        margin: '0 auto'
     },
     input: {
+        height: '20px',
         padding: '7px 9px',
         border: '1px solid #ced4da',
         marginTop: '7px',
@@ -19,20 +22,20 @@ export default theme => ({
         }
     },
     formContainer: {
-        marginTop: '10px',
+        marginTop: '15px',
     },
     multilineRoot: {
         padding: 0
     },
     selectContainer: {
         width: '100px',
-        marginTop: '20px',
+        marginTop: '30px',
     },
     shrinkLabel: {
         transform: 'translate(0, 0)'
     },
     selectRoot: {
-        marginTop: '6px',
+        marginTop: '5px',
     },
     footer: {
         marginTop: '10px',

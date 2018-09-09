@@ -12,10 +12,17 @@ const INLINE_STYLES = [
 
 class InlineStyleButtons extends Component {
     render() {
-        const { classes } = this.props;
+        const { classes, editorState } = this.props;
+        const currentStyle = editorState.getCurrentInlineStyle();
         return (
             <span className={classes.container}>
-                {INLINE_STYLES.map(type => <EditorStyleButton key={`inlineButton:${type.style}`} icon={type.icon} style={type.style} onToggle={this.props.onToggle}/>)}
+                {INLINE_STYLES.map(type => 
+                    <EditorStyleButton 
+                        key={`inlineButton:${type.style}`} 
+                        active={type.style === currentStyle}
+                        icon={type.icon} 
+                        style={type.style} 
+                        onToggle={this.props.onToggle}/>)}
             </span>
         );
     }

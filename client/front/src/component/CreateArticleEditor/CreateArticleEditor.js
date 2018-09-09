@@ -6,7 +6,8 @@ import {
     AtomicBlockUtils,
     getDefaultKeyBinding,
     CompositeDecorator,
-    convertToRaw
+    convertToRaw,
+    convertFromRaw,
 } from 'draft-js'
 import URLDialog from '../CreatArticleURLDialog';
 import ImageDialog from '../CreateArticleImageDialog';
@@ -14,6 +15,7 @@ import EditorButtonGroups from '../EditorButtonGroups';
 import EditorContentImage from '../EditorContentImage';
 import LinkText from './LinkText';
 import keycode from 'keycode';
+import className from 'classnames';
 import './styles.css';
 
 const IMAGE_BASE_URL = '/image';
@@ -42,8 +44,20 @@ class CreateArticleEditor extends Component {
             },
         ]);
 
+        let editorState; 
+        if (this.props.isEditMode) {
+            try {
+                const contentFromRaw = convertFromRaw(this.props.content);
+                editorState = EditorState.createWithContent(contentFromRaw, decorator);
+            } catch (ex) {
+                editorState = EditorState.createEmpty(decorator);
+            }
+        } else {
+            editorState = EditorState.createEmpty(decorator);
+        }
+
         this.state = { 
-            editorState: EditorState.createEmpty(decorator),
+            editorState,
             showURLDialog: false,
             showImageDialog: false
         };
@@ -57,12 +71,13 @@ class CreateArticleEditor extends Component {
         this.keyBindingFn = this.keyBindingFn.bind(this);
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.blockStyleFn = this.blockStyleFn.bind(this);
-        this.mediaBlockRenderer = this.mediaBlockRenderer.bind(this);
+        this.blockRenderer = this.blockRenderer.bind(this);
         this.disableURLDialog = this.disableURLDialog.bind(this);
         this.disableImageDialog = this.disableImageDialog.bind(this);
         this.confirmLink = this.confirmLink.bind(this);
         this.confirmImage = this.confirmImage.bind(this);
-        this.getContentWithHTML = this.getContentWithHTML.bind(this);
+        this.getContent = this.getContent.bind(this);
+        this.shouldPlaceholderHide = this.shouldPlaceholderHide.bind(this);
     }
 
     keyBindingFn(e: SyntheticKeyboardEvent): string {
@@ -78,7 +93,7 @@ class CreateArticleEditor extends Component {
                 case keycode('i'): return 'ITALIC';
                 case keycode('u'): return 'UNDERLINE';
                 case keycode('l'): return 'make-link';
-                // case keycode('m'): return 'make-image';
+                case keycode('m'): return 'make-image';
                 default: break;
             }
         }
@@ -120,7 +135,7 @@ class CreateArticleEditor extends Component {
         }
     }
 
-    mediaBlockRenderer(block) {
+    blockRenderer(block) {
         switch (block.getType()) {
             case 'atomic':
                 return {
@@ -265,12 +280,22 @@ class CreateArticleEditor extends Component {
         return true;
     }
 
-    getContentWithHTML() {
-        return this.refs.editor.editor.children[0].innerHTML;
+    getContent() {
+        const content = this.state.editorState.getCurrentContent();
+        const rawContent = convertToRaw(content);
+        return rawContent;
+    }
+
+    shouldPlaceholderHide() {
+        const { editorState } = this.state;
+        const contentState = editorState.getCurrentContent();
+        return !contentState.hasText() && 
+            contentState.getBlockMap().first().getType() !== 'unstyled';
     }
 
     render() {
         const { editorState, showURLDialog, showImageDialog } = this.state;
+        const cn = className('editor', { hidePlaceholder: this.shouldPlaceholderHide()} );
         return (
             <div className="editor-root">
                 <div>Content</div>
@@ -282,14 +307,14 @@ class CreateArticleEditor extends Component {
                         onImageClick={this.onImageClick}
                         editorState={editorState}
                     />
-                    <div className="editor" onClick={this.onEditorClick}>
+                    <div className={cn} onClick={this.onEditorClick}>
                         <Editor 
                             blockStyleFn={this.blockStyleFn}
-                            blockRendererFn={this.mediaBlockRenderer}
+                            blockRendererFn={this.blockRenderer}
                             keyBindingFn={this.keyBindingFn}
                             handleKeyCommand={this.handleKeyCommand}
                             ref="editor" 
-                            editorState={this.state.editorState} 
+                            editorState={editorState} 
                             onChange={this.onChange} 
                             placeholder="Enjoy your ideas :)"/>
                     </div>

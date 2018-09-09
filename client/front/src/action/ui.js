@@ -34,3 +34,11 @@ export const setDataForCreateOrEditMenu = (isEditMode: boolean, menu: Menu = nul
         menu
     }
 });
+
+export const setDataForCreateOrEditArticle = (isEditMode: boolean, article: Article = null) => ({
+    type: UIActionType.SET_DATA_FOR_CREATE_OR_EDIT_ARTICLE,
+    payload: {
+        isEditMode,
+        article
+    }
+});

@@ -46,8 +46,13 @@ const (
 				uid
 				title
 				content
+				summary
 				imageSource
 				createdAt
+				menu {
+					uid
+					name
+				}
 			}
 		}
 	`

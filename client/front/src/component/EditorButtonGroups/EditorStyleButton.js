@@ -19,7 +19,7 @@ class EditorStyleButton extends Component {
             className += ' active-button';
         }
         return (
-            <Button mini onClick={this.onClick} className={className}>
+            <Button mini onMouseDown={this.onClick} className={className}>
                 {React.createElement(Icon)}
             </Button>
         );

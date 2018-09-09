@@ -25,13 +25,14 @@ class CreateArticle extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.checkForms = this.checkForms.bind(this);
         this.getPrevURLFromQueryString = this.getPrevURLFromQueryString.bind(this);
-        this.getRawDataFromEditor = this.getRawDataFromEditor.bind(this);
+        this.getJSONStringContent = this.getJSONStringContent.bind(this);
         this.state = {
             data: {
+                uid: '',
                 title: '',
                 summary: '',
                 imageSource: '',
-                menuID: (this.props.menus && this.props.menus.length > 0) ? this.props.menus[0].uid : ''
+                menuID: ''
             },
             error: {
                 title: null,
@@ -42,21 +43,28 @@ class CreateArticle extends Component {
     }
 
     componentDidMount() {
-        const { menus, isAuthenticated, isEditMode } = this.props;
-        if (!isAuthenticated) {
-            this.props.history.goBack();
-        }
-
-        if (!menus || menus.length < 1){
-            alert('There should be at least one Menu.\nFirst, create a menu :)');
-            this.props.history.goBack();
+        const { isEditMode, menus } = this.props;
+        if (!menus || menus.length < 1) {
+            alert('There must be at least one menu. Create a menu first :)');
+            this.props.history.push(this.getPrevURLFromQueryString());
         }
 
         if (isEditMode) {
+            const { uid, title, summary, imageSource, menu } = this.props.article;
             this.setState({
-                data: { ...this.prop.article }
+                data: { 
+                    uid,
+                    title,
+                    summary,
+                    imageSource,
+                    menuID: menu[0].uid
+                 }
             });
         }
+    }
+
+    componentWillUnmount() {
+        this.props.initializeState();
     }
 
     handleInputChange(e) {
@@ -70,7 +78,8 @@ class CreateArticle extends Component {
 
     handleSubmitButtonClick() {
         const { data } = this.state;
-        const content = this.editorRef.getContentWithHTML();
+        const content = this.getJSONStringContent();
+        // const content = this.getEditorInnerHTML();
         const dataToSend = {
             title: data.title,
             summary: data.summary,
@@ -80,18 +89,19 @@ class CreateArticle extends Component {
                 uid: data.menuID
             }]
         };
+        console.dir(dataToSend);
         if (!this.checkForms(dataToSend)) {
             return;
         }
 
         const { isEditMode, submitNewArticle, submitUpdatedArticle } = this.props
-        console.dir(dataToSend);
-        isEditMode ? submitUpdatedArticle(dataToSend) : submitNewArticle(dataToSend);
+        isEditMode ? submitUpdatedArticle({ uid: data.uid, ... dataToSend }) : submitNewArticle(dataToSend);
         this.props.history.push(this.getPrevURLFromQueryString());
     }
 
-    getRawDataFromEditor() {
-        return this.editorRef.getRawData();
+    getJSONStringContent() {
+        const rawContent = this.editorRef.getContent();
+        return JSON.stringify(rawContent);
     }
 
     handleCancelButtonClick() {
@@ -117,7 +127,7 @@ class CreateArticle extends Component {
     }
 
     render() {
-        const { classes, menus } = this.props;
+        const { classes, menus, isEditMode, article } = this.props;
         const { title, summary, imageSource, menuID } = this.state.data;
         const { error } = this.state;
         return (
@@ -163,7 +173,7 @@ class CreateArticle extends Component {
                     />
                     <FormHelperText>{(error.summary && error.summary.length > 0) && error.summary}</FormHelperText>
                 </FormControl>
-                <Editor ref={ref => this.editorRef = ref}/>
+                <Editor ref={ref => this.editorRef = ref} isEditMode={isEditMode} content={article ? article.content : null}/>
                 <FormControl 
                     fullWidth
                     classes={{
@@ -206,7 +216,6 @@ class CreateArticle extends Component {
                     </Select>
                 </FormControl>
                 <div className={classes.footer}>
-                    {/* {this.getExtraComponent(isFetching, status)} */}
                     <div className={classes.buttonContainer}>
                         <Button className={classes.button} aria-label="confirm" color="default" onClick={this.handleSubmitButtonClick}>
                             <SaveIcon/>

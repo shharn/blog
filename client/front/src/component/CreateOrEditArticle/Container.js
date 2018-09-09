@@ -1,21 +1,20 @@
 //@flow
-import Component from './CreateArticle';
+import Component from './CreateOrEditArticle';
 import { connect } from 'react-redux';
 import {
     requestDataMutation
 } from '../../action/data';
 import { MutationOperationType } from '../../constant';
+import { setDataForCreateOrEditArticle } from '../../action/ui';
 
 const mapStateToProps = (state, ownProps) => {
-    const { status: createStatus } = state.app.data.mutation.articles.create;
-    const { status: updateStatus } = state.app.data.mutation.articles.update;
     const { isEditMode, article } = { ...state.app.ui.createOrEditArticle };
+    const fetchStatus = isEditMode ? state.app.data.mutation.articles.update : state.app.data.mutation.articles.create;
     return {
         menus: [ ...state.app.data.get.menus.data ],
         ...ownProps,
         isAuthenticated: state.app.auth.isAuthenticated,
-        createStatus,
-        updateStatus,
+        fetchStatus,
         isEditMode,
         article
     };
@@ -24,7 +23,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
     return {
         submitNewArticle: (data: any) => dispatch(requestDataMutation(MutationOperationType.CREATE, data, 'articles')),
-        submitUpdatedArticle: (data: any) => dispatch(requestDataMutation(MutationOperationType.UPDATE, data, 'articles'))
+        submitUpdatedArticle: (data: any) => dispatch(requestDataMutation(MutationOperationType.UPDATE, data, 'articles')),
+        initializeState: () => dispatch(setDataForCreateOrEditArticle(false, null))
     };
 };
 

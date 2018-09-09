@@ -1,7 +1,8 @@
 .editor-root 
     background: #ffffff
     margin-bottom: 10px
-
+    margin-top: 15px
+    
     .editor-button
         min-width: 0
         padding: 0 5px
@@ -16,6 +17,10 @@
 
 .editor 
     cursor: text
+
+    &.hidePlaceholder
+        .public-DraftEditorPlaceholder-root
+            display: none
 
     .public-DraftEditorPlaceholder-root,
         position: absolute
@@ -37,7 +42,7 @@
             margin: 16px 0
             padding: 10px 20px
 
-        .editor-codeblock
+        .public-DraftStyleDefault-pre
             background-color: rgba(0, 0, 0, 0.05)
             font-size: 16px
             padding: 15px
@@ -46,3 +51,6 @@
             text-decoration: none
             color: #42A5F5
             font-size: 15px
+        
+        .test
+            margin: 0

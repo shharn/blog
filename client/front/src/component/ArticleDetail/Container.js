@@ -6,6 +6,9 @@ import {
     requestDataMutation,
     changeMutationStatus
 } from '../../action/data';
+import {
+    setDataForCreateOrEditArticle
+} from '../../action/ui';
 import { 
     MutationOperationType,
     DataName
@@ -27,7 +30,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
     getArticle: (articleName: string) => dispatch(requestDataWithNameAndURL(articleName, `article`, 'title', `/articles/${PLACEHOLDER_NAME_TO_CONVERT}`)),
     deleteArticle: (uid: string) => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, DataName.ARTICLE)),
-    initFetchStatus: () => dispatch(changeMutationStatus(DataName.ARTICLE, MutationOperationType.DELETE, FetchStatus.INITIAL))
+    initFetchStatus: () => dispatch(changeMutationStatus(DataName.ARTICLE, MutationOperationType.DELETE, FetchStatus.INITIAL)),
+    setArticleToEdit: (article : any) => dispatch(setDataForCreateOrEditArticle(true, article))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Component);

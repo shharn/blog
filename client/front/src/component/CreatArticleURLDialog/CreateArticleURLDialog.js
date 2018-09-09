@@ -17,6 +17,8 @@ class CreateArticleURLDialog extends Component {
         this.onEscKeyDown = this.onEscKeyDown.bind(this);
         this.onDialogClose = this.onDialogClose.bind(this);
         this.onTextFieldKeyDown = this.onTextFieldKeyDown.bind(this);
+        this.ensureProtocol = this.ensureProtocol.bind(this);
+        this.submitURL = this.submitURL.bind(this);
         this.state = {
             url: ''
         };
@@ -30,7 +32,7 @@ class CreateArticleURLDialog extends Component {
 
     onSubmitClick(e) {
         e.preventDefault();
-        this.props.onConfirm(this.state.url);
+        this.submitURL();
         this.props.disableDialog();
     }
 
@@ -47,12 +49,26 @@ class CreateArticleURLDialog extends Component {
 
     onTextFieldKeyDown(e) {
         if (e.keyCode === keycode('enter')) {
-            this.props.onConfirm(this.state.url);
+            this.submitURL();
+            this.props.disableDialog();
         }
     }
 
     onDialogClose() {
         this.props.disableDialog();
+    }
+
+    submitURL() {
+        const { url } = this.state;
+        const protocolEnsuredURL = this.ensureProtocol(url);
+        this.props.onConfirm(protocolEnsuredURL);
+    }
+
+    ensureProtocol(url) {
+        if (!/^https?:\/\/.*/.test(url)) {
+            return `https://${url}`;        
+        }
+        return url;
     }
 
     render() {

@@ -13,12 +13,12 @@ const HottestArticleList = Loadable({
   });
   
   const ArticleListWrapper  = Loadable({
-    loader: () => import('../ArticleListWrapper'),
+    loader: () => import(/* webpackPrefetch: true */ '../ArticleListWrapper'),
     loading: () => <CircularProgress size={30}/>
   });
 
 const CreateArticle = Loadable({
-    loader: () => import('../CreateArticle'),
+    loader: () => import('../CreateOrEditArticle'),
     loading: () => <CircularProgress size={30}/>
 });
 
