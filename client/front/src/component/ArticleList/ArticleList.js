@@ -6,9 +6,7 @@ import styles from './styles';
 
 type Props = {
     classes: any,
-    path: string,
-
-    getArticlesOnMenu: (menuId: number) => void
+    path: string
 }
 
 class ArticleList extends Component<Props> {
@@ -25,6 +23,12 @@ class ArticleList extends Component<Props> {
             this.setState({
                 prevMenuName: this.props.match.params['menuName']
             });
+        }
+
+        if (this.props.data.length === 1) {
+            const article = this.props.data[0];
+            const replacedTitle = article.title.toLowerCase().replace(/\s/g, '-');
+            this.props.history.push(`${this.props.location.pathname}/${replacedTitle}`)
         }
     }
 
