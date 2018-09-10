@@ -68,7 +68,7 @@ export const dataMutationWait = () => ({
 })
 
 export const dataMutationFail = (dataName: string, operationType: string, error: BlogError) => ({
-    type: DataActionType.DATA_MUTATION_RESPONSE_ERROR,
+    type: DataActionType.DATA_MUTATION_FAIL,
     payload: {
         dataName,
         operationType,

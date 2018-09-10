@@ -14,7 +14,7 @@ const mapStateToProps = (state, ownProps) => {
         menus: [ ...state.app.data.get.menus.data ],
         ...ownProps,
         isAuthenticated: state.app.auth.isAuthenticated,
-        fetchStatus,
+        fetchStatus: fetchStatus.status,
         isEditMode,
         article
     };

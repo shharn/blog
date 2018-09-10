@@ -86,6 +86,23 @@ func GetArticleHandler(w http.ResponseWriter, rq *http.Request, params router.Pa
 	}
 }
 
+func UpdateArticleHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
+	id, exists := params["id"]
+	if !exists {
+		return nil, nil
+	}
+
+	var article data.Article
+	if err := json.NewDecoder(rq.Body).Decode(&article); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	if err := service.UpdateArticle(id.(string), article); err != nil {
+		return nil, err
+	}
+	return nil, nil
+}
+
 // DeleteArticleHandler is for "DELETE /articles/:id"
 func DeleteArticleHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
 	id, exists := params["id"]

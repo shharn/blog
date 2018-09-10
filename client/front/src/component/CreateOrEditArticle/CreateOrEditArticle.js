@@ -13,6 +13,8 @@ import Editor from '../CreateArticleEditor';
 import { formatString } from '../../util';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
+import { FetchStatus } from '../../constant';
+import { Typography } from '@material-ui/core';
 
 const errorMessageFormat = 'Should input the %s';
 const listToValidate = [ 'title', 'summary', 'content' ];
@@ -63,6 +65,13 @@ class CreateArticle extends Component {
         }
     }
 
+    componentDidUpdate() {
+        const { fetchStatus } = this.props;
+        if (fetchStatus === FetchStatus.SUCCESS) {
+            this.props.history.push(this.getPrevURLFromQueryString());
+        }
+    }
+
     componentWillUnmount() {
         this.props.initializeState();
     }
@@ -79,7 +88,6 @@ class CreateArticle extends Component {
     handleSubmitButtonClick() {
         const { data } = this.state;
         const content = this.getJSONStringContent();
-        // const content = this.getEditorInnerHTML();
         const dataToSend = {
             title: data.title,
             summary: data.summary,
@@ -89,14 +97,13 @@ class CreateArticle extends Component {
                 uid: data.menuID
             }]
         };
-        console.dir(dataToSend);
         if (!this.checkForms(dataToSend)) {
             return;
         }
 
         const { isEditMode, submitNewArticle, submitUpdatedArticle } = this.props
         isEditMode ? submitUpdatedArticle({ uid: data.uid, ... dataToSend }) : submitNewArticle(dataToSend);
-        this.props.history.push(this.getPrevURLFromQueryString());
+        // this.props.history.push(this.getPrevURLFromQueryString());
     }
 
     getJSONStringContent() {
@@ -127,7 +134,7 @@ class CreateArticle extends Component {
     }
 
     render() {
-        const { classes, menus, isEditMode, article } = this.props;
+        const { classes, menus, isEditMode, article, fetchStatus } = this.props;
         const { title, summary, imageSource, menuID } = this.state.data;
         const { error } = this.state;
         return (
@@ -225,6 +232,8 @@ class CreateArticle extends Component {
                         </Button>
                     </div>
                 </div>
+                {fetchStatus === FetchStatus.FAIL &&
+                    <Typography variant="body1" style={{color: 'red'}}>{`Fail to ${isEditMode ? 'update' : 'create a new article'} :(`} </Typography>}
             </Paper>
         );
     }

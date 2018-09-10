@@ -56,6 +56,16 @@ const (
 			}
 		}
 	`
+	getMenuToWhichTheArticleBelongQuery = `
+		query getMenuToWhichTheArticleBelongQuery($articleID: string) {
+			articles (func: uid($articleID)) {
+				menu {
+					uid
+				}
+				createdAt
+			}
+		}
+	`
 )
 
 type getTheHottestArticlesPayload struct {
@@ -67,6 +77,10 @@ type getArticlesOnMenusPayload struct {
 }
 
 type getArticlePayload struct {
+	Articles []data.Article `json:"articles"`
+}
+
+type getMenuToWhichTheArticleBelongPayload struct {
 	Articles []data.Article `json:"articles"`
 }
 
@@ -182,6 +196,47 @@ func DeleteArticle(id string) error {
 	defer c.Commit()
 	if err != nil {
 		return errors.WithStack(err)
+	}
+	return nil
+}
+
+// UpdateArticle updates an article
+func UpdateArticle(id string, article data.Article) error {
+	var (
+		err error
+		c   *db.Client
+	)
+	c, err = db.Init()
+	defer c.CleanUp()
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	defer c.Commit()
+
+	// if parent menu is changed, delete old edge
+	vars := map[string]string{"$articleID": id}
+	res, err2 := c.QueryWithVars(getMenuToWhichTheArticleBelongQuery, vars)
+	if err2 != nil {
+		return err2
+	}
+	oldArticle := getMenuToWhichTheArticleBelongPayload{}
+	if err = json.Unmarshal(res.Json, &oldArticle); err != nil {
+		return errors.WithStack(err)
+	}
+
+	oldMenu := oldArticle.Articles[0].Menu
+	if (*oldMenu)[0].ID != (*article.Menu)[0].ID {
+		_, err = c.DeleteEdge(article.ID, "menu", (*oldMenu)[0].ID)
+		if err != nil {
+			return err
+		}
+	}
+
+	article.CreatedAt = oldArticle.Articles[0].CreatedAt
+	mmd := db.MutationData{article}
+	_, err3 := c.Mutate(mmd)
+	if err3 != nil {
+		return errors.WithStack(err3)
 	}
 	return nil
 }

@@ -141,6 +141,7 @@ func UpdateMenu(menu data.Menu) error {
 	}
 
 	if menu.Parent != nil {
+		// really need it?
 		if _, err := c.AddEdge(menu.ID, "parent", (*menu.Parent)[0].ID); err != nil {
 			return err
 		}

@@ -125,7 +125,6 @@ func (c *Client) DeleteEdge(subject, predicate, objValue string) (*api.Assigned,
 
 // Delete makes a request for multiple tasks at once
 func (c *Client) Delete(md MutationData) (*api.Assigned, error) {
-	log.Printf("[Delete] %v\n", md)
 	dd, err := json.Marshal(md)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -139,15 +138,6 @@ func (c *Client) Delete(md MutationData) (*api.Assigned, error) {
 	}
 	return res, nil
 }
-
-// func (c *Client) DeleteEdgeWithNQuads(id, predicate, edgeID string) (*api.Assigned, error) {
-// 	mu.Del = append(mu.Del, &api.NQuad{
-// 		Subject:   uid,
-// 		Predicate: predicate,
-// 		// _STAR_ALL is defined as x.Star in x package.
-// 		ObjectValue: &api.Value{&api.Value_DefaultVal{"_STAR_ALL"}},
-// 	})
-// }
 
 // Commit DOES commit the transaction
 func (c *Client) Commit() error {

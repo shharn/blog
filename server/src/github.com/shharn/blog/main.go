@@ -35,6 +35,7 @@ func main() {
 	r.Get("/articles/hottest", handler.GetTheHottestArticlesHandler)
 	r.Post("/articles", handler.CreateArticleHandler)
 	r.Get("/articles/:id", handler.GetArticleHandler)
+	r.Patch("/articles/:id", handler.UpdateArticleHandler)
 	r.Delete("/articles/:id", handler.DeleteArticleHandler)
 
 	http.ListenAndServe(":10000", r)

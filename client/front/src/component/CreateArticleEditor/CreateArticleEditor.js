@@ -47,7 +47,8 @@ class CreateArticleEditor extends Component {
         let editorState; 
         if (this.props.isEditMode) {
             try {
-                const contentFromRaw = convertFromRaw(this.props.content);
+                const parsedContent = JSON.parse(this.props.content);
+                const contentFromRaw = convertFromRaw(parsedContent);
                 editorState = EditorState.createWithContent(contentFromRaw, decorator);
             } catch (ex) {
                 editorState = EditorState.createEmpty(decorator);
