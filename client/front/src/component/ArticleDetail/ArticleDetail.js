@@ -1,3 +1,4 @@
+// @flow`
 import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -10,7 +11,31 @@ import Divider from '@material-ui/core/Divider';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 
-class ArticleDetail extends Component {
+import type { 
+    Article,
+    ClientError,
+    RouterProps,
+    WithStylesProps
+} from '../../flowtype';
+
+type Props = {
+    article: Article,
+    error: ClientError,
+    fetchStatus: $Values<FetchStatus>,
+    isAuthenticated: boolean,
+    deleteFetchStatus: $Values<FetchStatus>,
+
+    getArticle: (articleName: string) => void,
+    deleteArticle: (uid: string) => void,
+    initFetchStatus: () => void,
+    setArticleToEdit: (article : Article) => void
+};
+
+type StaticProps = {
+    parentURL: string
+};
+
+class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {}, StaticProps> {
     constructor(props) {
         super(props);
         this.onEditButtonClicked = this.onEditButtonClicked.bind(this);
@@ -33,7 +58,7 @@ class ArticleDetail extends Component {
         this.props.initFetchStatus();
     }
 
-    getParentURL(currPath) {
+    getParentURL = (currPath: string): string => {
         if (this.parentURL) 
             return this.parentURL;
 
@@ -42,11 +67,11 @@ class ArticleDetail extends Component {
         return this.parentURL;
     }
 
-    onDeleteButtonClicked() {
+    onDeleteButtonClicked = (): void =>  {
         this.props.deleteArticle(this.props.article.uid);
     }
 
-    onEditButtonClicked() {
+    onEditButtonClicked = (): void => {
         this.props.setArticleToEdit(this.props.article);
         this.props.history.push(`/admin/article?prevURL=${encodeURI(this.parentURL)}`);
     }

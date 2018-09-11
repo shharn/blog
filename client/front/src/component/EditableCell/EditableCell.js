@@ -6,8 +6,11 @@ import { withStyles } from '@material-ui/core/styles';
 import keycode from 'keycode';
 import styles from './styles';
 
+import type {
+    WithStylesProps
+} from '../../flowtype';
+
 type Props = {
-    classes: any,
     rowId: number,
     cellName: string,
     value: string,
@@ -20,16 +23,16 @@ type State = {
     textValue: string
 };
 
-class EditableCell extends Component<Props, State> {
+class EditableCell extends Component<Props & WithStylesProps, State> {
     state = {
         textValue: this.props.value
     }
 
-    handleMouseClick = (event: SyntheticEvent<>) => {
-        event.stopPropagation();
+    handleMouseClick = (e: SyntheticMouseEvent<HTMLButtonElement>): void => {
+        e.stopPropagation();
     }
 
-    handleKeyUp = (event: SyntheticKeyboardEvent<>) => {
+    handleKeyUp = (event: SyntheticKeyboardEvent<>): void => {
         event.stopPropagation();
         const { cellName } = this.props;
         const { textValue } = this.state;
@@ -46,9 +49,9 @@ class EditableCell extends Component<Props, State> {
         }
     }
 
-    handleTextChange = (event) => {
+    handleTextChange = (e: SyntheticInputEvent<HTMLInputElement>): void => {
         this.setState({
-            textValue: event.currentTarget.value
+            textValue: e.currentTarget.value
         });
     }
 

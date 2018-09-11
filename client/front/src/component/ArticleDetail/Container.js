@@ -23,15 +23,16 @@ const mapStateToProps = (state, ownProps) => {
         error,
         fetchStatus,
         isAuthenticated,
-        deleteFetchStatus
+        deleteFetchStatus,
+        ...ownProps
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    getArticle: (articleName: string) => dispatch(requestDataWithNameAndURL(articleName, `article`, 'title', `/articles/${PLACEHOLDER_NAME_TO_CONVERT}`)),
-    deleteArticle: (uid: string) => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, DataName.ARTICLE)),
+    getArticle: articleName => dispatch(requestDataWithNameAndURL(articleName, `article`, 'title', `/articles/${PLACEHOLDER_NAME_TO_CONVERT}`)),
+    deleteArticle: uid => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, DataName.ARTICLE)),
     initFetchStatus: () => dispatch(changeMutationStatus(DataName.ARTICLE, MutationOperationType.DELETE, FetchStatus.INITIAL)),
-    setArticleToEdit: (article : any) => dispatch(setDataForCreateOrEditArticle(true, article))
+    setArticleToEdit: article => dispatch(setDataForCreateOrEditArticle(true, article))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Component);

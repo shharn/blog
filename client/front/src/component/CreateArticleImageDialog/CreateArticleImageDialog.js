@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -10,19 +11,27 @@ import { withStyles } from '@material-ui/core/styles';
 import { ImageUploadStatus } from '../../constant';
 import styles from './styles';
 
-class CreateArticleImageDialog extends Component {
-    constructor(props) {
-        super(props);
+import type {
+    WithStylesProps
+} from '../../flowtype';
 
-        this.onDialogClose = this.onDialogClose.bind(this);
-        this.onFileChange = this.onFileChange.bind(this);
-        this.onCancelClick = this.onCancelClick.bind(this);
-        this.onSubmitClick = this.onSubmitClick.bind(this);
-        this.onEscKeyDown = this.onEscKeyDown.bind(this);
-        this.state = {
-            files: []
-        };
-    }
+type Props = {
+    progress: number,
+    uploadStatus: $Values<ImageUploadStatus>,
+
+    onConfirm: (files: Array<File>) => void,
+    initializeStatus: () => void,
+    uploadImage: (files: Array<File>) => void
+};
+
+type State = {
+    files: Array<File>
+};
+
+class CreateArticleImageDialog extends React.Component<Props & WithStylesProps, State> {
+    state = {
+        files: []
+    };
 
     componentDidUpdate(prevProps) {
         if (!prevProps.showImageDialog && this.props.showImageDialog) {
@@ -39,7 +48,7 @@ class CreateArticleImageDialog extends Component {
         }
     }
 
-    onFileChange(e) {
+    onFileChange = (e: SyntheticInputEvent<HTMLInputElement>): void => {
         const { files: oldFiles } = this.state;
         const { files } = e.target;
         setTimeout(() => 
@@ -49,21 +58,21 @@ class CreateArticleImageDialog extends Component {
         , 0);
     }
 
-    onDialogClose() {
+    onDialogClose = (): void => {
         this.props.disableDialog();
     }
 
-    onEscKeyDown(e) {
+    onEscKeyDown = (e: SyntheticKeyboardEvent<>):void => {
         e.stopPropagation();
         e.preventDefault();
         this.props.disableDialog();
     }
 
-    onCancelClick() {
+    onCancelClick = (): void => {
         this.props.disableDialog();
     }
 
-    onSubmitClick() {
+    onSubmitClick = (): void => {
         if (this.props.uploadStatus === ImageUploadStatus.SUCCESS) {
             alert(`You've already submitted files`);
             return;
@@ -72,7 +81,7 @@ class CreateArticleImageDialog extends Component {
         this.props.uploadImage(files);
     }
 
-    onDeleteFile = (name) => () => {
+    onDeleteFile = (name: string): void => {
         const { files } = this.state;
         const filtered = files.filter(file => file.name !== name);
         this.setState({
@@ -104,7 +113,7 @@ class CreateArticleImageDialog extends Component {
                             <Typography 
                                 className={classes.emptyText} 
                                 variant="body1" 
-                                onClick={this.onClickEmptyText}>
+                            >
                                     Click to add images
                             </Typography>
                             <input onChange={this.onFileChange} className={classes.inputFile} type="file" accept="image/*" multiple/>

@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import Card  from '@material-ui/core/Card';
 import CardMedia from  '@material-ui/core/CardMedia';
@@ -8,7 +9,20 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import styles from './styles';
 
-class Article extends Component {
+import type { 
+    WithStylesProps,
+    Article as ArticleEntity
+ } from '../../flowtype';
+
+type Props = {
+    article: ArticleEntity,
+    customClasses: {
+        root: string,
+        cardMedia: string
+    }
+};
+
+class Article extends Component<Props & WithStylesProps> {
     render() {
         const { article, classes, customClasses } = this.props;
         return (

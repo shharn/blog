@@ -1,5 +1,7 @@
-export const reduxProviderTemplate = ({ dataProvider, statusProvider, errorProvider, reduxPropsProvider }) => (state, ownProps) => {
-    const reduxProps = typeof reduxPropsProvider === 'function' && reduxPropsProvider(state, ownProps);
+export type Provider = (state: mixed) => mixed
+
+export const reduxProviderTemplate = ({ dataProvider , statusProvider, errorProvider, reduxPropsProvider }) => (state, ownProps) => {
+    const reduxProps = typeof reduxPropsProvider === 'function' ? reduxPropsProvider(state, ownProps) : reduxPropsProvider;
     return {
         ...ownProps,
         data: {

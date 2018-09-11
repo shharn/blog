@@ -3,7 +3,11 @@ import Typography from '@material-ui/core/Typography';
 import styles from './styles';
 import { withStyles } from '@material-ui/core/styles';
 
-class DrawerHeader extends Component {
+import type {
+    WithStylesProps
+} from '../../flowtype';
+
+class DrawerHeader extends Component<WithStylesProps> {
     render() {
         const { classes } = this.props;
         return (

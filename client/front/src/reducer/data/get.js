@@ -1,7 +1,22 @@
 import { Data as DataActionType } from '../../action/types';
 import { FetchStatus } from '../../constant';
 
-const initialState = {
+import type { ClientError } from '../../flowtype';
+
+type GetReducerTemplate = {
+    [key: string]: DataTemplate
+};
+
+type DataTemplate = {
+    data: List<object> | object,
+    error: ClientError,
+    fetchStatus: $Values<FetchStatus>,
+    fetchComplete: boolean
+};
+
+
+
+const initialState: GetReducerTemplate = {
     menus: {
         data: [],
         error: {

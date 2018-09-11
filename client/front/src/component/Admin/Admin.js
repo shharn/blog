@@ -11,13 +11,18 @@ import keycode from 'keycode';
 import LocalStorage from 'local-storage';
 import styles from './styles';
 
-type Props = {
-    classes: any,
-    history: any,
+import type { Element } from 'react';
+import type { 
+    LoginInformation,
+    ClientError,
+    RouterProps,
+    WithStylesProps
+} from '../../flowtype';
 
+type Props = {
     loginStatus: $Values<LoginStatusType>,
-    errorMessage: string,
     isAuthenticated: boolean,
+    error: ClientError,
 
     login: (loginInfo: LoginInformation) => void,
     validateToken: (token: string) => void,
@@ -29,7 +34,7 @@ type State = {
     passwordValue: string
 }
 
-class Admin extends Component<Props, State> {
+class Admin extends Component<Props & WithStylesProps & RouterProps, State> {
     state = {
         emailValue: '',
         passwordValue: ''
@@ -44,40 +49,43 @@ class Admin extends Component<Props, State> {
         }
     }
 
-    componentDidUpdate = () => {
+    componentDidUpdate () {
         this.props.loginStatus === LoginStatusType.LOGIN_SUCCESS && this.redirectToHomeWithDelay();
     }
 
-    componentWillUnmount = () => {
+    componentWillUnmount() {
         this.props.initializeLoginStatus();
     }
 
-    redirectToHomeWithDelay = () => {
+    redirectToHomeWithDelay = () : void=> {
         setTimeout(() => this.props.history.push('/'), 1000);
     }
 
-    handleSubmit = () => {
+    handleSubmit = (): void => {
         const { emailValue, passwordValue } = this.state;
-        this.props.login({ email: emailValue, password: passwordValue });
+        this.props.login({ 
+            email: emailValue, 
+            password: passwordValue 
+        });
     }
 
-    handleEmailChange = (e) => {
+    handleEmailChange = (e: SyntheticInputEvent<HTMLInputElement>): void => {
         this.setState({
             emailValue: e.target.value
         });
     }
 
-    handlePasswordChange = (e) => {
+    handlePasswordChange = (e: SyntheticInputEvent<HTMLInputElement>): void => {
         this.setState({
             passwordValue: e.target.value
         });
     }
 
-    handleKeyUp = (e) => {
+    handleKeyUp = (e: SyntheticKeyboardEvent<>) => {
         e.keyCode === keycode('enter') && this.handleSubmit();
     }
 
-    getComponentOnLoginStatus = () => {
+    getComponentOnLoginStatus = (): Element<*> => {
         const { loginStatus } = this.props;
         let result = null;
         

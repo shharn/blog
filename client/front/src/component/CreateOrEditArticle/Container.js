@@ -7,12 +7,11 @@ import {
 import { MutationOperationType } from '../../constant';
 import { setDataForCreateOrEditArticle } from '../../action/ui';
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
     const { isEditMode, article } = { ...state.app.ui.createOrEditArticle };
     const fetchStatus = isEditMode ? state.app.data.mutation.articles.update : state.app.data.mutation.articles.create;
     return {
         menus: [ ...state.app.data.get.menus.data ],
-        ...ownProps,
         isAuthenticated: state.app.auth.isAuthenticated,
         fetchStatus: fetchStatus.status,
         isEditMode,

@@ -14,12 +14,13 @@ import { withStyles } from '@material-ui/core/styles';
 import { FetchStatus } from '../../constant';
 import styles from './styles';
 
-import type { Menu } from '../../flowtype';
+import type { 
+    Menu,
+    WithStylesProps,
+    RouterProps
+ } from '../../flowtype';
 
 type Props = {
-    history: any,
-    classes: any,
-
     menus: Array<Menu>,
     status: $Values<FetchStatus>,
     isFetching: boolean,
@@ -37,10 +38,10 @@ type Props = {
 type State = {
     menuName: string,
     menuURL: string,
-    parentMenuId: number
+    parentMenuId: string
 };
 
-class CreateOrEditMenu extends Component<Props, State> {
+class CreateOrEditMenu extends Component<Props & WithStylesProps & RouterProps, State> {
     state = {
         menuName: '',
         menuURL: '',
@@ -67,19 +68,19 @@ class CreateOrEditMenu extends Component<Props, State> {
         this.props.status === FetchStatus.SUCCESS && this.props.getMenus();
     }
 
-    handleNameChange = event => {
+    handleNameChange = (event: SyntheticInputEvent<HTMLInputElement>): void => {
         this.setState({ menuName: event.target.value });
     }
 
-    handleURLChange = event => {
+    handleURLChange = (event: SyntheticInputEvent<HTMLInputElement>): void => {
         this.setState({ menuURL: event.target.value });
     }
 
-    handleParentMenuChange = event => {
+    handleParentMenuChange = (event: SyntheticInputEvent<HTMLSelectElement>): void => {
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    handleSubmitButtonClick = event => {
+    handleSubmitButtonClick = (): void => {
         const { menuName, menuURL, parentMenuId } = this.state;
         const { isEditMode, menu } = this.props;
         if (menuName.length < 1) {
@@ -88,7 +89,12 @@ class CreateOrEditMenu extends Component<Props, State> {
         } 
 
         // If no parent, should not include the parent property
-        let data;
+        let data: {
+            uid?: string,
+            name: string,
+            url: string,
+            parent?: Array<{ uid: string }>
+        };
         if (isEditMode === true) {
             data = { ...menu, name: menuName, url: menuURL };
             if (!data.parent && parentMenuId !== '0') { // parent menu : None -> Some menu
@@ -106,7 +112,7 @@ class CreateOrEditMenu extends Component<Props, State> {
         isEditMode === true ? this.props.updateMenu(data) : this.props.createMenu(data);
     }
 
-    handleCancelButtonClick = event => {
+    handleCancelButtonClick = (): void => {
         this.props.switchToList();
     }
     

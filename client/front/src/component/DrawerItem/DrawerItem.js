@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -10,25 +11,32 @@ import { Link } from 'react-router-dom';
 import NestedDrawerItem from './index';
 import styles from './styles';
 
-import type { Menu } from '../../flowtype';
+import type { Element } from 'react';
+import type { 
+    Menu,
+    WithStylesProps
+ } from '../../flowtype';
 
 type Props = {
-    classes: any,
     menu: Menu,
-    children: Array<Menu>
-}
+    childMenus: Array<Menu>
+};
 
-class DrawerItem extends Component<Props> {
+type State = {
+    openChild: boolean
+};
+
+class DrawerItem extends Component<Props & WithStylesProps, State> {
     state = {
         openChild: false
     }
 
-    handleMenuClick = (e) => {
+    handleMenuClick = (e: SyntheticMouseEvent<HTMLButtonElement>): void => {
         const { openChild } = this.state;
         this.setState({ openChild: !openChild });
     }
 
-    getRightElement = () => {
+    getRightElement = (): Element<*> => {
         const { name, url } = this.props.menu;
         const { classes, childMenus } = this.props;
         const hasChildren = childMenus && childMenus.length > 0;

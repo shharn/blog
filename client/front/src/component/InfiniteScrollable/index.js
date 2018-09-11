@@ -1,10 +1,53 @@
-//@flow
 import React from 'react';
 import { connect } from 'react-redux';
 import { reduxProviderTemplate, dispatchProviderTemplate } from './provider';
 
-export const makeInfiniteScrollable = options => WrappedComponent => {
-    class InfiniteScrollable extends React.Component{
+import type { Provider } from './provider';
+
+export type InfiniteScrollabledProps = {
+    data?: Array<mixed>,
+    initLoader: () => void
+};
+
+type InfiniteScrollableOptions = {
+    initialCountPerRequest: number,
+    countPerRequest: number,
+    dataProvider: Provider,
+    statusProvider: Provider,
+    errorProvider: Provider,
+    statusWait: mixed, 
+    statusSuccess: mixed,
+    statusFail: mixed,
+    error: (error: mixed) => React.Component,
+    loader: (offset: number, count: number, args?: Array<any>) => void,
+    loaderArgs?: () => Object,
+    loading: () => React.Component,
+    useRedux: boolean
+}
+
+type WrapperComponentReduxProps = {
+    data?: ReduxDataProps,
+    initLoader: () => void
+}
+
+type ReduxDataProps = {
+    status: any,
+    error: any,
+    relayed: Array<mixed>
+};
+
+type WrapperProps = {
+    
+}
+
+type WrapperState = {
+    offset: number,
+    hasMore: boolean,
+    relayedData: Array<mixed>
+}
+
+export const makeInfiniteScrollable = (options: InfiniteScrollableOptions) => (WrappedComponent: React.Component<any>) => {
+    class InfiniteScrollable extends React.Component<WrapperProps, WrapperState>{
         constructor(props) {
             super(props);
             this.handleScroll = this.handleScroll.bind(this);
@@ -43,6 +86,7 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
             }
         }
 
+        // (event: SyntheticEvent<HTMLButtonElement>) => {
         handleScroll(e) : void {
             const target = e.target;
             if (this.isEndOfScroll(target)) {
@@ -64,7 +108,7 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
             this.props.loader(offset, count, args);
         }
 
-        initLoader() {
+        initLoader(): void {
             // initialize offset & relayedData
             this.setState({
                 offset: 0,
@@ -77,7 +121,7 @@ export const makeInfiniteScrollable = options => WrappedComponent => {
             return offsetHeight + scrollTop >= scrollHeight;
         }
 
-        render() : React.Node {
+        render() : ReactNode {
             const { data, ...rest } = this.props;
             const { relayedData } = this.state;
             return (

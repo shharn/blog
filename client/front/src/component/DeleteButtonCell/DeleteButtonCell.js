@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import Delete from '@material-ui/icons/Delete';

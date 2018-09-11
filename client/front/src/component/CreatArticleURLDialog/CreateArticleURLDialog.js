@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -8,63 +9,67 @@ import { withStyles } from '@material-ui/core/styles';
 import keycode from 'keycode';
 import styles from './styles';
 
-class CreateArticleURLDialog extends Component {
-    constructor(props) {
-        super(props);
-        this.onSubmitClick = this.onSubmitClick.bind(this);
-        this.onCancelClick = this.onCancelClick.bind(this);
-        this.onURLChange = this.onURLChange.bind(this);
-        this.onEscKeyDown = this.onEscKeyDown.bind(this);
-        this.onDialogClose = this.onDialogClose.bind(this);
-        this.onTextFieldKeyDown = this.onTextFieldKeyDown.bind(this);
-        this.ensureProtocol = this.ensureProtocol.bind(this);
-        this.submitURL = this.submitURL.bind(this);
-        this.state = {
-            url: ''
-        };
+import type {
+    WithStylesProps
+} from '../../flowtype';
+
+type Props = {
+    showDialog: boolean, 
+
+    disableDialog: () => void,
+    onConfirm: (src: string) => void
+};
+
+type State = {
+    url: string
+};
+
+class CreateArticleURLDialog extends Component<Props & WithStylesProps, State> {
+    state = {
+        url: ''
     }
 
-    onURLChange(e) {
+    onURLChange = (e: SyntheticInputEvent<HTMLInputElement>): void => {
         this.setState({
             url: e.target.value
         });
     }
 
-    onSubmitClick(e) {
+    onSubmitClick = (e: SyntheticMouseEvent<HTMLButtonElement>): void => {
         e.preventDefault();
         this.submitURL();
         this.props.disableDialog();
     }
 
-    onCancelClick(e) {
+    onCancelClick = (e: SyntheticMouseEvent<HTMLButtonElement>): void => {
         e.preventDefault();
         this.props.disableDialog();
     }
 
-    onEscKeyDown(e) {
+    onEscKeyDown = (e: SyntheticKeyboardEvent<>): void => {
         e.preventDefault();
         e.stopPropagation();
         this.props.disableDialog();
     }
 
-    onTextFieldKeyDown(e) {
+    onTextFieldKeyDown = (e: SyntheticKeyboardEvent<HTMLInputElement>): void => {
         if (e.keyCode === keycode('enter')) {
             this.submitURL();
             this.props.disableDialog();
         }
     }
 
-    onDialogClose() {
+    onDialogClose = (): void => {
         this.props.disableDialog();
     }
 
-    submitURL() {
+    submitURL= (): void => {
         const { url } = this.state;
         const protocolEnsuredURL = this.ensureProtocol(url);
         this.props.onConfirm(protocolEnsuredURL);
     }
 
-    ensureProtocol(url) {
+    ensureProtocol = (url: string): string => {
         if (!/^https?:\/\/.*/.test(url)) {
             return `https://${url}`;        
         }

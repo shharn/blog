@@ -1,21 +1,26 @@
+// @flow
 import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Article from '../Article';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 
-type Props = {
-    classes: any,
-    path: string
-}
+import type {
+    RouterProps,
+    WithStylesProps
+} from '../../flowtype';
+import type {
+    InfiniteScrollabledProps
+} from '../InfiniteScrollable';
 
-class ArticleList extends Component<Props> {
-    constructor(props) {
-        super(props);
-        this.state = {
+type State = {
+    prevMenuName: string
+};
+
+class ArticleList extends Component<RouterProps & WithStylesProps & InfiniteScrollabledProps, State> {
+    state = {
             prevMenuName: this.props.match.params['menuName']
-        };
-    }
+    };
 
     componentDidUpdate() {
         if (this.props.match.params['menuName'] !== this.state.prevMenuName) {

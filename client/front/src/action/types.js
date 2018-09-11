@@ -1,5 +1,10 @@
 import { createUnique } from '../util';
 
+export type Action = {
+    type: any, // symbol
+    payload: Object
+};
+
 export const Auth = {
     INITIALISE_LOGIN_STATUS: createUnique('INITIALISE_LOGIN_STATUS'),
     REQUEST_LOGIN: createUnique('REQUEST_LOGIN'),

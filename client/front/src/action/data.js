@@ -2,16 +2,17 @@
 import { Data as DataActionType } from './types';
 import { FetchStatus } from '../constant';
 
-import type { BlogError } from '../flowtype';
+import type { ClientError } from '../flowtype';
+import type { Action } from './types';
 
-export const requestData = (dataName: string) => ({
+export const requestData = (dataName: string): Action => ({
     type: DataActionType.REQUEST_GET_DATA,
     payload: {
         dataName
     }
 })
 
-export const requestDataWithURL = (dataName: string, url: string) => ({
+export const requestDataWithURL = (dataName: string, url: string): Action => ({
     type: DataActionType.REQUEST_GET_DATA_WITH_URL,
     payload: {
         dataName,
@@ -19,7 +20,7 @@ export const requestDataWithURL = (dataName: string, url: string) => ({
     }
 })
 
-export const requestDataWithNameAndURL = (name: string, dataName: string, propName: string, url: string) => ({
+export const requestDataWithNameAndURL = (name: string, dataName: string, propName: string, url: string): Action => ({
     type: DataActionType.REQUEST_GET_DATA_WITH_NAME_AND_URL,
     payload: {
         name,
@@ -29,7 +30,7 @@ export const requestDataWithNameAndURL = (name: string, dataName: string, propNa
     }
 })
 
-export const dataResponseFailed = (error: BlogError, dataName: string) => ({
+export const dataResponseFailed = (error: ClientError, dataName: string): Action => ({
     type: DataActionType.GET_DATA_RESPONSE_ERROR,
     payload: {
         error,
@@ -37,7 +38,7 @@ export const dataResponseFailed = (error: BlogError, dataName: string) => ({
     }
 })
 
-export const dataResponseSuccess = (data: any, dataName: string) => ({
+export const dataResponseSuccess = (data: any, dataName: string): Action => ({
     type: DataActionType.GET_DATA_RESPONSE_SUCCESS,
     payload: {
         data,
@@ -45,7 +46,7 @@ export const dataResponseSuccess = (data: any, dataName: string) => ({
     }
 })
 
-export const requestDataMutation = (operationType: string, data: any, dataName: string) => ({
+export const requestDataMutation = (operationType: string, data: any, dataName: string): Action => ({
     type: DataActionType.REQUEST_MUTATE_DATA,
     payload: {
         operationType,
@@ -54,7 +55,7 @@ export const requestDataMutation = (operationType: string, data: any, dataName: 
     }
 })
 
-export const dataMutationSuccess = (dataName: string, operationType: string, data: any) => ({
+export const dataMutationSuccess = (dataName: string, operationType: string, data: any): Action => ({
     type: DataActionType.DATA_MUTATION_SUCCESS,
     payload: {
         dataName,
@@ -63,11 +64,11 @@ export const dataMutationSuccess = (dataName: string, operationType: string, dat
     }
 })
 
-export const dataMutationWait = () => ({
+export const dataMutationWait = (): Action => ({
     type: DataActionType.DATA_MUTATION_RESPONSE_WAIT
 })
 
-export const dataMutationFail = (dataName: string, operationType: string, error: BlogError) => ({
+export const dataMutationFail = (dataName: string, operationType: string, error: ClientError): Action => ({
     type: DataActionType.DATA_MUTATION_FAIL,
     payload: {
         dataName,
@@ -76,7 +77,7 @@ export const dataMutationFail = (dataName: string, operationType: string, error:
     }
 })
 
-export const changeMutationStatus = (dataName: string, operationType: string, statusToChange: $Values<FetchStatus>) => ({
+export const changeMutationStatus = (dataName: string, operationType: string, statusToChange: $Values<FetchStatus>): Action => ({
     type: DataActionType.CHANGE_MUTATION_STATUS,
     payload: {
         dataName,
@@ -85,21 +86,21 @@ export const changeMutationStatus = (dataName: string, operationType: string, st
     }
 });
 
-export const uploadImage = (files: Array<File>) => ({
+export const uploadImage = (files: Array<File>): Action => ({
     type: DataActionType.UPLOAD_IMAGE,
     payload: {
         files
     }
 });
 
-export const uploadImageSuccess = () => ({
+export const uploadImageSuccess = (): Action => ({
     type: DataActionType.UPLOAD_IMAGE_SUCCESS
 });
 
-export const uploadImageFail = () => ({
+export const uploadImageFail = (): Action => ({
     type: DataActionType.UPLOAD_IMAGE_FAIL
 });
 
-export const initializeImageDialogStatus = () => ({
+export const initializeImageDialogStatus = (): Action => ({
     type: DataActionType.INITIALIZE_IMAGE_DIALOG_STATUS
 });

@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import List from '@material-ui/core/List';
 import { withStyles } from '@material-ui/core/styles';
@@ -7,24 +8,38 @@ import DrawerItem from '../DrawerItem';
 import styles from './styles';
 import { FetchStatus as FetchStatusType } from '../../constant';
 
-class DrawerItems extends Component {
+import type {
+    Menu,
+    WithStylesProps,
+    ClientError
+} from '../../flowtype';
+
+type Props = {
+    menus: Array<Menu>,
+    error: ClientError,
+    fetchStatus: $Values<FetchStatusType>,
+
+    requestMenuData: () => void
+};
+
+class DrawerItems extends Component<Props & WithStylesProps> {
     componentDidMount() {
         this.props.requestMenuData();
     }
 
     render() {
-        const { menus, fetchStatus, fetchComplete, classes, error } = this.props;
+        const { menus, fetchStatus, classes, error } = this.props;
         const notChildMenus =  menus && menus.filter(menu => !menu.parent);
         return (
-            fetchComplete ? 
-            <List className={classes.listContainer}>
-                {fetchStatus === FetchStatusType.SUCCESS ?
-                    notChildMenus == null ? 
-                        <Typography className={classes.text}>No Menus</Typography> : 
-                        notChildMenus.map(menu => <DrawerItem key={menu.uid} menu={menu} isChild={false}/>) :
-                    <Typography className={classes.text}>{error.message}</Typography>}
-            </List> :
-            <CircularProgress size={30} className={classes.circularProgress}/>
+            fetchStatus === FetchStatusType.WAIT ?
+                <CircularProgress size={30} className={classes.circularProgress}/> :
+                fetchStatus === FetchStatusType.SUCCESS ?
+                    <List className={classes.listContainer}>
+                        {notChildMenus ? 
+                            notChildMenus.map(menu => <DrawerItem key={menu.uid} menu={menu} isChild={false}/>) :
+                            <Typography className={classes.text}>No Menus</Typography>} 
+                    </List> :
+                    <Typography className={classes.text}>{error.message}</Typography>
         );
     }
 }

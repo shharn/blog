@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import ArticleList from '../ArticleList';
@@ -6,7 +7,16 @@ import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 
-class ArticleListWrapper extends Component {
+import type {
+    RouterProps,
+    WithStylesProps
+} from '../../flowtype';
+
+type Props = {
+    isAuthenticated: boolean
+};
+
+class ArticleListWrapper extends Component<Props & RouterProps & WithStylesProps> {
     render() {
         const { isAuthenticated, classes, ...rest } = this.props;
         return (

@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { convertFromRaw } from 'draft-js';
@@ -6,20 +7,28 @@ import cn from 'classnames';
 import styles from './styles';
 import './styles.css';
 
+import type { 
+    Element
+} from 'react';
+import type {
+    WithStylesProps
+} from '../../flowtype';
 
-const getLastSplittedFromImageSrc = str => {
-    const splitted = str.split('/');
+const getLastSplittedFromImageSrc = (src: string): string => {
+    const splitted = src.split('/');
     const len = splitted.length;
     return splitted[len -1];
 };
 
-const blockToTag = {
+const blockToTag: {
+    [string]: Element<*>
+} = {
     'code-block': <pre/>
 };
 
-const blockToHTML = block => blockToTag[block.type.toLowerCase()]
+const blockToHTML = (block): Element<*> => blockToTag[block.type.toLowerCase()]
 
-const entityToHTML = (entity, originalText) => {
+const entityToHTML = (entity, originalText: string): Element<*> | string => {
     switch(entity.type.toUpperCase()){
         case 'LINK':
             return <a href={entity.data.url}>{originalText}</a>;
@@ -33,7 +42,11 @@ const entityToHTML = (entity, originalText) => {
     }
 };
 
-class ArticleDetailContent extends Component {
+type Props = {
+    content: string
+};
+
+class ArticleDetailContent extends Component<Props & WithStylesProps> {
     render() {
         const { classes, content } = this.props;
         const parsed = JSON.parse(content);

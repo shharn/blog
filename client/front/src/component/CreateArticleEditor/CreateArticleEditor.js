@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import { 
     Editor, 
@@ -33,8 +34,19 @@ function findLinkEntities(contentBlock, callback, contentState) {
     );
 }
 
-class CreateArticleEditor extends Component {
-    constructor(props) {
+type Props = {
+    isEditMode: boolean,
+    content: string
+};
+
+type State = {
+    editorState: any,
+    showURLDialog: boolean,
+    showImageDialog: boolean
+};
+
+class CreateArticleEditor extends Component<Props, State> {
+    constructor(props: Props) {
         super(props);
 
         const decorator = new CompositeDecorator([
@@ -62,26 +74,11 @@ class CreateArticleEditor extends Component {
             showURLDialog: false,
             showImageDialog: false
         };
-
-        this.onChange = (editorState) => this.setState({editorState});
-        this.onBlockStyleToggle = this.onBlockStyleToggle.bind(this);
-        this.onInlineStyleToggle = this.onInlineStyleToggle.bind(this);
-        this.onEditorClick = this.onEditorClick.bind(this);
-        this.onLinkClick = this.onLinkClick.bind(this);
-        this.onImageClick = this.onImageClick.bind(this);
-        this.keyBindingFn = this.keyBindingFn.bind(this);
-        this.handleKeyCommand = this.handleKeyCommand.bind(this);
-        this.blockStyleFn = this.blockStyleFn.bind(this);
-        this.blockRenderer = this.blockRenderer.bind(this);
-        this.disableURLDialog = this.disableURLDialog.bind(this);
-        this.disableImageDialog = this.disableImageDialog.bind(this);
-        this.confirmLink = this.confirmLink.bind(this);
-        this.confirmImage = this.confirmImage.bind(this);
-        this.getContent = this.getContent.bind(this);
-        this.shouldPlaceholderHide = this.shouldPlaceholderHide.bind(this);
     }
 
-    keyBindingFn(e: SyntheticKeyboardEvent): string {
+    onChange = (editorState: any): void => this.setState({ editorState })
+
+    keyBindingFn = (e: SyntheticKeyboardEvent<HTMLElement>): string => {
         if (e.ctrlKey) {
             switch (e.keyCode) {
                 case keycode('q'): return 'header-one';
@@ -101,7 +98,7 @@ class CreateArticleEditor extends Component {
         return getDefaultKeyBinding(e);
     }
 
-    handleKeyCommand(command: string): DraftHandleValue {
+    handleKeyCommand = (command: string): string => {
         switch (command) {
             case 'header-one':
             case 'header-two':
@@ -127,7 +124,7 @@ class CreateArticleEditor extends Component {
         }
     }
 
-    blockStyleFn(block) {
+    blockStyleFn = (block: any): ?string => {
         switch (block.getType()) {
             case 'code-block': 
                 return 'editor-codeblock';
@@ -136,7 +133,7 @@ class CreateArticleEditor extends Component {
         }
     }
 
-    blockRenderer(block) {
+    blockRenderer = (block: any): ?Object => {
         switch (block.getType()) {
             case 'atomic':
                 return {
@@ -148,7 +145,7 @@ class CreateArticleEditor extends Component {
         }
     }
 
-    onBlockStyleToggle(blockType) {
+    onBlockStyleToggle= (blockType: string): void => {
         this.onChange(
             RichUtils.toggleBlockType(
                 this.state.editorState,
@@ -157,7 +154,7 @@ class CreateArticleEditor extends Component {
         );
     }
 
-    onInlineStyleToggle(inlineStyle) {
+    onInlineStyleToggle = (inlineStyle: string): void => {
         this.onChange(
             RichUtils.toggleInlineStyle(
                 this.state.editorState,
@@ -166,11 +163,11 @@ class CreateArticleEditor extends Component {
         );
     }
 
-    onEditorClick() {
+    onEditorClick = (): void => {
         this.refs.editor.focus();
     }
 
-    onLinkClick(e) {
+    onLinkClick = (): void => {
         const { showURLDialog, editorState } = this.state;
         const selection = editorState.getSelection();
         if (selection.isCollapsed()) {
@@ -188,14 +185,14 @@ class CreateArticleEditor extends Component {
         }
     }
 
-    onImageClick(e) {
+    onImageClick= (): void => {
         const { showImageDialog } = this.state;
         this.setState({
             showImageDialog: !showImageDialog
         });
     }
 
-    confirmImage(files) {
+    confirmImage = (files: Array<File>): void => {
         let { editorState: newEditorState } = this.state;
         for (let file of files) {
             const contentState = newEditorState.getCurrentContent();
@@ -224,19 +221,19 @@ class CreateArticleEditor extends Component {
         });
     }
 
-    disableURLDialog() {
+    disableURLDialog= (): void => {
         this.setState({
             showURLDialog: false
         });
     }
 
-    disableImageDialog() {
+    disableImageDialog= (): void => {
         this.setState({
             showImageDialog: false
         });
     }
 
-    confirmLink(url) {
+    confirmLink = (url: string): void => {
         const { editorState } = this.state;
         const contentState = editorState.getCurrentContent();
         const contentStateWithEntity = contentState.createEntity(
@@ -258,7 +255,7 @@ class CreateArticleEditor extends Component {
         });
     }
 
-    removeLink(e) {
+    removeLink = (e: SyntheticMouseEvent<HTMLButtonElement>): void => {
         e.preventDefault();
         const { editorState } = this.state;
         const selection = editorState.getSelection();
@@ -269,7 +266,7 @@ class CreateArticleEditor extends Component {
         }
     }
 
-    hasContent(): bool {
+    hasContent = (): bool => {
         const { editorState } = this.state;
         var contentState = editorState.getCurrentContent();
         if (!contentState.hasText()) {
@@ -281,13 +278,13 @@ class CreateArticleEditor extends Component {
         return true;
     }
 
-    getContent() {
+    getContent = (): any => {
         const content = this.state.editorState.getCurrentContent();
         const rawContent = convertToRaw(content);
         return rawContent;
     }
 
-    shouldPlaceholderHide() {
+    shouldPlaceholderHide = (): bool => {
         const { editorState } = this.state;
         const contentState = editorState.getCurrentContent();
         return !contentState.hasText() && 

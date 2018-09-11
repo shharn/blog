@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import Paper from '@material-ui/core/Paper';
 import FormControl from '@material-ui/core/FormControl';
@@ -16,33 +17,76 @@ import styles from './styles';
 import { FetchStatus } from '../../constant';
 import { Typography } from '@material-ui/core';
 
-const errorMessageFormat = 'Should input the %s';
-const listToValidate = [ 'title', 'summary', 'content' ];
+import type {
+    WithStylesProps,
+    RouterProps,
+    Menu,
+    Article
+} from '../../flowtype';
+import type {
+    Element
+} from 'react';
 
-class CreateArticle extends Component {
-    constructor(props) {
-        super(props);
-        this.handleSubmitButtonClick = this.handleSubmitButtonClick.bind(this);
-        this.handleCancelButtonClick = this.handleCancelButtonClick.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.checkForms = this.checkForms.bind(this);
-        this.getPrevURLFromQueryString = this.getPrevURLFromQueryString.bind(this);
-        this.getJSONStringContent = this.getJSONStringContent.bind(this);
-        this.state = {
-            data: {
-                uid: '',
-                title: '',
-                summary: '',
-                imageSource: '',
-                menuID: ''
-            },
-            error: {
-                title: null,
-                summary: null,
-                content: null,
-            }
-        };
-    }
+const errorMessageFormat: string = 'Should input the %s';
+const listToValidate: Array<string> = [ 'title', 'summary', 'content' ];
+
+type ArticleToSend = {
+    uid?: string,
+    title: string,
+    summary: string,
+    content: string,
+    imageSource: string,
+    menu: Array<{
+        uid: string
+    }>
+};
+
+type FormErrors = {
+    title: string,
+    summary: string,
+    content: string
+};
+
+type Props = {
+    menus: Array<Menu>,
+    isAuthenticated: boolean,
+    fetchStatus: $Values<FetchStatus>,
+    isEditMode: boolean,
+    article: ?Article,
+
+    submitNewArticle: (data: ArticleToSend) => void,
+    submitUpdatedArticle: (data: Article) => void,
+    initializeState: () => void
+}
+
+type State = {
+    data: {
+        uid: string,
+        title: string,
+        summary: string,
+        imageSource: string,
+        menuID: string
+    },
+    error: FormErrors
+};
+
+class CreateArticle extends Component<Props & WithStylesProps & RouterProps, State> {
+    editorRef: any;
+
+    state = {
+        data: {
+            uid: '',
+            title: '',
+            summary: '',
+            imageSource: '',
+            menuID: ''
+        },
+        error: {
+            title: '',
+            summary: '',
+            content: '',
+        }
+    };
 
     componentDidMount() {
         const { isEditMode, menus } = this.props;
@@ -52,6 +96,10 @@ class CreateArticle extends Component {
         }
 
         if (isEditMode) {
+            if (!this.props.article) {
+                alert('Something is wrong.\nArticle should not be null on edit mode');
+                return;
+            }
             const { uid, title, summary, imageSource, menu } = this.props.article;
             this.setState({
                 data: { 
@@ -76,7 +124,7 @@ class CreateArticle extends Component {
         this.props.initializeState();
     }
 
-    handleInputChange(e) {
+    handleInputChange = (e: SyntheticInputEvent<HTMLInputElement>): void => {
         this.setState({
             data: {
                 ...this.state.data,
@@ -85,7 +133,7 @@ class CreateArticle extends Component {
         });
     }
 
-    handleSubmitButtonClick() {
+    handleSubmitButtonClick = (): void => {
         const { data } = this.state;
         const content = this.getJSONStringContent();
         const dataToSend = {
@@ -103,21 +151,24 @@ class CreateArticle extends Component {
 
         const { isEditMode, submitNewArticle, submitUpdatedArticle } = this.props
         isEditMode ? submitUpdatedArticle({ uid: data.uid, ... dataToSend }) : submitNewArticle(dataToSend);
-        // this.props.history.push(this.getPrevURLFromQueryString());
     }
 
-    getJSONStringContent() {
+    getJSONStringContent = (): string => {
         const rawContent = this.editorRef.getContent();
         return JSON.stringify(rawContent);
     }
 
-    handleCancelButtonClick() {
+    handleCancelButtonClick = (): void => {
         this.props.history.push(this.getPrevURLFromQueryString());
     }
 
-    checkForms(data) {
+    checkForms = (data: ArticleToSend): boolean => {
         let pass = true;
-        let tmpError = {};
+        let tmpError: FormErrors = {
+            title: '',
+            summary: '',
+            content: ''
+        };
         listToValidate.forEach(val => {
             if (data[val].length < 1) {
                 pass = false;
@@ -128,7 +179,7 @@ class CreateArticle extends Component {
         return pass;
     }
 
-    getPrevURLFromQueryString() {
+    getPrevURLFromQueryString = (): string => {
         let prevURL = decodeURI(this.props.location.search.split('=')[1]);
         return prevURL;
     }
@@ -180,7 +231,7 @@ class CreateArticle extends Component {
                     />
                     <FormHelperText>{(error.summary && error.summary.length > 0) && error.summary}</FormHelperText>
                 </FormControl>
-                <Editor ref={ref => this.editorRef = ref} isEditMode={isEditMode} content={article ? article.content : null}/>
+                <Editor ref={ref => this.editorRef = ref} isEditMode={isEditMode} content={article ? article.content : ''}/>
                 <FormControl 
                     fullWidth
                     classes={{

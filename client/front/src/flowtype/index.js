@@ -16,11 +16,6 @@ export type Article = {
     menu: ?Menu
 }
 
-export type BlogError = {
-    code: number,
-    message: string
-};
-
 export type LoginInformation = {
     email: string,
     password: string
@@ -34,4 +29,20 @@ export type LoginResponse = {
 export type BlogAction = {
     type: string,
     payload: any
+};
+
+export type ClientError = {
+    code: number,
+    message: string
+};
+
+export type WithStylesProps = {
+    classes: any,
+    theme?: any
+};
+
+export type RouterProps = {
+    history: any,
+    location: any, 
+    match: any
 };

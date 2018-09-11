@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import ListIcon from '@material-ui/icons/List';
@@ -8,7 +9,16 @@ import { withStyles } from '@material-ui/core/styles';
 import cn from 'classnames';
 import styles from './styles';
 
-class ArticleDetailButtonGroup extends Component {
+import type { 
+    WithStylesProps
+} from '../../flowtype';
+
+type Props = {
+    isAuthenticated: boolean,
+    parentURL: string
+};
+
+class ArticleDetailButtonGroup extends Component<Props & WithStylesProps> {
     render() {
         const { classes, isAuthenticated, parentURL } = this.props;
         return (
