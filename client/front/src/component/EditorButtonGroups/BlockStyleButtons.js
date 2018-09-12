@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import LooksOne from '@material-ui/icons/LooksOne';
 import LooksTwo from '@material-ui/icons/LooksTwo';
 import FormatListBulleted from '@material-ui/icons/FormatListBulleted';
@@ -7,7 +8,17 @@ import FormatQuote from '@material-ui/icons/FormatQuote';
 import Code from '@material-ui/icons/Code';
 import EditorStyleButton from './EditorStyleButton';
 
-const BLOCK_TYPES = [
+import type {
+    WithStylesProps
+} from '../../flowtype';
+// import type {
+//     Componen
+// } from 'react';
+
+const BLOCK_TYPES: Array<{ 
+    icon: React.ComponentType<any>,
+    style: string 
+}> = [
     {icon: LooksOne, style: 'header-one'},
     {icon: LooksTwo, style: 'header-two'},
     {icon: FormatQuote, style: 'blockquote'},
@@ -16,7 +27,11 @@ const BLOCK_TYPES = [
     {icon: Code, style: 'code-block'},
   ];
 
-class BlockStyleButtons extends Component {
+type Props = {
+    editorState: any
+};
+
+class BlockStyleButtons extends React.Component<Props & WithStylesProps> {
     render() {
         const { classes, editorState } = this.props;
         const selection = editorState.getSelection();

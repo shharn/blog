@@ -1,20 +1,24 @@
+// @flow
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import InsertLink from '@material-ui/icons/InsertLink';
 import InsertPhoto from '@material-ui/icons/InsertPhoto';
 
-class StrategyButtons extends Component {
-    constructor(props) {
-        super(props);
-        this.onLinkClick = this.onLinkClick.bind(this);
-        this.onImageClick = this.onImageClick.bind(this);
-    }
-    
-    onLinkClick() {
+import type {
+    WithStylesProps
+} from '../../flowtype';
+
+type Props = {
+    onLinkClick: () => void,
+    onImageClick: () => void
+}
+
+class StrategyButtons extends Component<Props & WithStylesProps> {
+    onLinkClick = (): void => {
         this.props.onLinkClick();
     }
 
-    onImageClick() {
+    onImageClick = (): void => {
         this.props.onImageClick();
     }
 

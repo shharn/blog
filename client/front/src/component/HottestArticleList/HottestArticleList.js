@@ -1,20 +1,27 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { FetchStatus } from '../../constant';
 import Article from '../Article';
 import styles from './styles';
 
-type Props = {
-    classes: any,
-    path: string,
+import type {
+    WithStylesProps,
+    RouterProps,
+    Article as ArticleEntity,
+    ClientError
+} from '../../flowtype';
 
-    articles: Array<Article>,
-    error: any,
+type Props = {
+    articles: Array<ArticleEntity>,
+    error: ClientError,
     fetchStatus: $Values<FetchStatus>,
     fetchComplete: boolean,
 }
 
-class HottestArticleList extends Component<Props> {
+class HottestArticleList extends React.Component<Props & WithStylesProps & RouterProps> {
+    innerContainer: ?HTMLDivElement;
+
     render() {
         const { classes } = this.props;
         const articles = this.props.data;

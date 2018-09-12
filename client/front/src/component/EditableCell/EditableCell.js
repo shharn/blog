@@ -32,11 +32,11 @@ class EditableCell extends Component<Props & WithStylesProps, State> {
         e.stopPropagation();
     }
 
-    handleKeyUp = (event: SyntheticKeyboardEvent<>): void => {
-        event.stopPropagation();
+    handleKeyUp = (e: SyntheticKeyboardEvent<>): void => {
+        e.stopPropagation();
         const { cellName } = this.props;
         const { textValue } = this.state;
-        switch(event.keyCode) {
+        switch(e.keyCode) {
             case keycode('enter'):
                 this.state.textValue !== this.props.value && this.props.onEnterKeyUp(cellName, textValue);
                 this.props.onEscKeyUp();

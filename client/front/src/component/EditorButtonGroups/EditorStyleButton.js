@@ -1,13 +1,20 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import Button from '@material-ui/core/Button';
 
-class EditorStyleButton extends Component {
-    constructor(props) {
-        super(props);
-        this.onClick = this.onClick.bind(this);
-    }
+import type { 
+} from 'react';
 
-    onClick(e) {
+type Props = {
+    active: boolean,
+    icon: React.ComponentType<any>,
+    style: string,
+
+    onToggle: (stye: string) => void
+}
+
+class EditorStyleButton extends React.Component<Props> {
+    onClick = (e: SyntheticMouseEvent<HTMLButtonElement>): void => {
         e.preventDefault();
         this.props.onToggle(this.props.style);
     }

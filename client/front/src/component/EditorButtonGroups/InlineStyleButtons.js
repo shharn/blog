@@ -1,16 +1,28 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import Bold from '@material-ui/icons/FormatBold';
 import Italic from '@material-ui/icons/FormatItalic';
 import Underline from '@material-ui/icons/FormatUnderlined';
 import EditorStyleButton from './EditorStyleButton';
 
-const INLINE_STYLES = [
+import type {
+    WithStylesProps
+} from '../../flowtype';
+
+const INLINE_STYLES: Array<{
+    icon: React.ComponentType<any>,
+    style: string
+}> = [
     {icon: Bold, style: 'BOLD'},
     {icon: Italic, style: 'ITALIC'},
     {icon: Underline, style: 'UNDERLINE'}
   ];
 
-class InlineStyleButtons extends Component {
+type Props = {
+    editorState: any
+};
+
+class InlineStyleButtons extends React.Component<Props & WithStylesProps> {
     render() {
         const { classes, editorState } = this.props;
         const currentStyle = editorState.getCurrentInlineStyle();

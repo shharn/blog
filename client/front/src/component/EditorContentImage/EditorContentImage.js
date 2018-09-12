@@ -1,6 +1,12 @@
+// @flow
 import React, { Component } from 'react';
 
-class EditorContentImage extends Component {
+type Props = {
+    block: any,
+    contentState: any
+};
+
+class EditorContentImage extends Component<Props> {
     render() {
         const first = this.props.block.getEntityAt(0);
         const entity = this.props.contentState.getEntity(first);

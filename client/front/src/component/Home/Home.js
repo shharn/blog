@@ -1,39 +1,24 @@
+// @flow
 import React, { Component } from 'react';
 import TopBar from '../TopBar';
 import ResponsiveDrawer from '../ResponsiveDrawer';
-// import { Route } from 'react-router';
-// import CircularProgress from '@material-ui/core/CircularProgress';
-// import Loadable from 'react-loadable';
 import MainArea from '../MainArea';
-
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 
-// const HottestArticleList = Loadable({
-//   loader: () =>  import('../HottestArticleList'),
-//   loading: () => <CircularProgress size={30}/>
-// });
-
-// const ArticleListWrapper  = Loadable({
-//   loader: () => import('../ArticleListWrapper'),
-//   loading: () => <CircularProgress size={30}/>
-// });
-
-// const CreateArticle = Loadable({
-//   loader: () => import('../CreateArticle'),
-//   loading: () => <CircularProgress size={30}/>
-// });
+import type {
+    WithStylesProps
+} from '../../flowtype';
 
 type Props = {
   isAuthenticated: boolean,
-  classes: any
 };
 
 type State = {
   smallScreenOpen: boolean
 };
 
-class Home extends Component<Props, State> {
+class Home extends Component<Props & WithStylesProps, State> {
   state = {
     smallScreenOpen: false
   };

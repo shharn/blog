@@ -26,11 +26,6 @@ export type LoginResponse = {
     token: string
 };
 
-export type BlogAction = {
-    type: string,
-    payload: any
-};
-
 export type ClientError = {
     code: number,
     message: string
