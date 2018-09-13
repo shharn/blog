@@ -10,40 +10,48 @@ import ResponsiveMenuList from '../ResponsiveMenuList';
 import { MenuManagerChildComponentType } from '../../constant';
 import styles from './styles';
 
+import type {
+    WithStylesProps
+} from '../../flowtype';
+import type {
+    Element
+} from 'react';
+
 type Props = {
     classes: any,
     isDialogOpened: boolean,
     childComponent: $Values<MenuManagerChildComponentType>,
 
+    disableEditableCell: () => void,
     changeChildComponent: (childComponent: $Values<MenuManagerChildComponentType>) => void,
     closeDialog: () => void,
     openDialog: () => void
 };
 
-class MenuManager extends Component<Props> {
+class MenuManager extends Component<Props & WithStylesProps> {
     handleManagementButtonClick = () => {
         const { isDialogOpened, openDialog, closeDialog } = this.props;
         isDialogOpened ? closeDialog() : openDialog();
     }
 
-    handleDialogClose = (event) => {
-        if ((event.type === 'keyup' && event.target.tagName !== "INPUT") || event.type === 'click') {
+    handleDialogClose = (e: any): void => {
+        if ((e.type === 'keyup' && e.target.tagName !== "INPUT") || e.type === 'click') {
             this.props.changeChildComponent(MenuManagerChildComponentType.LIST);
             this.props.closeDialog();
         }
     }
 
-    handleEscKeyDown = (e) => {
+    handleEscKeyDown = (e: SyntheticKeyboardEvent<HTMLElement>): void => {
         this.props.childComponent === MenuManagerChildComponentType.LIST ? this.props.closeDialog() :
             this.props.changeChildComponent(MenuManagerChildComponentType.LIST);
     }
 
-    isFromEditableCell = (event) => {
-        let target = event.target;
+    isFromEditableCell = (e: any): boolean => {
+        let target = e.target;
         return target.tagName === 'TD' && target.children.length < 1;
     }
 
-    getRightComponent = () => {
+    getRightComponent = (): Element<*> => {
         const childComponent = this.props.childComponent;
         switch(childComponent) {
             case MenuManagerChildComponentType.LIST:
@@ -56,11 +64,11 @@ class MenuManager extends Component<Props> {
         }
     }
 
-    switchToList = () => {
+    switchToList = (): void => {
         this.props.changeChildComponent(MenuManagerChildComponentType.LIST);
     }
 
-    switchToCreateMenu = () => {
+    switchToCreateMenu = (): void => {
         this.props.changeChildComponent(MenuManagerChildComponentType.CREATE_MENU);
     }
 

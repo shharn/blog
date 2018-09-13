@@ -1,10 +1,19 @@
+// @flow
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import styles from './styles';
 import { Typography } from '@material-ui/core';
 
-class MetaInfo extends Component {
+import type {
+    WithStylesProps
+} from '../../flowtype';
+
+type Props = {
+    createdAt: string
+};
+
+class MetaInfo extends Component<Props & WithStylesProps> {
     render() {
         const { classes, createdAt } = this.props;
         const time = new Date(createdAt);
@@ -14,7 +23,11 @@ class MetaInfo extends Component {
                     // alt="Seunghwan Han"
                     // src="/static/images/uxceo-128.jpg"
                     className={classes.avatar}>P</Avatar>
-                <Typography className={classes.createdAt} variant="subheading">{time.toLocaleString('en-us', { day: 'numeric', month: 'short', year: 'numeric' })}</Typography>
+                <Typography 
+                    className={classes.createdAt} 
+                    variant="subheading">
+                    {time.toLocaleString('en-us', { day: 'numeric', month: 'short', year: 'numeric' })}
+                </Typography>
             </div>
         );
     }

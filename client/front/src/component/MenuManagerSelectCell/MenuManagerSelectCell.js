@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -12,12 +13,12 @@ type Props = {
 };
 
 class MenuManagerSelectCell extends Component<Props> {
-    handleChange = event => {
+    handleChange = (e: any): void => {
         const parent = this.props.menu.parent == null ?  { uid: '0' } : this.props.menu.parent[0];
-        const selectedParentId = event.target.value;
+        const selectedParentId = e.target.value;
         if (parent.uid !== selectedParentId) {
             let maybeCloned = { ...this.props.menu };
-            maybeCloned.parent = selectedParentId === '0' ? null : [{ uid: event.target.value }];
+            maybeCloned.parent = selectedParentId === '0' ? null : [{ uid: e.target.value }];
             this.props.updateMenu(maybeCloned);
         }
     }

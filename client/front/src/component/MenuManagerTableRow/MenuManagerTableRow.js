@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import TableRow from '@material-ui/core/TableRow';
 import MenuTableCell from '../MenuManagerTableCell';
 import DeleteButtonCell from '../DeleteButtonCell';
@@ -14,12 +14,12 @@ type Props = {
     deleteMenu: (uid: number) => void
 };
 
-class MenuManagerTableRow extends Component<Props> {
+class MenuManagerTableRow extends React.Component<Props> {
     deleteMenu = () => {
         this.props.deleteMenu(this.props.menu.uid);
     }
 
-    getCells = () => {
+    getCells = (): Array<React.Element<typeof DeleteButtonCell>> => {
         let result = [];
         result = cellNames.map(cellName => <MenuTableCell key={`${this.props.menu.uid}:${cellName}`} menu={this.props.menu} cellName={cellName}/>);
         result.push(<DeleteButtonCell  key={`'deleteButton:${this.props.menu.uid}`} deleteMenu={this.deleteMenu} />);

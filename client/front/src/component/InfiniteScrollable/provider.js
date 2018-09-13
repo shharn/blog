@@ -1,18 +1,29 @@
+// @flow
 export type Provider = (state: mixed) => mixed
 
-export const reduxProviderTemplate = ({ dataProvider , statusProvider, errorProvider, reduxPropsProvider }) => (state, ownProps) => {
-    const reduxProps = typeof reduxPropsProvider === 'function' ? reduxPropsProvider(state, ownProps) : reduxPropsProvider;
+type ProviderTemplateConfigs = {
+    dataProvider: Provider,
+    statusProvider: Provider,
+    errorProvider: Provider,
+    reduxPropsProvider?: Provider
+};
+
+export const reduxProviderTemplate = ({ 
+    dataProvider, 
+    statusProvider, 
+    errorProvider, 
+    reduxPropsProvider 
+}: ProviderTemplateConfigs) => (state: mixed) => {
     return {
-        ...ownProps,
         data: {
             status: statusProvider(state),
             error: errorProvider(state),
             relayed: dataProvider(state),
         },
-        reduxProps
+        reduxProps: reduxPropsProvider ? reduxPropsProvider(state) : {}
     };
 };
 
-export const dispatchProviderTemplate = loader => dispatch => ({ 
-    loader: (offset, count, ...args) => dispatch(loader(offset, count, args))
+export const dispatchProviderTemplate = (loader: any) => (dispatch: any) => ({ 
+    loader: (offset: number, count: number, ...args?: Array<mixed>) => dispatch(loader(offset, count, args))
  });

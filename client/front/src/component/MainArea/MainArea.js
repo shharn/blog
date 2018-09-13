@@ -7,6 +7,10 @@ import PrivateRoute from '../PrivateRoute';
 import Loadable from 'react-loadable';
 import styles from './styles';
 
+import type {
+    WithStylesProps
+} from '../../flowtype';
+
 const HottestArticleList = Loadable({
     loader: () =>  import('../HottestArticleList'),
     loading: () => <CircularProgress size={30}/>
@@ -27,11 +31,7 @@ const ArticleDetail = Loadable({
     loading: () => <CircularProgress size={30}/>
 });
 
-type Props = {
-    classes: any,
-}
-
-class MainArea extends Component<Props> {
+class MainArea extends Component<WithStylesProps> {
     render() {
         const { classes } = this.props;
         return (

@@ -1,8 +1,21 @@
+// @flow
 import React, { Component } from 'react';
 import styles from './styles';
 import { withStyles } from '@material-ui/core/styles';
 
-class SocialIcon extends Component {
+import type {
+    WithStylesProps
+} from '../../flowtype';
+
+import type {
+    IconData
+} from '../SocialIcons/iconData';
+
+type Props = {
+    datum: IconData
+};
+
+class SocialIcon extends Component<Props & WithStylesProps> {
     render() {
         const { classes, datum } = this.props;
         return (

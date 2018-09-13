@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -9,7 +10,19 @@ import { withStyles } from '@material-ui/core/styles';
 import EmptyCenter from './EmptyCenter';
 import styles from './styles';
 
-class TopBar extends Component {
+import type {
+    WithStylesProps
+} from '../../flowtype';
+
+type Props = {
+    toggleDrawer: () => void
+};
+
+class TopBar extends Component<Props & WithStylesProps> {
+    handleSearchToggle = (): void => {
+        console.log('handleSearchToggle');
+    }
+
     render() {
         const { classes, toggleDrawer } = this.props;
         return (
@@ -22,7 +35,7 @@ class TopBar extends Component {
                       </div>
                       <EmptyCenter />
                       <div>
-                          <IconButton className={classes.navSearchIcon} onClick={this._handleSearchToggle}>
+                          <IconButton className={classes.navSearchIcon} onClick={this.handleSearchToggle}>
                               <SearchIcon/>
                           </IconButton>
                           <TextField className={classes.searchInput} placeholder="Search"></TextField>

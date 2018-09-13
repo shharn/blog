@@ -1,7 +1,13 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
-class PrivateRoute extends Component {
+type Props = {
+    isAuthenticated: boolean,
+    component: React.ComponentType<*>
+};
+
+class PrivateRoute extends React.Component<Props> {
     render() {
         const { isAuthenticated, component: Component, ...rest } = this.props;
         return (

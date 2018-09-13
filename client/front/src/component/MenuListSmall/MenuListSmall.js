@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import List from '@material-ui/core/List';
 import Button from '@material-ui/core/Button';
@@ -6,7 +7,10 @@ import AddIcon from '@material-ui/icons/Add';
 import ListItemWrapper from '../ListItemWrapper';
 import styles from './styles';
 
-import type { Menu } from '../../flowtype';
+import type { 
+    Menu,
+    WithStylesProps
+} from '../../flowtype';
 
 type Props = {
     menus: Array<Menu>,
@@ -16,12 +20,12 @@ type Props = {
     switchToCreateMenu: () => void
 };
 
-class MenuListSmall extends Component<Props> {
-    switchToEditMenu = (menu: Menu) => {
+class MenuListSmall extends Component<Props & WithStylesProps> {
+    switchToEditMenu = (menu: Menu): void => {
         this.props.switchToEditMenu(menu);
     }
 
-    onAddButtonClicked = () => {
+    onAddButtonClicked = (): void => {
         this.props.switchToCreateMenu();
     }
 

@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import Hidden from '@material-ui/core/Hidden';
 import MenuList from '../MenuList';
@@ -6,14 +7,16 @@ import keycode from 'keycode';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 
-type Props = {
-    classes: any,
+import type {
+    WithStylesProps
+} from '../../flowtype';
 
+type Props = {
     switchToList: () => void,
     switchToCreateMenu: () => void
 };
 
-class ResponsiveMenuList extends Component<Props> {
+class ResponsiveMenuList extends Component<Props & WithStylesProps> {
     onKeyUpOnContainer = (e) => {
         e.stopPropagation();
         switch(e.keycode) {

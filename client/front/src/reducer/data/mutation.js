@@ -1,7 +1,24 @@
 import { Data as DataActionType } from '../../action/types';
 import { FetchStatus } from '../../constant';
 
-const initialState = {
+import type {
+    Action
+} from '../../flowtype';
+
+export type MutationState = {
+    status: any, // Symbol
+    isFetching: boolean
+}
+
+export type Mutations = {
+    create: MutationState,
+    update: MutationState,
+    delete: MutationState
+};
+
+const initialState: {
+    [key: string]: Mutations
+} = {
     menus: {
         create: {
             status: FetchStatus.INITIAL,
@@ -32,7 +49,7 @@ const initialState = {
     }
 };
 
-const reducer = (state = initialState, action) => {
+const reducer = (state: { [key: string]: Mutations } = initialState, action: Action) => {
     const { type } = action;
     const { dataName, operationType } = action.payload || {};
     switch(type) {

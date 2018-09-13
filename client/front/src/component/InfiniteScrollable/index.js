@@ -1,4 +1,5 @@
-import React from 'react';
+// @flow
+import * as React from 'react';
 import { connect } from 'react-redux';
 import { reduxProviderTemplate, dispatchProviderTemplate } from './provider';
 
@@ -10,34 +11,34 @@ export type InfiniteScrollabledProps = {
 };
 
 type InfiniteScrollableOptions = {
+    offset?: number,
     initialCountPerRequest: number,
     countPerRequest: number,
     dataProvider: Provider,
     statusProvider: Provider,
     errorProvider: Provider,
+    reduxPropsProvider?: Provider,
     statusWait: mixed, 
     statusSuccess: mixed,
     statusFail: mixed,
-    error: (error: mixed) => React.Component,
+    error: (error: mixed) => React.Component<any>,
     loader: (offset: number, count: number, args?: Array<any>) => void,
     loaderArgs?: () => Object,
-    loading: () => React.Component,
+    loading: () => React.Component<any>,
     useRedux: boolean
 }
 
-type WrapperComponentReduxProps = {
-    data?: ReduxDataProps,
-    initLoader: () => void
-}
-
 type ReduxDataProps = {
-    status: any,
-    error: any,
-    relayed: Array<mixed>
+    status: mixed,
+    error: string,
+    relayed: Array<mixed>,
+    
 };
 
 type WrapperProps = {
-    
+    data: ReduxDataProps,
+    reduxProps?: any,
+    loader: (offset: number, count: number, args?: Object) => void,
 }
 
 type WrapperState = {
@@ -46,29 +47,22 @@ type WrapperState = {
     relayedData: Array<mixed>
 }
 
-export const makeInfiniteScrollable = (options: InfiniteScrollableOptions) => (WrappedComponent: React.Component<any>) => {
+export const makeInfiniteScrollable = (options: InfiniteScrollableOptions) => (WrappedComponent: React.ComponentType<any>) => {
     class InfiniteScrollable extends React.Component<WrapperProps, WrapperState>{
-        constructor(props) {
-            super(props);
-            this.handleScroll = this.handleScroll.bind(this);
-            this.handleEndOfScroll = this.handleEndOfScroll.bind(this);
-            this.isEndOfScroll = this.isEndOfScroll.bind(this);
-            this.load = this.load.bind(this);
-            this.initLoader = this.initLoader.bind(this);
-            this.countPerRequest = options.countPerRequest || 5;
-            this.initialCountPerRequest = options.initialCountPerRequest || this.countPerRequest;
-            this.state = {
-                relayedData: [],
-                offset: options.offset || 0,
-                hasMore: false
-            };
-        }
+        countPerRequest: number;
+        initialCountPerRequest: number;
 
-        componentDidMount() {
+        state = {
+            relayedData: [],
+            offset: options.offset || 0,
+            hasMore: false
+        };
+
+        componentDidMount = (): void => {
             this.load(this.initialCountPerRequest);
         }
 
-        componentDidUpdate(prevProps, prevState, snapshot) {
+        componentDidUpdate = (prevProps: WrapperProps): void => {
             // The data fetch succeeded when the scroll is at the bottom of the container
             if (this.props.data.status === options.statusSuccess && this.props.data.relayed !== prevProps.data.relayed) {
                 const addedData = this.props.data.relayed;
@@ -87,28 +81,28 @@ export const makeInfiniteScrollable = (options: InfiniteScrollableOptions) => (W
         }
 
         // (event: SyntheticEvent<HTMLButtonElement>) => {
-        handleScroll(e) : void {
-            const target = e.target;
+        handleScroll = (e: SyntheticEvent<>): void => {
+            const target =  e.target;
             if (this.isEndOfScroll(target)) {
                 this.handleEndOfScroll();
             }
         }
     
-        handleEndOfScroll() : void {
+        handleEndOfScroll = (): void => {
             const isFetching = this.props.data.status === options.statusWait;
             if (this.state.hasMore && !isFetching) {
                 this.load(this.countPerRequest);
             }
         } 
 
-        load(count: number) {
+        load = (count: number): void => {
             const { loaderArgs } = options;
-            const offset = this.state.offset;
+            const { offset } = this.state;
             const args = loaderArgs && loaderArgs.call(this);
             this.props.loader(offset, count, args);
         }
 
-        initLoader(): void {
+        initLoader = (): void => {
             // initialize offset & relayedData
             this.setState({
                 offset: 0,
@@ -116,19 +110,19 @@ export const makeInfiniteScrollable = (options: InfiniteScrollableOptions) => (W
             }, () => this.load(this.initialCountPerRequest));
         }
     
-        isEndOfScroll(target: HTMLElement) : boolean {
+        isEndOfScroll = (target: any): boolean => {
             const { offsetHeight, scrollTop, scrollHeight } = target;
             return offsetHeight + scrollTop >= scrollHeight;
         }
 
-        render() : ReactNode {
+        render() {
             const { data, ...rest } = this.props;
             const { relayedData } = this.state;
             return (
                 <div onScroll={this.handleScroll}>
                     <WrappedComponent {...rest} data={relayedData} initLoader={this.initLoader}>
                         {this.props.data.status === options.statusWait && options.loading()}
-                        {this.props.data.status === options.statusError && options.error(this.props.data.error)}
+                        {this.props.data.status === options.statusFail && options.error(this.props.data.error)}
                     </WrappedComponent>
                 </div>
             );
@@ -137,6 +131,14 @@ export const makeInfiniteScrollable = (options: InfiniteScrollableOptions) => (W
 
     const { loader, useRedux, dataProvider, statusProvider, errorProvider, reduxPropsProvider } = options;
     return useRedux ?
-        connect(reduxProviderTemplate({ dataProvider, statusProvider, errorProvider, reduxPropsProvider }), dispatchProviderTemplate(loader))(InfiniteScrollable) :
+        connect(
+            reduxProviderTemplate({ 
+                dataProvider,
+                statusProvider,
+                errorProvider,
+                reduxPropsProvider 
+            }),
+             dispatchProviderTemplate(loader)
+        )(InfiniteScrollable) :
         InfiniteScrollable;
 }

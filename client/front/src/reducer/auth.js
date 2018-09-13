@@ -4,7 +4,10 @@ import LocalStorage from 'local-storage';
 
 const initialState = {
     loginStatus: LoginStatusType.INITIAL,
-    error: null,
+    error: {
+        code: 0,
+        message: ''
+    },
     isAuthenticated: false
 };
 

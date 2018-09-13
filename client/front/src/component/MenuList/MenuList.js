@@ -11,22 +11,32 @@ import { withStyles } from '@material-ui/core/styles';
 import MenuTableRow from '../MenuManagerTableRow';
 import styles from './styles';
 
-import type { Menu } from '../../flowtype';
+import type { 
+    Menu,
+    WithStylesProps
+ } from '../../flowtype';
 
 const headerNames = [
     'Name', 'URL', 'Parent', 'Delete'
 ];
 
 type Props = {
-    classes: any,
+    isEditable: boolean,
+    editableRowId: number,
+    editableCellName: string,
     menus: Array<Menu>,
 
     switchToList: () => void,
-    switchToCreateMenu: () => void
+    switchToCreateMenu: () => void,
+
+    changeEditableCell: (rowId: number, cellName: string) =>void,
+    disableEditableCell: () => void,
+    updateMenu: (menu: Menu) => void,
+    deleteMenu: (uid: number) => void
 };
 
-class MeuList extends React.Component<Props> {
-    onAddButtonClicked = () => {
+class MeuList extends React.Component<Props & WithStylesProps> {
+    onAddButtonClicked = (): void => {
         this.props.switchToCreateMenu();
     }
 

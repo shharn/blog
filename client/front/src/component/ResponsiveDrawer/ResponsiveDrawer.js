@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import Hidden from '@material-ui/core/Hidden';
 import Drawer from '@material-ui/core/Drawer';
 import { withStyles } from '@material-ui/core/styles';
@@ -8,7 +9,17 @@ import MenuManager from '../MenuManager';
 import SocialIcons from '../SocialIcons';
 import styles from './styles';
 
-class ResponsiveDrawer extends Component {
+import type {
+    WithStylesProps
+} from '../../flowtype';
+
+type Props = {
+    isAuthenticated: boolean,
+    toggleDrawer: () => void,
+    smallScreenOpen: boolean
+};
+
+class ResponsiveDrawer extends React.Component<Props & WithStylesProps> {
     render() {
         const { classes, theme, toggleDrawer, smallScreenOpen, isAuthenticated } = this.props;
         return (

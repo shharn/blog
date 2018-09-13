@@ -1,9 +1,13 @@
+// @flow
 import React, { Component } from 'react';
 import EditableCell from '../EditableCell';
 import SelectCell from '../MenuManagerSelectCell';
 import TableCellWrapper from '../TableCellWrapper';
 
 import type { Menu } from '../../flowtype';
+import type {
+    Element
+} from 'react';
 
 type Props = {
     isEditable: boolean,
@@ -16,12 +20,12 @@ type Props = {
 };
 
 class MenuManagerTableCell extends Component<Props> {
-    handleCellClick = () => {
+    handleCellClick = (): void => {
         const { menu, cellName } = this.props;
         this.props.changeEditableCell(menu.uid, cellName);
     }
 
-    handleEnterKeyUpOnEditableCell = (cellName: string, value: string) => {
+    handleEnterKeyUpOnEditableCell = (cellName: string, value: string): void => {
         const maybeCloned = { ...this.props.menu,  [cellName]: value };
         this.props.updateMenu(maybeCloned);
     }
@@ -30,7 +34,7 @@ class MenuManagerTableCell extends Component<Props> {
         this.props.disableEditableCell();
     }
 
-    getEditableOrPlainText = () => {
+    getEditableOrPlainText = ():Element<typeof EditableCell | typeof TableCellWrapper> => {
         const { isEditable, cellName, menu } = this.props;
         if (isEditable) {
             return (

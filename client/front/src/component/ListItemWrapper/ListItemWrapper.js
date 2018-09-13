@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -12,33 +13,33 @@ type Props = {
 type State = {
     menuName: string,
     menuUrl: string,
-    menuParentId: number
+    menuParentId: string
 };
 
 class ListItemWrapper extends Component<Props, State> {
     state = {
         menuName: this.props.menu.name,
         menuUrl: this.props.menu.url,
-        menuParentId: this.props.parentId
+        menuParentId: this.props.menu.parent ? this.props.menu.parent[0].uid : '0'
     }
 
-    handleListItemClick = e => {
+    handleListItemClick = (e: SyntheticMouseEvent<HTMLElement>): void => {
         this.props.onMenuClicked(this.props.menu);
     }
 
-    handleTouchStart = e => {
+    handleTouchStart = (e: SyntheticTouchEvent<HTMLElement>): void => {
         console.log('touch start');
     }
 
-    handleTouchCancel = e => {
+    handleTouchCancel = (e: SyntheticTouchEvent<HTMLElement>): void => {
         console.log('touch canceled');
     }
 
-    handleTouchMove = e => {
+    handleTouchMove = (e: SyntheticTouchEvent<HTMLElement>): void => {
         console.log('touch move');
     }
 
-    handleTouchEnd = e => {
+    handleTouchEnd = (e: SyntheticTouchEvent<HTMLElement>): void => {
         console.log('touch end');
     }
     
