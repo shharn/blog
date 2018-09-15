@@ -7,7 +7,7 @@ import {
     dataMutationFail,
     uploadImageSuccess,
     uploadImageFail,
-    updateImageUploadProgress
+    requestData
  } from '../action/data';
 import { Data as DataActionType } from '../action/types';
 import { MutationOperationType, Token } from '../constant';
@@ -20,7 +20,9 @@ import {
     uploadImage
 } from '../service';
 
-import type { BlogAction } from '../action/data';
+import type { 
+    Action
+} from '../action/types';
 
 function* dataGetRequestHandler(action: BlogAction) : Generator<any, any, any,> {
     const { dataName } = action.payload;
@@ -69,6 +71,7 @@ function* dataMutationRequestHandler(action: BlogAction) : Generator<any, any, a
     }
     if (response.statusCode === 200) {
         yield put(dataMutationSuccess(dataName, operationType, response.body));
+        yield put(requestData(dataName));
     } else {
         yield put(dataMutationFail(dataName, operationType, {
                 code: response.statusCode == null ? -1 : response.statusCode,
