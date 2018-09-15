@@ -1,4 +1,5 @@
-import React from 'react';
+// @flow
+import * as React from 'react';
 import ReactDOM from 'react-dom';
 import RootRoute from './route/RootRoute';
 import registerServiceWorker from './registerServiceWorker';
@@ -12,11 +13,17 @@ import { menuNameToUIDConverter, menuConverterChecker } from './middleware/menuN
 import { articleNameToUIDConverter, articleConverterChecker } from './middleware/articleNameConverter';
 import logger from 'redux-logger';
 import appReducer from './reducer';
+import type { AppState } from './reducer';
 import rootSaga from './saga';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import blue from '@material-ui/core/colors/blue';
 import pink from '@material-ui/core/colors/pink';
+
+export type StoreState = {
+    app: AppState,
+    router: any
+};
 
 const history = createHistory();
 const routeMiddleware = routerMiddleware(history);
@@ -54,18 +61,23 @@ const theme = createMuiTheme({
     }
 });
 
-ReactDOM.render(
-    <Provider store={store}>
-        <ConnectedRouter history={history}>
-            <MuiThemeProvider theme={theme}>
-                <React.Fragment>
-                    <CssBaseline />
-                    <RootRoute />
-                </React.Fragment>
-            </MuiThemeProvider>
-        </ConnectedRouter>
-    </Provider>,
-    document.getElementById('root')
-);
+const container = document.getElementById('root');
+if (container) {
+    ReactDOM.render(
+        <Provider store={store}>
+            <ConnectedRouter history={history}>
+                <MuiThemeProvider theme={theme}>
+                    <React.Fragment>
+                        <CssBaseline />
+                        <RootRoute />
+                    </React.Fragment>
+                </MuiThemeProvider>
+            </ConnectedRouter>
+        </Provider>,
+        container
+    );
+    registerServiceWorker();
+} else {
+    throw new Error(`Cannot find an element with id 'root'`);
+}
 
-registerServiceWorker();

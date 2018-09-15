@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import Component from './ArticleList';
 import { FetchStatus } from '../../constant';
@@ -9,17 +10,30 @@ import {
     requestDataWithNameAndURL
 } from '../../action/data';
 
-const infScrOptions = {
+import type {
+    StoreState
+} from '../../';
+import type {
+    InfiniteScrollableOptions
+} from '../InfiniteScrollable';
+
+const infScrOptions: InfiniteScrollableOptions = {
     initialCountPerRequest: 10,
     countPerRequest: 5,
-    dataProvider: state => state.app.data.get.articles.data,
-    statusProvider: state => state.app.data.get.articles.fetchStatus,
-    errorProvider: state => state.app.data.get.articles.error,
+    dataProvider: (state: StoreState) => state.app.data.get.articles.data,
+    statusProvider: (state: StoreState) => state.app.data.get.articles.fetchStatus,
+    errorProvider: (state: StoreState) => state.app.data.get.articles.error,
     statusWait: FetchStatus.WAIT,
     statusSuccess: FetchStatus.SUCCESS,
     statusFail: FetchStatus.FAIL,
-    error: error => <Typography variant="subheading">Fail to load Articles. :(</Typography>, 
-    loader: (offset, count, args) => requestDataWithNameAndURL(args[0], `articles`, 'name', `/menus/${PLACEHOLDER_NAME_TO_CONVERT}/articles?offset=${offset}&count=${count}`),
+    error: () => <Typography variant="subheading">Fail to load Articles. :(</Typography>, 
+    loader: (offset: number, count: number, args?: Array<any>): void => {
+        if (args && args.length > 0) {
+            return requestDataWithNameAndURL(args[0], `articles`, 'name', `/menus/${PLACEHOLDER_NAME_TO_CONVERT}/articles?offset=${offset}&count=${count}`);
+        } else {
+            throw new Error(`Invalid arguments passed to InfiniteScrollable.loader method. arguments: ${JSON.stringify(args)}`);
+        }
+    },
     loaderArgs: function() {
         return this.props.match.params["menuName"];
     },

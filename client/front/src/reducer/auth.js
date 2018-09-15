@@ -1,8 +1,22 @@
+// @flow
 import { Auth as AuthActionType } from '../action/types'
 import { LoginStatus as LoginStatusType, Token } from '../constant';
 import LocalStorage from 'local-storage';
 
-const initialState = {
+import type {
+    ClientError
+} from '../flowtype';
+import type {
+    Action
+} from '../action/types';
+
+export type AuthState = {
+    loginStatus: $Values<LoginStatusType>,
+    error: ClientError,
+    isAuthenticated: boolean
+};
+
+const initialState: AuthState = {
     loginStatus: LoginStatusType.INITIAL,
     error: {
         code: 0,
@@ -11,7 +25,7 @@ const initialState = {
     isAuthenticated: false
 };
 
-const reducer = (state = initialState, action) => {
+const reducer = (state: AuthState = initialState, action: Action): AuthState => {
     let { type } = action;
     switch(type) {
         case AuthActionType.INITIALISE_LOGIN_STATUS:

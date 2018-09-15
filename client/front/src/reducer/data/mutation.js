@@ -1,24 +1,25 @@
+// @flow
 import { Data as DataActionType } from '../../action/types';
 import { FetchStatus } from '../../constant';
 
 import type {
     Action
-} from '../../flowtype';
+} from '../../action/types';
 
 export type MutationState = {
-    status: any, // Symbol
-    isFetching: boolean
-}
-
-export type Mutations = {
-    create: MutationState,
-    update: MutationState,
-    delete: MutationState
+    [key: string]: MutationType
 };
 
-const initialState: {
-    [key: string]: Mutations
-} = {
+type MutationType = {
+    [key: 'create' | 'update' | 'delete']: Mutation
+};
+
+type Mutation = {
+    status: $Values<FetchStatus>,
+    isFetching: boolean
+};
+
+const initialState: MutationState = {
     menus: {
         create: {
             status: FetchStatus.INITIAL,
@@ -49,7 +50,7 @@ const initialState: {
     }
 };
 
-const reducer = (state: { [key: string]: Mutations } = initialState, action: Action) => {
+const reducer = (state: MutationState = initialState, action: Action): MutationState => {
     const { type } = action;
     const { dataName, operationType } = action.payload || {};
     switch(type) {
@@ -76,7 +77,7 @@ const reducer = (state: { [key: string]: Mutations } = initialState, action: Act
                 }
             };
         case DataActionType.DATA_MUTATION_FAIL:
-            const { error } = this.action;
+            const { error } = action.payload;
             return {
                 ...state,
                 [dataName]: {

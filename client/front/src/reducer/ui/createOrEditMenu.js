@@ -1,11 +1,25 @@
+// @flow`
 import { UI as UIActionType } from '../../action/types';
+
+import type {
+    Menu
+} from '../../flowtype';
+
+import type {
+    Action
+} from '../../action/types';
+
+export type CreateOrEditMenuState = {
+    isEditMode: boolean,
+    menu: ?Menu
+};
 
 const initialState = {
     isEditMode: false,
     menu: null
 };
 
-const reducer = (state = initialState, action) => {
+const reducer = (state: CreateOrEditMenuState = initialState, action: Action) => {
     const { type } = action;
     switch(type) {
         case UIActionType.SWITCH_MENU_MANAGER_CHILD_COMPONENT:

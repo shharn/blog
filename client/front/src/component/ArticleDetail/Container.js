@@ -14,7 +14,14 @@ import {
     DataName
 } from '../../constant';
 
-const mapStateToProps = (state, ownProps) => {
+import type {
+    StoreState
+} from '../../';
+import type {
+    Dispatch
+} from '../../action/types';
+
+const mapStateToProps = (state: StoreState) => {
     const { data: article, error, fetchStatus } =   { ...state.app.data.get.article };
     const deleteFetchStatus = state.app.data.mutation.articles.delete.status;
     const { isAuthenticated } = state.app.auth;
@@ -23,12 +30,11 @@ const mapStateToProps = (state, ownProps) => {
         error,
         fetchStatus,
         isAuthenticated,
-        deleteFetchStatus,
-        ...ownProps
+        deleteFetchStatus
     };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
     getArticle: articleName => dispatch(requestDataWithNameAndURL(articleName, `article`, 'title', `/articles/${PLACEHOLDER_NAME_TO_CONVERT}`)),
     deleteArticle: uid => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, DataName.ARTICLE)),
     initFetchStatus: () => dispatch(changeMutationStatus(DataName.ARTICLE, MutationOperationType.DELETE, FetchStatus.INITIAL)),

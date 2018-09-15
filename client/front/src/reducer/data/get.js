@@ -1,22 +1,26 @@
+// @flow
 import { Data as DataActionType } from '../../action/types';
 import { FetchStatus } from '../../constant';
 
-import type { ClientError } from '../../flowtype';
-
-type GetReducerTemplate = {
-    [key: string]: DataTemplate
-};
+import type { 
+    ClientError
+} from '../../flowtype';
+import type {
+    Action
+} from '../../action/types';
 
 type DataTemplate = {
-    data: List<object> | object,
+    data: Array<Object> | Object,
     error: ClientError,
     fetchStatus: $Values<FetchStatus>,
     fetchComplete: boolean
 };
 
+export type GetState = {
+    [key: string]: DataTemplate
+};
 
-
-const initialState: GetReducerTemplate = {
+const initialState: GetState = {
     menus: {
         data: [],
         error: {
@@ -38,6 +42,7 @@ const initialState: GetReducerTemplate = {
             message: ''
         },
         fetchStatus: FetchStatus.INITIAL,
+        fetchComplete: false
     },
     articles: {
         data: [],
@@ -59,9 +64,9 @@ const initialState: GetReducerTemplate = {
     },
 };
 
-const reducer = (state= initialState, action) => {
+const reducer = (state: GetState = initialState, action: Action): GetState => {
     const { type } = action;
-    const { dataName } = action.payload || "";
+    const dataName = (action.payload && action.payload.dataName) || "";
     switch (type) {
         case DataActionType.REQUEST_GET_DATA:
         case DataActionType.REQUEST_GET_DATA_WITH_URL: {

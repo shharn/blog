@@ -190,7 +190,7 @@ class CreateArticle extends Component<Props & WithStylesProps & RouterProps, Sta
         const { error } = this.state;
         return (
             <Paper className={classes.container} elevation={4}>
-                <FormControl fullWidth error={(error.title && error.title.length > 0)}>
+                <FormControl fullWidth error={(!!error.title && (error.title.length > 0))}>
                     <div>Title</div>
                     <Input 
                         value={title}
@@ -204,13 +204,13 @@ class CreateArticle extends Component<Props & WithStylesProps & RouterProps, Sta
                         inputProps={{
                             name: 'title'
                         }}/>
-                    <FormHelperText>{(error.title && error.title.length > 0) && error.title}</FormHelperText>
+                    <FormHelperText>{(!!error.title && (error.title.length > 0)) && error.title}</FormHelperText>
                 </FormControl>
                 <FormControl fullWidth 
                     classes={{
                         root: classes.formContainer
                     }}
-                    error={(error.summary && error.summary.length > 0)}
+                    error={(!!error.summary && (error.summary.length > 0))}
                 >
                     <div>Summary</div>
                     <Input
@@ -229,7 +229,7 @@ class CreateArticle extends Component<Props & WithStylesProps & RouterProps, Sta
                             name: 'summary'
                         }}
                     />
-                    <FormHelperText>{(error.summary && error.summary.length > 0) && error.summary}</FormHelperText>
+                    <FormHelperText>{(!!error.summary && (error.summary.length > 0)) && error.summary}</FormHelperText>
                 </FormControl>
                 <Editor ref={ref => this.editorRef = ref} isEditMode={isEditMode} content={article ? article.content : ''}/>
                 <FormControl 

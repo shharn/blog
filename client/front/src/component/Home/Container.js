@@ -1,7 +1,12 @@
+// @flow
 import Home from './Home';
 import { connect } from 'react-redux';
 
-const mapStateToProps = (state, ownProps) => ({
+import type {
+    StoreState
+} from '../../';
+
+const mapStateToProps = (state: StoreState) => ({
     isAuthenticated: state.app.auth.isAuthenticated
 });
 

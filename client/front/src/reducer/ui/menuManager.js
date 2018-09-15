@@ -1,12 +1,22 @@
+// @flow
 import { UI as UIActionType } from '../../action/types';
 import { MenuManagerChildComponentType } from '../../constant';
 
-const initialState = {
+import type {
+    Action
+} from '../../action/types';
+
+export type MenuManagerState = {
+    isDialogOpened: boolean,
+    childComponent: $Values<MenuManagerChildComponentType>
+};
+
+const initialState: MenuManagerState = {
     isDialogOpened: false,
     childComponent: MenuManagerChildComponentType.LIST
 };
 
-const reducer = (state = initialState, action) => {
+const reducer = (state: MenuManagerState = initialState, action: Action): MenuManagerState => {
     const { type } = action;
     switch (type){
         case UIActionType.OPEN_MENU_MANAGEMENT_DIALOG:

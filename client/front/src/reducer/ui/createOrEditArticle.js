@@ -1,11 +1,25 @@
+// @flow
 import { UI as UIActionType } from '../../action/types';
 
-const initialState = {
+import type {
+    Article,
+} from '../../flowtype';
+
+import type {
+    Action
+} from '../../action/types';
+
+export type CreateOrEditArticleState = {
+    isEditMode: boolean,
+    article: ?Article
+};
+
+const initialState: CreateOrEditArticleState = {
     isEditMode: false,
     article: null
 };
 
-const reducer = (state = initialState, action) => {
+const reducer = (state:CreateOrEditArticleState = initialState, action: Action) => {
     const { type } = action;
     switch(type) {
         case UIActionType.SET_DATA_FOR_CREATE_OR_EDIT_ARTICLE:

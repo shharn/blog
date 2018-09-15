@@ -1,8 +1,16 @@
+// @flow
 import { connect } from 'react-redux';
 import DrawerItems from './DrawerItems';
 import {  requestData } from '../../action/data';
 
-const mapStateToProps = (state, ownProps) => {
+import type {
+    StoreState
+} from '../../';
+import type {
+    Dispatch
+} from '../../action/types';
+
+const mapStateToProps = (state: StoreState) => {
     const { data, error, fetchStatus } =   { ...state.app.data.get.menus };
     return {
         menus: data,
@@ -11,7 +19,7 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
     requestMenuData: () => dispatch(requestData('menus'))
 });
 

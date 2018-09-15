@@ -5,6 +5,8 @@ export type Action = {
     payload: Object
 };
 
+export type Dispatch = (action: Action) => any;
+
 export const Auth = {
     INITIALISE_LOGIN_STATUS: createUnique('INITIALISE_LOGIN_STATUS'),
     REQUEST_LOGIN: createUnique('REQUEST_LOGIN'),

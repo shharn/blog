@@ -1,12 +1,23 @@
+// @flow
 import { UI as UIActionType } from '../../action/types';
 
-const initialState = {
+import type {
+    Action
+} from '../../action/types';
+
+export type MenuListState = {
+    isEditable: boolean,
+    editableRowId: ?string,
+    editableCellName: ?string
+};
+
+const initialState: MenuListState = {
     isEditable: false,
     editableRowId: null,
     editableCellName: null
 };
 
-const reducer = (state = initialState, action) => {
+const reducer = (state: MenuListState = initialState, action: Action): MenuListState => {
     const { type } = action;
     switch (type){
         case UIActionType.CHANGE_EDITABLE_CELL:

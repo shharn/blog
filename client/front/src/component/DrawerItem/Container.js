@@ -1,7 +1,15 @@
+// @flow
 import { connect } from 'react-redux';
 import DrawerItem from './DrawerItem';
 
-const mapStateToProps = (state, ownProps) => {
+import type {
+    StoreState
+} from '../../';
+import type {
+    Menu
+} from '../../flowtype';
+
+const mapStateToProps = (state: StoreState, ownProps: { menu : Menu }) => {
     const menus = [ ...state.app.data.get.menus.data ];
     const childIDs = (ownProps.menu.children || []).map(child => child.uid);
     const childMenus = menus.filter(menu => childIDs.includes(menu.uid));
@@ -11,10 +19,4 @@ const mapStateToProps = (state, ownProps) => {
     }
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(DrawerItem);
+export default connect(mapStateToProps)(DrawerItem);

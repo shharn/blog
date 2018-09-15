@@ -10,7 +10,7 @@ export type InfiniteScrollabledProps = {
     initLoader: () => void
 };
 
-type InfiniteScrollableOptions = {
+export type InfiniteScrollableOptions = {
     offset?: number,
     initialCountPerRequest: number,
     countPerRequest: number,
@@ -21,24 +21,23 @@ type InfiniteScrollableOptions = {
     statusWait: mixed, 
     statusSuccess: mixed,
     statusFail: mixed,
-    error: (error: mixed) => React.Component<any>,
+    error: (error: mixed) => React.Element<*>,
     loader: (offset: number, count: number, args?: Array<any>) => void,
     loaderArgs?: () => Object,
-    loading: () => React.Component<any>,
+    loading: () => React.Element<*>,
     useRedux: boolean
 }
 
 type ReduxDataProps = {
     status: mixed,
     error: string,
-    relayed: Array<mixed>,
-    
+    relayed: Array<mixed>
 };
 
 type WrapperProps = {
     data: ReduxDataProps,
     reduxProps?: any,
-    loader: (offset: number, count: number, args?: Object) => void,
+    loader: (offset: number, count: number, args?: Object) => void
 }
 
 type WrapperState = {
@@ -49,8 +48,8 @@ type WrapperState = {
 
 export const makeInfiniteScrollable = (options: InfiniteScrollableOptions) => (WrappedComponent: React.ComponentType<any>) => {
     class InfiniteScrollable extends React.Component<WrapperProps, WrapperState>{
-        countPerRequest: number;
-        initialCountPerRequest: number;
+        countPerRequest: number = options.countPerRequest;
+        initialCountPerRequest: number = options.initialCountPerRequest;
 
         state = {
             relayedData: [],

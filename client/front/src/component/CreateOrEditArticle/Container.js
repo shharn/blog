@@ -7,7 +7,14 @@ import {
 import { MutationOperationType } from '../../constant';
 import { setDataForCreateOrEditArticle } from '../../action/ui';
 
-const mapStateToProps = (state) => {
+import type {
+    StoreState
+} from '../../';
+import type {
+    Dispatch
+} from '../../action/types';
+
+const mapStateToProps = (state: StoreState) => {
     const { isEditMode, article } = { ...state.app.ui.createOrEditArticle };
     const fetchStatus = isEditMode ? state.app.data.mutation.articles.update : state.app.data.mutation.articles.create;
     return {
@@ -19,7 +26,7 @@ const mapStateToProps = (state) => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
         submitNewArticle: (data: any) => dispatch(requestDataMutation(MutationOperationType.CREATE, data, 'articles')),
         submitUpdatedArticle: (data: any) => dispatch(requestDataMutation(MutationOperationType.UPDATE, data, 'articles')),

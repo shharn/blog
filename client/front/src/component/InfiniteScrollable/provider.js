@@ -1,5 +1,5 @@
 // @flow
-export type Provider = (state: mixed) => mixed
+export type Provider = (state: Object) => mixed
 
 type ProviderTemplateConfigs = {
     dataProvider: Provider,
@@ -13,7 +13,7 @@ export const reduxProviderTemplate = ({
     statusProvider, 
     errorProvider, 
     reduxPropsProvider 
-}: ProviderTemplateConfigs) => (state: mixed) => {
+}: ProviderTemplateConfigs) => (state: Object) => {
     return {
         data: {
             status: statusProvider(state),

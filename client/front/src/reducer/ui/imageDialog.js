@@ -1,12 +1,22 @@
+// @flow
 import { Data as DataActionType } from '../../action/types';
 import { ImageUploadStatus } from '../../constant';
 
-const initialState = {
+import type {
+    Action
+} from '../../action/types';
+
+export type ImageDialogState = {
+    uploadStatus: $Values<ImageUploadStatus>,
+    progress: number
+};
+
+const initialState: ImageDialogState = {
     uploadStatus: ImageUploadStatus.INITIAL,
     progress: 0
 };
 
-const reducer = (state = initialState, action) => {
+const reducer = (state: ImageDialogState = initialState, action: Action): ImageDialogState => {
     const { type } = action;
     switch(type) {
         case DataActionType.UPLOAD_IMAGE: 
