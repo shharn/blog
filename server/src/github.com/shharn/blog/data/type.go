@@ -37,8 +37,3 @@ type Article struct {
 	CreatedAt   string  `json:"createdAt, omitempty"`
 	Menu        *[]Menu `json:"menu,omitempty"`
 }
-
-var (
-	// TokenStorage is the storage for the session token made with jwt algorithm
-	TokenStorage = SessionStorage{}
-)

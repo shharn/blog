@@ -9,7 +9,9 @@ import {
     invalidToken,
     validToken
 } from '../action/auth';
+import { Token } from '../constant';
 import { isNetworkOffline } from '../util';
+import LocalStorage from 'local-storage';
 import * as service from '../service';
 
 import type { 
@@ -59,12 +61,15 @@ export function* validateToken(action: Action): Generator<any, any, any> {
 }
 
 export function* processLogout(action: Action): Generator<any, any, any> {
-    const { token } = action.payload;
-    const { response } = yield call(service.requestLogout, token);
-    if (response.error) {
-        put(logoutFailed(response.error));
+    LocalStorage.remove(Token.key);
+    const exists: boolean = LocalStorage.get(Token.key) != null;
+    if (exists) {
+        yield put(logoutFailed({
+            code: -1,
+            message: 'Fail to logout. Retry later.'
+        }));
     } else {
-        put(logoutSuccess())
+        yield put(logoutSuccess())
     }
 }
 

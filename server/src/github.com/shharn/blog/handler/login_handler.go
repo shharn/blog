@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -25,6 +26,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) 
 		return nil, errors.WithStack(err)
 	}
 
+	
 	if len(loginInfo.Email) < 1 || len(loginInfo.Password) < 1 {
 		return data.Authentication{
 			IsValid: false,
@@ -32,6 +34,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) 
 	}
 
 	if !isAdminUser(&loginInfo) {
+		fmt.Println("not matched")
 		return data.Authentication{
 			IsValid: false,
 		}, nil
@@ -46,7 +49,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) 
 		return nil, errors.WithStack(err)
 	}
 
-	storeToken(tokenString, loginInfo.Email)
 	return data.Authentication{
 		IsValid: true,
 		Token:   tokenString,
@@ -54,6 +56,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) 
 }
 
 func isAdminUser(info *data.LoginInformation) bool {
+	fmt.Println(info.Email == adminEmail)
+	fmt.Println(info.Password == adminPassword)
 	return info.Email == adminEmail && info.Password == adminPassword
 }
 
@@ -64,8 +68,4 @@ func makeToken(info *data.LoginInformation) *jwt.Token {
 	claims["email"] = info.Email
 	token.Claims = claims
 	return token
-}
-
-func storeToken(tokenString string, email string) {
-	data.TokenStorage[tokenString] = email
 }
