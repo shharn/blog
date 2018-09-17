@@ -17,7 +17,7 @@ type Props = {
 };
 
 class ArticleListWrapper extends Component<Props & RouterProps & WithStylesProps> {
-    render() {
+    render = () => {
         const { isAuthenticated, classes, ...rest } = this.props;
         return (
             <div>

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 
 class EmptyCenter extends Component<{}> {
-    render() {
+    render = () => {
         return (
             <div style={{ flex: '1 1 auto' }}/>
         );

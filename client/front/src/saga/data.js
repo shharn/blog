@@ -19,12 +19,9 @@ import {
     updateData,
     uploadImage
 } from '../service';
+import type { Action } from '../action/types';
 
-import type { 
-    Action
-} from '../action/types';
-
-function* dataGetRequestHandler(action: BlogAction) : Generator<any, any, any,> {
+function* dataGetRequestHandler(action: Action) : Generator<any, any, any,> {
     const { dataName } = action.payload;
     const response = yield call(getData, dataName);
     if (response.statusCode === 200) {
@@ -37,7 +34,7 @@ function* dataGetRequestHandler(action: BlogAction) : Generator<any, any, any,> 
     }
 }
 
-function* dataGetRequestWithURLHandler(action: BlogAction) : Generator<any, any, any> {
+function* dataGetRequestWithURLHandler(action: Action) : Generator<any, any, any> {
     const { dataName, url } = action.payload;
     const urlWithoutLeadingSlash = url[0] === '/' ? url.substr(1) : url;
     const response = yield call(getDataWithURL, urlWithoutLeadingSlash);
@@ -52,7 +49,7 @@ function* dataGetRequestWithURLHandler(action: BlogAction) : Generator<any, any,
     }
 }
 
-function* dataMutationRequestHandler(action: BlogAction) : Generator<any, any, any> {
+function* dataMutationRequestHandler(action: Action) : Generator<any, any, any> {
     const { operationType, dataName, data } = action.payload;
     const token = LocalStorage.get(Token.key);
     let response;
@@ -80,7 +77,7 @@ function* dataMutationRequestHandler(action: BlogAction) : Generator<any, any, a
     }
 }
 
-function* uploadImageRequestHandler(action: BlogAction) : Generator<any, any, any> {
+function* uploadImageRequestHandler(action: Action) : Generator<any, any, any> {
     const { files } = action.payload;
     const token = LocalStorage.get(Token.key);
     let response = yield call(uploadImage, files, token);

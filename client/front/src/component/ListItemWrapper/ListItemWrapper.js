@@ -43,7 +43,7 @@ class ListItemWrapper extends Component<Props, State> {
         console.log('touch end');
     }
     
-    render() {
+    render = () => {
         const { menu } = this.props;
         return (
             <ListItem 

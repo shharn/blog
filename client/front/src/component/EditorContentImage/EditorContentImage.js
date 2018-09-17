@@ -7,7 +7,7 @@ type Props = {
 };
 
 class EditorContentImage extends Component<Props> {
-    render() {
+    render = () => {
         const first = this.props.block.getEntityAt(0);
         const entity = this.props.contentState.getEntity(first);
         const { src } = entity.getData();

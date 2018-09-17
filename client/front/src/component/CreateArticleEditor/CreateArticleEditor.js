@@ -291,7 +291,7 @@ class CreateArticleEditor extends Component<Props, State> {
             contentState.getBlockMap().first().getType() !== 'unstyled';
     }
 
-    render() {
+    render = () => {
         const { editorState, showURLDialog, showImageDialog } = this.state;
         const cn = className('editor', { hidePlaceholder: this.shouldPlaceholderHide()} );
         return (

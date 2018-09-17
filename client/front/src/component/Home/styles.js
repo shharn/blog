@@ -3,7 +3,8 @@ import { Styles } from '../../constant';
 export default theme => ({
   homeContainer: {
     width: '100%',
-    height: '100%'
+    height: '100%',
+    minWidth: '300px'
   },
   appFrame: {
     position: 'relative',

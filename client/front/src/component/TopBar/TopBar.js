@@ -8,6 +8,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import { withStyles } from '@material-ui/core/styles';
 import EmptyCenter from './EmptyCenter';
+import Button from '@material-ui/core/Button';
+import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
+import LocalStorage from 'local-storage';
+import { Token } from '../../constant';
 import styles from './styles';
 
 import type {
@@ -15,7 +19,10 @@ import type {
 } from '../../flowtype';
 
 type Props = {
-    toggleDrawer: () => void
+    isAuthenticated: boolean,
+
+    toggleDrawer: () => void,
+    logout: () => void
 };
 
 class TopBar extends Component<Props & WithStylesProps> {
@@ -23,8 +30,13 @@ class TopBar extends Component<Props & WithStylesProps> {
         console.log('handleSearchToggle');
     }
 
-    render() {
-        const { classes, toggleDrawer } = this.props;
+    handleLogoutButtonClicked = (): void => {
+        const token = LocalStorage.get(Token);
+        this.props.logout(token);
+    }
+
+    render = () => {
+        const { classes, toggleDrawer, isAuthenticated } = this.props;
         return (
             <AppBar className={classes.appBar}>
                   <Toolbar classes={{ root: classes.toolBar}}>
@@ -40,6 +52,17 @@ class TopBar extends Component<Props & WithStylesProps> {
                           </IconButton>
                           <TextField className={classes.searchInput} placeholder="Search"></TextField>
                       </div>
+                      {isAuthenticated && 
+                        <div className={classes.buttonContainer}>
+                            <Button
+                                classes={{
+                                    root: classes.logoutButton
+                                }}
+                                aria-label="logout"
+                                onClick={this.handleLogoutButtonClicked}>
+                                <PowerSettingsNew />
+                            </Button>
+                        </div>}
                   </Toolbar>
               </AppBar>
         );

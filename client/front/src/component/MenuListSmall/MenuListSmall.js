@@ -29,7 +29,7 @@ class MenuListSmall extends Component<Props & WithStylesProps> {
         this.props.switchToCreateMenu();
     }
 
-    render() {
+    render = () => {
         const { classes, menus } = this.props;
         return (
             <div className={classes.container}>

@@ -42,19 +42,19 @@ class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {},
         this.onDeleteButtonClicked = this.onDeleteButtonClicked.bind(this);
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         const articleName = this.props.match.params['articleName']
         this.props.getArticle(articleName);
     }
 
-    componentDidUpdate() {
+    componentDidUpdate = () => {
         if (!this.props.article || this.props.deleteFetchStatus === FetchStatus.SUCCESS) {
             let url = this.getParentURL(this.props.location.pathname);
             this.props.history.push(url);
         }
     }
 
-    componentWillUnmount() {
+    componentWillUnmount = () => {
         this.props.initFetchStatus();
     }
 
@@ -76,7 +76,7 @@ class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {},
         this.props.history.push(`/admin/article?prevURL=${encodeURI(this.parentURL)}`);
     }
 
-    render() {
+    render = () => {
         const { classes, article, fetchStatus, isAuthenticated } = this.props;
         return (
             article ? 

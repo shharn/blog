@@ -13,7 +13,7 @@ class DeleteButtonCell extends Component<Props> {
         this.props.deleteMenu();
     }
 
-    render() {
+    render = () => {
         return (
             <TableCell>
                 <Button aria-label="Delete" onClick={this.handleClick} >

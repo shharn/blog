@@ -56,7 +56,7 @@ class MenuManagerTableCell extends Component<Props> {
         }
     }
 
-    render() {
+    render = () => {
         const { cellName, menu } = this.props;
         return (
             cellName === 'parent' ?  <SelectCell menu={menu}/> : this.getEditableOrPlainText()

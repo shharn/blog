@@ -8,7 +8,7 @@ import type {
 } from '../../flowtype';
 
 class DrawerHeader extends Component<WithStylesProps> {
-    render() {
+    render = () =>{
         const { classes } = this.props;
         return (
             <a href="/" className={classes.drawerHeader}>

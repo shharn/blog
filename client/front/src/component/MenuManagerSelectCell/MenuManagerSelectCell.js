@@ -23,7 +23,7 @@ class MenuManagerSelectCell extends Component<Props> {
         }
     }
 
-    render() {
+    render = () => {
         const parent = this.props.menu.parent == null ?  { uid: '0' } : this.props.menu.parent[0];
         return (
             <TableCell>

@@ -6,6 +6,7 @@ export default theme => ({
     flexDirection: 'column',
     justifyContent: 'center',
     position: 'absolute',
+    cursor: 'auto',
     marginLeft: Styles.drawerWidth,
     [theme.breakpoints.up('sm')]: {
       width: `calc(100% - ${Styles.drawerWidth}px)`
@@ -24,6 +25,18 @@ export default theme => ({
     }
   },
   searchInput: {
-      marginLeft: '10px'
+      color: 'rgba(0, 0, 0, 0.40)',
+      marginLeft: '10px',
+      [theme.breakpoints.down('sm')]: {
+        marginLeft: 0,
+        width: '100px'
+      }
+  },
+  buttonContainer: {
+    marginLeft: '10px'
+  },
+  logoutButton: {
+    color: 'rgba(0, 0, 0, 0.40)',
+    minWidth: 0
   }
 });

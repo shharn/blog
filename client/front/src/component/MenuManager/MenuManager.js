@@ -29,7 +29,7 @@ type Props = {
 };
 
 class MenuManager extends Component<Props & WithStylesProps> {
-    handleManagementButtonClick = () => {
+    handleManagementButtonClick = (): void => {
         const { isDialogOpened, openDialog, closeDialog } = this.props;
         isDialogOpened ? closeDialog() : openDialog();
     }
@@ -42,6 +42,9 @@ class MenuManager extends Component<Props & WithStylesProps> {
     }
 
     handleEscKeyDown = (e: SyntheticKeyboardEvent<HTMLElement>): void => {
+        if (e.target.tagName === 'INPUT') {
+            return;
+        }
         this.props.childComponent === MenuManagerChildComponentType.LIST ? this.props.closeDialog() :
             this.props.changeChildComponent(MenuManagerChildComponentType.LIST);
     }
@@ -72,11 +75,17 @@ class MenuManager extends Component<Props & WithStylesProps> {
         this.props.changeChildComponent(MenuManagerChildComponentType.CREATE_MENU);
     }
 
-    render() {
+    render = () => {
         const { classes, isDialogOpened } = this.props;
         return (
             <div className={classes.container}>
-                <Button aria-label="Management" onClick={this.handleManagementButtonClick}>
+                <Button 
+                    classes={{
+                        root: classes.button
+                    }}
+                    aria-label="Management" 
+                    onClick={this.handleManagementButtonClick}>
+                    
                     <Settings/> 
                 </Button>
                 <Dialog

@@ -64,7 +64,7 @@ class DrawerItem extends Component<Props & WithStylesProps, State> {
         }
     }
 
-    render() {
+    render = () => {
         return this.getRightElement();
     }
 }

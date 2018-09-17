@@ -22,7 +22,7 @@ class StrategyButtons extends Component<Props & WithStylesProps> {
         this.props.onImageClick();
     }
 
-    render() {
+    render = () => {
         const { classes } = this.props;
         return (
             <div className={classes.container}>

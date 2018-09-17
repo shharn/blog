@@ -3,17 +3,26 @@ import MenuListSmall from './MenuListSmall';
 import { switchMenuManagerChildComponent, setDataForCreateOrEditMenu } from '../../action/ui';
 import { MenuManagerChildComponentType } from '../../constant';
 
-import type { Menu } from '../../flowtype';
+import type { 
+    Menu
+} from '../../flowtype';
+import type {
+    StoreState
+} from '../../';
+import type {
+    Dispatch
+} from '../../action/types';
 
-const mapStateToProps = (state, ownProps) => {
+
+
+const mapStateToProps = (state: StoreState) => {
     const menus = [ ...state.app.data.get.menus.data ];
     return {
-        menus,
-        ...ownProps
+        menus
     };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
     switchToEditMenu: (menu: Menu) => {
         dispatch(switchMenuManagerChildComponent(MenuManagerChildComponentType.EDIT_MENU));
         dispatch(setDataForCreateOrEditMenu(true, menu));

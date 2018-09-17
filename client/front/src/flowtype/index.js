@@ -1,9 +1,9 @@
 export type Menu = {
     uid?: string,
     name: string,
-    url: string,
-    parent: Array<Menu>,
-    children: Array<Menu>
+    url?: string,
+    parent?: Array<Menu>,
+    children?: Array<Menu>
 };
 
 export type Article = {

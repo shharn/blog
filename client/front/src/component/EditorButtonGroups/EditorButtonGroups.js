@@ -17,7 +17,7 @@ type Props = {
 }
 
 class EditorButtonGroups extends Component<Props & WithStylesProps> {
-    render() {
+    render = () => {
         const { editorState, onBlockStyleToggle, onInlineStyleToggle, classes } = this.props;
         return (
             <div className={classes.root}>

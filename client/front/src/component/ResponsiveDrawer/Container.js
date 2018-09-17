@@ -1,14 +1,14 @@
+// @flow
 import { connect} from 'react-redux';
 import ResponsiveDrawer from './ResponsiveDrawer';
+import type {
+    StoreState 
+} from '../../';
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: StoreState) => {
     return {
         isAuthenticated: state.app.auth.isAuthenticated
     };
 };
 
-const mapDispatchToProps = dispatch => ({
-    
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ResponsiveDrawer);
+export default connect(mapStateToProps)(ResponsiveDrawer);

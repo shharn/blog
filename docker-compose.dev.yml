@@ -18,7 +18,6 @@ services:
         volumes:
             - ./server/src:/go/src
         depends_on:
-            - redis
             - dgraph-server
         networks:
             - frontend
@@ -28,13 +27,6 @@ services:
             - "10000:10000"
             - "2345:2345"
         restart: always
-
-    redis:
-        image: redis
-        networks:
-            - backend
-        ports:
-            - "6379:6379"
 
     dgraph-zero:
         image: dgraph/dgraph:latest

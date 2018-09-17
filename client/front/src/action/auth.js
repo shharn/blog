@@ -52,10 +52,6 @@ export const requestLogout = (token : string): Action=> ({
     }
 })
 
-export const clientHasNoToken = (): Action => ({
-    type: Auth.CLINET_HAS_NO_TOKEN
-})
-
 export const logoutSuccess = (): Action => ({
     type: Auth.LOGOUT_SUCCESS
 })

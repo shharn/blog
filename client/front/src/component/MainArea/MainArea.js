@@ -32,7 +32,7 @@ const ArticleDetail = Loadable({
 });
 
 class MainArea extends Component<WithStylesProps> {
-    render() {
+    render = () => {
         const { classes } = this.props;
         return (
             <main className={classes.content}>

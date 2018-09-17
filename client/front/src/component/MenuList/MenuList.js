@@ -40,10 +40,14 @@ class MeuList extends React.Component<Props & WithStylesProps> {
         this.props.switchToCreateMenu();
     }
 
-    render() {
+    onKeyDown = (e: SyntheticKeyboardEvent<HTMLElement>): void => {
+        this.props.disableEditableCell();
+    }
+
+    render = () => {
         const { menus, classes } = this.props;
         return (
-            <div className={classes.tableContainer}>
+            <div className={classes.tableContainer} onKeyDown={this.onKeyDown}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -51,7 +55,7 @@ class MeuList extends React.Component<Props & WithStylesProps> {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {menus.map(menu => <React.Fragment key={menu.uid}><MenuTableRow key={menu.uid} menu={menu}/></React.Fragment>)}
+                        {menus.map(menu => <MenuTableRow key={menu.uid} menu={menu}/>)}
                     </TableBody>
                 </Table>
                 <Button className={classes.addButton} variant="fab" mini color="secondary" aria-label="add" onClick={this.onAddButtonClicked}>

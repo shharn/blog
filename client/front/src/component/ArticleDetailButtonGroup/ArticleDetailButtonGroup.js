@@ -19,7 +19,7 @@ type Props = {
 };
 
 class ArticleDetailButtonGroup extends Component<Props & WithStylesProps> {
-    render() {
+    render = () => {
         const { classes, isAuthenticated, parentURL } = this.props;
         return (
             <div className={classes.container}>

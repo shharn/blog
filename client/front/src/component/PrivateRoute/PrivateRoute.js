@@ -8,7 +8,7 @@ type Props = {
 };
 
 class PrivateRoute extends React.Component<Props> {
-    render() {
+    render = () => {
         const { isAuthenticated, component: Component, ...rest } = this.props;
         return (
             <Route {...rest}

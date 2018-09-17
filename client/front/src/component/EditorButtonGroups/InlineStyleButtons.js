@@ -23,7 +23,7 @@ type Props = {
 };
 
 class InlineStyleButtons extends React.Component<Props & WithStylesProps> {
-    render() {
+    render = () => {
         const { classes, editorState } = this.props;
         const currentStyle = editorState.getCurrentInlineStyle();
         return (

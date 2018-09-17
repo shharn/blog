@@ -1,20 +1,26 @@
+// @flow
 import { connect } from 'react-redux';
 import MenuManagerTableRow from './MenuManagerTableRow';
 import { requestDataMutation } from '../../action/data';
-import { MutationOperationType, DataName, Token } from '../../constant';
-import LocalStorage from 'local-storage';
+import { MutationOperationType, DataName } from '../../constant';
+import type {
+    Menu
+} from '../../flowtype';
+import type {
+    StoreState
+} from '../../';
+import type {
+    Dispatch
+} from '../../action/types';
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (_: StoreState, ownProps: { menu: Menu }) => {
     return {
         ...ownProps
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    const clientToken = LocalStorage.get(Token.key);
-    return {
-        deleteMenu: (uid: string) => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, DataName.MENU, clientToken))
-    };
-};
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+    deleteMenu: (uid: string) => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, DataName.MENU))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(MenuManagerTableRow);

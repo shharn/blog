@@ -47,7 +47,7 @@ type Props = {
 };
 
 class ArticleDetailContent extends Component<Props & WithStylesProps> {
-    render() {
+    render = () => {
         const { classes, content } = this.props;
         const parsed = JSON.parse(content);
         const contentState = convertFromRaw(parsed);

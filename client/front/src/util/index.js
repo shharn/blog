@@ -10,3 +10,7 @@ export const createUnique = (name: string): any /* Symbol */ => {
     }
     return name;
 };
+
+export function isNetworkOffline(response: any): boolean {
+    return !response.status;
+}

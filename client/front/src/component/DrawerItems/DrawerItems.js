@@ -23,11 +23,11 @@ type Props = {
 };
 
 class DrawerItems extends Component<Props & WithStylesProps> {
-    componentDidMount() {
+    componentDidMount = () => {
         this.props.requestMenuData();
     }
 
-    render() {
+    render = () => {
         const { menus, fetchStatus, classes, error } = this.props;
         const notChildMenus =  menus && menus.filter(menu => !menu.parent);
         return (

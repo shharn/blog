@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
-import { LoginStatus as LoginStatusType, Token } from '../../constant';
+import { AuthStatus, Token } from '../../constant';
 import keycode from 'keycode';
 import LocalStorage from 'local-storage';
 import styles from './styles';
@@ -20,7 +20,7 @@ import type {
 } from '../../flowtype';
 
 type Props = {
-    loginStatus: $Values<LoginStatusType>,
+    authStatus: $Values<AuthStatus>,
     isAuthenticated: boolean,
     error: ClientError,
 
@@ -49,15 +49,15 @@ class Admin extends Component<Props & WithStylesProps & RouterProps, State> {
         }
     }
 
-    componentDidUpdate () {
-        this.props.loginStatus === LoginStatusType.LOGIN_SUCCESS && this.redirectToHomeWithDelay();
+    componentDidUpdate =  () => {
+        this.props.authStatus === AuthStatus.LOGIN_SUCCESS && this.redirectToHomeWithDelay();
     }
 
-    componentWillUnmount() {
+    componentWillUnmount = () => {
         this.props.initializeLoginStatus();
     }
 
-    redirectToHomeWithDelay = () : void=> {
+    redirectToHomeWithDelay = (): void=> {
         setTimeout(() => this.props.history.push('/'), 1000);
     }
 
@@ -90,13 +90,13 @@ class Admin extends Component<Props & WithStylesProps & RouterProps, State> {
         let result = null;
         
         switch(loginStatus) {
-            case LoginStatusType.LOGIN_WAIT:
+            case AuthStatus.LOGIN_WAIT:
                 result = <CircularProgress className={this.props.classes.circularProgerss}/>;
                 break;
-            case LoginStatusType.LOGIN_SUCCESS:
+            case AuthStatus.LOGIN_SUCCESS:
                 result = <Typography variant="caption">Confirmed. Will be redirected soon</Typography>;
                 break;
-            case LoginStatusType.LOGIN_FAIL:
+            case AuthStatus.LOGIN_FAIL:
                 result = (
                     <div className={this.props.classes.bottomContainer}>
                         <Typography className={this.props.classes.errorMessage} variant="caption">{this.props.error.message}</Typography>
@@ -104,7 +104,7 @@ class Admin extends Component<Props & WithStylesProps & RouterProps, State> {
                     </div>
                 );
                 break;
-            case LoginStatusType.INITIAL:
+            case AuthStatus.INITIAL:
             default:
                 result = <Button variant="raised" color="primary" className={this.props.classes.button} onClick={this.handleSubmit}>Submit</Button>;
                 break;
@@ -112,7 +112,7 @@ class Admin extends Component<Props & WithStylesProps & RouterProps, State> {
         return result;
     }
 
-    render() {
+    render = () => {
         return (
             <div className={this.props.classes.root} onKeyUp={this.handleKeyUp}>
                 <Paper elevation={4} className={this.props.classes.paper}>

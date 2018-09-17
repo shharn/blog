@@ -1,3 +1,4 @@
+// @flow
 import { connect } from 'react-redux';
 import MenuList from './MenuList';
 import { 
@@ -13,13 +14,21 @@ import {
 } from '../../constant';
 import LocalStorage from 'local-storage';
 
-import type { Menu } from '../../flowtype';
+import type { 
+    Menu 
+} from '../../flowtype';
+import type {
+    StoreState
+} from '../../';
+import type {
+    Dispatch
+} from '../../action/types';
 
 const MENU_DATA_NAME = 'menus';
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: StoreState, ownProps: { switchToList: () => void, switchToCreateMenu: () => void }) => {
     const menus =  [ ...state.app.data.get.menus.data ];
-    const { isEditable, editableRowId, editableCellName } = state.app.ui.menuManager;
+    const { isEditable, editableRowId, editableCellName } = state.app.ui.menuList;
     return {
         isEditable,
         editableRowId,
@@ -29,13 +38,12 @@ const mapStateToProps = (state, ownProps) => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    const clientToken = LocalStorage.get(Token.key);
+const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
         changeEditableCell: (rowId: number, cellName: string) => dispatch(changeToEditableCell(rowId, cellName)),
         disableEditableCell: () => dispatch(disableEditableCell()),
-        updateMenu: (menu: Menu) => dispatch(requestDataMutation(MutationOperationType.UPDATE, menu, MENU_DATA_NAME, clientToken)),
-        deleteMenu: (uid: number) => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, MENU_DATA_NAME, clientToken)),
+        updateMenu: (menu: Menu) => dispatch(requestDataMutation(MutationOperationType.UPDATE, menu, MENU_DATA_NAME)),
+        deleteMenu: (uid: number) => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, MENU_DATA_NAME)),
     };
 };
 

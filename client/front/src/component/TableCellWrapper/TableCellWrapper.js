@@ -16,7 +16,7 @@ class TableCellWrapper  extends Component<Props> {
         onCellClick(rowId, cellName);
     }
 
-    render() {
+    render = () => {
         const { value } = this.props;
         return (
             <TableCell variant='body' onClick={this.handleClick}>

@@ -55,7 +55,7 @@ class EditableCell extends Component<Props & WithStylesProps, State> {
         });
     }
 
-    render() {
+    render = () => {
         const { rowId, cellName, classes } = this.props;
         return (
             <TableCell variant='body' key={`${rowId}:${cellName}`}>

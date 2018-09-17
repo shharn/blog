@@ -88,7 +88,7 @@ class CreateArticle extends Component<Props & WithStylesProps & RouterProps, Sta
         }
     };
 
-    componentDidMount() {
+    componentDidMount = () => {
         const { isEditMode, menus } = this.props;
         if (!menus || menus.length < 1) {
             alert('There must be at least one menu. Create a menu first :)');
@@ -113,14 +113,14 @@ class CreateArticle extends Component<Props & WithStylesProps & RouterProps, Sta
         }
     }
 
-    componentDidUpdate() {
+    componentDidUpdate = () => {
         const { fetchStatus } = this.props;
         if (fetchStatus === FetchStatus.SUCCESS) {
             this.props.history.push(this.getPrevURLFromQueryString());
         }
     }
 
-    componentWillUnmount() {
+    componentWillUnmount = () => {
         this.props.initializeState();
     }
 
@@ -184,7 +184,7 @@ class CreateArticle extends Component<Props & WithStylesProps & RouterProps, Sta
         return prevURL;
     }
 
-    render() {
+    render = () => {
         const { classes, menus, isEditMode, article, fetchStatus } = this.props;
         const { title, summary, imageSource, menuID } = this.state.data;
         const { error } = this.state;

@@ -29,7 +29,7 @@ class Home extends Component<Props & WithStylesProps, State> {
       });
   }
 
-  render() {
+  render = () => {
     const { classes, isAuthenticated } = this.props;
     return (
       <div className={classes.homeContainer}>

@@ -3,6 +3,9 @@ export default {
         alignSelf: 'flex-end',
         marginRight: '20px'
     },
+    button: {
+        minWidth: 0
+    },
     dialogContent: {
         maxHeight: '500px',
         display: 'flex',

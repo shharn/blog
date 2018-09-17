@@ -28,7 +28,7 @@ class ResponsiveMenuList extends Component<Props & WithStylesProps> {
         }
     }
 
-    render() {
+    render = () => {
         const { classes, switchToList, switchToCreateMenu } = this.props;
         return (
             <div className={classes.responsiveMenuListContainer} onKeyUp={this.onKeyUpOnContainer}>

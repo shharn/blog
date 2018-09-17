@@ -76,7 +76,7 @@ class CreateArticleURLDialog extends Component<Props & WithStylesProps, State> {
         return url;
     }
 
-    render() {
+    render = () => {
         const { showURLDialog, classes } = this.props;
         return (
             <Dialog

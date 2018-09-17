@@ -32,7 +32,7 @@ type Props = {
 };
 
 class BlockStyleButtons extends React.Component<Props & WithStylesProps> {
-    render() {
+    render = () => {
         const { classes, editorState } = this.props;
         const selection = editorState.getSelection();
         const blockType = editorState

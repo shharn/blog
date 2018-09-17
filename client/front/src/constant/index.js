@@ -1,13 +1,10 @@
 import { createUnique } from '../util';
 
-export const LoginStatus = {
+export const AuthStatus = {
     INITIAL: createUnique('INITIAL'),
     LOGIN_WAIT: createUnique('LOGIN_WAIT'),
     LOGIN_SUCCESS: createUnique('LOGIN_SUCCESS'),
-    LOGIN_FAIL: createUnique('LOGIN_FAIL')
-};
-
-export const LogoutStatus = {
+    LOGIN_FAIL: createUnique('LOGIN_FAIL'),
     LOGOUT_WAIT: createUnique('LOGOUT_WAIT'),
     LOGOUT_SUCCESS: createUnique('LOGOUT_SUCCESS'),
     LOGOUT_FAIL: createUnique('LOGOUT_FAIL')

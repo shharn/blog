@@ -4,19 +4,20 @@ import { Auth as AuthActionType } from '../action/types';
 import { 
     loginSuccess,
     loginFailed,
-    clientHasNoToken,
     logoutSuccess,
     logoutFailed, 
     invalidToken,
     validToken
 } from '../action/auth';
-
+import { isNetworkOffline } from '../util';
 import * as service from '../service';
 
-import type { BlogAction } from '../flowtype';
+import type { 
+    Action
+} from '../flowtype';
 
 
-export function* loginProcess(action: BlogAction): Generator<any, any, any> {
+export function* processLogin(action: Action): Generator<any, any, any> {
     const response = yield call(service.requestLogin, action.payload.loginInfo);
     if (isNetworkOffline(response)) {
         // In this case, I think that using another action for 'net`work offline' is better idea
@@ -37,7 +38,7 @@ export function* loginProcess(action: BlogAction): Generator<any, any, any> {
     }
 }
 
-export function* validateToken(action: BlogAction): Generator<any, any, any> {
+export function* validateToken(action: Action): Generator<any, any, any> {
     const { token } = action.payload;
     const response = yield call(service.validateToken, token);
     if (isNetworkOffline(response)) {
@@ -57,26 +58,18 @@ export function* validateToken(action: BlogAction): Generator<any, any, any> {
     }
 }
 
-export function* logoutProcess(action: BlogAction): Generator<any, any, any> {
+export function* processLogout(action: Action): Generator<any, any, any> {
     const { token } = action.payload;
-    if (token) {
-        const { response } = yield call(service.requestLogout, token);
-        if (response.error) {
-            put(logoutFailed(response.error));
-        } else {
-            put(logoutSuccess())
-        }
+    const { response } = yield call(service.requestLogout, token);
+    if (response.error) {
+        put(logoutFailed(response.error));
     } else {
-        put(clientHasNoToken());
+        put(logoutSuccess())
     }
 }
 
-function isNetworkOffline(response: any): boolean {
-    return !response.status;
-}
-
 export default function* watchLogin(): Generator<any, any, any,> {
-    yield takeLatest(AuthActionType.REQUEST_LOGIN, loginProcess);
-    yield takeLatest(AuthActionType.REQUEST_LOGOUT, logoutProcess);
+    yield takeLatest(AuthActionType.REQUEST_LOGIN, processLogin);
+    yield takeLatest(AuthActionType.REQUEST_LOGOUT, processLogout);
     yield takeLatest(AuthActionType.VALIDATE_TOKEN, validateToken);
 }

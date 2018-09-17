@@ -48,7 +48,7 @@ class CreateOrEditMenu extends Component<Props & WithStylesProps & RouterProps, 
         parentMenuId: '0',
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         if (this.props.isEditMode) {
             const { menu } = this.props;
             this.setState({
@@ -59,11 +59,11 @@ class CreateOrEditMenu extends Component<Props & WithStylesProps & RouterProps, 
         }
     }
 
-    componentDidUpdate() {
+    componentDidUpdate = () => {
         this.props.status === FetchStatus.SUCCESS && setTimeout(this.props.switchToList, 1000);
     }
 
-    componentWillUnmount() {
+    componentWillUnmount = () => {
         this.props.initializeStatus();
         this.props.status === FetchStatus.SUCCESS && this.props.getMenus();
     }
@@ -129,7 +129,7 @@ class CreateOrEditMenu extends Component<Props & WithStylesProps & RouterProps, 
         }
     }
 
-    render() {
+    render = () => {
         const { classes, menus, menu, isEditMode, status } = this.props;
         const showableMenus = isEditMode === true ? menus.filter(item => item.uid === '0' || item.uid !== menu.uid) : menus;
         return (

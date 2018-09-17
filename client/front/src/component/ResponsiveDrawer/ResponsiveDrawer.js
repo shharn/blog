@@ -20,7 +20,7 @@ type Props = {
 };
 
 class ResponsiveDrawer extends React.Component<Props & WithStylesProps> {
-    render() {
+    render = () => {
         const { classes, theme, toggleDrawer, smallScreenOpen, isAuthenticated } = this.props;
         return (
             <div>

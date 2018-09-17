@@ -16,7 +16,7 @@ type Props = {
 };
 
 class SocialIcon extends Component<Props & WithStylesProps> {
-    render() {
+    render = () => {
         const { classes, datum } = this.props;
         return (
             <div className={classes.icon}>

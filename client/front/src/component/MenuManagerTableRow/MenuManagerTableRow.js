@@ -26,7 +26,7 @@ class MenuManagerTableRow extends React.Component<Props> {
         return result;
     }
 
-    render() {
+    render = () => {
         return (
             <TableRow>
                 {this.getCells()}

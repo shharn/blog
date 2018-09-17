@@ -23,7 +23,7 @@ type Props = {
 };
 
 class Article extends Component<Props & WithStylesProps> {
-    render() {
+    render = () => {
         const { article, classes, customClasses } = this.props;
         return (
             <Link className={classes.outerAnchor} to={`/menus/${article.menu[0].name.toLowerCase().replace(/\s/g, '-')}/articles/${article.title.toLowerCase().replace(/\s/g, '-')}`}>

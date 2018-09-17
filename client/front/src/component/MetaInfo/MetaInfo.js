@@ -14,7 +14,7 @@ type Props = {
 };
 
 class MetaInfo extends Component<Props & WithStylesProps> {
-    render() {
+    render = () => {
         const { classes, createdAt } = this.props;
         const time = new Date(createdAt);
         return (

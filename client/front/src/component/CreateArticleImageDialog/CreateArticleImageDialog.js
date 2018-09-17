@@ -33,7 +33,7 @@ class CreateArticleImageDialog extends React.Component<Props & WithStylesProps, 
         files: []
     };
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate = (prevProps) => {
         if (!prevProps.showImageDialog && this.props.showImageDialog) {
             this.setState({
                 files: []
@@ -89,7 +89,7 @@ class CreateArticleImageDialog extends React.Component<Props & WithStylesProps, 
         });
     }
 
-    render() {
+    render = () => {
         const { classes, showImageDialog, uploadStatus } = this.props;
         const { files } = this.state;
         return (

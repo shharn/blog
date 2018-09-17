@@ -10,9 +10,9 @@ import type {
 } from '../../action/types';
 
 const mapStateToProps = (state: StoreState) => {
-    const { loginStatus, error, isAuthenticated } = state.app.auth;
+    const { authStatus, error, isAuthenticated } = state.app.auth;
     return {
-        loginStatus,
+        authStatus,
         error,
         isAuthenticated
     };

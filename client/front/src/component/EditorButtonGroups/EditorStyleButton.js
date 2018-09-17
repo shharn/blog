@@ -19,7 +19,7 @@ class EditorStyleButton extends React.Component<Props> {
         this.props.onToggle(this.props.style);
     }
 
-    render() {
+    render = () => {
         const { icon: Icon, active } = this.props;
         let className = 'editor-button';
         if (active) {

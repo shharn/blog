@@ -10,7 +10,7 @@ import type {
 } from '../../flowtype';
 
 class SocialIcons extends Component<WithStylesProps> {
-    render() {
+    render = () => {
         const { classes } = this.props;
         return (
              <div className={classes.socialIcons}>

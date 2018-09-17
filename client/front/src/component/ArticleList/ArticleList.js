@@ -22,7 +22,7 @@ class ArticleList extends Component<RouterProps & WithStylesProps & InfiniteScro
             prevMenuName: this.props.match.params['menuName']
     };
 
-    componentDidUpdate() {
+    componentDidUpdate = () => {
         if (this.props.match.params['menuName'] !== this.state.prevMenuName) {
             this.props.initLoader();
             this.setState({
@@ -37,7 +37,7 @@ class ArticleList extends Component<RouterProps & WithStylesProps & InfiniteScro
         }
     }
 
-    render() {
+    render = () => {
         const { classes } = this.props;
         const articles = this.props.data;
         const isEmpty = !articles || articles.length < 1;

@@ -22,7 +22,7 @@ type Props = {
 class HottestArticleList extends React.Component<Props & WithStylesProps & RouterProps> {
     innerContainer: ?HTMLDivElement;
 
-    render() {
+    render = () => {
         const { classes } = this.props;
         const articles = this.props.data;
         return (
