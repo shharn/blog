@@ -4,10 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import styles from './styles';
 import { Typography } from '@material-ui/core';
-
-import type {
-    WithStylesProps
-} from '../../flowtype';
+import type { WithStylesProps } from '../../flowtype';
 
 type Props = {
     createdAt: string

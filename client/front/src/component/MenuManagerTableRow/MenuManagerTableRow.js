@@ -3,7 +3,6 @@ import * as React from 'react';
 import TableRow from '@material-ui/core/TableRow';
 import MenuTableCell from '../MenuManagerTableCell';
 import DeleteButtonCell from '../DeleteButtonCell';
- 
 import type { Menu } from '../../flowtype';
 
 const cellNames : Array<string> = [ 'name', 'url', 'parent' ];

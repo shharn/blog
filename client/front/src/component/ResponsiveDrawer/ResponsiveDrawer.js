@@ -8,10 +8,7 @@ import DrawerItems from '../DrawerItems';
 import MenuManager from '../MenuManager';
 import SocialIcons from '../SocialIcons';
 import styles from './styles';
-
-import type {
-    WithStylesProps
-} from '../../flowtype';
+import type { WithStylesProps } from '../../flowtype';
 
 type Props = {
     isAuthenticated: boolean,

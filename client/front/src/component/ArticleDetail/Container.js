@@ -1,27 +1,23 @@
 import Component from './ArticleDetail';
 import { connect } from 'react-redux';
-import { PLACEHOLDER_NAME_TO_CONVERT, FetchStatus } from '../../constant';
+import { 
+    PLACEHOLDER_NAME_TO_CONVERT, 
+    FetchStatus
+} from '../../constant';
 import { 
     requestDataWithNameAndURL,
     requestDataMutation,
     changeMutationStatus
 } from '../../action/data';
-import {
-    setDataForCreateOrEditArticle
-} from '../../action/ui';
+import { setDataForCreateOrEditArticle } from '../../action/ui';
 import { 
     MutationOperationType,
     DataName
 } from '../../constant';
+import type { StoreState } from '../../';
+import type { Dispatch } from '../../action/types';
 
-import type {
-    StoreState
-} from '../../';
-import type {
-    Dispatch
-} from '../../action/types';
-
-const mapStateToProps = (state: StoreState) => {
+const mapStateToProps = (state: StoreState): Object => {
     const { data: article, error, fetchStatus } =   { ...state.app.data.get.article };
     const deleteFetchStatus = state.app.data.mutation.articles.delete.status;
     const { isAuthenticated } = state.app.auth;
@@ -34,7 +30,7 @@ const mapStateToProps = (state: StoreState) => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch): Object => ({
     getArticle: articleName => dispatch(requestDataWithNameAndURL(articleName, `article`, 'title', `/articles/${PLACEHOLDER_NAME_TO_CONVERT}`)),
     deleteArticle: uid => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, DataName.ARTICLE)),
     initFetchStatus: () => dispatch(changeMutationStatus(DataName.ARTICLE, MutationOperationType.DELETE, FetchStatus.INITIAL)),

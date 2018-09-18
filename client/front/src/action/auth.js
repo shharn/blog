@@ -1,6 +1,5 @@
 // @flow
 import { Auth } from './types';
-
 import type { LoginInformation, LoginResponse, ClientError } from '../flowtype';
 import type { Action } from './types';
 

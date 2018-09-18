@@ -1,30 +1,21 @@
 // @flow
 import { connect } from 'react-redux';
 import MenuManagerSelectCell from './MenuManagerSelectCell';
-import { 
-    requestDataMutation
-} from '../../action/data';
+import { requestDataMutation } from '../../action/data';
 import {
     MutationOperationType,
     DataName
 } from '../../constant';
-
-import type { 
-    Menu
-} from '../../flowtype';
-import type {
-    StoreState
-} from '../../';
-import type {
-    Dispatch
-} from '../../action/types';
+import type { Menu } from '../../flowtype';
+import type { StoreState } from '../../';
+import type { Dispatch } from '../../action/types';
 
 const emptyMenu: Menu = {
     uid: '0',
     name: 'None',
 };
 
-const mapStateToProps = (state: StoreState, ownProps: { menu: Menu }) => {
+const mapStateToProps = (state: StoreState, ownProps: { menu: Menu }): Object => {
     const menus = [ ...state.app.data.get.menus.data ].filter(menu => menu.uid !== ownProps.menu.uid);
     menus.splice(0, 0, emptyMenu);
     return {
@@ -33,7 +24,7 @@ const mapStateToProps = (state: StoreState, ownProps: { menu: Menu }) => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch): Object => ({
     updateMenu: (menu: Menu) => dispatch(requestDataMutation(MutationOperationType.UPDATE, menu, DataName.MENU)),
 });
 

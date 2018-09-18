@@ -1,10 +1,8 @@
 // @flow
 import request from 'superagent';
 import env from '../config/env';
-
+import { HEADER_NAME_FOR_TOKEN } from '../constant';
 import type { LoginInformation } from '../flowtype';
-
-const HEADER_NAME_FOR_TOKEN = 'X-Session-Token';
 
 export function requestLogin(loginInfo: LoginInformation): request.Response {
     return request

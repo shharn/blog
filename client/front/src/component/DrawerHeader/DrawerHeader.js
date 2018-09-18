@@ -2,10 +2,7 @@ import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import styles from './styles';
 import { withStyles } from '@material-ui/core/styles';
-
-import type {
-    WithStylesProps
-} from '../../flowtype';
+import type { WithStylesProps } from '../../flowtype';
 
 class DrawerHeader extends Component<WithStylesProps> {
     render = () =>{

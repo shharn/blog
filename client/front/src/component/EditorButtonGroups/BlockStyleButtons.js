@@ -7,13 +7,7 @@ import FormatListNumbered from '@material-ui/icons/FormatListNumbered';
 import FormatQuote from '@material-ui/icons/FormatQuote';
 import Code from '@material-ui/icons/Code';
 import EditorStyleButton from './EditorStyleButton';
-
-import type {
-    WithStylesProps
-} from '../../flowtype';
-// import type {
-//     Componen
-// } from 'react';
+import type { WithStylesProps } from '../../flowtype';
 
 const BLOCK_TYPES: Array<{ 
     icon: React.ComponentType<any>,

@@ -7,7 +7,6 @@ import Typography from '@material-ui/core/Typography';
 import DrawerItem from '../DrawerItem';
 import styles from './styles';
 import { FetchStatus as FetchStatusType } from '../../constant';
-
 import type {
     Menu,
     WithStylesProps,

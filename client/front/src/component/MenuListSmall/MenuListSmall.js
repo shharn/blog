@@ -6,7 +6,6 @@ import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import ListItemWrapper from '../ListItemWrapper';
 import styles from './styles';
-
 import type { 
     Menu,
     WithStylesProps

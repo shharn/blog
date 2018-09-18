@@ -2,14 +2,8 @@
 import React, { Component } from 'react';
 import styles from './styles';
 import { withStyles } from '@material-ui/core/styles';
-
-import type {
-    WithStylesProps
-} from '../../flowtype';
-
-import type {
-    IconData
-} from '../SocialIcons/iconData';
+import type { WithStylesProps } from '../../flowtype';
+import type { IconData } from '../SocialIcons/iconData';
 
 type Props = {
     datum: IconData

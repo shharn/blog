@@ -19,10 +19,7 @@ import { Token } from '../constant';
 import { isNetworkOffline } from '../util';
 import LocalStorage from 'local-storage';
 import * as service from '../service';
-
-import type { 
-    Action
-} from '../flowtype';
+import type { Action } from '../flowtype';
 import type { Response } from 'superagent';
 
 
@@ -68,6 +65,11 @@ export function* validateToken(action: Action): Generator<Response | PutEffect, 
 }
 
 export function* processLogout(action: Action): Generator<Response | PutEffect, void, void> {
+    const token: string = LocalStorage.get(Token.key);
+    if (!token || token.length < 1) {
+        yield put(logoutSuccess());
+    }
+
     LocalStorage.remove(Token.key);
     const exists: boolean = LocalStorage.get(Token.key) != null;
     if (exists) {
@@ -76,7 +78,22 @@ export function* processLogout(action: Action): Generator<Response | PutEffect, 
             message: 'Fail to logout. Retry later.'
         }));
     } else {
-        yield put(logoutSuccess())
+        const response: Response = yield call(service.requestLogout, token);
+        if (isNetworkOffline(response)) {
+            yield put(logoutFailed({
+                code: -1,
+                message: 'Network is down :('
+            }));
+        } else {
+            if (response.statusCode === 200) {
+                yield put(logoutSuccess());
+            } else {
+                yield put(logoutFailed({
+                    code: response.statusCode,
+                    message: 'Invalid Token'
+                }));
+            }
+        }
     }
 }
 

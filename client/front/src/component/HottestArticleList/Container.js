@@ -5,16 +5,9 @@ import { FetchStatus } from '../../constant';
 import { makeInfiniteScrollable } from '../InfiniteScrollable';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
-import { 
-    requestDataWithURL
-} from '../../action/data';
-
-import type {
-    StoreState
-} from '../../';
-import type {
-    InfiniteScrollableOptions
-} from '../InfiniteScrollable';
+import { requestDataWithURL } from '../../action/data';
+import type { StoreState } from '../../';
+import type { InfiniteScrollableOptions } from '../InfiniteScrollable';
 
 const infScrOptions: InfiniteScrollableOptions = {
     initialCountPerRequest: 10,

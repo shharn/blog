@@ -2,9 +2,6 @@
 import * as React from 'react';
 import Button from '@material-ui/core/Button';
 
-import type { 
-} from 'react';
-
 type Props = {
     active: boolean,
     icon: React.ComponentType<any>,

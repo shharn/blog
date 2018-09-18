@@ -8,10 +8,7 @@ import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import cn from 'classnames';
 import styles from './styles';
-
-import type { 
-    WithStylesProps
-} from '../../flowtype';
+import type { WithStylesProps} from '../../flowtype';
 
 type Props = {
     isAuthenticated: boolean,

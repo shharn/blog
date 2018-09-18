@@ -10,7 +10,6 @@ import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
 import MenuTableRow from '../MenuManagerTableRow';
 import styles from './styles';
-
 import type { 
     Menu,
     WithStylesProps

@@ -4,18 +4,11 @@ import MenuManagerTableCell from './MenuManagerTableCell';
 import { requestDataMutation } from '../../action/data';
 import { disableEditableCell, changeToEditableCell } from '../../action/ui';
 import { MutationOperationType, DataName } from '../../constant';
+import type { Menu } from '../../flowtype';
+import type { StoreState } from '../../';
+import type { Dispatch } from '../../action/types';
 
-import type { 
-    Menu
-} from '../../flowtype';
-import type {
-    StoreState
-} from '../../';
-import type {
-    Dispatch
-} from '../../action/types';
-
-const mapStateToProps = (state: StoreState, ownProps: { menu: Menu, cellName: string }) => {
+const mapStateToProps = (state: StoreState, ownProps: { menu: Menu, cellName: string }): Object => {
     const { isEditable, editableRowId, editableCellName } = state.app.ui.menuList;
     const { menu, cellName } = ownProps;
     return {
@@ -24,7 +17,7 @@ const mapStateToProps = (state: StoreState, ownProps: { menu: Menu, cellName: st
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch): Object => ({
     changeEditableCell: (rowId: number, cellName: string) => dispatch(changeToEditableCell(rowId, cellName)),
     disableEditableCell: () => dispatch(disableEditableCell()),
     updateMenu: (menu: Menu) => dispatch(requestDataMutation(MutationOperationType.UPDATE, menu, DataName.MENU))

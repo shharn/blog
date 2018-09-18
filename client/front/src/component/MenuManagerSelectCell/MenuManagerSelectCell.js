@@ -13,7 +13,7 @@ type Props = {
 };
 
 class MenuManagerSelectCell extends Component<Props> {
-    handleChange = (e: any): void => {
+    handleChange = (e: SyntheticInputEvent<HTMLInputElement>): void => {
         const parent = this.props.menu.parent == null ?  { uid: '0' } : this.props.menu.parent[0];
         const selectedParentId = e.target.value;
         if (parent.uid !== selectedParentId) {

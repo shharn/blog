@@ -10,7 +10,6 @@ import { AuthStatus, Token } from '../../constant';
 import keycode from 'keycode';
 import LocalStorage from 'local-storage';
 import styles from './styles';
-
 import type { Element } from 'react';
 import type { 
     LoginInformation,
@@ -81,7 +80,7 @@ class Admin extends Component<Props & WithStylesProps & RouterProps, State> {
         });
     }
 
-    handleKeyUp = (e: SyntheticKeyboardEvent<>) => {
+    handleKeyUp = (e: SyntheticKeyboardEvent<>): void => {
         e.keyCode === keycode('enter') && this.handleSubmit();
     }
 

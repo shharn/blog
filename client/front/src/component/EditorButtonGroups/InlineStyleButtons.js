@@ -4,10 +4,7 @@ import Bold from '@material-ui/icons/FormatBold';
 import Italic from '@material-ui/icons/FormatItalic';
 import Underline from '@material-ui/icons/FormatUnderlined';
 import EditorStyleButton from './EditorStyleButton';
-
-import type {
-    WithStylesProps
-} from '../../flowtype';
+import type { WithStylesProps } from '../../flowtype';
 
 const INLINE_STYLES: Array<{
     icon: React.ComponentType<any>,

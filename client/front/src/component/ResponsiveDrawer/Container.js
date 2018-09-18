@@ -1,9 +1,7 @@
 // @flow
 import { connect} from 'react-redux';
 import ResponsiveDrawer from './ResponsiveDrawer';
-import type {
-    StoreState 
-} from '../../';
+import type { StoreState } from '../../';
 
 const mapStateToProps = (state: StoreState) => {
     return {

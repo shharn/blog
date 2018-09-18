@@ -5,10 +5,7 @@ import InlineStyleButtons from './InlineStyleButtons';
 import StrategyButtons from './StrategyButtons';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
-
-import type {
-    WithStylesProps
-} from '../../flowtype';
+import type { WithStylesProps } from '../../flowtype';
 
 type Props = {
     editorState: any,

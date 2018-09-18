@@ -13,10 +13,7 @@ import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
 import LocalStorage from 'local-storage';
 import { Token } from '../../constant';
 import styles from './styles';
-
-import type {
-    WithStylesProps
-} from '../../flowtype';
+import type { WithStylesProps } from '../../flowtype';
 
 type Props = {
     isAuthenticated: boolean,

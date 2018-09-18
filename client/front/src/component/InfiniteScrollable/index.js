@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { reduxProviderTemplate, dispatchProviderTemplate } from './provider';
-
 import type { Provider } from './provider';
 
 export type InfiniteScrollabledProps = {

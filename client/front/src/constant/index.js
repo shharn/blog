@@ -17,6 +17,8 @@ export const FetchStatus = {
     FAIL: createUnique('FETCH_FAIL')
 };
 
+export const HEADER_NAME_FOR_TOKEN = 'X-Session-Token';
+
 export const Token = {
     key: 'puppyToken'
 };

@@ -5,10 +5,7 @@ import ResponsiveDrawer from '../ResponsiveDrawer';
 import MainArea from '../MainArea';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
-
-import type {
-    WithStylesProps
-} from '../../flowtype';
+import type { WithStylesProps } from '../../flowtype';
 
 type Props = {
   isAuthenticated: boolean,

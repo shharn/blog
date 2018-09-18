@@ -1,20 +1,13 @@
 //@flow
 import Component from './CreateOrEditArticle';
 import { connect } from 'react-redux';
-import {
-    requestDataMutation
-} from '../../action/data';
+import { requestDataMutation } from '../../action/data';
 import { MutationOperationType } from '../../constant';
 import { setDataForCreateOrEditArticle } from '../../action/ui';
+import type { StoreState } from '../../';
+import type { Dispatch } from '../../action/types';
 
-import type {
-    StoreState
-} from '../../';
-import type {
-    Dispatch
-} from '../../action/types';
-
-const mapStateToProps = (state: StoreState) => {
+const mapStateToProps = (state: StoreState): Object => {
     const { isEditMode, article } = { ...state.app.ui.createOrEditArticle };
     const fetchStatus = isEditMode ? state.app.data.mutation.articles.update : state.app.data.mutation.articles.create;
     return {
@@ -26,7 +19,7 @@ const mapStateToProps = (state: StoreState) => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
+const mapDispatchToProps = (dispatch: Dispatch):Object => {
     return {
         submitNewArticle: (data: any) => dispatch(requestDataMutation(MutationOperationType.CREATE, data, 'articles')),
         submitUpdatedArticle: (data: any) => dispatch(requestDataMutation(MutationOperationType.UPDATE, data, 'articles')),

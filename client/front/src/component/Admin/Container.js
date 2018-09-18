@@ -1,15 +1,14 @@
 import { connect } from 'react-redux';
 import Admin from './Admin';
-import { requestLogin, validateToken, initializeLoginStatus } from '../../action/auth';
+import { 
+    requestLogin, 
+    validateToken, 
+    initializeLoginStatus
+} from '../../action/auth';
+import type { StoreState } from '../../';
+import type { Dispatch} from '../../action/types';
 
-import type { 
-    StoreState
-} from '../../';
-import type { 
-    Dispatch
-} from '../../action/types';
-
-const mapStateToProps = (state: StoreState) => {
+const mapStateToProps = (state: StoreState): Object => {
     const { authStatus, error, isAuthenticated } = state.app.auth;
     return {
         authStatus,
@@ -18,7 +17,7 @@ const mapStateToProps = (state: StoreState) => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch): Object => ({
     login: loginInfo => dispatch(requestLogin(loginInfo)),
     validateToken: token => dispatch(validateToken(token)),
     initializeLoginStatus: () => dispatch(initializeLoginStatus())

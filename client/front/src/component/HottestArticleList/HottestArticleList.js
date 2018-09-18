@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { FetchStatus } from '../../constant';
 import Article from '../Article';
 import styles from './styles';
-
 import type {
     WithStylesProps,
     RouterProps,

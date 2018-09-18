@@ -6,7 +6,6 @@ import AddIcon from '@material-ui/icons/Add';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
-
 import type {
     RouterProps,
     WithStylesProps

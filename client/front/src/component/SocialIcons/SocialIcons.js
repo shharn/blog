@@ -4,10 +4,7 @@ import SocialIcon from '../SocialIcon';
 import styles from './styles';
 import { withStyles } from '@material-ui/core/styles';
 import iconData from './iconData';
-
-import type {
-    WithStylesProps
-} from '../../flowtype';
+import type { WithStylesProps } from '../../flowtype';
 
 class SocialIcons extends Component<WithStylesProps> {
     render = () => {

@@ -5,10 +5,7 @@ import TableCell from '@material-ui/core/TableCell';
 import { withStyles } from '@material-ui/core/styles';
 import keycode from 'keycode';
 import styles from './styles';
-
-import type {
-    WithStylesProps
-} from '../../flowtype';
+import type { WithStylesProps } from '../../flowtype';
 
 type Props = {
     rowId: number,

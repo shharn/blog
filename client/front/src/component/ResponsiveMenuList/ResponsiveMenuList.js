@@ -6,10 +6,7 @@ import MenuListSmall from '../MenuListSmall';
 import keycode from 'keycode';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
-
-import type {
-    WithStylesProps
-} from '../../flowtype';
+import type { WithStylesProps } from '../../flowtype';
 
 type Props = {
     switchToList: () => void,
@@ -17,9 +14,9 @@ type Props = {
 };
 
 class ResponsiveMenuList extends Component<Props & WithStylesProps> {
-    onKeyUpOnContainer = (e) => {
+    onKeyUpOnContainer = (e: SyntheticKeyboardEvent<*>): void => {
         e.stopPropagation();
-        switch(e.keycode) {
+        switch(e.keyCode) {
             case keycode('esc'): 
                 this.props.switchToList();
                 break;

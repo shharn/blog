@@ -7,20 +7,15 @@ import {
     changeMutationStatus
 } from '../../action/data';
 import { MutationOperationType, FetchStatus } from '../../constant';
-
-import type {
-    StoreState
-} from '../../';
-import type {
-    Dispatch
-} from '../../action/types';
+import type { StoreState } from '../../';
+import type { Dispatch } from '../../action/types';
 
 const emptyMenu = {
     uid: '0',
     name: 'None',
 };
 
-const mapStateToProps = (state: StoreState, ownProps: { switchToList: () => void }) => {
+const mapStateToProps = (state: StoreState, ownProps: { switchToList: () => void }): Object => {
     const menus = [ ...state.app.data.get.menus.data ];
     menus.splice(0, 0, emptyMenu);
     const { isEditMode, menu } = state.app.ui.createOrEditMenu;
@@ -36,7 +31,7 @@ const mapStateToProps = (state: StoreState, ownProps: { switchToList: () => void
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch): Object => ({
     getMenus : () => dispatch(requestData('menus')),
     createMenu: menu => dispatch(requestDataMutation(MutationOperationType.CREATE ,menu, 'menus')),
     updateMenu: menu => dispatch(requestDataMutation(MutationOperationType.UPDATE, menu, 'menus')),

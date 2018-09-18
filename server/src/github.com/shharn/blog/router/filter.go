@@ -23,7 +23,7 @@ type AuthFilter struct {
 // Filter in AuthFilter validates the token from the header
 func (af AuthFilter) Filter(w http.ResponseWriter, r *http.Request) (bool, error) {
 	path := strings.ToLower(r.URL.Path[1:])
-	if r.Method == "GET" || path == "login" || path == "check" {
+	if r.Method == "GET" || path == "login" || path == "check" || path == "logout" {
 		return false, nil
 	}
 	clientToken := r.Header.Get("X-Session-Token")

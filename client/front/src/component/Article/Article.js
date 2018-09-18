@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import styles from './styles';
-
 import type { 
     WithStylesProps,
     Article as ArticleEntity

@@ -21,7 +21,7 @@ import './styles.css';
 
 const IMAGE_BASE_URL = '/image';
 
-function findLinkEntities(contentBlock, callback, contentState) {
+function findLinkEntities(contentBlock: any, callback: Function, contentState: any): void {
     contentBlock.findEntityRanges(
         character => {
             const entityKey = character.getEntity();

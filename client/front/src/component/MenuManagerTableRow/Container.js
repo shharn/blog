@@ -3,23 +3,17 @@ import { connect } from 'react-redux';
 import MenuManagerTableRow from './MenuManagerTableRow';
 import { requestDataMutation } from '../../action/data';
 import { MutationOperationType, DataName } from '../../constant';
-import type {
-    Menu
-} from '../../flowtype';
-import type {
-    StoreState
-} from '../../';
-import type {
-    Dispatch
-} from '../../action/types';
+import type { Menu } from '../../flowtype';
+import type { StoreState } from '../../';
+import type { Dispatch } from '../../action/types';
 
-const mapStateToProps = (_: StoreState, ownProps: { menu: Menu }) => {
+const mapStateToProps = (_: StoreState, ownProps: { menu: Menu }): Object => {
     return {
         ...ownProps
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch): Object => ({
     deleteMenu: (uid: string) => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, DataName.MENU))
 });
 

@@ -1,7 +1,6 @@
 // @flow
 import { Data as DataActionType } from './types';
 import { FetchStatus } from '../constant';
-
 import type { ClientError } from '../flowtype';
 import type { Action } from './types';
 

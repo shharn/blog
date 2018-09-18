@@ -13,7 +13,6 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { FetchStatus } from '../../constant';
 import styles from './styles';
-
 import type { 
     Menu,
     WithStylesProps,

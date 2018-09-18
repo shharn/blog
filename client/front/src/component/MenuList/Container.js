@@ -5,28 +5,15 @@ import {
     changeToEditableCell,
     disableEditableCell,
 } from '../../action/ui';
-import { 
-    requestDataMutation
-} from '../../action/data';
-import {
-    MutationOperationType,
-    Token
-} from '../../constant';
-import LocalStorage from 'local-storage';
-
-import type { 
-    Menu 
-} from '../../flowtype';
-import type {
-    StoreState
-} from '../../';
-import type {
-    Dispatch
-} from '../../action/types';
+import { requestDataMutation } from '../../action/data';
+import { MutationOperationType } from '../../constant';
+import type { Menu } from '../../flowtype';
+import type { StoreState } from '../../';
+import type { Dispatch } from '../../action/types';
 
 const MENU_DATA_NAME = 'menus';
 
-const mapStateToProps = (state: StoreState, ownProps: { switchToList: () => void, switchToCreateMenu: () => void }) => {
+const mapStateToProps = (state: StoreState, ownProps: { switchToList: () => void, switchToCreateMenu: () => void }): Object => {
     const menus =  [ ...state.app.data.get.menus.data ];
     const { isEditable, editableRowId, editableCellName } = state.app.ui.menuList;
     return {
@@ -38,7 +25,7 @@ const mapStateToProps = (state: StoreState, ownProps: { switchToList: () => void
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
+const mapDispatchToProps = (dispatch: Dispatch): Object => {
     return {
         changeEditableCell: (rowId: number, cellName: string) => dispatch(changeToEditableCell(rowId, cellName)),
         disableEditableCell: () => dispatch(disableEditableCell()),

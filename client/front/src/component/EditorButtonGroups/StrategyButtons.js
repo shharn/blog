@@ -3,10 +3,7 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import InsertLink from '@material-ui/icons/InsertLink';
 import InsertPhoto from '@material-ui/icons/InsertPhoto';
-
-import type {
-    WithStylesProps
-} from '../../flowtype';
+import type { WithStylesProps } from '../../flowtype';
 
 type Props = {
     onLinkClick: () => void,

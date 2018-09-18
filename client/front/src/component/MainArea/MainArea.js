@@ -6,20 +6,17 @@ import { Route, Switch } from 'react-router';
 import PrivateRoute from '../PrivateRoute';
 import Loadable from 'react-loadable';
 import styles from './styles';
-
-import type {
-    WithStylesProps
-} from '../../flowtype';
+import type { WithStylesProps } from '../../flowtype';
 
 const HottestArticleList = Loadable({
     loader: () =>  import('../HottestArticleList'),
     loading: () => <CircularProgress size={30}/>
   });
   
-  const ArticleListWrapper  = Loadable({
-    loader: () => import(/* webpackPrefetch: true */ '../ArticleListWrapper'),
-    loading: () => <CircularProgress size={30}/>
-  });
+const ArticleListWrapper  = Loadable({
+loader: () => import(/* webpackPrefetch: true */ '../ArticleListWrapper'),
+loading: () => <CircularProgress size={30}/>
+});
 
 const CreateArticle = Loadable({
     loader: () => import('../CreateOrEditArticle'),

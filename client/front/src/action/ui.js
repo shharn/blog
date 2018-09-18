@@ -1,7 +1,6 @@
 // @flow
 import { UI as UIActionType } from './types';
 import { MenuManagerChildComponentType } from '../constant';
-
 import type { Action } from './types';
 import type { 
     Menu,

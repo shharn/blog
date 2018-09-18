@@ -6,13 +6,8 @@ import { convertToHTML } from 'draft-convert';
 import cn from 'classnames';
 import styles from './styles';
 import './styles.css';
-
-import type { 
-    Element
-} from 'react';
-import type {
-    WithStylesProps
-} from '../../flowtype';
+import type { Element } from 'react';
+import type { WithStylesProps } from '../../flowtype';
 
 const getLastSplittedFromImageSrc = (src: string): string => {
     const splitted = src.split('/');

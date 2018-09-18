@@ -4,14 +4,11 @@ import Typography from '@material-ui/core/Typography';
 import Article from '../Article';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
-
-import type {
+import type { 
     RouterProps,
     WithStylesProps
 } from '../../flowtype';
-import type {
-    InfiniteScrollabledProps
-} from '../InfiniteScrollable';
+import type { InfiniteScrollabledProps } from '../InfiniteScrollable';
 
 type State = {
     prevMenuName: string

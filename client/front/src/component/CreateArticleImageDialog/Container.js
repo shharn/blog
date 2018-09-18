@@ -4,15 +4,10 @@ import {
     uploadImage,
     initializeImageDialogStatus
 } from '../../action/data';
+import type { StoreState } from '../../';
+import type { Dispatch } from '../../action/types';
 
-import type {
-    StoreState
-} from '../../';
-import type {
-    Dispatch 
-} from '../../action/types';
-
-const mapStateToProps = (state: StoreState, ownProps: { onConfirm: (files: Array<File>) => void }) => {
+const mapStateToProps = (state: StoreState, ownProps: { onConfirm: (files: Array<File>) => void }): Object => {
     const { progress, uploadStatus } = state.app.ui.imageDialog;
     return {
         ...ownProps,
@@ -21,7 +16,7 @@ const mapStateToProps = (state: StoreState, ownProps: { onConfirm: (files: Array
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
+const mapDispatchToProps = (dispatch: Dispatch): Object => {
     return {
         initializeStatus: () => dispatch(initializeImageDialogStatus()),
         uploadImage: files => dispatch(uploadImage(files))

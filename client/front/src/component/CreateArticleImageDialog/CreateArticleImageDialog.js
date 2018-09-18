@@ -10,10 +10,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import { ImageUploadStatus } from '../../constant';
 import styles from './styles';
-
-import type {
-    WithStylesProps
-} from '../../flowtype';
+import type { WithStylesProps } from '../../flowtype';
 
 type Props = {
     progress: number,

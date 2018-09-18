@@ -3,11 +3,8 @@ import React, { Component } from 'react';
 import EditableCell from '../EditableCell';
 import SelectCell from '../MenuManagerSelectCell';
 import TableCellWrapper from '../TableCellWrapper';
-
 import type { Menu } from '../../flowtype';
-import type {
-    Element
-} from 'react';
+import type { Element } from 'react';
 
 type Props = {
     isEditable: boolean,
@@ -34,7 +31,7 @@ class MenuManagerTableCell extends Component<Props> {
         this.props.disableEditableCell();
     }
 
-    getEditableOrPlainText = ():Element<typeof EditableCell | typeof TableCellWrapper> => {
+    getEditableOrPlainText = (): Element<typeof EditableCell | typeof TableCellWrapper> => {
         const { isEditable, cellName, menu } = this.props;
         if (isEditable) {
             return (

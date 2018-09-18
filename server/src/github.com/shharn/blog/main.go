@@ -20,10 +20,10 @@ func main() {
 		SetAllowedMethod(allowedMethods).
 		SetAllowedHeaders(allowedHeaders).
 		SetCORS()
-	r.Use(router.AuthFilter{Key: config.JWTSecretKey})
+	r.Use(router.AuthFilter{Key: config.Key})
 
 	r.Post("/login", handler.LoginHandler)
-
+	r.Post("/logout", handler.LogoutHandler)
 	r.Get("/check", handler.CheckHandler)
 
 	r.Get("/menus", handler.GetMenusHandler)
@@ -38,5 +38,7 @@ func main() {
 	r.Patch("/articles/:id", handler.UpdateArticleHandler)
 	r.Delete("/articles/:id", handler.DeleteArticleHandler)
 
-	http.ListenAndServe(":10000", r)
+	if err := handler.RegenerateKey(); err == nil {
+		http.ListenAndServe(":10000", r)
+	}
 }

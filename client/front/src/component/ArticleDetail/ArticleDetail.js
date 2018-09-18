@@ -10,7 +10,6 @@ import CircularProgress from '@material-ui/core/LinearProgress';
 import Divider from '@material-ui/core/Divider';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
-
 import type { 
     Article,
     ClientError,
@@ -36,12 +35,6 @@ type StaticProps = {
 };
 
 class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {}, StaticProps> {
-    constructor(props) {
-        super(props);
-        this.onEditButtonClicked = this.onEditButtonClicked.bind(this);
-        this.onDeleteButtonClicked = this.onDeleteButtonClicked.bind(this);
-    }
-
     componentDidMount = () => {
         const articleName = this.props.match.params['articleName']
         this.props.getArticle(articleName);
