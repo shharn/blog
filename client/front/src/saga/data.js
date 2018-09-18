@@ -1,4 +1,4 @@
-import { put, call, takeLatest } from 'redux-saga/effects';
+import { put, call, takeLatest, PutEffect, ForkEffect } from 'redux-saga/effects';
 import LocalStorage from 'local-storage';
 import { 
     dataResponseSuccess, 
@@ -20,10 +20,11 @@ import {
     uploadImage
 } from '../service';
 import type { Action } from '../action/types';
+import type { Response } from 'superagent';
 
-function* dataGetRequestHandler(action: Action) : Generator<any, any, any,> {
+function* dataGetRequestHandler(action: Action) : Generator<Response | PutEffect, void, void,> {
     const { dataName } = action.payload;
-    const response = yield call(getData, dataName);
+    const response: Response = yield call(getData, dataName);
     if (response.statusCode === 200) {
         yield put(dataResponseSuccess(response.body, dataName));
     } else {
@@ -34,10 +35,10 @@ function* dataGetRequestHandler(action: Action) : Generator<any, any, any,> {
     }
 }
 
-function* dataGetRequestWithURLHandler(action: Action) : Generator<any, any, any> {
+function* dataGetRequestWithURLHandler(action: Action) : Generator<Response | PutEffect, void, void> {
     const { dataName, url } = action.payload;
-    const urlWithoutLeadingSlash = url[0] === '/' ? url.substr(1) : url;
-    const response = yield call(getDataWithURL, urlWithoutLeadingSlash);
+    const urlWithoutLeadingSlash: string = url[0] === '/' ? url.substr(1) : url;
+    const response: Response = yield call(getDataWithURL, urlWithoutLeadingSlash);
     if (response.statusCode === 200) {
         yield put(dataResponseSuccess(response.body, dataName));
     } else {
@@ -49,10 +50,10 @@ function* dataGetRequestWithURLHandler(action: Action) : Generator<any, any, any
     }
 }
 
-function* dataMutationRequestHandler(action: Action) : Generator<any, any, any> {
+function* dataMutationRequestHandler(action: Action) : Generator<Response | PutEffect, void, void> {
     const { operationType, dataName, data } = action.payload;
-    const token = LocalStorage.get(Token.key);
-    let response;
+    const token: string = LocalStorage.get(Token.key);
+    let response: Response;
     switch(operationType) {
         case MutationOperationType.CREATE:
             response = yield call(createData, dataName, data, token);
@@ -77,10 +78,10 @@ function* dataMutationRequestHandler(action: Action) : Generator<any, any, any> 
     }
 }
 
-function* uploadImageRequestHandler(action: Action) : Generator<any, any, any> {
+function* uploadImageRequestHandler(action: Action) : Generator<Response | PutEffect, void, void> {
     const { files } = action.payload;
-    const token = LocalStorage.get(Token.key);
-    let response = yield call(uploadImage, files, token);
+    const token: string = LocalStorage.get(Token.key);
+    let response: Response = yield call(uploadImage, files, token);
     if (response.statusCode === 200) {
         yield put(uploadImageSuccess());
     } else {
@@ -88,7 +89,7 @@ function* uploadImageRequestHandler(action: Action) : Generator<any, any, any> {
     }
 }
 
-export default function* watchDataRequest(): Generator<any, any, any> {
+export default function* watchDataRequest(): Generator<ForkEffect, void, void> {
     yield takeLatest(DataActionType.REQUEST_GET_DATA, dataGetRequestHandler);
     yield takeLatest(DataActionType.REQUEST_GET_DATA_WITH_URL, dataGetRequestWithURLHandler);
     yield takeLatest(DataActionType.REQUEST_MUTATE_DATA, dataMutationRequestHandler);

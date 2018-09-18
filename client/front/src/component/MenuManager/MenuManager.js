@@ -41,7 +41,7 @@ class MenuManager extends Component<Props & WithStylesProps> {
         }
     }
 
-    handleEscKeyDown = (e: SyntheticKeyboardEvent<HTMLElement>): void => {
+    handleEscKeyDown = (e: any): void => {
         if (e.target.tagName === 'INPUT') {
             return;
         }

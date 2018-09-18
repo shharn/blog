@@ -6,7 +6,7 @@ import type { LoginInformation } from '../flowtype';
 
 const HEADER_NAME_FOR_TOKEN = 'X-Session-Token';
 
-export function requestLogin(loginInfo: LoginInformation) {
+export function requestLogin(loginInfo: LoginInformation): request.Response {
     return request
             .post(`http://${env.apiServerDomain}/login`)
             .type('text/plain')
