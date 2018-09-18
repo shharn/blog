@@ -9,6 +9,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { AuthStatus, Token } from '../../constant';
 import keycode from 'keycode';
 import LocalStorage from 'local-storage';
+import { sha512 } from 'js-sha512';
 import styles from './styles';
 import type { Element } from 'react';
 import type { 
@@ -62,9 +63,10 @@ class Admin extends Component<Props & WithStylesProps & RouterProps, State> {
 
     handleSubmit = (): void => {
         const { emailValue, passwordValue } = this.state;
+        const hashedPassword = sha512(passwordValue);
         this.props.login({ 
             email: emailValue, 
-            password: passwordValue 
+            password: hashedPassword 
         });
     }
 

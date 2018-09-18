@@ -41,6 +41,7 @@
     "immutable": "^3.8.2",
     "jest": "20.0.4",
     "js-cookie": "^2.2.0",
+    "js-sha512": "^0.8.0",
     "keycode": "^2.1.9",
     "local-storage": "^1.4.2",
     "mkdirp": "^0.5.1",
