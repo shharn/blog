@@ -63,7 +63,7 @@ class Admin extends Component<Props & WithStylesProps & RouterProps, State> {
 
     handleSubmit = (): void => {
         const { emailValue, passwordValue } = this.state;
-        const hashedPassword = sha512(passwordValue);
+        const hashedPassword: string = sha512(passwordValue);
         this.props.login({ 
             email: emailValue, 
             password: hashedPassword 

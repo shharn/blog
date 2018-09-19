@@ -11,7 +11,7 @@ var factory = map[string]inputFactory{
 	"deleteNodeInput":       deleteNodeInputFactory,
 	"deleteChildMenuInput":  deleteChildMenuInputFactory,
 	"deleteParentMenuInput": deleteParentMenuInputFactory,
-}
+} 
 
 type addChildMenuInput struct {
 	ID    string    `json:"uid,omitempty"`
