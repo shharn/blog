@@ -14,7 +14,7 @@ export function requestLogin(loginInfo: LoginInformation): request.Response {
             .catch(err => err.response ? err.response : err);
 }
 
-export function validateToken(token: string) {
+export function validateToken(token: string): Promise<Response | Error> {
     return request
         .get(`http://${env.apiServerDomain}/check`)
         .set(HEADER_NAME_FOR_TOKEN, token)
@@ -24,7 +24,7 @@ export function validateToken(token: string) {
         .catch(err => err.response ? err.response : err);
 }
 
-export function requestLogout(token: string)  {
+export function requestLogout(token: string): Promise<Response | Error> {
     return request
         .post(`http://${env.apiServerDomain}/logout`)
         .set(HEADER_NAME_FOR_TOKEN, token)
@@ -32,7 +32,7 @@ export function requestLogout(token: string)  {
         .catch(err => err.response ? err.response : err);
 }
 
-export function getData(dataName: string) {
+export function getData(dataName: string): Promise<Response | Error> {
     return request
         .get(`http://${env.apiServerDomain}/${dataName}`)
         .accept('json')
@@ -40,7 +40,7 @@ export function getData(dataName: string) {
         .catch(err => err.response ? err.response : err);
 }
 
-export function getDataWithURL(url: string) {
+export function getDataWithURL(url: string): Promise<Response | Error> {
     return request
         .get(`http://${env.apiServerDomain}/${url}`)
         .accept('json')
@@ -48,7 +48,7 @@ export function getDataWithURL(url: string) {
         .catch(err => err.response ? err.response : err);
 }
 
-export function createData(dataName: string, data: any, token: string) {
+export function createData(dataName: string, data: any, token: string): Promise<Response | Error> {
     return request
         .post(`http://${env.apiServerDomain}/${dataName}`)
         .set(HEADER_NAME_FOR_TOKEN, token)
@@ -59,7 +59,7 @@ export function createData(dataName: string, data: any, token: string) {
         .catch(err => err.response ? err.response : err);
 }
 
-export function updateData(dataName: string, data: any, token: string) {
+export function updateData(dataName: string, data: any, token: string): Promise<Response | Error> {
     return request
         .patch(`http://${env.apiServerDomain}/${dataName}/${data.uid}`)
         .set(HEADER_NAME_FOR_TOKEN, token)
@@ -70,7 +70,7 @@ export function updateData(dataName: string, data: any, token: string) {
         .catch(err => err.response ? err.response : err);
 }
 
-export function deleteData(dataName: string, uid: string, token: string) {
+export function deleteData(dataName: string, uid: string, token: string): Promise<Response | Error> {
     return request
         .delete(`http://${env.apiServerDomain}/${dataName}/${uid}`)
         .set(HEADER_NAME_FOR_TOKEN, token)
@@ -80,12 +80,13 @@ export function deleteData(dataName: string, uid: string, token: string) {
         .catch(err => err.response ? err.response : err);
 }
 
-export function uploadImage(files: Array<File>, token: string) {
+export function uploadImage(files: Array<File>, token: string): Promise<Response | Error> {
     let req = request.post(`/upload`);
     for (let file of files) {
         req = req.attach(file.name, file);
     }
     return req
+        .set(HEADER_NAME_FOR_TOKEN, token)
         .then(res => res)
         .catch(err => err.response ? err.response : err);
 }
