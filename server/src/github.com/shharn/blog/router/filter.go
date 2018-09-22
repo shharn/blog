@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/shharn/blog/config"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
 )
@@ -30,7 +31,7 @@ func (af AuthFilter) Filter(w http.ResponseWriter, r *http.Request) (bool, error
 
 	isValid, err := af.validateToken(clientToken, af.Key)
 	if err != nil {
-		return !isValid, errors.WithStack(err)
+		return true, errors.WithStack(err)
 	}
 	return !isValid, nil
 }
@@ -40,7 +41,7 @@ func (af AuthFilter) validateToken(token, key string) (bool, error) {
 		return false, nil
 	}
 	parsedToken, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
-		return []byte("secret"), nil
+		return []byte(config.Key), nil
 	})
 
 	if err != nil {

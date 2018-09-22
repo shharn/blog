@@ -87,10 +87,10 @@ class Admin extends Component<Props & WithStylesProps & RouterProps, State> {
     }
 
     getComponentOnLoginStatus = (): Element<*> => {
-        const { loginStatus } = this.props;
+        const { authStatus } = this.props;
         let result = null;
         
-        switch(loginStatus) {
+        switch(authStatus) {
             case AuthStatus.LOGIN_WAIT:
                 result = <CircularProgress className={this.props.classes.circularProgerss}/>;
                 break;
@@ -114,13 +114,25 @@ class Admin extends Component<Props & WithStylesProps & RouterProps, State> {
     }
 
     render = () => {
+        const { authStatus } = this.props;
         return (
             <div className={this.props.classes.root} onKeyUp={this.handleKeyUp}>
                 <Paper elevation={4} className={this.props.classes.paper}>
                     <Typography className={this.props.classes.header}  variant="subheading">Login</Typography>
                     <div className={this.props.classes.formContainer}>
-                        <TextField placeholder="Your Email" label="Your Email" className={this.props.classes.textfield} onChange={this.handleEmailChange}/>
-                        <TextField placeholder="Password" label="Password" type="password" className={this.props.classes.textfield} onChange={this.handlePasswordChange}/>
+                        <TextField
+                            disabled={authStatus === AuthStatus.LOGIN_SUCCESS}
+                            placeholder="Your Email"
+                            label="Your Email"
+                            className={this.props.classes.textfield} 
+                            onChange={this.handleEmailChange}/>
+                        <TextField
+                            disabled={authStatus === AuthStatus.LOGIN_SUCCESS}
+                            placeholder="Password" 
+                            label="Password" 
+                            type="password" 
+                            className={this.props.classes.textfield} 
+                            onChange={this.handlePasswordChange}/>
                     </div>
                     {this.getComponentOnLoginStatus()}
                 </Paper>    

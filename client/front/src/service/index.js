@@ -81,12 +81,13 @@ export function deleteData(dataName: string, uid: string, token: string): Promis
 }
 
 export function uploadImage(files: Array<File>, token: string): Promise<Response | Error> {
-    let req = request.post(`/upload`);
+    let req = request
+        .post(`/upload`)
+        .set(HEADER_NAME_FOR_TOKEN, token);
     for (let file of files) {
         req = req.attach(file.name, file);
     }
     return req
-        .set(HEADER_NAME_FOR_TOKEN, token)
         .then(res => res)
         .catch(err => err.response ? err.response : err);
 }

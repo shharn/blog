@@ -284,7 +284,7 @@ class CreateArticle extends Component<Props & WithStylesProps & RouterProps, Sta
                     </div>
                 </div>
                 {fetchStatus === FetchStatus.FAIL &&
-                    <Typography variant="body1" style={{color: 'red'}}>{`Fail to ${isEditMode ? 'update' : 'create a new article'} :(`} </Typography>}
+                    <Typography className={classes.errorMessage} variant="body1" style={{color: 'red'}}>{`Fail to ${isEditMode ? 'update' : 'create a new article'} :(`} </Typography>}
             </Paper>
         );
     }

@@ -1,4 +1,4 @@
-export default ({
+export const dialog = {
     content: {
         display: 'flex',
         flexDirection: 'column',
@@ -22,9 +22,12 @@ export default ({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center'
-    },
+    }
+};
+
+export const chip = {
     chip: {
         marginTop: '5px',
         marginBottom: '5px'
     }
-})
+};

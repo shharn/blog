@@ -3,13 +3,13 @@ import * as React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
+import ChipWrapper from './ChipWrapper';
 import Button from '@material-ui/core/Button';
-import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import { ImageUploadStatus } from '../../constant';
-import styles from './styles';
+import { dialog } from './styles';
 import type { WithStylesProps } from '../../flowtype';
 
 type Props = {
@@ -47,12 +47,15 @@ class CreateArticleImageDialog extends React.Component<Props & WithStylesProps, 
 
     onFileChange = (e: SyntheticInputEvent<HTMLInputElement>): void => {
         const { files: oldFiles } = this.state;
-        const { files } = e.target;
-        setTimeout(() => 
-            this.setState({
-                files: [ ...oldFiles, ...files ]
-            }) 
-        , 0);
+        const selectedFiles: FileList = e.target.files;
+        const arr = [ ...oldFiles];
+        for (let idx = 0; idx < selectedFiles.length; idx++) {
+            let file = selectedFiles[idx];
+            arr.push(file);
+        }
+        this.setState({
+            files: arr
+        });
     }
 
     onDialogClose = (): void => {
@@ -78,7 +81,7 @@ class CreateArticleImageDialog extends React.Component<Props & WithStylesProps, 
         this.props.uploadImage(files);
     }
 
-    onDeleteFile = (name: string): void => {
+    deleteFile = (name: string): void => {
         const { files } = this.state;
         const filtered = files.filter(file => file.name !== name);
         this.setState({
@@ -99,12 +102,11 @@ class CreateArticleImageDialog extends React.Component<Props & WithStylesProps, 
                 <DialogContent id="dialog-content" className={classes.content}>
                     {files.length > 0 ? 
                         <div className={classes.filesContainer}>
-                            {files.map(file => <Chip
-                                className={classes.chip}
-                                key={`filechip:${file.name}`}
-                                color="primary"
-                                label={file.name}
-                                onDelete={this.onDeleteFile(file.name)}/>)}
+                            {files.map(file => <ChipWrapper 
+                                key={`filechip:${file.name}`} 
+                                file={file}
+                                deleteFile={this.deleteFile}
+                            />)}
                         </div> :
                         <React.Fragment>
                             <Typography 
@@ -133,4 +135,4 @@ class CreateArticleImageDialog extends React.Component<Props & WithStylesProps, 
     }
 }
 
-export default withStyles(styles)(CreateArticleImageDialog);
+export default withStyles(dialog)(CreateArticleImageDialog);

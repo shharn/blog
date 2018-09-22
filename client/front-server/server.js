@@ -3,7 +3,7 @@ var path = require('path');
 var multer = require('multer');
 var chalk = require('chalk');
 var mkdirp = require('mkdirp');
-var superagent = require('superagent');
+var request = require('superagent');
 
 var PORT = 3000;
 const ASSET_DIR = '../public/asset/image';
@@ -31,26 +31,28 @@ app.use('/image', express.static(path.resolve(__dirname, '../public/asset/image'
 app.post('/upload', (req, res, next) => {
     const token = req.header(TOKEN_HEADER_NAME);
     if (!!token && token.length > 0) {
-        const result = superagent
-            .post('http://localhost:10000/check')
+        request
+            .get('http://api-server:10000/check')
             .set(TOKEN_HEADER_NAME, token)
+            .timeout({
+                deadline: 10000
+            })
             .accept('json')
-            .then(res => res)
-            .catch(err => err.response || err);
-        if (result.statusCode === 200) {
-            if (result.body.isValid === true) {
-                next();
-            } else {
-                res.sendStatus(HTTP_STATUS_UNAUTHORIZED);
-            }
-        } else {
-            res.sendStatus(HTTP_STATUS_UNAUTHORIZED);
-        }
+            .then(res => {
+                if (res.statusCode === 200 && res.body.isValid) {
+                    next();
+                } else {
+                    res.sendStatus(HTTP_STATUS_UNAUTHORIZED);
+                }
+            })
+            .catch(err => console.dir(err));
+    } else {
+        res.sendStatus(HTTP_STATUS_UNAUTHORIZED);
     }
-    res.sendStatus(HTTP_STATUS_UNAUTHORIZED);
 }, 
 upload.any(), 
 (_, res) => {
+    console.log('last handler');
     res.sendStatus(HTTP_STATUS_SUCCESS);
 });
 
