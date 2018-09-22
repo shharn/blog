@@ -10,6 +10,7 @@ const ASSET_DIR = '../public/asset/image';
 const TOKEN_HEADER_NAME = "X-Session-Token";
 const HTTP_STATUS_SUCCESS = 200;
 const HTTP_STATUS_UNAUTHORIZED = 401;
+const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
 var storage = multer.diskStorage({
     destination: (_, __, cb) => {
@@ -45,15 +46,20 @@ app.post('/upload', (req, res, next) => {
                     res.sendStatus(HTTP_STATUS_UNAUTHORIZED);
                 }
             })
-            .catch(err => console.dir(err));
+            .catch(err => {
+                res.sendStatus(HTTP_STATUS_INTERNAL_SERVER_ERROR);
+            });
     } else {
         res.sendStatus(HTTP_STATUS_UNAUTHORIZED);
     }
 }, 
 upload.any(), 
 (_, res) => {
-    console.log('last handler');
     res.sendStatus(HTTP_STATUS_SUCCESS);
+});
+
+app.all('*', (_, res) => {
+    res.redirect('/');
 });
 
 app.listen(PORT, () => {
