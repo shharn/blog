@@ -10,7 +10,7 @@ type Props = {
     deleteFile: (name: string) => void
 };
 
-class ChipWrapper extends Component<Props | WithStylesProps> {
+class ChipWrapper extends Component<Props & WithStylesProps> {
     onDelete = (): void => {
         const { file, deleteFile } = this.props;
         deleteFile(file.name);

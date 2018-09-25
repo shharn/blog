@@ -50,7 +50,15 @@ class MeuList extends React.Component<Props & WithStylesProps> {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            {headerNames.map(name => <TableCell variant='head' key={name}>{name}</TableCell>)}
+                            {headerNames.map(name => 
+                                <TableCell 
+                                    classes={{
+                                        root: classes.cellRoot
+                                    }}
+                                    variant='head' 
+                                    key={name}>
+                                    {name}
+                                </TableCell>)}
                         </TableRow>
                     </TableHead>
                     <TableBody>

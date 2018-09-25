@@ -40,21 +40,12 @@ class Admin extends Component<Props & WithStylesProps & RouterProps, State> {
         passwordValue: ''
     }
 
-    componentDidMount = () => {
-        const storedToken = LocalStorage.get(Token.key);
-        if (storedToken) {
-            this.props.validateToken(storedToken);
-        } else {
-            this.props.initializeLoginStatus();
-        }
+    componentDidMount() {
+        this.props.isAuthenticated && this.redirectToHomeWithDelay();
     }
 
     componentDidUpdate =  () => {
         this.props.authStatus === AuthStatus.LOGIN_SUCCESS && this.redirectToHomeWithDelay();
-    }
-
-    componentWillUnmount = () => {
-        this.props.initializeLoginStatus();
     }
 
     redirectToHomeWithDelay = (): void=> {

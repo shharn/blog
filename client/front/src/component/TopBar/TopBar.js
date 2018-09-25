@@ -10,8 +10,6 @@ import { withStyles } from '@material-ui/core/styles';
 import EmptyCenter from './EmptyCenter';
 import Button from '@material-ui/core/Button';
 import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
-import LocalStorage from 'local-storage';
-import { Token } from '../../constant';
 import styles from './styles';
 import type { WithStylesProps } from '../../flowtype';
 
@@ -28,8 +26,7 @@ class TopBar extends Component<Props & WithStylesProps> {
     }
 
     handleLogoutButtonClicked = (): void => {
-        const token = LocalStorage.get(Token);
-        this.props.logout(token);
+        this.props.logout();
     }
 
     render = () => {

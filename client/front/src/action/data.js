@@ -76,12 +76,11 @@ export const dataMutationFail = (dataName: string, operationType: string, error:
     }
 })
 
-export const changeMutationStatus = (dataName: string, operationType: string, statusToChange: $Values<FetchStatus>): Action => ({
-    type: DataActionType.CHANGE_MUTATION_STATUS,
+export const initializeMutationStatus = (dataName: string, operationType: string): Action => ({
+    type: DataActionType.INITIALIZE_MUTATION_STATUS,
     payload: {
         dataName,
-        operationType,
-        statusToChange
+        operationType
     }
 });
 

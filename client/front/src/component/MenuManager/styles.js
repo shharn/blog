@@ -6,6 +6,9 @@ export default {
     button: {
         minWidth: 0
     },
+    dialogPaper: {
+        margin: 0
+    },
     dialogContent: {
         maxHeight: '500px',
         display: 'flex',

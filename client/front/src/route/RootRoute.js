@@ -1,7 +1,12 @@
-import React, { Component } from 'react';
+// @flow
+import * as React from 'react';
 import Home from '../component/Home';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { Route, Switch, Redirect } from 'react-router';
+import { 
+    Route, 
+    Switch, 
+    Redirect 
+} from 'react-router';
 import Loadable from 'react-loadable';
 
 const Admin = Loadable({
@@ -9,7 +14,7 @@ const Admin = Loadable({
     loading: () => <CircularProgress size={30}/>
 });
 
-class RootRoute extends Component {
+class RootRoute extends React.Component<{}> {
     render() {
         return (
             <React.Fragment>

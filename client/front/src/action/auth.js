@@ -44,11 +44,8 @@ export const invalidToken = (error: ClientError): Action => ({
     }
 })
 
-export const requestLogout = (token : string): Action=> ({
-    type: Auth.REQUEST_LOGOUT,
-    payload: {
-        token
-    }
+export const requestLogout = (): Action=> ({
+    type: Auth.REQUEST_LOGOUT
 })
 
 export const logoutSuccess = (): Action => ({

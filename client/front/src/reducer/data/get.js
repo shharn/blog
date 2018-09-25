@@ -20,13 +20,15 @@ export type GetState = {
     [key: string]: DataTemplate
 };
 
+const NO_ERROR: ClientError = {
+    code: 0,
+    message: ''
+};
+
 const initialState: GetState = {
     menus: {
         data: [],
-        error: {
-            code: 0,
-            message: ""
-        },
+        error: { ...NO_ERROR },
         fetchStatus: FetchStatus.INITIAL,
         fetchComplete: false
     },
@@ -37,28 +39,19 @@ const initialState: GetState = {
             content: '',
             summary: '',
         },
-        error: {
-            code: 0,
-            message: ''
-        },
+        error: { ...NO_ERROR },
         fetchStatus: FetchStatus.INITIAL,
         fetchComplete: false
     },
     articles: {
         data: [],
-        error: {
-            code: 0,
-            message: ""
-        },
+        error: { ...NO_ERROR },
         fetchStatus: FetchStatus.INITIAL,
         fetchComplete: false
     },
     hottestArticles: {
         data: [],
-        error: {
-            code: 0,
-            message: ""
-        },
+        error: { ...NO_ERROR },
         fetchStatus: FetchStatus.INITIAL,
         fetchComplete: false
     },
@@ -75,7 +68,8 @@ const reducer = (state: GetState = initialState, action: Action): GetState => {
                 [dataName]: {
                     ...state[dataName],
                     fetchComplete: false,
-                    fetchStatus: FetchStatus.WAIT
+                    fetchStatus: FetchStatus.WAIT,
+                    error: { ...NO_ERROR }
                 }
             };
         }
@@ -87,7 +81,8 @@ const reducer = (state: GetState = initialState, action: Action): GetState => {
                     ...state[dataName],
                     fetchComplete: true,
                     fetchStatus: FetchStatus.SUCCESS,
-                    data: data
+                    data,
+                    error: { ...NO_ERROR }
                 }
             };
         }

@@ -15,7 +15,6 @@ const (
 			articles (func: has(title), orderdesc: views, offset: $offset, first: $count){
 				uid
 				title
-				content
 				menu {
 					uid
 					name
@@ -30,7 +29,6 @@ const (
 			articles (func: has(title), orderdesc: createdAt, offset: $offset, first: $count) @filter(uid_in(menu, $menuID)) {
 				uid
 				title
-				content
 				menu {
 					uid
 					name

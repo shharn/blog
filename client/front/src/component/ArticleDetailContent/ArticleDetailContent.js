@@ -26,7 +26,7 @@ const blockToHTML = (block): Element<*> => blockToTag[block.type.toLowerCase()]
 const entityToHTML = (entity, originalText: string): Element<*> | string => {
     switch(entity.type.toUpperCase()){
         case 'LINK':
-            return <a href={entity.data.url}>{originalText}</a>;
+            return <a href={entity.data.url} target="_blank">{originalText}</a>;
         case 'IMAGE':
             const src = entity.data.src;
             return (

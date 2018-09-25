@@ -30,12 +30,20 @@ const routeMiddleware = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware();
 const actionConverterForMenu = createActionConverter(menuConverterChecker, menuNameToUIDConverter);
 const actionConverterForArticle = createActionConverter(articleConverterChecker, articleNameToUIDConverter);
+const isProduction = process.env.NODE_ENV === 'production';
+const middlewares = [
+    ...(isProduction ? [] : [ logger ]),
+    routeMiddleware,
+    actionConverterForMenu,
+    actionConverterForArticle,
+    sagaMiddleware
+];
 const store = createStore(
     combineReducers({
         router: routerReducer,
         app: appReducer
     }),
-    applyMiddleware(logger, routeMiddleware, actionConverterForMenu, actionConverterForArticle, sagaMiddleware)
+    applyMiddleware(...middlewares)
 );
 sagaMiddleware.run(rootSaga);
 

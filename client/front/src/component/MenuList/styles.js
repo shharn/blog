@@ -4,6 +4,10 @@ export default {
         flexDirection: 'column',
         alignItems: 'center'
     },
+    cellRoot: {
+        padding: '4px 15px',
+        textAlign: 'center'
+    },
     addButton: {
         margin: '20px 0px'
     }

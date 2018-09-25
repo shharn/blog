@@ -20,7 +20,7 @@ class ArticleList extends Component<RouterProps & WithStylesProps & InfiniteScro
     };
 
     componentDidUpdate = () => {
-        if (this.props.match.params['menuName'] !== this.state.prevMenuName) {
+        if (this.isMenuChanged()) {
             this.props.initLoader();
             this.setState({
                 prevMenuName: this.props.match.params['menuName']
@@ -28,10 +28,18 @@ class ArticleList extends Component<RouterProps & WithStylesProps & InfiniteScro
         }
 
         if (this.props.data.length === 1) {
-            const article = this.props.data[0];
-            const replacedTitle = article.title.toLowerCase().replace(/\s/g, '-');
-            this.props.history.push(`${this.props.location.pathname}/${replacedTitle}`)
+            this.moveToOnlyOneArticle();
         }
+    }
+
+    isMenuChanged = (): boolean => {
+        return this.props.match.params['menuName'] !== this.state.prevMenuName
+    }
+
+    moveToOnlyOneArticle = (): void => {
+        const article = this.props.data[0];
+        const replacedTitle = article.title.toLowerCase().replace(/\s/g, '-');
+        this.props.history.push(`${this.props.location.pathname}/${replacedTitle}`)
     }
 
     render = () => {

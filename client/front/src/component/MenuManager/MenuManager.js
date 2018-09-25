@@ -88,6 +88,9 @@ class MenuManager extends Component<Props & WithStylesProps> {
                     <Settings/> 
                 </Button>
                 <Dialog
+                    classes={{
+                        paper: classes.dialogPaper
+                    }}
                     open={isDialogOpened}
                     onClose={this.handleDialogClose}
                     onEscapeKeyDown={this.handleEscKeyDown}

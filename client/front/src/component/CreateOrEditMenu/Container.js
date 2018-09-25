@@ -4,11 +4,12 @@ import CreateOrEditMenu from './CreateOrEditMenu';
 import {
     requestData,
     requestDataMutation,
-    changeMutationStatus
+    initializeMutationStatus
 } from '../../action/data';
-import { MutationOperationType, FetchStatus } from '../../constant';
+import { MutationOperationType } from '../../constant';
 import type { StoreState } from '../../';
 import type { Dispatch } from '../../action/types';
+import type { Menu } from '../../flowtype';
 
 const emptyMenu = {
     uid: '0',
@@ -32,12 +33,12 @@ const mapStateToProps = (state: StoreState, ownProps: { switchToList: () => void
 };
 
 const mapDispatchToProps = (dispatch: Dispatch): Object => ({
-    getMenus : () => dispatch(requestData('menus')),
-    createMenu: menu => dispatch(requestDataMutation(MutationOperationType.CREATE ,menu, 'menus')),
-    updateMenu: menu => dispatch(requestDataMutation(MutationOperationType.UPDATE, menu, 'menus')),
-    initializeStatus: () => {
-        dispatch(changeMutationStatus('menus', MutationOperationType.CREATE, FetchStatus.FETCH_INITIAL));
-        dispatch(changeMutationStatus('menus', MutationOperationType.UPDATE, FetchStatus.FETCH_INITIAL));
+    getMenus : (): void => dispatch(requestData('menus')),
+    createMenu: (menu: Menu): void => dispatch(requestDataMutation(MutationOperationType.CREATE ,menu, 'menus')),
+    updateMenu: (menu: Menu): void => dispatch(requestDataMutation(MutationOperationType.UPDATE, menu, 'menus')),
+    initializeStatus: (): void => {
+        dispatch(initializeMutationStatus('menus', MutationOperationType.CREATE));
+        dispatch(initializeMutationStatus('menus', MutationOperationType.UPDATE));
     }
 });
 

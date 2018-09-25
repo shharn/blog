@@ -40,6 +40,7 @@
     "html-webpack-plugin": "2.29.0",
     "immutable": "^3.8.2",
     "jest": "20.0.4",
+    "jest-dom": "^1.12.1",
     "js-cookie": "^2.2.0",
     "js-sha512": "^0.8.0",
     "keycode": "^2.1.9",
@@ -62,6 +63,7 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
+    "react-testing-library": "^5.1.0",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0",
@@ -86,26 +88,26 @@
     "build:js:prod": "node front/scripts/build.js",
     "run:front-server": "node front-server/server.js",
     "build": "npm-run-all build:css build:js:prod",
-    "test": "node scripts/test.js --env=jsdom",
+    "test": "node front/scripts/test.js --env=jsdom",
     "flow": "flow"
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx,mjs}"
+      "front/src/**/*.{js,jsx,mjs}"
     ],
     "setupFiles": [
-      "<rootDir>/config/polyfills.js"
+      "<rootDir>/front/config/polyfills.js"
     ],
     "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,mjs}",
-      "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,mjs}"
+      "<rootDir>/front/src/**/__tests__/**/*.{js,jsx,mjs}",
+      "<rootDir>/front/src/**/?(*.)(spec|test).{js,jsx,mjs}"
     ],
     "testEnvironment": "node",
     "testURL": "http://localhost",
     "transform": {
       "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+      "^.+\\.css$": "<rootDir>/front/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/front/config/jest/fileTransform.js"
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
@@ -140,6 +142,9 @@
   "apiServer": {
     "development": {
       "domain": "localhost:10000"
+    },
+    "test": {
+      "domain": "api-server:10000"
     },
     "production": {
       "domain": "undefined.com"

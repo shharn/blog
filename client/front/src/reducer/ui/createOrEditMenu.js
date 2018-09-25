@@ -14,7 +14,7 @@ export type CreateOrEditMenuState = {
     menu: ?Menu
 };
 
-const initialState = {
+const initialState: CreateOrEditMenuState = {
     isEditMode: false,
     menu: null
 };
@@ -22,12 +22,6 @@ const initialState = {
 const reducer = (state: CreateOrEditMenuState = initialState, action: Action) => {
     const { type } = action;
     switch(type) {
-        case UIActionType.SWITCH_MENU_MANAGER_CHILD_COMPONENT:
-            return {
-                ...state,
-                isEditMode: false,
-                menu: null
-            };
         case UIActionType.SET_DATA_FOR_CREATE_OR_EDIT_MENU:
             const { isEditMode, menu } = action.payload;
             return {

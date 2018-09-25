@@ -3,7 +3,12 @@ import React, { Component } from 'react';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import TableCell from '@material-ui/core/TableCell';
-import type { Menu } from '../../flowtype';
+import { withStyles } from '@material-ui/core/styles';
+import styles from './styles';
+import type { 
+    Menu,
+    WithStylesProps
+ } from '../../flowtype';
 
 type Props = {
     menus: Array<Menu>,
@@ -12,7 +17,7 @@ type Props = {
     updateMenu: (menu: Menu) => void
 };
 
-class MenuManagerSelectCell extends Component<Props> {
+class MenuManagerSelectCell extends Component<Props & WithStylesProps> {
     handleChange = (e: SyntheticInputEvent<HTMLInputElement>): void => {
         const parent = this.props.menu.parent == null ?  { uid: '0' } : this.props.menu.parent[0];
         const selectedParentId = e.target.value;
@@ -26,7 +31,10 @@ class MenuManagerSelectCell extends Component<Props> {
     render = () => {
         const parent = this.props.menu.parent == null ?  { uid: '0' } : this.props.menu.parent[0];
         return (
-            <TableCell>
+            <TableCell
+                classes={{
+                    root: this.props.classes.root
+                }}>
                 <Select
                     value={parent.uid}
                     onChange={this.handleChange}
@@ -42,4 +50,4 @@ class MenuManagerSelectCell extends Component<Props> {
     }
 }
 
-export default MenuManagerSelectCell;
+export default withStyles(styles)(MenuManagerSelectCell);

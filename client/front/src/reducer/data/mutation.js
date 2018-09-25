@@ -1,10 +1,12 @@
 // @flow
 import { Data as DataActionType } from '../../action/types';
 import { FetchStatus } from '../../constant';
-
 import type {
     Action
 } from '../../action/types';
+import type {
+    ClientError
+} from '../../flowtype';
 
 export type MutationState = {
     [key: string]: MutationType
@@ -16,37 +18,26 @@ type MutationType = {
 
 type Mutation = {
     status: $Values<FetchStatus>,
-    isFetching: boolean
+    isFetching: boolean,
+    error: ClientError
+};
+
+const INITIAL_STATES: Mutation = {
+    status: FetchStatus.INITIAL,
+    isFetching: false,
+    error: null
 };
 
 const initialState: MutationState = {
     menus: {
-        create: {
-            status: FetchStatus.INITIAL,
-            isFetching: false
-        },
-        update: {
-            status: FetchStatus.INITIAL,
-            isFetching: false
-        },
-         delete: {
-            status: FetchStatus.INITIAL,
-            isFetching: false
-         }
+        create: { ...INITIAL_STATES },
+        update: { ...INITIAL_STATES },
+        delete: { ...INITIAL_STATES }
     },
     articles: {
-        create: {
-            status: FetchStatus.INITIAL,
-            isFetching: false
-        },
-        update: {
-            status: FetchStatus.INITIAL,
-            isFetching: false
-        },
-         delete: {
-            status: FetchStatus.INITIAL,
-            isFetching: false
-         }
+        create: { ...INITIAL_STATES },
+        update: { ...INITIAL_STATES },
+        delete: { ...INITIAL_STATES }
     }
 };
 
@@ -61,7 +52,8 @@ const reducer = (state: MutationState = initialState, action: Action): MutationS
                     ...state[dataName],
                     [operationType]: {
                         status: FetchStatus.WAIT,
-                        isFetching: true
+                        isFetching: true,
+                        error: null
                     }
                 }
             };
@@ -72,7 +64,8 @@ const reducer = (state: MutationState = initialState, action: Action): MutationS
                     ...state[dataName],
                     [operationType]: {
                         status: FetchStatus.SUCCESS,
-                        isFetching: false
+                        isFetching: false,
+                        error: null
                     }
                 }
             };
@@ -89,15 +82,15 @@ const reducer = (state: MutationState = initialState, action: Action): MutationS
                         }
                     }
                 };
-        case DataActionType.CHANGE_MUTATION_STATUS:
-            const { statusToChange } = action.payload;
+        case DataActionType.INITIALIZE_MUTATION_STATUS:
             return {
                 ...state,
                 [dataName]: {
                     ...state[dataName],
                         [operationType]: {
-                            status: statusToChange,
-                            isFetching: false
+                            status: FetchStatus.INITIAL,
+                            isFetching: false,
+                            error: null
                         }
                     }
                 };

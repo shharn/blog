@@ -11,6 +11,7 @@ const TOKEN_HEADER_NAME = "X-Session-Token";
 const HTTP_STATUS_SUCCESS = 200;
 const HTTP_STATUS_UNAUTHORIZED = 401;
 const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
+const API_SERVER_HOST = 'http://api-server:10000';
 
 var storage = multer.diskStorage({
     destination: (_, __, cb) => {
@@ -33,7 +34,7 @@ app.post('/upload', (req, res, next) => {
     const token = req.header(TOKEN_HEADER_NAME);
     if (!!token && token.length > 0) {
         request
-            .get('http://api-server:10000/check')
+            .get(`${API_SERVER_HOST}/check`)
             .set(TOKEN_HEADER_NAME, token)
             .timeout({
                 deadline: 10000

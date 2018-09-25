@@ -3,7 +3,6 @@ import Admin from './Admin';
 import { 
     requestLogin, 
     validateToken, 
-    initializeLoginStatus
 } from '../../action/auth';
 import type { StoreState } from '../../';
 import type { Dispatch} from '../../action/types';
@@ -19,8 +18,7 @@ const mapStateToProps = (state: StoreState): Object => {
 
 const mapDispatchToProps = (dispatch: Dispatch): Object => ({
     login: loginInfo => dispatch(requestLogin(loginInfo)),
-    validateToken: token => dispatch(validateToken(token)),
-    initializeLoginStatus: () => dispatch(initializeLoginStatus())
+    validateToken: token => dispatch(validateToken(token))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Admin);

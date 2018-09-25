@@ -1,13 +1,12 @@
 import Component from './ArticleDetail';
 import { connect } from 'react-redux';
 import { 
-    PLACEHOLDER_NAME_TO_CONVERT, 
-    FetchStatus
+    PLACEHOLDER_NAME_TO_CONVERT
 } from '../../constant';
 import { 
     requestDataWithNameAndURL,
     requestDataMutation,
-    changeMutationStatus
+    initializeMutationStatus
 } from '../../action/data';
 import { setDataForCreateOrEditArticle } from '../../action/ui';
 import { 
@@ -33,7 +32,7 @@ const mapStateToProps = (state: StoreState): Object => {
 const mapDispatchToProps = (dispatch: Dispatch): Object => ({
     getArticle: articleName => dispatch(requestDataWithNameAndURL(articleName, `article`, 'title', `/articles/${PLACEHOLDER_NAME_TO_CONVERT}`)),
     deleteArticle: uid => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, DataName.ARTICLE)),
-    initFetchStatus: () => dispatch(changeMutationStatus(DataName.ARTICLE, MutationOperationType.DELETE, FetchStatus.INITIAL)),
+    initFetchStatus: () => dispatch(initializeMutationStatus(DataName.ARTICLE, MutationOperationType.DELETE)),
     setArticleToEdit: article => dispatch(setDataForCreateOrEditArticle(true, article))
 });
 
