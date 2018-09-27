@@ -21,7 +21,7 @@ const reducer = (state: MenuListState = initialState, action: Action): MenuListS
     const { type } = action;
     switch (type){
         case UIActionType.CHANGE_EDITABLE_CELL:
-            const { rowId, cellName} = action.payload;
+            const { rowId, cellName } = action.payload;
             return {
                 ...state,
                 isEditable: true,

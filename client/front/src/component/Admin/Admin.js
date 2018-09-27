@@ -25,8 +25,7 @@ type Props = {
     error: ClientError,
 
     login: (loginInfo: LoginInformation) => void,
-    validateToken: (token: string) => void,
-    initializeLoginStatus: () => void
+    validateToken: (token: string) => void
 }
 
 type State = {

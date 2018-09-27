@@ -61,8 +61,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) 
 }
 
 func isAdminUser(info *data.LoginInformation) bool {
-	fmt.Println(info.Email == adminEmail)
-	fmt.Println(info.Password == adminPassword)
 	return info.Email == adminEmail && info.Password == adminPassword
 }
 
@@ -78,14 +76,14 @@ func makeToken(info *data.LoginInformation) *jwt.Token {
 // CheckHandler is handler for "/check"
 func CheckHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
 	clientToken := rq.Header.Get("X-Session-Token")
-	isValid, err := validateToken(clientToken)
-	if err == nil {
+	if isValid, err := validateToken(clientToken); err != nil {
+		return nil, err
+	} else {
 		return data.Authentication{
 			Token:   clientToken,
 			IsValid: isValid,
 		}, nil
 	}
-	return nil, err
 }
 
 func validateToken(tokenString string) (bool, error) {
@@ -95,13 +93,10 @@ func validateToken(tokenString string) (bool, error) {
 		}
 		return []byte(config.Key), nil
 	})
-	if token.Valid {
-		return true, nil
-	}
 	if err != nil {
 		return false, errors.WithStack(err)
 	}
-	return false, nil
+	return token.Valid, nil
 }
 
 // LogoutHandler is the service for "POST /logout"

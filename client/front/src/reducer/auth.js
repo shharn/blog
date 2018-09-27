@@ -11,34 +11,36 @@ export type AuthState = {
     isAuthenticated: boolean
 };
 
-const initialError: ClientError = {
+const NO_ERROR: ClientError = {
     code: 0,
     message: ''
 };
 
 const initialState: AuthState = {
     authStatus: AuthStatus.INITIAL,
-    error: initialError,
+    error: { ...NO_ERROR },
     isAuthenticated: false
 };
 
 const reducer = (state: AuthState = initialState, action: Action): AuthState => {
-    let { type } = action;
+    const { type } = action;
     switch(type) {
         case AuthActionType.INITIALISE_LOGIN_STATUS:
             return {
                 ...state,
-                authStatus: AuthStatus.INITIAL
+                authStatus: AuthStatus.INITIAL,
+                error: { ...NO_ERROR }
             };
         case AuthActionType.REQUEST_LOGIN:
             return {
                 ...state,
+                error: { ...NO_ERROR },
                 authStatus: AuthStatus.LOGIN_WAIT
             };
         case AuthActionType.LOGIN_FAILED:
             return {
                 ...state,
-                authStatus: AuthStatus.LOGIN_FAIL,
+                authStatus: AuthStatus.LOGIN_FAILED,
                 isAuthenticated: false,
                 error: action.payload.error
             };
@@ -47,43 +49,51 @@ const reducer = (state: AuthState = initialState, action: Action): AuthState => 
             return {
                 ...state,
                 isAuthenticated: action.payload.isValid,
-                authStatus: AuthStatus.LOGIN_SUCCESS
+                authStatus: AuthStatus.LOGIN_SUCCESS,
+                error: { ...NO_ERROR }
             };
         case AuthActionType.VALIDATE_TOKEN: 
             return {
                 ...state,
-                authStatus: AuthStatus.LOGIN_WAIT
+                authStatus: AuthStatus.LOGIN_WAIT,
+                error: { ...NO_ERROR },
+                isAuthenticated: false,
             };
         case AuthActionType.VALID_TOKEN:
             return {
                 ...state,
                 authStatus: AuthStatus.LOGIN_SUCCESS,
+                error: { ...NO_ERROR },
                 isAuthenticated: true
             };
         case AuthActionType.INVALID_TOKEN:
+            LocalStorage.remove(Token.key);
             return {
                 ...state,
                 error: action.payload.error,
-                authStatus: AuthStatus.LOGIN_INITIAL,
+                authStatus: AuthStatus.INITIAL,
                 isAuthenticated: false
             };
         case AuthActionType.REQUEST_LOGOUT:
             return {
                 ...state,
-                authStatus: AuthStatus.LOGOUT_WAIT
+                authStatus: AuthStatus.LOGOUT_WAIT,
+                error: { ...NO_ERROR }
             };
         case AuthActionType.LOGOUT_SUCCESS:
             return {
                 ...state,
-                error: initialError,
+                error: { ...NO_ERROR },
                 authStatus: AuthStatus.INITIAL,
                 isAuthenticated: false
             };
-        case AuthActionType.LOGOUT_FAIL:
+        case AuthActionType.LOGOUT_FAILED:
+            const { error } = action.payload;
             return {
                 ...state,
+                error,
                 authStatus: AuthStatus.INITIAL,
-                error: action.payload.error
+                isAuthenticated: true
             };
         default:
             return state;

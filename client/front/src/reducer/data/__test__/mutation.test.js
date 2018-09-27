@@ -22,7 +22,7 @@ const initialState = {
 };
 
 describe('app.data.mutation reducer test', () => {
-    it('Should return the initial state', () => {
+    test('Should return the initial state', () => {
         const actual = reducer(undefined, {});
         const expected = { ...initialState };
         expect(actual).toEqual(expected);

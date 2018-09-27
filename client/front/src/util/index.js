@@ -8,7 +8,7 @@ export const createUnique = (name: string): any /* Symbol */ => {
     if (typeof Symbol === 'function') {
         return Symbol(name);
     }
-    return name;
+    return `${Date.now()}: + name`;
 };
 
 export function isNetworkOffline(response: any): boolean {

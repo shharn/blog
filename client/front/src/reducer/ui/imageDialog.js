@@ -8,12 +8,10 @@ import type {
 
 export type ImageDialogState = {
     uploadStatus: $Values<ImageUploadStatus>,
-    progress: number
 };
 
 const initialState: ImageDialogState = {
-    uploadStatus: ImageUploadStatus.INITIAL,
-    progress: 0
+    uploadStatus: ImageUploadStatus.INITIAL
 };
 
 const reducer = (state: ImageDialogState = initialState, action: Action): ImageDialogState => {
@@ -22,7 +20,6 @@ const reducer = (state: ImageDialogState = initialState, action: Action): ImageD
         case DataActionType.UPLOAD_IMAGE: 
             return {
                 ...state,
-                progress: 0,
                 uploadStatus: ImageUploadStatus.UPLOADING
             };
         case DataActionType.UPLOAD_IMAGE_SUCCESS:
@@ -39,7 +36,6 @@ const reducer = (state: ImageDialogState = initialState, action: Action): ImageD
             return {
                 ...state,
                 uploadStatus: ImageUploadStatus.INITIAL,
-                progress: 0
             };
         default:
             return state;
