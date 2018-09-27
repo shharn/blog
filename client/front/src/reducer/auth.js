@@ -25,7 +25,7 @@ const initialState: AuthState = {
 const reducer = (state: AuthState = initialState, action: Action): AuthState => {
     const { type } = action;
     switch(type) {
-        case AuthActionType.INITIALISE_LOGIN_STATUS:
+        case AuthActionType.INITIALIZE_LOGIN_STATUS:
             return {
                 ...state,
                 authStatus: AuthStatus.INITIAL,

@@ -1,7 +1,123 @@
 // @flow
 import { Data as DataActionType } from './types';
-import type { ClientError } from '../flowtype';
 import type { Action } from './types';
+import type { ClientError } from '../flowtype';
+
+export type RequestDataAction = {
+    type: DataActionType.REQUEST_GET_DATA,
+    payload: {
+        dataName: string
+    }
+};
+
+export type RequestDataWithURLAction = {
+    type: DataActionType.REQUEST_GET_DATA_WITH_URL,
+    payload: {
+        dataName: string,
+        url: string
+    }
+};
+
+export type RequestDataWithNameAndURLAction = {
+    type: DataActionType.REQUEEST_GET_DATA_WITH_NAME_AND_URL,
+    paylod: {
+        name: string,
+        dataName: string,
+        propName: string,
+        url: string
+    }
+};
+
+export type DataResponseFailedAction = {
+    type: DataActionType.GET_DATA_RESPONSE_ERROR,
+    payload: {
+        error: ClientError,
+        dataName: string
+    }
+};
+
+export type DataResponseSuccessAction = {
+    type: DataActionType.GET_DATA_RESPONSE_SUCCESS,
+    payload: {
+        data: mixed,
+        dataName: string
+    }
+};
+
+
+export type RequestDataMutationAction = {
+    type: DataActionType.REQUEST_MUTATE_DATA,
+    payload: {
+        operationType: string,
+        dataName: string,
+        data: mixed
+    }
+};
+
+export type DataMutationSuccessAction = {
+    type: DataActionType.DATA_MUTATION_SUCCESS,
+    payload: {
+        dataName: string,
+        operationType: string,
+        data: mixed
+    }
+};
+
+export type DataMutationWaitAction = {
+    type: DataActionType.DATA_MUTATION_RESPONSE_WAIT
+};
+
+export type DataMutationFailAction = {
+    type: DataActionType.DATA_MUTATION_FAIL,
+    payload: {
+        dataName: string,
+        operationType: string,
+        error: ClientError
+    }
+};
+
+export type InitializeMutationStatusAction = {
+    type: DataActionType.INITIALIZE_MUTATION_STATUS,
+    payload: {
+        dataName: string,
+        operationType: string
+    }
+};
+
+export type UploadImageAction = {
+    type: DataActionType.UPLOAD_IMAGE,
+    payload: {
+        files: Array<File>
+    }
+};
+
+export type UploadImageSuccessAction = {
+    type: DataActionType.UPLOAD_IMAGE_SUCCESS
+};
+
+export type UploadImageFailAction = {
+    type: DataActionType.UPLOAD_IMAGE_FAIL
+};
+
+export type InitializeImageDialogStatusAction = {
+    type: DataActionType.INITIALIZE_IMAGE_DIALOG_STATUS
+};
+
+export type DataAction = 
+    RequestDataAction |
+    RequestDataWithURLAction |
+    RequestDataWithNameAndURLAction |
+    DataResponseFailedAction |
+    DataResponseSuccessAction |
+    RequestDataMutationAction |
+    DataMutationSuccessAction |
+    DataMutationWaitAction |
+    DataMutationFailAction |
+    InitializeMutationStatusAction |
+    UploadImageAction |
+    UploadImageSuccessAction |
+    UploadImageFailAction |
+    InitializeImageDialogStatusAction;
 
 export const requestData = (dataName: string): Action => ({
     type: DataActionType.REQUEST_GET_DATA,

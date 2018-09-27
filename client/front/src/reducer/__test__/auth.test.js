@@ -24,7 +24,7 @@ describe('app.auth reducer test', () => {
     describe('Should handle INITIALISE_LOGIN_STATUS', () => {
         test('INITIALIZE_LOGIN_STATUS -> INITIALIZE_LOGIN_STATUS', () => {
             const actual = reducer(undefined, {
-                type: AuthActionType.INITIALISE_LOGIN_STATUS
+                type: AuthActionType.INITIALIZE_LOGIN_STATUS
             });
             const expected = {
                 authStatus: AuthStatus.INITIAL,
@@ -57,7 +57,7 @@ describe('app.auth reducer test', () => {
                 authStatus: AuthStatus.LOGIN_FAILED
             };
             const actual = reducer(initial, {
-                type: AuthActionType.INITIALISE_LOGIN_STATUS
+                type: AuthActionType.INITIALIZE_LOGIN_STATUS
             });
             const expected = {
                 ...initialState,
