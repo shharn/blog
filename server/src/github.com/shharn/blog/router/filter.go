@@ -12,7 +12,7 @@ import (
 // Filter filters or pre-processes the request
 // Can be used for authentication or something like that
 type Filter interface {
-	Filter(w http.ResponseWriter, r *http.Request) (bool, error)
+	Filter(w http.ResponseWriter, r *http.Request) error
 }
 
 // AuthFilter is responsible for validating the session token
@@ -22,18 +22,30 @@ type AuthFilter struct {
 }
 
 // Filter in AuthFilter validates the token from the header
-func (af AuthFilter) Filter(w http.ResponseWriter, r *http.Request) (bool, error) {
+func (af AuthFilter) Filter(w http.ResponseWriter, r *http.Request) error {
 	path := strings.ToLower(r.URL.Path[1:])
+	// should be refactored
 	if r.Method == "GET" || path == "login" || path == "check" || path == "logout" {
-		return false, nil
+		return nil
 	}
 	clientToken := r.Header.Get("X-Session-Token")
 
-	isValid, err := af.validateToken(clientToken, af.Key)
-	if err != nil {
-		return true, errors.WithStack(err)
+	if isValid, err := af.validateToken(clientToken, af.Key); err == nil {
+		if isValid {
+			return nil
+		} 
+		return RouterError{
+			Code: http.StatusUnauthorized,
+			MessageForClient: "Invalid token",
+			innerError: nil,
+		}
+	} else {
+		return RouterError{
+			Code: http.StatusInternalServerError,
+			MessageForClient: mapStatusCodeToMessage[http.StatusInternalServerError],
+			innerError: errors.WithStack(err),
+		}
 	}
-	return !isValid, nil
 }
 
 func (af AuthFilter) validateToken(token, key string) (bool, error) {
@@ -56,9 +68,9 @@ type CORSFilter struct {
 }
 
 // Filter for CORSFilter
-func (cf CORSFilter) Filter(w http.ResponseWriter, rq *http.Request) (bool, error) {
+func (cf CORSFilter) Filter(w http.ResponseWriter, rq *http.Request) error {
 	w.Header().Set("Access-Control-Allow-Origin", cf.CORSContext.AllowedOrigins)
 	w.Header().Set("Access-Control-Allow-Methods", cf.CORSContext.AllowedMethods)
 	w.Header().Set("Access-Control-Allow-Headers", cf.CORSContext.AllowedHeaders)
-	return false, nil
+	return nil
 }

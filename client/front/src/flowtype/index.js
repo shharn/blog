@@ -22,7 +22,7 @@ export type LoginInformation = {
 };
 
 export type LoginResponse = {
-    isAuthenticated: boolean,
+    isValid: boolean,
     token: string
 };
 

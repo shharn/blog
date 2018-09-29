@@ -8,15 +8,28 @@ import (
 	"strings"
 )
 
-// GlobalError is a data structure for global error handling
-type GlobalError struct {
-	code             int
+var (
+	mapStatusCodeToMessage = map[int]string{
+		http.StatusBadRequest: "Bad Request",
+		http.StatusUnauthorized: "Invalid authentication data",
+		http.StatusForbidden: "Not allowed to do it",
+		http.StatusNotFound: "Not Found",
+		http.StatusMethodNotAllowed: "Not Allowed Method",
+		http.StatusRequestTimeout: "Request Timeout",
+		http.StatusConflict: "Conflict",
+		http.StatusInternalServerError: "The Server is temporaliy unavailable. Try later",
+	}
+)
+
+// RouterError is a error type in this router context
+type RouterError struct {
+	Code             int `json:"-"`
 	MessageForClient string `json:"message,omitempty"`
 	innerError       error
 }
 
-func (ge GlobalError) Error() string {
-	return fmt.Sprintf("StatusCode: %v, Message: %v", ge.code, ge.MessageForClient)
+func (ge RouterError) Error() string {
+	return fmt.Sprintf("StatusCode: %v, Message: %v", ge.Code, ge.MessageForClient)
 }
 
 // Handler processes the client's request and return something
@@ -56,6 +69,7 @@ func (r *Router) SetCORS() *Router {
 	ctxs = append(ctxs, RouterContext{
 		Pattern: "*",
 		Handler: func(w http.ResponseWriter, rq *http.Request, params Params) (interface{}, error) {
+			log.Printf("CORS Handler\n")
 			w.Header().Set("Access-Control-Allow-Origin", r.CORSContext.AllowedOrigins)
 			w.Header().Set("Access-Control-Allow-Methods", r.CORSContext.AllowedMethods)
 			w.Header().Set("Access-Control-Allow-Headers", r.CORSContext.AllowedHeaders)
@@ -144,86 +158,66 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 	}()
 
 	w.Header().Set("Content-Type", "application/json")
-	globalError := func(w http.ResponseWriter, rq *http.Request) error {
-		if exists := contains(r.RegisteredMethods, rq.Method); exists == true {
-			ctxs, ok := (*r).Dispatchers[rq.Method]
-			if ok != true {
-				return GlobalError{
-					code:             http.StatusNotFound,
-					MessageForClient: "Not Found",
-					innerError:       nil,
-				}
-			}
-
-			// pass through filters
-			if rq.Method != "OPTIONS" {
-				for _, filter := range r.Filters {
-					shouldBeFiltered, err := filter.Filter(w, rq)
-					if shouldBeFiltered {
-						if err == nil {
-							w.WriteHeader(http.StatusUnauthorized)
-							return GlobalError{
-								code:             http.StatusUnauthorized,
-								MessageForClient: "Not allowed to use this method",
-								innerError:       nil,
-							}
-						}
-						return GlobalError{
-							code:             http.StatusInternalServerError,
-							MessageForClient: "Server is temporarily unavailable. Please try later",
-							innerError:       err,
-						}
-					}
-				}
-			}
-
-			// Select the correct RouterContext based on (Registered Pattern, Request.URL.Path)
-			path := rq.URL.Path
-			ctx, found := findRightContextFromPath(ctxs, path)
-			if found == false {
-				return GlobalError{
-					code:             http.StatusNotFound,
-					MessageForClient: "Not Found",
-					innerError:       nil,
-				}
-			}
-
-			// Make Params by parsing
-			params := parseURL(ctx.Pattern, path)
-			result, err := ctx.Handler(w, rq, params)
-			if err != nil {
-				return GlobalError{
-					code:             http.StatusInternalServerError,
-					MessageForClient: "Server is temporarily unavailable. Please try later",
-					innerError:       err,
-				}
-			}
-
-			bytes, err := r.Marshaler.Marshal(result)
-			if err != nil {
-				return GlobalError{
-					code:             http.StatusInternalServerError,
-					MessageForClient: "",
-					innerError:       err,
-				}
-			}
-			w.WriteHeader(http.StatusOK)
-			if bytes != nil {
-				w.Write(bytes)
-			}
-			return nil
+	err := r.consume(w, rq);
+	if err != nil {
+		if t, ok := err.(RouterError); ok {
+			log.Printf("[Error] %v\n", fmt.Sprintf("%+v", t.innerError))
+			bytes, _ := r.Marshaler.Marshal(t)
+			w.WriteHeader(t.Code)
+			w.Write(bytes)
+		} else {
+			log.Printf("[Error] %v\n", err.Error())
+			w.WriteHeader(http.StatusInternalServerError)
 		}
-		return GlobalError{
-			code:             http.StatusMethodNotAllowed,
-			MessageForClient: "Not Allowed Method",
-		}
-	}(w, rq)
+	}
+}
 
-	if globalError != nil {
-		log.Printf("[Error] %v", fmt.Sprintf("%+v", globalError.(GlobalError).innerError))
-		bytes, _ := r.Marshaler.Marshal(globalError)
-		w.WriteHeader(globalError.(GlobalError).code)
-		w.Write(bytes)
+func (r *Router) consume(w http.ResponseWriter, rq *http.Request) error {
+	if exists := contains(r.RegisteredMethods, rq.Method); exists {
+		for _, filter := range r.Filters {
+			if err := filter.Filter(w, rq); err != nil {
+				return err
+			}
+		}
+		
+		ctxs, ok := (*r).Dispatchers[rq.Method]
+		if ok != true {
+			return RouterError{
+				Code:             http.StatusNotFound,
+				MessageForClient: mapStatusCodeToMessage[http.StatusNotFound],
+				innerError:       nil,
+			}
+		}
+
+		path := rq.URL.Path
+		ctx, found := findContextFromPath(ctxs, path)
+		if !found {
+			return RouterError{
+				Code:             http.StatusNotFound,
+				MessageForClient: mapStatusCodeToMessage[http.StatusNotFound],
+				innerError:       nil,
+			}
+		}
+
+		params := parseURL(ctx.Pattern, path)
+		result, err := ctx.Handler(w, rq, params)
+		if err != nil {
+			return err
+		}
+
+		bytes, err := r.Marshaler.Marshal(result)
+		if err != nil {
+			return err
+		}
+		w.WriteHeader(http.StatusOK)
+		if bytes != nil {
+			w.Write(bytes)
+		}
+		return nil
+	}
+	return RouterError{
+		Code:             http.StatusMethodNotAllowed,
+		MessageForClient: mapStatusCodeToMessage[http.StatusMethodNotAllowed],
 	}
 }
 
@@ -236,11 +230,12 @@ func contains(list []string, value string) bool {
 	return false
 }
 
-func findRightContextFromPath(ctxs []RouterContext, path string) (RouterContext, bool) {
+func findContextFromPath(ctxs []RouterContext, path string) (RouterContext, bool) {
 	wildCardIdx := -1
 	for idx, ctx := range ctxs {
 		if ctx.Pattern == "*" {
 			wildCardIdx = idx
+			break;
 		}
 
 		// Should fix this line

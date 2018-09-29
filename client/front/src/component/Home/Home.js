@@ -26,7 +26,7 @@ class Home extends Component<Props & WithStylesProps, State> {
   componentDidMount() {
     if (!this.props.isAuthenticated) {
       const token = LocalStorage.get(Token.key);
-      this.props.authenticate(token);
+      token && this.props.authenticate(token);
     }
   }
 

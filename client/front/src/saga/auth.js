@@ -20,51 +20,50 @@ import { isNetworkOffline } from '../util';
 import LocalStorage from 'local-storage';
 import * as service from '../service';
 import type { Action } from '../flowtype';
-import type { Response } from 'superagent';
+import type { request } from 'superagent';
 
-
-export function* processLogin(action: Action): Generator<Response | PutEffect, void, void> {
-    const response: Response = yield call(service.requestLogin, action.payload.loginInfo);
+export function* processLogin(action: Action): Generator<request.Response | PutEffect, void, void> {
+    const response: request.Response = yield call(service.requestLogin, action.payload.loginInfo);
     if (isNetworkOffline(response)) {
         // In this case, I think that using another action for 'net`work offline' is better idea
         // because more expressive / meaningful
         yield put(loginFailed({
             code: -1,
-            message: 'Network is down (Server or Client) :('
+            message: 'Network is offline :('
         }));
     } else {
-        if (response.statusCode === 200) {
+        if (response.status === 200) {
             yield put(loginSuccess(response.body));
         } else {
             yield put(loginFailed({
-                code: response.statusCode,
+                code: response.status,
                 message: response.body.message
             }));
         }
     }
 }
 
-export function* validateToken(action: Action): Generator<Response | PutEffect, void, void> {
+export function* validateToken(action: Action): Generator<request.Response | PutEffect, void, void> {
     const { token } = action.payload;
-    const response: Response = yield call(service.validateToken, token);
+    const response: request.Response = yield call(service.validateToken, token);
     if (isNetworkOffline(response)) {
         yield put(invalidToken({
             code: -1,
-            message: 'Network is down :('
+            message: 'Network is offline :('
         }));
     } else {
-        if (response.statusCode === 200 && response.body.isValid === true) {
+        if (response.status === 200 && response.body.isValid === true) {
             yield put(validToken());
         } else {
             yield put(invalidToken({
-                code: response.statusCode,
+                code: response.status,
                 message: 'Invalid Token'
             }));
         }
     }
 }
 
-export function* processLogout(action: Action): Generator<Response | PutEffect, void, void> {
+export function* processLogout(action: Action): Generator<request.Response | PutEffect, void, void> {
     const token: string = LocalStorage.get(Token.key);
     if (!token || token.length < 1) {
         yield put(logoutSuccess());
@@ -78,18 +77,18 @@ export function* processLogout(action: Action): Generator<Response | PutEffect, 
             message: 'Fail to logout. Retry later.'
         }));
     } else {
-        const response: Response = yield call(service.requestLogout, token);
+        const response: request.Response = yield call(service.requestLogout, token);
         if (isNetworkOffline(response)) {
             yield put(logoutFailed({
                 code: -1,
-                message: 'Network is down :('
+                message: 'Network is offline :('
             }));
         } else {
-            if (response.statusCode === 200) {
+            if (response.status === 200) {
                 yield put(logoutSuccess());
             } else {
                 yield put(logoutFailed({
-                    code: response.statusCode,
+                    code: response.status,
                     message: 'Invalid Token'
                 }));
             }

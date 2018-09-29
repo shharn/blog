@@ -12,8 +12,7 @@ import (
 
 // GetMenusHandler is a handler for "GET /menus"
 func GetMenusHandler(w http.ResponseWriter, r *http.Request, params router.Params) (interface{}, error) {
-	menus, err := service.GetMenus()
-	return menus, err
+	return service.GetMenus()
 }
 
 // CreateMenuHandler is a handler for "POST /menus"

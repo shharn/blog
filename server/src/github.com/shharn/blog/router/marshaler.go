@@ -2,6 +2,7 @@ package router
 
 import (
 	"encoding/json"
+	"github.com/pkg/errors"
 )
 
 // Marshaler processes the result of the Handler.
@@ -18,5 +19,9 @@ func (j JSONMarshaler) Marshal(obj interface{}) ([]byte, error) {
 	if obj == nil {
 		return nil, nil
 	}
-	return json.Marshal(obj)
+	if bytes, err := json.Marshal(obj); err == nil {
+		return bytes, nil
+	} else {
+		return nil, errors.WithStack(err)
+	}
 }

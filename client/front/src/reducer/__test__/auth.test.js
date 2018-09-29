@@ -45,7 +45,7 @@ describe('app.auth reducer test', () => {
             });
             const expected = {
                 ...initialState,
-                authStatus: AuthStatus.INITIAL,
+                authStatus: AuthStatus.LOGIN_SUCCESS,
                 isAuthenticated: true
             };
             expect(actual).toEqual(expected);

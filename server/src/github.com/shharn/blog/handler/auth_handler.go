@@ -15,12 +15,6 @@ import (
 	"github.com/shharn/blog/service"
 )
 
-const (
-	adminEmail string = `test@test.com`
-	// will change it to hashed value later at client
-	adminPassword string = `test`
-)
-
 // LoginHandler is a handler for "POST /login"
 func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) (interface{}, error) {
 	var (
@@ -35,17 +29,19 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) 
 
 	
 	if len(loginInfo.Email) < 1 || len(loginInfo.Password) < 1 {
-		return data.Authentication{
-			IsValid: false,
-		}, nil
+		return nil, router.RouterError{
+				Code: http.StatusUnauthorized,
+				MessageForClient: "Invalid email or password",
+			}
 	}
 
 	if isValid, err = service.Authenticate(loginInfo.Email, loginInfo.Password); err != nil {
 		return nil, err
 	} else if !isValid {
-		return data.Authentication{
-			IsValid: false,
-		}, nil
+		return nil, router.RouterError{
+				Code: http.StatusUnauthorized,
+				MessageForClient: "Invalid email or password",
+			}
 	}
 
 	token := makeToken(&loginInfo)
@@ -58,10 +54,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) 
 		IsValid: true,
 		Token:   tokenString,
 	}, nil
-}
-
-func isAdminUser(info *data.LoginInformation) bool {
-	return info.Email == adminEmail && info.Password == adminPassword
 }
 
 func makeToken(info *data.LoginInformation) *jwt.Token {
@@ -80,7 +72,6 @@ func CheckHandler(w http.ResponseWriter, rq *http.Request, params router.Params)
 		return nil, err
 	} else {
 		return data.Authentication{
-			Token:   clientToken,
 			IsValid: isValid,
 		}, nil
 	}
@@ -124,6 +115,5 @@ func RegenerateKey() error {
 		return errors.WithStack(err)
 	}
 	config.Key = fmt.Sprintf("%x", b)
-	fmt.Printf("secret key: %v", config.Key)
 	return nil
 }

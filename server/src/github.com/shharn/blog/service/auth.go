@@ -59,12 +59,12 @@ func Authenticate(email, password string) (bool, error) {
 	}
 
 	if len(authResult.Result) < 1 {
-		return false, errors.New("Invalid email or password")
+		return false, nil
 	}
 
 	if authResult.Result[0].Pswd[0].Checkpwd {
 		return true, nil
 	} else {
-		return false, errors.New("Invalid email or password")
+		return false, nil
 	}
 }

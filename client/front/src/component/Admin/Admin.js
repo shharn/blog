@@ -87,7 +87,7 @@ class Admin extends Component<Props & WithStylesProps & RouterProps, State> {
             case AuthStatus.LOGIN_SUCCESS:
                 result = <Typography variant="caption">Confirmed. Will be redirected soon</Typography>;
                 break;
-            case AuthStatus.LOGIN_FAIL:
+            case AuthStatus.LOGIN_FAILED:
                 result = (
                     <div className={this.props.classes.bottomContainer}>
                         <Typography className={this.props.classes.errorMessage} variant="caption">{this.props.error.message}</Typography>
