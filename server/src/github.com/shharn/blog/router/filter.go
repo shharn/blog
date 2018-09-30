@@ -25,7 +25,7 @@ type AuthFilter struct {
 func (af AuthFilter) Filter(w http.ResponseWriter, r *http.Request) error {
 	path := strings.ToLower(r.URL.Path[1:])
 	// should be refactored
-	if r.Method == "GET" || path == "login" || path == "check" || path == "logout" {
+	if r.Method == "GET" || r.Method == "OPTIONS" || path == "login" || path == "check" || path == "logout" {
 		return nil
 	}
 	clientToken := r.Header.Get("X-Session-Token")

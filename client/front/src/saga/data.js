@@ -69,7 +69,6 @@ function* dataMutationRequestHandler(action: Action) : Generator<request.Respons
     }
     if (response.statusCode === 200) {
         yield put(dataMutationSuccess(dataName, operationType, response.body));
-        yield put(requestData(dataName));
     } else {
         yield put(dataMutationFail(dataName, operationType, {
                 code: response.statusCode == null ? -1 : response.statusCode,

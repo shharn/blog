@@ -3,6 +3,8 @@ import {
     validateToken,
     processLogout
 } from '../auth';
+import { Token } from '../../constant';
+import ls from 'local-storage';
 import { cloneableGenerator } from 'redux-saga/utils';
 import { Auth as AuthActionType } from '../../action/types';
 
@@ -28,10 +30,12 @@ describe('Should handle REQUEST_LOGIN in Saga', () => {
         const clone = gen.clone();
         const mockRequestLogin = jest.fn(_ => ({}));
         const response = clone.next(mockRequestLogin(mockPayload));
+        const resultAction = response.value.PUT.action;
         const last = clone.next();
 
         expect(response.done).toBe(false);
-        expect(response.value.PUT.action.payload).toEqual({ error: { ...NETWORK_ERROR }});
+        expect(resultAction.type).toBe(AuthActionType.LOGIN_FAILED);
+        expect(resultAction.payload).toEqual({ error: { ...NETWORK_ERROR }});
         expect(last.done).toBe(true);
     });
 
@@ -46,11 +50,12 @@ describe('Should handle REQUEST_LOGIN in Saga', () => {
             status: 200
         }));
         const response = clone.next(mockRequestLogin(mockPayload));
-        const actualPayload = response.value.PUT.action.payload;
+        const resultAction = response.value.PUT.action;
         const last = clone.next();
 
         expect(response.done).toBe(false);
-        expect(actualPayload).toEqual({  ...mockResponseBody });
+        expect(resultAction.type).toBe(AuthActionType.LOGIN_SUCCESS);
+        expect(resultAction.payload).toEqual({  ...mockResponseBody });
         expect(last.done).toBe(true);
     });
 
@@ -65,7 +70,7 @@ describe('Should handle REQUEST_LOGIN in Saga', () => {
             status: 401
         }));
         const response = clone.next(mockRequestLogin(mockPayload));
-        const actualPayload = response.value.PUT.action.payload;
+        const resultAction = response.value.PUT.action;
         const expectedPayload = {
             error: {
                 code: 401,
@@ -75,19 +80,119 @@ describe('Should handle REQUEST_LOGIN in Saga', () => {
         const last = clone.next();
 
         expect(response.done).toBe(false);
-        expect(actualPayload).toEqual(expectedPayload);
+        expect(resultAction.type).toBe(AuthActionType.LOGIN_FAILED);
+        expect(resultAction.payload).toEqual(expectedPayload);
         expect(last.done).toBe(true);
     });
 });
 
 describe('Should handle VALIDATE_TOKEN in Saga', () => {
+    const mockToken = 'testtoken';
+    const gen = cloneableGenerator(validateToken)({
+        type: AuthActionType.VALIDATE_TOKEN,
+        payload: {
+            token: mockToken
+        }
+    });
+    gen.next();
     test('If current network is offline, put INVALID_TOKEN', () => {
+        const clone = gen.clone();
+        const mockValidateToken = jest.fn(_ => ({}));
+        const response = clone.next(mockValidateToken(mockToken));
+        const resultAction = response.value.PUT.action;
+        const last = clone.next();
 
+        expect(response.done).toBe(false);
+        expect(resultAction.type).toBe(AuthActionType.INVALID_TOKEN);
+        expect(resultAction.payload).toEqual({ error: { ...NETWORK_ERROR }});
+        expect(last.done).toBe(true);
+    });
+
+    test('If current network is online & valid token, should succeed', () => {
+        const clone = gen.clone();
+        const mockValidateToken = jest.fn(_ => ({
+            status: 200,
+            body: {
+                isValid: true
+            }
+        }));
+        const response = clone.next(mockValidateToken(mockToken));
+        const resultAction = response.value.PUT.action;
+        const last = clone.next();
+
+        expect(response.done).toBe(false);
+        expect(resultAction.type).toBe(AuthActionType.VALID_TOKEN);
+        expect(last.done).toBe(true);
+    });
+
+    test('If current network is online & invalid token, should put INVALID_TOKEN action with error', () => {
+        const clone = gen.clone();
+        const mockValidateToken = jest.fn(_ => ({
+            status: 200,
+            body: {
+                isValid: false
+            }
+        }));
+        const response = clone.next(mockValidateToken(mockToken));
+        const resultAction = response.value.PUT.action;
+        const last = clone.next();
+
+        expect(response.done).toBe(false);
+        expect(resultAction.type).toBe(AuthActionType.INVALID_TOKEN);
+        expect(resultAction.payload).toEqual({
+            error: {
+                code: 403,
+                message: 'Invalid Token'
+            }
+        });
+        expect(last.done).toBe(true);
     });
 });
 
 describe('Should handle REQUEST_LOGOUT', () => {
-    test('If current network is offline, put LOGOUT_FAILED with error', () => {
+    const mockToken = 'testtoken';
+    const gen = cloneableGenerator(processLogout)({
+        type: AuthActionType.REQUEST_LOGOUT
+    });
 
+    test(`Has no token`, () => {
+        const clone = gen.clone();
+        ls.remove(Token.key);
+        const actualAction = clone.next().value.PUT.action;
+        const last = clone.next();
+
+        expect(actualAction.type).toBe(AuthActionType.LOGOUT_SUCCESS);
+        expect(last.done).toBe(true);
+    });
+
+    test(`Network is offline`, () => {
+        ls.set(Token.key, mockToken);
+        const clone = gen.clone();
+        clone.next();
+        const mockRequestLogout = jest.fn(_ => ({}));
+        const response = clone.next(mockRequestLogout(mockToken));
+        const actualAction = response.value.PUT.action;
+        const last = clone.next();
+
+        expect(ls.get(Token.key)).toBeNull();
+        expect(actualAction.type).toBe(AuthActionType.LOGOUT_FAILED);
+        expect(actualAction.payload).toEqual({ error: { ...NETWORK_ERROR }});
+        expect(last.done).toBe(true);
+    });
+
+    test(`Network is online`, () => {
+        ls.set(Token.key, mockToken);
+        const clone = gen.clone();
+        clone.next();
+        const mockRequestLogout = jest.fn(_ => ({
+            status: 200
+        }));
+        const response = clone.next(mockRequestLogout(mockToken));
+        const actualAction = response.value.PUT.action;
+        const last = clone.next();
+
+        expect(ls.get(Token.key)).toBeNull();
+        expect(actualAction.type).toBe(AuthActionType.LOGOUT_SUCCESS);
+        expect(last.done).toBe(true);
     });
 });

@@ -56,42 +56,34 @@ export function* validateToken(action: Action): Generator<request.Response | Put
             yield put(validToken());
         } else {
             yield put(invalidToken({
-                code: response.status,
+                code: 403,
                 message: 'Invalid Token'
             }));
         }
     }
 }
 
-export function* processLogout(action: Action): Generator<request.Response | PutEffect, void, void> {
+export function* processLogout(action: Action): Generator<request.Response | PutEffect, void, null | PutEffect> {
     const token: string = LocalStorage.get(Token.key);
     if (!token || token.length < 1) {
-        yield put(logoutSuccess());
+        return put(logoutSuccess());
     }
-
+    
     LocalStorage.remove(Token.key);
-    const exists: boolean = LocalStorage.get(Token.key) != null;
-    if (exists) {
+    const response: request.Response = yield call(service.requestLogout, token);
+    if (isNetworkOffline(response)) {
         yield put(logoutFailed({
             code: -1,
-            message: 'Fail to logout. Retry later.'
+            message: 'Network is offline :('
         }));
     } else {
-        const response: request.Response = yield call(service.requestLogout, token);
-        if (isNetworkOffline(response)) {
-            yield put(logoutFailed({
-                code: -1,
-                message: 'Network is offline :('
-            }));
+        if (response.status === 200) {
+            yield put(logoutSuccess());
         } else {
-            if (response.status === 200) {
-                yield put(logoutSuccess());
-            } else {
-                yield put(logoutFailed({
-                    code: response.status,
-                    message: 'Invalid Token'
-                }));
-            }
+            yield put(logoutFailed({
+                code: response.status,
+                message: 'Invalid Token'
+            }));
         }
     }
 }

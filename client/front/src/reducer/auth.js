@@ -70,7 +70,6 @@ const reducer = (state: AuthState = initialState, action: Action): AuthState => 
             LocalStorage.remove(Token.key);
             return {
                 ...state,
-                error: action.payload.error,
                 authStatus: AuthStatus.INITIAL,
                 isAuthenticated: false
             };

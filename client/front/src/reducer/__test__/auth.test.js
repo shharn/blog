@@ -204,21 +204,13 @@ describe('app.auth reducer test', () => {
                 ...initialState,
                 authStatus: AuthStatus.LOGIN_WAIT
             };
-            const testError = {
-                code: 500,
-                message: 'test error message'
-            };
             const actual = reducer(initial, {
                 type: AuthActionType.INVALID_TOKEN,
-                payload: {
-                    error: { ...testError }
-                }
             });
             const expected = {
                 ...initialState,
                 authStatus: AuthStatus.INITIAL,
                 isAuthenticated: false,
-                error: { ...testError }
             };
             expect(actual).toEqual(expected);
         });

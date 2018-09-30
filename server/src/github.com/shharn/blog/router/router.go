@@ -69,10 +69,9 @@ func (r *Router) SetCORS() *Router {
 	ctxs = append(ctxs, RouterContext{
 		Pattern: "*",
 		Handler: func(w http.ResponseWriter, rq *http.Request, params Params) (interface{}, error) {
-			log.Printf("CORS Handler\n")
-			w.Header().Set("Access-Control-Allow-Origin", r.CORSContext.AllowedOrigins)
-			w.Header().Set("Access-Control-Allow-Methods", r.CORSContext.AllowedMethods)
-			w.Header().Set("Access-Control-Allow-Headers", r.CORSContext.AllowedHeaders)
+			// w.Header().Set("Access-Control-Allow-Origin", r.CORSContext.AllowedOrigins)
+			// w.Header().Set("Access-Control-Allow-Methods", r.CORSContext.AllowedMethods)
+			// w.Header().Set("Access-Control-Allow-Headers", r.CORSContext.AllowedHeaders)
 			return nil, nil
 		},
 	})
@@ -161,7 +160,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 	err := r.consume(w, rq);
 	if err != nil {
 		if t, ok := err.(RouterError); ok {
-			log.Printf("[Error] %v\n", fmt.Sprintf("%+v", t.innerError))
+			log.Printf("[Error] %v\n[Inner] %v", t.Error(), fmt.Sprintf("%+v", t.innerError))
 			bytes, _ := r.Marshaler.Marshal(t)
 			w.WriteHeader(t.Code)
 			w.Write(bytes)
