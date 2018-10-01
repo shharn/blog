@@ -18,12 +18,16 @@ import {
 import { Token } from '../constant';
 import { isNetworkOffline } from '../util';
 import LocalStorage from 'local-storage';
-import * as service from '../service';
+import {
+    requestLogin,
+    validateToken,
+    requestLogout
+ } from '../service';
 import type { Action } from '../flowtype';
 import type { request } from 'superagent';
 
 export function* processLogin(action: Action): Generator<request.Response | PutEffect, void, void> {
-    const response: request.Response = yield call(service.requestLogin, action.payload.loginInfo);
+    const response: request.Response = yield call(requestLogin, action.payload.loginInfo);
     if (isNetworkOffline(response)) {
         // In this case, I think that using another action for 'net`work offline' is better idea
         // because more expressive / meaningful
@@ -43,9 +47,9 @@ export function* processLogin(action: Action): Generator<request.Response | PutE
     }
 }
 
-export function* validateToken(action: Action): Generator<request.Response | PutEffect, void, void> {
+export function* processTokenValidation(action: Action): Generator<request.Response | PutEffect, void, void> {
     const { token } = action.payload;
-    const response: request.Response = yield call(service.validateToken, token);
+    const response: request.Response = yield call(validateToken, token);
     if (isNetworkOffline(response)) {
         yield put(invalidToken({
             code: -1,
@@ -56,7 +60,7 @@ export function* validateToken(action: Action): Generator<request.Response | Put
             yield put(validToken());
         } else {
             yield put(invalidToken({
-                code: 403,
+                code: 401,
                 message: 'Invalid Token'
             }));
         }
@@ -70,7 +74,7 @@ export function* processLogout(action: Action): Generator<request.Response | Put
     }
     
     LocalStorage.remove(Token.key);
-    const response: request.Response = yield call(service.requestLogout, token);
+    const response: request.Response = yield call(requestLogout, token);
     if (isNetworkOffline(response)) {
         yield put(logoutFailed({
             code: -1,
@@ -82,7 +86,7 @@ export function* processLogout(action: Action): Generator<request.Response | Put
         } else {
             yield put(logoutFailed({
                 code: response.status,
-                message: 'Invalid Token'
+                message: response.body.message
             }));
         }
     }
@@ -91,5 +95,5 @@ export function* processLogout(action: Action): Generator<request.Response | Put
 export default function* watchLogin(): Generator<ForkEffect, void, void,> {
     yield takeLatest(AuthActionType.REQUEST_LOGIN, processLogin);
     yield takeLatest(AuthActionType.REQUEST_LOGOUT, processLogout);
-    yield takeLatest(AuthActionType.VALIDATE_TOKEN, validateToken);
+    yield takeLatest(AuthActionType.VALIDATE_TOKEN, processTokenValidation);
 }

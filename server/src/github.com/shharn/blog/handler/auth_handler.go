@@ -103,7 +103,10 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request, params router.Params)
 				return nil, nil
 			} 
 		} else {
-			return nil, errors.Errorf("Invalid token")
+			return nil, router.RouterError{
+				Code: http.StatusUnauthorized,
+				MessageForClient: "Invalid Token",
+			}
 		}
 	}
 }
