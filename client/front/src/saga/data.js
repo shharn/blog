@@ -27,6 +27,7 @@ import {
     updateData,
     uploadImage
 } from '../service';
+import { isNetworkOffline } from '../util';
 import type { Action } from '../action/types';
 import type { request } from 'superagent';
 
@@ -58,9 +59,16 @@ export function* dataGetRequestWithURLHandler(action: Action) : Generator<reques
     }
 }
 
-export function* dataMutationRequestHandler(action: Action) : Generator<request.Response | PutEffect, void, void> {
+export function* dataMutationRequestHandler(action: Action) : Generator<request.Response | PutEffect, void, null | PutEffect> {
     const { operationType, dataName, data } = action.payload;
     const token: string = LocalStorage.get(Token.key);
+    if (!token || token.length < 1) {
+        return put(dataMutationFail(dataName, operationType, {
+            code: 401,
+            message: 'Invalid token'
+        }));
+    }
+
     let response: request.Response;
     switch(operationType) {
         case MutationOperationType.CREATE:
@@ -89,14 +97,27 @@ export function* uploadImageRequestHandler(action: Action) : Generator<request.R
     const { files } = action.payload;
     const token: string = LocalStorage.get(Token.key);
     if (!token || token.length < 1) {
-        return put(uploadImageFail());
+        return put(uploadImageFail({
+            code: 401,
+            message: 'Invalid Token'
+        }));
     }
 
-    let response: request.Response = yield call(uploadImage, files, token);
+    const response: request.Response = yield call(uploadImage, files, token);
+    if (isNetworkOffline(response)) {
+        return put(uploadImageFail({
+            code: -1,
+            message: 'Network is Offline :('
+        }));
+    }
+
     if (response.status === 200) {
         yield put(uploadImageSuccess());
     } else {
-        yield put(uploadImageFail());
+        yield put(uploadImageFail({
+            code: response.status,
+            message: response.body.message || 'Fail to upload images'
+        }));
     }
 }
 

@@ -96,7 +96,10 @@ export type UploadImageSuccessAction = {
 };
 
 export type UploadImageFailAction = {
-    type: DataActionType.UPLOAD_IMAGE_FAIL
+    type: DataActionType.UPLOAD_IMAGE_FAIL,
+    payload: {
+        error: ClientError
+    }
 };
 
 export type InitializeImageDialogStatusAction = {
@@ -210,8 +213,11 @@ export const uploadImageSuccess = (): Action => ({
     type: DataActionType.UPLOAD_IMAGE_SUCCESS
 });
 
-export const uploadImageFail = (): Action => ({
-    type: DataActionType.UPLOAD_IMAGE_FAIL
+export const uploadImageFail = (error: ClientError): Action => ({
+    type: DataActionType.UPLOAD_IMAGE_FAIL,
+    payload: {
+        error
+    }
 });
 
 export const initializeImageDialogStatus = (): Action => ({

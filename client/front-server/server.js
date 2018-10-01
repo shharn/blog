@@ -12,6 +12,12 @@ const HTTP_STATUS_SUCCESS = 200;
 const HTTP_STATUS_UNAUTHORIZED = 401;
 const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 const API_SERVER_HOST = 'http://api-server:10000';
+const UNAUTHORIZED_BODY = {
+    message: 'Invalid Token'
+};
+const INTERNAL_SERVER_ERROR_BODY = {
+    message: 'The server is temporarily unavailable. Please try later :('
+};
 
 var storage = multer.diskStorage({
     destination: (_, __, cb) => {
@@ -44,14 +50,20 @@ app.post('/upload', (req, res, next) => {
                 if (res.statusCode === 200 && res.body.isValid) {
                     next();
                 } else {
-                    res.sendStatus(HTTP_STATUS_UNAUTHORIZED);
+                    res
+                        .status(HTTP_STATUS_UNAUTHORIZED)
+                        .json(UNAUTHORIZED_BODY);
                 }
             })
             .catch(err => {
-                res.sendStatus(HTTP_STATUS_INTERNAL_SERVER_ERROR);
+                res
+                    .status(HTTP_STATUS_INTERNAL_SERVER_ERROR)
+                    .json(INTERNAL_SERVER_ERROR_BODY);
             });
     } else {
-        res.sendStatus(HTTP_STATUS_UNAUTHORIZED);
+        res
+            .status(HTTP_STATUS_UNAUTHORIZED)
+            .json(UNAUTHORIZED_BODY);
     }
 }, 
 upload.any(), 

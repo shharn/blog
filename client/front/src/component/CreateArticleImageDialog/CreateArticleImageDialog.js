@@ -10,11 +10,15 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import { ImageUploadStatus } from '../../constant';
 import { dialog } from './styles';
-import type { WithStylesProps } from '../../flowtype';
+import type { 
+    WithStylesProps,
+    ClientError
+} from '../../flowtype';
 
 type Props = {
     progress: number,
     uploadStatus: $Values<ImageUploadStatus>,
+    error: ClientError,
 
     onConfirm: (files: Array<File>) => void,
     initializeStatus: () => void,
@@ -90,7 +94,7 @@ class CreateArticleImageDialog extends React.Component<Props & WithStylesProps, 
     }
 
     render = () => {
-        const { classes, showImageDialog, uploadStatus } = this.props;
+        const { classes, showImageDialog, uploadStatus, error } = this.props;
         const { files } = this.state;
         return (
             <Dialog
@@ -130,6 +134,8 @@ class CreateArticleImageDialog extends React.Component<Props & WithStylesProps, 
                     </DialogActions>}
                 {uploadStatus === ImageUploadStatus.UPLOADING && 
                     <LinearProgress variant="indeterminate" color="secondary"/>}
+                {uploadStatus === ImageUploadStatus.FAIL &&
+                    <Typography variant='body1' className={classes.errorMessage}>{error.message}</Typography>}
             </Dialog>
         );
     }

@@ -12,6 +12,7 @@ import {
     uploadImageSuccess,
     uploadImageFail
 } from '../../action/data';
+import ls from 'local-storage';
 import  {
     put,
     call
@@ -30,6 +31,7 @@ import {
     updateData,
     uploadImage
 } from '../../service';
+jest.mock('../../service');
 
 const NETWORK_ERROR = {
     code: -1,
@@ -152,45 +154,195 @@ describe('Should handle REQUEST_GET_DATA_WITH_URL', () => {
 });
 
 describe('Should handle REQUEST_MUTATE_DATA', () => {
-    const mockDataName = 'test';
-    const mockOperationType = MutationOperationType.UPDATE;
-    const mockData = {
-        uid: '0x001',
-        name: 'name to be updated'
-    };
-    const mockToken = 'testtoken';
-    const gen = cloneableGenerator(dataGetRequestWithURLHandler)({
-        type: DataActionType.REQUEST_MUTATE_DATA,
-        payload: {
-            dataName: mockDataName,
-            operationType: mockOperationType,
-            data: { ...mockData }
-        }
+    describe('Should handle Each operation type with happy path', () => {
+        const mockDataName = 'test';
+        const mockData = {
+            uid: '0x001',
+            name: 'name to be updated/created'
+        };
+        const mockToken = 'testtoken';
+        const operationTypes = [ 
+            { type: MutationOperationType.CREATE, method: createData },
+            { type: MutationOperationType.UPDATE, method: updateData },
+            { type: MutationOperationType.DELETE, method: deleteData }
+        ];
+        const mockResponse = {
+            status: 200
+        };
+        const actionType = DataActionType.REQUEST_MUTATE_DATA;
+
+        beforeEach(() => {
+            ls.set(Token.key, mockToken);
+        });
+
+        operationTypes.forEach(operationType => {
+            test(`Happy path test for ${operationType.type}`, () =>{
+                const mockOperationType = operationType.type;
+                const gen = dataMutationRequestHandler({
+                    type: actionType,
+                    payload: {
+                        dataName: mockDataName,
+                        operationType: mockOperationType,
+                        data: { ...mockData }
+                    }
+                });
+                let next = gen.next(operationType.method(mockDataName, mockData, mockToken));
+                expect(next.value).toEqual(call(operationType.method, mockDataName, mockData, mockToken));
+
+                next = gen.next({ ...mockResponse });
+                expect(next.value).toEqual(put(dataMutationSuccess(mockDataName, mockOperationType, undefined)));
+
+                next = gen.next();
+                expect(next).toEqual({ done: true });
+            });
+        });
     });
 
-    test('Network is offline', () => {
-        const clone = gen.clone();
-        let next = clone.next(updateData(mockDataName, mockData, mockToken));
-        expect(next.value).toEqual(call(updateData, mockDataName, mockData, mockToken));
+    describe('unhappy path', () => {
+        const mockDataName = 'test';
+        const mockOperationType = MutationOperationType.UPDATE;
+        const mockData = {
+            uid: '0x001',
+            name: 'name to be updated'
+        };
+        const mockToken = 'testtoken';
+        const gen = cloneableGenerator(dataMutationRequestHandler)({
+            type: DataActionType.REQUEST_MUTATE_DATA,
+            payload: {
+                dataName: mockDataName,
+                operationType: mockOperationType,
+                data: { ...mockData }
+            }
+        });
 
-        next = clone.next({ ...NETWORK_OFFLINE_RESPONSE });
-        expect(next.value).toEqual(put(dataMutationFail(mockDataName, mockOperationType, { ...NETWORK_ERROR })));
+        beforeEach(() => {
+            ls.set(Token.key, mockToken);
+        });
 
-        next = clone.next();
-        expect(next.done).toBe(true);
-    });
+        test('Network is offline', () => {
+            const clone = gen.clone();
+            let next = clone.next(updateData(mockDataName, mockData, mockToken));
+            expect(next.value).toEqual(call(updateData, mockDataName, mockData, mockToken));
 
-    test('Has no token', () => {
+            next = clone.next({ ...NETWORK_OFFLINE_RESPONSE });
+            expect(next.value).toEqual(put(dataMutationFail(mockDataName, mockOperationType, { ...NETWORK_ERROR })));
 
-    });
+            next = clone.next();
+            expect(next.done).toBe(true);
+        });
 
-    test('Has valid token, normal request', () => {
+        test('Has no token', () => {
+            ls.remove(Token.key);
+            const clone = gen.clone();
+            let next = clone.next();
+            expect(next.value).toEqual(put(dataMutationFail(mockDataName, mockOperationType, {
+                code: 401,
+                message : 'Invalid token'
+            })));
 
+            next = clone.next();
+            expect(next).toEqual({ done: true });
+        });
+
+        test('Invalid token', () => {
+            const mockResponse = {
+                status: 401,
+                body: {
+                    message: 'test error message'
+                }
+            };
+            const clone = gen.clone();
+            let next = clone.next(updateData(mockDataName, mockData, mockToken));
+            expect(next.value).toEqual(call(updateData, mockDataName, mockData, mockToken));
+
+            next = clone.next({ ...mockResponse });
+            expect(next.value).toEqual(put(dataMutationFail(mockDataName, mockOperationType, {
+                code: mockResponse.status,
+                message: mockResponse.body.message
+            })));
+
+            next = clone.next();
+            expect(next).toEqual({ done: true });
+        });
     });
 });
 
 describe('Should handle UPLOAD_IMAGE', () => {
-    test('asdf', () => {
-    
+    const mockToken = 'testtoken';
+    const mockFiles = [ {}, {} ];
+    const gen = cloneableGenerator(uploadImageRequestHandler)({
+        type: DataActionType.UPLOAD_IMAGE,
+        payload: {
+            files: [ ...mockFiles ]
+        }
+    });
+
+    beforeEach(() => {
+        ls.set(Token.key, mockToken);
+    });
+
+    test('Network is offline', () => {
+        const clone = gen.clone();
+        let next = clone.next(uploadImage([ ...mockFiles ], mockToken));
+        expect(next.value).toEqual(call(uploadImage, [ ...mockFiles ], mockToken));
+
+        next  = clone.next(NETWORK_OFFLINE_RESPONSE);
+        expect(next.value).toEqual(put(uploadImageFail({
+            code: -1,
+            message: 'Network is Offline :('
+        })));
+
+        next = clone.next();
+        expect(next).toEqual({ done: true });
+    });
+
+    test('Has no token', () => {
+        ls.remove(Token.key);
+        const clone = gen.clone();
+        let next = clone.next();
+        expect(next.value).toEqual(put(uploadImageFail({
+            code: 401,
+            message: 'Invalid Token'
+        })));
+
+        next = clone.next();
+        expect(next).toEqual({ done: true });
+    });
+
+    test('Invalid token', () => {
+        const mockMessage = 'test error message';
+        const mockResponse = {
+            status: 401,
+            body: {
+                message: mockMessage
+            }
+        };
+        const clone = gen.clone();
+        let next = clone.next(uploadImage([ ...mockFiles ], mockToken));
+        expect(next.value).toEqual(call(uploadImage, [ ...mockFiles ], mockToken));
+
+        next = clone.next({ ...mockResponse });
+        expect(next.value).toEqual(put(uploadImageFail({
+            code: 401,
+            message: mockMessage
+        })));
+
+        next = clone.next();
+        expect(next).toEqual({ done: true });
+    });
+
+    test('Happy path', () => {
+        const mockResponse = {
+            status: 200
+        };
+        const clone = gen.clone();
+        let next = clone.next(uploadImage([ ...mockFiles ], mockToken));
+        expect(next.value).toEqual(call(uploadImage, [ ...mockFiles ], mockToken ));
+
+        next = clone.next({ ...mockResponse });
+        expect(next.value).toEqual(put(uploadImageSuccess()));
+
+        next = clone.next();
+        expect(next).toEqual({ done: true });
     });
 });

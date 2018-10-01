@@ -8,11 +8,12 @@ import type { StoreState } from '../../';
 import type { Dispatch } from '../../action/types';
 
 const mapStateToProps = (state: StoreState, ownProps: { onConfirm: (files: Array<File>) => void }): Object => {
-    const { progress, uploadStatus } = state.app.ui.imageDialog;
+    const { progress, uploadStatus, error } = state.app.ui.imageDialog;
     return {
         ...ownProps,
         progress,
-        uploadStatus
+        uploadStatus,
+        error
     };
 };
 
