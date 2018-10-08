@@ -39,6 +39,6 @@ func main() {
 	r.Delete("/articles/:id", handler.DeleteArticleHandler)
 
 	if err := handler.RegenerateKey(); err == nil {
-		http.ListenAndServe(":10000", r)
+		http.ListenAndServe(":80", r)
 	}
 }
