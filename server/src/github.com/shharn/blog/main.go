@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"log"
 
 	"github.com/shharn/blog/config"
 	"github.com/shharn/blog/handler"
@@ -39,6 +40,12 @@ func main() {
 	r.Delete("/articles/:id", handler.DeleteArticleHandler)
 
 	if err := handler.RegenerateKey(); err == nil {
-		http.ListenAndServe(":80", r)
+		if err := http.ListenAndServe(":80", r); err != nil {
+			log.Printf("%+v\n", err)
+		} else {
+			log.Println("Listening on port 80\v")
+		}
+	} else {
+		log.Printf("%+v\n", err)
 	}
 }
