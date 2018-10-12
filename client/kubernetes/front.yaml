@@ -26,8 +26,8 @@ spec:
         matchLabels:
             app: blog-front
             tier: front
-        replicas: 2
-        strategy:
+    replicas: 2
+    strategy:
         type: RollingUpdate
         rollingUpdate:
             maxUnavailable: 1
@@ -40,7 +40,7 @@ spec:
         spec:
             containers:
                 - name: blog-front
-                  image: puppyloper/blog-front
+                  image: puppyloper/blog-front:dev
                   imagePullPolicy: IfNotPresent
                   ports:
                       - containerPort: 80

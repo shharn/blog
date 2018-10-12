@@ -1,9 +1,11 @@
-FROM node:8.11.3-alpine
-
+FROM node:8.11.3-alpine as base
 WORKDIR /app
-
 COPY . .
+RUN yarn install && \
+    yarn build
 
-RUN yarn install
-
-CMD ["yarn", "start"]
+FROM node:8.11.3-alpine as production
+WORKDIR /app
+COPY --from=base /app/public /app/public
+COPY --from=base /app/front-server /app/front-server
+CMD ["node", "front-server/server.js"]
