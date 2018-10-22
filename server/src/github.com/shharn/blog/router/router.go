@@ -138,7 +138,7 @@ func (r *Router) add(method, path string, handler Handler) {
 		Handler: handler,
 	}
 	ctxs, exist := (*r).Dispatchers[method]
-	if exist == false {
+	if !exist {
 		ctxs = []RouterContext{}
 	}
 	ctxs = append(ctxs, newCtx)
@@ -237,10 +237,6 @@ func findContextFromPath(ctxs []RouterContext, path string) (RouterContext, bool
 			break;
 		}
 
-		// Should fix this line
-		// First, check the length of the splitted (pattern, path)
-		// Second, check if non-param word lay on the same position & same string value
-		// If the two predicates passed, we can say that this is the target RouterContext
 		if matchPathToPattern(ctx.Pattern, path) {
 			return ctx, true
 		}
@@ -258,6 +254,9 @@ func matchPathToPattern(pattern, path string) bool {
 	}
 
 	for idx, patternSlice := range splittedPattern {
+		if len(patternSlice) < 1 && len(splittedPath[idx]) > 0 {
+			return false
+		}
 		if len(patternSlice) > 0 && patternSlice[0] != ':' && patternSlice != splittedPath[idx] {
 			return false
 		}

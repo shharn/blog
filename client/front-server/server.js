@@ -1,17 +1,17 @@
-var express = require('express');
 var path = require('path');
+var express = require('express');
 var multer = require('multer');
 var chalk = require('chalk');
 var mkdirp = require('mkdirp');
 var request = require('superagent');
 
-var PORT = 3000;
+var PORT = 80;
 const ASSET_DIR = '../public/asset/image';
 const TOKEN_HEADER_NAME = "X-Session-Token";
 const HTTP_STATUS_SUCCESS = 200;
 const HTTP_STATUS_UNAUTHORIZED = 401;
 const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
-const API_SERVER_HOST = 'http://api-server:10000';
+const API_SERVER_HOST = 'http://blog-api-server';
 const UNAUTHORIZED_BODY = {
     message: 'Invalid Token'
 };

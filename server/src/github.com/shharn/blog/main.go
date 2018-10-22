@@ -23,6 +23,9 @@ func main() {
 		SetCORS()
 	r.Use(router.AuthFilter{Key: config.Key})
 
+	// for load balancer
+	r.Get("/", handler.NoopHandler)
+
 	r.Post("/login", handler.LoginHandler)
 	r.Post("/logout", handler.LogoutHandler)
 	r.Get("/check", handler.CheckHandler)

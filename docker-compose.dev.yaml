@@ -11,7 +11,7 @@ services:
         depends_on:
             - api-server
         ports:
-            - "3000:3000"
+            - "3000:80"
 
     api-server:
         build: "./server"
@@ -24,8 +24,7 @@ services:
             - backend
             - database
         ports:
-            - "10000:10000"
-            - "2345:2345"
+            - "10000:80"
         restart: always
 
     dgraph-zero:

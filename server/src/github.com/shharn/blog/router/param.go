@@ -16,12 +16,10 @@ func parseURL(pattern, path string) Params {
 		path = path[1:]
 	}
 
-	// Can sure the pattern & path are exactly matched each other
-	// This would be filtered before reach this point (Maybe at ... ServeHTTP method)
-	splittedPattern, splittedPath := strings.Split(pattern, "/"), strings.Split(path, "/")
 	params := Params{}
+	splittedPattern, splittedPath := strings.Split(pattern, "/"), strings.Split(path, "/")
 	for index, splittedPattern := range splittedPattern {
-		if splittedPattern[0] == ':' {
+		if len(splittedPattern) > 0 && splittedPattern[0] == ':' {
 			params[splittedPattern[1:]] = splittedPath[index]
 		}
 	}

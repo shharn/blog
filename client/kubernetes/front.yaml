@@ -3,6 +3,7 @@ kind: Service
 metadata:
     name: blog-front
 spec:
+    type: NodePort
     selector:
         app: blog-front
         tier: front
@@ -15,7 +16,6 @@ spec:
       port: 443
       targetPort: 443
       name: https
-    type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -26,12 +26,12 @@ spec:
         matchLabels:
             app: blog-front
             tier: front
-    replicas: 2
+    replicas: 1
     strategy:
         type: RollingUpdate
         rollingUpdate:
             maxUnavailable: 1
-            maxSurge: 3
+            maxSurge: 2
     template:
         metadata:
             labels:
@@ -40,8 +40,8 @@ spec:
         spec:
             containers:
                 - name: blog-front
-                  image: puppyloper/blog-front:dev
-                  imagePullPolicy: IfNotPresent
+                  image: puppyloper/blog-front:1.0.0
+                  imagePullPolicy: Always
                   ports:
                       - containerPort: 80
                         name: http

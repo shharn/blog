@@ -1,13 +1,14 @@
-apiVersion: skaffold/v1alpha3
+apiVersion: skaffold/v1alpha4
 kind: Config
 build:
   artifacts:
-  - imageName: puppyloper/blog-font:production
-    workspace: ./client
-  - imageName: puppyloper/blog-api-server:production
-    workspace: ./server
+  - image: puppyloper/blog-font
+    context: ./client
+  - image: puppyloper/blog-api-server
+    context: ./server
 deploy:
   kubectl:
     manifests:
     - ./client/kubernetes/*
     - ./server/kubernetes/*
+    - ./ingress.dev.yaml

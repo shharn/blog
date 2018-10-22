@@ -39,10 +39,6 @@ function getServedPath(appPackageJson) {
   return ensureSlash(servedUrl, true);
 }
 
-function getApiServerDomain(appPackageJson) {
-  return require(appPackageJson).apiServer[process.env.NODE_ENV].domain;
-}
-
 // config after eject: we're in ./config/
 module.exports = {
   dotenv: resolveRoot('.env'),
@@ -56,6 +52,5 @@ module.exports = {
   testsSetup: resolveApp('src/setupTests.js'),
   appNodeModules: resolveRoot('node_modules'),
   publicUrl: getPublicUrl(resolveRoot('package.json')),
-  servedPath: getServedPath(resolveRoot('package.json')),
-  apiServerDomain: getApiServerDomain(resolveRoot('package.json'))
+  servedPath: getServedPath(resolveRoot('package.json'))
 };
