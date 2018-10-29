@@ -1,36 +1,42 @@
 version: "3.2"
 services:
-    front-app:
-        build: ./client
+    puppyloper.blog:
+        build:
+            context: ./client
+            dockerfile: Dockerfile.dev
+        image: blog-front:dev
         volumes:
             - "./client:/app"
             - /app/node_modules/
             - /app/public
         networks:
             - frontend
-        depends_on:
-            - api-server
         ports:
-            - "3000:80"
+            - "3000:3000"
 
-    api-server:
-        build: "./server"
+    api.puppyloper.blog:
+        build: 
+            context: "./server"
+            dockerfile: Dockerfile.dev
+        image: blog-api-server:dev
         volumes:
-            - ./server/src:/go/src
-        depends_on:
-            - dgraph-server
+            - ./server/src/github.com/shharn:/go/src/github.com/shharn
         networks:
             - frontend
             - backend
             - database
         ports:
-            - "10000:80"
+            - "5000:5000"
         restart: always
 
     dgraph-zero:
-        image: dgraph/dgraph:latest
+        image: dgraph/dgraph:v1.0.9
         volumes:
-            - dgraph:/dgraph
+            - type: volume
+              source: dgraph
+              target: /dgraph
+              volume:
+                  nocopy: true
         ports:
             - 5080:5080 # For grpc
             - 6080:6080 # For http
@@ -41,9 +47,13 @@ services:
         # https://github.com/dgraph-io/dgraph/blob/master/dgraph/cmd/zero/run.go
 
     dgraph-server:
-        image: dgraph/dgraph:latest
+        image: dgraph/dgraph:v1.0.9
         volumes:
-            - dgraph:/dgraph
+            - type: volume
+              source: dgraph
+              target: /dgraph
+              volume:
+                  nocopy: true
         ports:
             - 8080:8080 # For http
             - 9080:9080 # For grpc
@@ -55,15 +65,18 @@ services:
         # https://github.com/dgraph-io/dgraph/blob/master/dgraph/cmd/server/run.go#L59-L124
 
     dgraph-ratel:
-        image: dgraph/dgraph:latest
+        image: dgraph/dgraph:v1.0.9
         volumes:
-            - dgraph:/dgraph
+            - type: volume
+              source: dgraph
+              target: /dgraph
+              volume:
+                  nocopy: true
         ports:
             - 8000:8000
         networks:
             - database
         command: dgraph-ratel
-    
 networks:
     frontend:
     backend:

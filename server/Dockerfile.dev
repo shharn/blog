@@ -1,12 +1,12 @@
 FROM golang:1.11.1-alpine3.8 as base
 WORKDIR /go
+ENV LOG_LEVEL=all
+ENV ENVIRONMENT=development
 COPY ./src/github.com/shharn/blog /go/src/github.com/shharn/blog
 RUN apk update && \
     apk upgrade && \
     apk add git && \
     go get -d ./src/github.com/shharn/blog/... && \
+    go get github.com/tockins/realize && \
     go install github.com/shharn/blog
-
-FROM golang:1.11.1-alpine3.8 as production
-COPY --from=base /go/bin /go/bin
-CMD ["blog"]
+CMD ["realize", "start", "--path", "./src/github.com/shharn/blog", "--run"]

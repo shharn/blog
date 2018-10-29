@@ -48,7 +48,7 @@ class Admin extends Component<Props & WithStylesProps & RouterProps, State> {
     }
 
     redirectToHomeWithDelay = (): void=> {
-        setTimeout(() => this.props.history.push('/'), 1000);
+        setTimeout(() => document.location.href='/', 1000);
     }
 
     handleSubmit = (): void => {

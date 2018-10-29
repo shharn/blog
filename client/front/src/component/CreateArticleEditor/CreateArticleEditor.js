@@ -17,7 +17,7 @@ import EditorContentImage from '../EditorContentImage';
 import LinkText from './LinkText';
 import keycode from 'keycode';
 import className from 'classnames';
-import './styles.sass';
+import './styles.css';
 
 const IMAGE_BASE_URL = '/image';
 

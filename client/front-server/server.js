@@ -5,7 +5,7 @@ var chalk = require('chalk');
 var mkdirp = require('mkdirp');
 var request = require('superagent');
 
-var PORT = 80;
+var PORT = 3000;
 const ASSET_DIR = '../public/asset/image';
 const TOKEN_HEADER_NAME = "X-Session-Token";
 const HTTP_STATUS_SUCCESS = 200;
@@ -33,6 +33,8 @@ var upload = multer({
     storage
 });
 var app = express();
+
+app.disable('x-powered-by');
 
 app.use(express.static(path.resolve(__dirname, '../public/app')));
 app.use('/image', express.static(path.resolve(__dirname, '../public/asset/image')));
@@ -69,6 +71,10 @@ app.post('/upload', (req, res, next) => {
 upload.any(), 
 (_, res) => {
     res.sendStatus(HTTP_STATUS_SUCCESS);
+});
+
+app.get('/menus/:menuName/articles/:articleTitle', (req, res) => {
+    res.sendState(HTTP_STATUS_SUCCESS);
 });
 
 app.all('*', (_, res) => {

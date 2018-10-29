@@ -11,9 +11,11 @@ spec:
     - protocol: TCP
       name: http
       port: 80
+      targetPort: 5000
     - protocol: TCP
       name: https
       port: 443
+      targetPort: 5001
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -41,7 +43,7 @@ spec:
                   image: puppyloper/blog-api-server:1.0.0
                   imagePullPolicy: Always
                   ports:
-                      - containerPort: 80
+                      - containerPort: 5000
                         name: http
-                      - containerPort: 443
+                      - containerPort: 5001
                         name: https

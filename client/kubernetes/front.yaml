@@ -10,11 +10,11 @@ spec:
     ports:
     - protocol: TCP
       port: 80
-      targetPort: 80
+      targetPort: 3000
       name: http
     - protocol: TCP
       port: 443
-      targetPort: 443
+      targetPort: 3001
       name: https
 ---
 apiVersion: apps/v1
@@ -43,7 +43,7 @@ spec:
                   image: puppyloper/blog-front:1.0.0
                   imagePullPolicy: Always
                   ports:
-                      - containerPort: 80
+                      - containerPort: 3000
                         name: http
-                      - containerPort: 443
+                      - containerPort: 3001
                         name: https

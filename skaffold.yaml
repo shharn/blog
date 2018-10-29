@@ -2,13 +2,18 @@ apiVersion: skaffold/v1alpha4
 kind: Config
 build:
   artifacts:
-  - image: puppyloper/blog-font
+  - image: puppyloper/blog-font:dev
     context: ./client
+    docker:
+      dockerfile: dev.Dockerfile
   - image: puppyloper/blog-api-server
     context: ./server
+    docker:
+      dockerfile: Dockerfile
+      target: base
 deploy:
   kubectl:
     manifests:
-    - ./client/kubernetes/*
-    - ./server/kubernetes/*
+    - ./client/kubernetes/*.dev.yaml
+    - ./server/kubernetes/*.dev.yaml
     - ./ingress.dev.yaml

@@ -21,3 +21,10 @@ spec:
         backend:
           serviceName: blog-api-server
           servicePort: 80
+  - host: dgraph-ratel.local
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: dgraph-ratel
+          servicePort: 80

@@ -8,18 +8,19 @@ import type {
     ClientError
 } from '../../flowtype';
 
-export type MutationState = {
-    [key: string]: MutationType
+
+type Mutation = {
+    status: $Values<FetchStatus>,
+    isFetching: boolean,
+    error: ClientError
 };
 
 type MutationType = {
     [key: 'create' | 'update' | 'delete']: Mutation
 };
 
-type Mutation = {
-    status: $Values<FetchStatus>,
-    isFetching: boolean,
-    error: ClientError
+export type MutationState = {
+    [key: string]: MutationType
 };
 
 const INITIAL_STATES: Mutation = {

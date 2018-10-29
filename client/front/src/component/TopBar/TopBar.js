@@ -10,6 +10,7 @@ import { withStyles } from '@material-ui/core/styles';
 import EmptyCenter from './EmptyCenter';
 import Button from '@material-ui/core/Button';
 import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
+import ExitToApp from '@material-ui/icons/ExitToApp';
 import styles from './styles';
 import type { WithStylesProps } from '../../flowtype';
 
@@ -25,8 +26,9 @@ class TopBar extends Component<Props & WithStylesProps> {
         console.log('handleSearchToggle');
     }
 
-    handleLogoutButtonClicked = (): void => {
-        this.props.logout();
+    handleAuthButtonClick = (): void => {
+        const { isAuthenticated } = this.props;
+        isAuthenticated ? this.props.logout() : this.props.history.push('/login');
     }
 
     render = () => {
@@ -46,17 +48,18 @@ class TopBar extends Component<Props & WithStylesProps> {
                           </IconButton>
                           <TextField className={classes.searchInput} placeholder="Search"></TextField>
                       </div>
-                      {isAuthenticated && 
-                        <div className={classes.buttonContainer}>
-                            <Button
-                                classes={{
-                                    root: classes.logoutButton
-                                }}
-                                aria-label="logout"
-                                onClick={this.handleLogoutButtonClicked}>
-                                <PowerSettingsNew />
-                            </Button>
-                        </div>}
+                    <div className={classes.buttonContainer}>
+                        <Button
+                            classes={{
+                                root: classes.toggleButton
+                            }}
+                            aria-label={isAuthenticated ? "logout" : "login"}
+                            onClick={this.handleAuthButtonClick}>
+                            {isAuthenticated ? 
+                                <ExitToApp /> : 
+                                <PowerSettingsNew />}
+                        </Button>
+                    </div>
                   </Toolbar>
               </AppBar>
         );

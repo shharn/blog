@@ -35,7 +35,7 @@ export default theme => ({
   buttonContainer: {
     marginLeft: '10px'
   },
-  logoutButton: {
+  toggleButton: {
     color: 'rgba(0, 0, 0, 0.40)',
     minWidth: 0
   }

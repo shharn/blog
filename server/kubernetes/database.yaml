@@ -7,8 +7,8 @@ metadata:
 spec:
     ports:
     - protocol: TCP
-      port: 9080
       name: dgraph-server-port
+      port: 9080
       targetPort: 9080
     selector:
         db: dgraph

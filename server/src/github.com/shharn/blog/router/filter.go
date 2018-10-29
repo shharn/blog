@@ -3,6 +3,7 @@ package router
 import (
 	"net/http"
 	"strings"
+	"os"
 
 	"github.com/shharn/blog/config"
 	"github.com/dgrijalva/jwt-go"
@@ -69,7 +70,22 @@ type CORSFilter struct {
 
 // Filter for CORSFilter
 func (cf CORSFilter) Filter(w http.ResponseWriter, rq *http.Request) error {
-	w.Header().Set("Access-Control-Allow-Origin", cf.CORSContext.AllowedOrigins)
+	var allowedOrigin string
+	currentEnv := os.Getenv("ENVIRONMENT")
+	if currentEnv == "development" {
+		allowedOrigin = "*"
+	} else {
+		host := rq.Host
+		if contains(cf.CORSContext.AllowedOrigins, host) {
+			allowedOrigin = host
+		} else {
+			return RouterError{
+				Code: http.StatusForbidden,
+				MessageForClient: "You're not allowed to use ajax call",
+			}
+		}
+	}
+	w.Header().Set("Access-Control-Allow-Origin", allowedOrigin)
 	w.Header().Set("Access-Control-Allow-Methods", cf.CORSContext.AllowedMethods)
 	w.Header().Set("Access-Control-Allow-Headers", cf.CORSContext.AllowedHeaders)
 	return nil

@@ -1,3 +1,4 @@
+import { withRouter } from 'react-router';
 import Component from './Container';
 
-export default Component;
+export default withRouter(Component);

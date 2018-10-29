@@ -40,7 +40,7 @@ type Handler func(http.ResponseWriter, *http.Request, Params) (interface{}, erro
 // CORSContext includes the Headers about CORS Configs
 // It will be used at the handler for "OPTIONS" method
 type CORSContext struct {
-	AllowedOrigins string
+	AllowedOrigins []string
 	AllowedMethods string
 	AllowedHeaders string
 }
@@ -81,7 +81,7 @@ func (r *Router) SetCORS() *Router {
 }
 
 // SetAllowedOrigin sets the allowed origins
-func (r *Router) SetAllowedOrigin(origins string) *Router {
+func (r *Router) SetAllowedOrigin(origins []string) *Router {
 	r.CORSContext.AllowedOrigins = origins
 	return r
 }

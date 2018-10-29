@@ -13,7 +13,7 @@ if (!NODE_ENV) {
     'The NODE_ENV environment variable is required but was not specified.'
   );
 }
-
+console.log(`[env.js] Current NODE_ENV : ${NODE_ENV}`);
 // https://github.com/bkeepers/dotenv#what-other-env-files-can-i-use
 var dotenvFiles = [
   `${paths.dotenv}.${NODE_ENV}.local`,
@@ -77,7 +77,7 @@ function getClientEnvironment(publicUrl) {
         // This should only be used as an escape hatch. Normally you would put
         // images into the `src` and `import` them in code to get their paths.
         PUBLIC_URL: publicUrl,
-        API_SERVER_URL: 'api.puppyloper.blog'
+        API_SERVER_URL: process.env.NODE_ENV === 'development' ? 'localhost:5000' : 'api.puppyloper.blog'
       }
     );
   // Stringify all values so we can feed into Webpack DefinePlugin

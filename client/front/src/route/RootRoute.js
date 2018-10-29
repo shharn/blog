@@ -1,18 +1,18 @@
 // @flow
 import * as React from 'react';
 import Home from '../component/Home';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { 
     Route, 
     Switch, 
     Redirect 
 } from 'react-router';
-import Loadable from 'react-loadable';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import loadable from 'react-loadable';
 
-const Admin = Loadable({
+const Admin = loadable({
     loader: () => import('../component/Admin'),
     loading: () => <CircularProgress size={30}/>
-});
+})
 
 class RootRoute extends React.Component<{}> {
     render() {
@@ -23,7 +23,7 @@ class RootRoute extends React.Component<{}> {
                     <Route exact path="/menus/:menuName/articles" component={Home}/>
                     <Route exact path="/menus/:menuName/articles/:articleName" component={Home}/>
                     <Route path="/admin/article" component={Home}/>
-                    <Route path="/admin/login" component={Admin}/>
+                    <Route path="/login" component={Admin}/>
                     <Redirect to="/"/>
                 </Switch>
             </React.Fragment>

@@ -9,9 +9,9 @@ import (
 	"github.com/shharn/blog/router"
 )
 
-const (
-	allowedOrigin  = "*"
-	allowedMethods = "GET, POST, DELETE, OPTIONS, PUT, PATCH"
+var (
+	allowedOrigin = []string{ "puppyloper.blog" }
+	allowedMethods = "GET, POST, DELETE, OPTIONS, PATCH"
 	allowedHeaders = "Access-Control-Request-Headers,Access-Control-Request-Headers, Access-Control-Request-Method, Origin, Content-Type, Accept, X-Session-Token"
 )
 
@@ -43,7 +43,7 @@ func main() {
 	r.Delete("/articles/:id", handler.DeleteArticleHandler)
 
 	if err := handler.RegenerateKey(); err == nil {
-		if err := http.ListenAndServe(":80", r); err != nil {
+		if err := http.ListenAndServe(":5000", r); err != nil {
 			log.Printf("%+v\n", err)
 		} else {
 			log.Println("Listening on port 80\v")
