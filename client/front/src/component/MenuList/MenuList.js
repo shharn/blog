@@ -8,6 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import MenuTableRow from '../MenuManagerTableRow';
 import styles from './styles';
 import type { 
@@ -47,6 +48,7 @@ class MeuList extends React.Component<Props & WithStylesProps> {
         const { menus, classes } = this.props;
         return (
             <div className={classes.tableContainer} onKeyDown={this.onKeyDown}>
+                {menus.length > 0 ? 
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -64,7 +66,14 @@ class MeuList extends React.Component<Props & WithStylesProps> {
                     <TableBody>
                         {menus.map(menu => <MenuTableRow key={menu.uid} menu={menu}/>)}
                     </TableBody>
-                </Table>
+                </Table> :
+                <Typography 
+                    className={classes.emptyMessage}
+                    variant="title"  
+                    align="center">
+                    No Menu :(
+                </Typography>
+                }
                 <Button className={classes.addButton} variant="fab" mini color="secondary" aria-label="add" onClick={this.onAddButtonClicked}>
                     <AddIcon/>
                 </Button>

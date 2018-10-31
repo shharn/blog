@@ -10,6 +10,9 @@ export default {
         maxHeight: '400px',
         overflow: 'auto'
     },
+    emptyMessage: {
+        color: 'rgba(0, 0, 0, 0.54)'
+    },
     addButton: {
         margin: '20px'
     }

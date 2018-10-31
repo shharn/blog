@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import ListItemWrapper from '../ListItemWrapper';
+import { Typography } from '@material-ui/core';
 import styles from './styles';
 import type { 
     Menu,
@@ -32,9 +33,17 @@ class MenuListSmall extends Component<Props & WithStylesProps> {
         const { classes, menus } = this.props;
         return (
             <div className={classes.container}>
+                {menus.length > 0 ?
                 <List component="nav" className={classes.listContainer}>
                     {menus.map(menu => <ListItemWrapper key={`$MenuItem:${menu.uid}`} onMenuClicked={this.switchToEditMenu} menu={menu}/>)}
-                </List>
+                </List> :
+                <Typography
+                    className={classes.emptyMessage}
+                    variant="title"
+                    align="center">
+                    No Menu :(
+                </Typography>
+                }
                 <Button className={classes.addButton} variant="fab" mini color="secondary" aria-label="add" onClick={this.onAddButtonClicked}>
                     <AddIcon/>
                 </Button>
