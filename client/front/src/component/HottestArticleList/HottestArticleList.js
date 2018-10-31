@@ -3,8 +3,10 @@ import * as React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { FetchStatus } from '../../constant';
 import Article from '../Article';
+import { Typography } from '@material-ui/core';
 import styles from './styles';
-import type {
+import type
+ {
     WithStylesProps,
     RouterProps,
     Article as ArticleEntity,
@@ -34,7 +36,12 @@ class HottestArticleList extends React.Component<Props & WithStylesProps & Route
                         </div>
                         {this.props.children}
                     </React.Fragment> :
-                    <span>Empty !!</span>
+                    <Typography 
+                        className={classes.emptyMessage}
+                        align="center"
+                        variant='display2'>
+                        Coming Soon  :)
+                    </Typography>
                 }
             </div>
         );
