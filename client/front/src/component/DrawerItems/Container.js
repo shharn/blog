@@ -1,7 +1,7 @@
 // @flow
 import { connect } from 'react-redux';
 import DrawerItems from './DrawerItems';
-import {  requestData } from '../../action/data';
+import { requestData } from '../../action/data';
 import type { StoreState } from '../../';
 import type { Dispatch } from '../../action/types';
 

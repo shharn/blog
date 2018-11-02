@@ -11,6 +11,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import MenuTableRow from '../MenuManagerTableRow';
 import styles from './styles';
+import { FetchStatus } from '../../constant';
 import type { 
     Menu,
     WithStylesProps
@@ -25,12 +26,13 @@ type Props = {
     editableRowId: number,
     editableCellName: string,
     menus: Array<Menu>,
+    updateMutationState: Mutation,
+    deleteMutationState: Mutation,
 
     switchToList: () => void,
     switchToCreateMenu: () => void,
 
     changeEditableCell: (rowId: number, cellName: string) =>void,
-    disableEditableCell: () => void,
     updateMenu: (menu: Menu) => void,
     deleteMenu: (uid: number) => void
 };
@@ -40,14 +42,16 @@ class MeuList extends React.Component<Props & WithStylesProps> {
         this.props.switchToCreateMenu();
     }
 
-    onKeyDown = (e: SyntheticKeyboardEvent<HTMLElement>): void => {
-        this.props.disableEditableCell();
+    getErrorMessage = (): string => {
+        const { updateMutationState, deleteMutationState } = this.props;
+        return updateMutationState.status === FetchStatus.FAIL ?
+            updateMutationState.error.message : deleteMutationState.error.message;
     }
 
     render = () => {
-        const { menus, classes } = this.props;
+        const { menus, classes, updateMutationState, deleteMutationState } = this.props;
         return (
-            <div className={classes.tableContainer} onKeyDown={this.onKeyDown}>
+            <div className={classes.tableContainer}>
                 {menus.length > 0 ? 
                 <Table>
                     <TableHead>
@@ -73,6 +77,13 @@ class MeuList extends React.Component<Props & WithStylesProps> {
                     align="center">
                     No Menu :(
                 </Typography>
+                }
+                {(updateMutationState.status === FetchStatus.FAIL || deleteMutationState.status === FetchStatus.FAIL) &&
+                    <Typography
+                        variant="body1"
+                        align="center">
+                        {this.getErrorMessage()} 
+                    </Typography>
                 }
                 <Button className={classes.addButton} variant="fab" mini color="secondary" aria-label="add" onClick={this.onAddButtonClicked}>
                     <AddIcon/>

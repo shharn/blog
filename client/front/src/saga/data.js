@@ -52,7 +52,6 @@ export function* dataGetRequestWithURLHandler(action: Action) : Generator<reques
         yield put(dataResponseSuccess(response.body, dataName));
     } else {
         yield put(dataResponseFailed({ 
-            // eslint-disable-next-line
             code: response.status == null ? -1 : response.status,
             message: response.status == null ? "Network is Offline :(" : response.body.message
         }, dataName));

@@ -1,10 +1,7 @@
 // @flow
 import { connect } from 'react-redux';
 import MenuList from './MenuList';
-import { 
-    changeToEditableCell,
-    disableEditableCell,
-} from '../../action/ui';
+import { changeToEditableCell } from '../../action/ui';
 import { requestDataMutation } from '../../action/data';
 import { MutationOperationType } from '../../constant';
 import type { Menu } from '../../flowtype';
@@ -14,6 +11,7 @@ import type { Dispatch } from '../../action/types';
 const MENU_DATA_NAME = 'menus';
 
 const mapStateToProps = (state: StoreState, ownProps: { switchToList: () => void, switchToCreateMenu: () => void }): Object => {
+    console.dir(state);
     const menus =  [ ...state.app.data.get.menus.data ];
     const { isEditable, editableRowId, editableCellName } = state.app.ui.menuList;
     return {
@@ -21,6 +19,8 @@ const mapStateToProps = (state: StoreState, ownProps: { switchToList: () => void
         editableRowId,
         editableCellName,
         menus,
+        updateMutationState: state.app.data.mutation.menus.update,
+        deleteMutationState: state.app.data.mutation.menus.delete,
         ...ownProps
     };
 };
@@ -28,7 +28,6 @@ const mapStateToProps = (state: StoreState, ownProps: { switchToList: () => void
 const mapDispatchToProps = (dispatch: Dispatch): Object => {
     return {
         changeEditableCell: (rowId: number, cellName: string) => dispatch(changeToEditableCell(rowId, cellName)),
-        disableEditableCell: () => dispatch(disableEditableCell()),
         updateMenu: (menu: Menu) => dispatch(requestDataMutation(MutationOperationType.UPDATE, menu, MENU_DATA_NAME)),
         deleteMenu: (uid: number) => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, MENU_DATA_NAME)),
     };

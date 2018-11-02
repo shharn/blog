@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux';
+import { createAutoUpdater } from './middleware/dataAutoUpdater';
 import { createActionConverter } from './middleware/actionConverter';
 import { menuNameToUIDConverter, menuConverterChecker } from './middleware/menuNameConverter';
 import { articleNameToUIDConverter, articleConverterChecker } from './middleware/articleNameConverter';
@@ -28,12 +29,14 @@ export type StoreState = {
 const history = createHistory();
 const routeMiddleware = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware();
+const dataAutoUpdater = createAutoUpdater();
 const actionConverterForMenu = createActionConverter(menuConverterChecker, menuNameToUIDConverter);
 const actionConverterForArticle = createActionConverter(articleConverterChecker, articleNameToUIDConverter);
 const isProduction = process.env.NODE_ENV === 'production';
 const middlewares = [
     ...(isProduction ? [] : [ logger ]),
     routeMiddleware,
+    dataAutoUpdater,
     actionConverterForMenu,
     actionConverterForArticle,
     sagaMiddleware

@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import MenuManagerTableCell from './MenuManagerTableCell';
 import { requestDataMutation } from '../../action/data';
-import { disableEditableCell, changeToEditableCell } from '../../action/ui';
+import { changeToEditableCell } from '../../action/ui';
 import { MutationOperationType, DataName } from '../../constant';
 import type { Menu } from '../../flowtype';
 import type { StoreState } from '../../';
@@ -19,7 +19,6 @@ const mapStateToProps = (state: StoreState, ownProps: { menu: Menu, cellName: st
 
 const mapDispatchToProps = (dispatch: Dispatch): Object => ({
     changeEditableCell: (rowId: number, cellName: string) => dispatch(changeToEditableCell(rowId, cellName)),
-    disableEditableCell: () => dispatch(disableEditableCell()),
     updateMenu: (menu: Menu) => dispatch(requestDataMutation(MutationOperationType.UPDATE, menu, DataName.MENU))
 });
 

@@ -2,18 +2,21 @@
 import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import TableCell from '@material-ui/core/TableCell';
+import { FetchStatus } from '../../constant';
 import { withStyles } from '@material-ui/core/styles';
 import keycode from 'keycode';
 import styles from './styles';
+import type { Mutation } from '../../reducer/data/mutation';
 import type { WithStylesProps } from '../../flowtype';
 
 type Props = {
     rowId: number,
     cellName: string,
     value: string,
+    updateMenu: (cellName: string, value: string) => void,
 
-    onEnterKeyUp: (cellName: string, value: string) => void,
-    onEscKeyUp: () => void
+    updateMutationState: Mutation,
+    disableEditableCell: () => void
 };
 
 type State = {
@@ -23,6 +26,12 @@ type State = {
 class EditableCell extends Component<Props & WithStylesProps, State> {
     state = {
         textValue: this.props.value
+    }
+
+    componentDidUpdate(): void {
+        if (this.props.updateMutationState.status === FetchStatus.SUCCESS) {
+            this.props.disableEditableCell();
+        }
     }
 
     handleMouseClick = (e: SyntheticMouseEvent<HTMLButtonElement>): void => {
@@ -35,11 +44,12 @@ class EditableCell extends Component<Props & WithStylesProps, State> {
         const { textValue } = this.state;
         switch(e.keyCode) {
             case keycode('enter'):
-                this.state.textValue !== this.props.value && this.props.onEnterKeyUp(cellName, textValue);
-                this.props.onEscKeyUp();
+                if (this.state.textValue !== this.props.value && this.state.textValue.length > 0) {
+                    this.props.updateMenu(cellName, textValue);
+                }
                 break;
             case keycode('esc'):
-                this.props.onEscKeyUp();
+                this.props.disableEditableCell();
                 break;
             default:
                 return;

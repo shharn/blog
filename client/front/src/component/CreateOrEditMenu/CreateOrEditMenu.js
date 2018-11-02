@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { FetchStatus } from '../../constant';
 import styles from './styles';
+import type { Element } from 'react';
 import type { 
     Menu,
     WithStylesProps,
@@ -40,11 +41,13 @@ type State = {
     parentMenuId: string
 };
 
+const EMPTY_MENU_ID: string = '0';
+
 class CreateOrEditMenu extends Component<Props & WithStylesProps & RouterProps, State> {
     state = {
         menuName: '',
         menuURL: '',
-        parentMenuId: '0',
+        parentMenuId: EMPTY_MENU_ID,
     }
 
     componentDidMount = () => {
@@ -53,7 +56,7 @@ class CreateOrEditMenu extends Component<Props & WithStylesProps & RouterProps, 
             this.setState({
                 menuName: menu.name,
                 menuURL: menu.url,
-                parentMenuId: menu.parent ? menu.parent[0].uid : '0'
+                parentMenuId: menu.parent ? menu.parent[0].uid : EMPTY_MENU_ID
             });
         }
     }
@@ -96,17 +99,17 @@ class CreateOrEditMenu extends Component<Props & WithStylesProps & RouterProps, 
         };
         if (isEditMode === true) {
             data = { ...menu, name: menuName, url: menuURL };
-            if (!data.parent && parentMenuId !== '0') { // parent menu : None -> Some menu
+            if (!data.parent && parentMenuId !== EMPTY_MENU_ID) { // parent menu : None -> Some menu
                 data.parent = [ { uid: parentMenuId } ];
             } else if (data.parent && data.parent[0].uid !== parentMenuId) { // parent menu : Some menu -> Other menu
-                data.parent = parentMenuId === '0' ? null : [ { uid: parentMenuId } ];
+                data.parent = parentMenuId === EMPTY_MENU_ID ? null : [ { uid: parentMenuId } ];
             }
         } else {
             data = {
                 name: menuName,
                 url: menuURL
             };
-            parentMenuId !== '0' && (data.parent = [  { uid: parentMenuId } ]);
+            parentMenuId !== EMPTY_MENU_ID && (data.parent = [  { uid: parentMenuId } ]);
         }
         isEditMode === true ? this.props.updateMenu(data) : this.props.createMenu(data);
     }
@@ -115,7 +118,8 @@ class CreateOrEditMenu extends Component<Props & WithStylesProps & RouterProps, 
         this.props.switchToList();
     }
     
-    getExtraComponent = (status: $Values<FetchStatus>) => {
+    getStatueIndicator = (): Element<*> => {
+        const status: $Values<FetchStatus> = this.props.status;
         switch(status) {
             case FetchStatus.WAIT:
                 return <LinearProgress/>;
@@ -129,7 +133,7 @@ class CreateOrEditMenu extends Component<Props & WithStylesProps & RouterProps, 
     }
 
     render = () => {
-        const { classes, menus, menu, isEditMode, status } = this.props;
+        const { classes, menus, menu, isEditMode } = this.props;
         const showableMenus = isEditMode === true ? menus.filter(item => item.uid === '0' || item.uid !== menu.uid) : menus;
         return (
             <div className={classes.createMenuContainer}>
@@ -151,7 +155,7 @@ class CreateOrEditMenu extends Component<Props & WithStylesProps & RouterProps, 
                     </FormControl>
                 </div>
                 <div className={classes.footer}>
-                    {this.getExtraComponent(status)}
+                    {this.getStatueIndicator()}
                     <div className={classes.buttonContainer}>
                         <Button className={classes.iconButton} aria-label="confirm" color="default" onClick={this.handleSubmitButtonClick}>
                             <SaveIcon/>

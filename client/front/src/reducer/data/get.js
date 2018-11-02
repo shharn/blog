@@ -1,13 +1,8 @@
 // @flow
 import { Data as DataActionType } from '../../action/types';
 import { FetchStatus } from '../../constant';
-
-import type { 
-    ClientError
-} from '../../flowtype';
-import type {
-    Action
-} from '../../action/types';
+import type { ClientError } from '../../flowtype';
+import type { Action } from '../../action/types';
 
 type DataTemplate = {
     data: Array<Object> | Object,

@@ -12,7 +12,6 @@ type Props = {
     menu: Menu,
 
     changeEditableCell: (rowId: number, cellName: string) => void,
-    disableEditableCell: () => void,
     updateMenu: (menu: Menu) => void
 };
 
@@ -27,10 +26,6 @@ class MenuManagerTableCell extends Component<Props> {
         this.props.updateMenu(maybeCloned);
     }
 
-    handleEscKeyUpOnEditableCell = () => {
-        this.props.disableEditableCell();
-    }
-
     getEditableOrPlainText = (): Element<typeof EditableCell | typeof TableCellWrapper> => {
         const { isEditable, cellName, menu } = this.props;
         if (isEditable) {
@@ -39,8 +34,7 @@ class MenuManagerTableCell extends Component<Props> {
                     rowId={menu.uid} 
                     cellName={cellName}
                     value={menu[cellName]}
-                    onEnterKeyUp={this.handleEnterKeyUpOnEditableCell}
-                    onEscKeyUp={this.handleEscKeyUpOnEditableCell}/>
+                    updateMenu={this.handleEnterKeyUpOnEditableCell}/>
             );
         } else {
             return (

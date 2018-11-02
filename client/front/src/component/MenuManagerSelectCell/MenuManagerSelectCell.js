@@ -17,19 +17,21 @@ type Props = {
     updateMenu: (menu: Menu) => void
 };
 
+const NO_PARENT_MENU: string = '0';
+
 class MenuManagerSelectCell extends Component<Props & WithStylesProps> {
     handleChange = (e: SyntheticInputEvent<HTMLInputElement>): void => {
-        const parent = this.props.menu.parent == null ?  { uid: '0' } : this.props.menu.parent[0];
+        const parent = this.props.menu.parent == null ?  { uid: NO_PARENT_MENU } : this.props.menu.parent[0];
         const selectedParentId = e.target.value;
         if (parent.uid !== selectedParentId) {
             let maybeCloned = { ...this.props.menu };
-            maybeCloned.parent = selectedParentId === '0' ? null : [{ uid: e.target.value }];
+            maybeCloned.parent = selectedParentId === NO_PARENT_MENU ? null : [{ uid: e.target.value }];
             this.props.updateMenu(maybeCloned);
         }
     }
 
     render = () => {
-        const parent = this.props.menu.parent == null ?  { uid: '0' } : this.props.menu.parent[0];
+        const parent = this.props.menu.parent == null ?  { uid: NO_PARENT_MENU } : this.props.menu.parent[0];
         return (
             <TableCell
                 classes={{

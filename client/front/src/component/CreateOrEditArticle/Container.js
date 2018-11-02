@@ -21,9 +21,9 @@ const mapStateToProps = (state: StoreState): Object => {
 
 const mapDispatchToProps = (dispatch: Dispatch):Object => {
     return {
-        submitNewArticle: (data: any) => dispatch(requestDataMutation(MutationOperationType.CREATE, data, 'articles')),
-        submitUpdatedArticle: (data: any) => dispatch(requestDataMutation(MutationOperationType.UPDATE, data, 'articles')),
-        initializeState: () => dispatch(setDataForCreateOrEditArticle(false, null))
+        submitNewArticle: (data: any): void => dispatch(requestDataMutation(MutationOperationType.CREATE, data, 'articles')),
+        submitUpdatedArticle: (data: any): void => dispatch(requestDataMutation(MutationOperationType.UPDATE, data, 'articles')),
+        initializeState: (): void => dispatch(setDataForCreateOrEditArticle(false, null))
     };
 };
 
