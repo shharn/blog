@@ -5,7 +5,7 @@ import { convertFromRaw } from 'draft-js';
 import { convertToHTML } from 'draft-convert';
 import cn from 'classnames';
 import styles from './styles';
-import './styles.sass';
+import './styles.css';
 import type { Element } from 'react';
 import type { WithStylesProps } from '../../flowtype';
 
@@ -15,13 +15,16 @@ const getLastSplittedFromImageSrc = (src: string): string => {
     return splitted[len -1];
 };
 
-const blockToTag: {
-    [string]: Element<*>
-} = {
-    'code-block': <pre/>
-};
-
-const blockToHTML = (block): Element<*> => blockToTag[block.type.toLowerCase()]
+const blockToHTML = (block): Element<*> => {
+    switch(block.type.toLowerCase()) {
+        case 'code-block': 
+            return <pre/>
+        case 'unstyled':
+            return block.text.length > 0 ? <p/> : <br/>;
+        default:
+            return <p/>;
+    }
+}
 
 const entityToHTML = (entity, originalText: string): Element<*> | string => {
     switch(entity.type.toUpperCase()){

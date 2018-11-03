@@ -1,6 +1,7 @@
 export default ({
     container: {
         display: 'flex',
+        position: 'relative',
         flexDirection: 'row-reverse'
     },
     button: {
@@ -12,5 +13,9 @@ export default ({
     },
     iconButton: {
         fontSize: '1.5rem',
+    },
+    flexEnd: {
+        position: 'absolute',
+        left: '0',
     }
 })

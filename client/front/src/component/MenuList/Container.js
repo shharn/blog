@@ -11,7 +11,6 @@ import type { Dispatch } from '../../action/types';
 const MENU_DATA_NAME = 'menus';
 
 const mapStateToProps = (state: StoreState, ownProps: { switchToList: () => void, switchToCreateMenu: () => void }): Object => {
-    console.dir(state);
     const menus =  [ ...state.app.data.get.menus.data ];
     const { isEditable, editableRowId, editableCellName } = state.app.ui.menuList;
     return {

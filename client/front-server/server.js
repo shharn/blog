@@ -74,7 +74,7 @@ upload.any(),
 });
 
 app.get('/menus/:menuName/articles/:articleTitle', (req, res) => {
-    res.sendState(HTTP_STATUS_SUCCESS);
+    res.sendStatus(HTTP_STATUS_SUCCESS);
 });
 
 app.all('*', (_, res) => {

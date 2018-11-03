@@ -13,7 +13,8 @@ export type Article = {
     summary: string,
     createdAt: string,
     views: number,
-    menu: ?Menu
+    menu: ?Menu,
+    views: number
 }
 
 export type LoginInformation = {

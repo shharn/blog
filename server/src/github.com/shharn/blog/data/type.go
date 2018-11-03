@@ -34,6 +34,7 @@ type Article struct {
 	ImageSource string  `json:"imageSource,omitempty"`
 	Summary     string  `json:"summary,omitempty"`
 	Content     string  `json:"content,omitempty"`
-	CreatedAt   string  `json:"createdAt, omitempty"`
+	CreatedAt   string  `json:"createdAt,omitempty"`
 	Menu        *[]Menu `json:"menu,omitempty"`
+	Views	int `json:"views,omitempty"`
 }

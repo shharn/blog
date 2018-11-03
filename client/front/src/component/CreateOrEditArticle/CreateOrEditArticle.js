@@ -72,14 +72,13 @@ type State = {
 
 class CreateArticle extends Component<Props & WithStylesProps & RouterProps, State> {
     editorRef: any;
-
     state = {
         data: {
-            uid: '',
-            title: '',
-            summary: '',
-            imageSource: '',
-            menuID: ''
+            uid: this.props.isEditMode ? this.props.article.uid : '',
+            title: this.props.isEditMode ? this.props.article.title : '',
+            summary: this.props.isEditMode ? this.props.article.summary : '',
+            imageSource: this.props.isEditMode ? this.props.article.imageSource : '',
+            menuID: this.props.isEditMode ? this.props.article.menu[0].uid : this.props.menus[0].uid
         },
         error: {
             title: '',
@@ -88,7 +87,8 @@ class CreateArticle extends Component<Props & WithStylesProps & RouterProps, Sta
         }
     };
 
-    componentDidMount = () => {
+    constructor(props) {
+        super(props);
         const { isEditMode, menus } = this.props;
         if (!menus || menus.length < 1) {
             alert('There must be at least one menu. Create a menu first :)');
@@ -98,18 +98,7 @@ class CreateArticle extends Component<Props & WithStylesProps & RouterProps, Sta
         if (isEditMode) {
             if (!this.props.article) {
                 alert('Something is wrong.\nArticle should not be null on edit mode');
-                return;
             }
-            const { uid, title, summary, imageSource, menu } = this.props.article;
-            this.setState({
-                data: { 
-                    uid,
-                    title,
-                    summary,
-                    imageSource,
-                    menuID: menu[0].uid
-                 }
-            });
         }
     }
 
@@ -263,7 +252,7 @@ class CreateArticle extends Component<Props & WithStylesProps & RouterProps, Sta
                             root: classes.selectRoot,
                         }}
                         autoWidth={true}
-                        value={menuID.length > 0 ? menuID : menus[0].uid}
+                        value={menuID}
                         onChange={this.handleInputChange}
                         inputProps={{
                             name: 'menuID',

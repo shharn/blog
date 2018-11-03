@@ -51,6 +51,7 @@ const (
 					uid
 					name
 				}
+				views
 			}
 		}
 	`
@@ -145,6 +146,7 @@ func CreateArticle(article data.Article) error {
 	defer c.Commit()
 
 	article.CreatedAt = time.Now().Format(time.RFC3339)
+	article.Views = 0
 	md := db.MutationData{article}
 	_, err = c.Mutate(md)
 	if err != nil {

@@ -12,6 +12,9 @@ export const menuNameToUIDConverter = (action, srcData) => {
     let splitted = name.toLowerCase().split(NAME_SEPERATOR); // some_menu_example => ['some', 'name', example']
     let result = data.filter(datum => {
         // ex) Some Menu Example => some menu example => ['some', 'menu', 'example']
+        if (!!!datum[propName]) {
+            return false;
+        }
         let splitted2 = datum[propName].toLowerCase().split(WHITE_SPACE);
         if (splitted.length !== splitted2.length) return false;
         for (let i = 0; i < splitted.length; i++) {
