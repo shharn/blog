@@ -25,9 +25,14 @@ class Article extends Component<Props & WithStylesProps> {
     render = () => {
         const { article, classes, customClasses } = this.props;
         return (
-            <Link className={classes.outerAnchor} to={`/menus/${article.menu[0].name.toLowerCase().replace(/\s/g, '-')}/articles/${article.title.toLowerCase().replace(/\s/g, '-')}`}>
+            <Link 
+                className={classes.outerAnchor} 
+                to={`/menus/${article.menu[0].name.toLowerCase().replace(/\s/g, '-')}/articles/${article.title.toLowerCase().replace(/\s/g, '-')}`}
+            >
                 <Card className={customClasses.root}>
-                    <CardHeader title={article.title} subheader={article.createdAt ? new Date(article.createdAt).toLocaleDateString('en-us', { year: 'numeric', month: 'short', day: 'numeric' }) : 'May be, 2018'}/>
+                    <CardHeader 
+                        title={article.title} 
+                        subheader={article.createdAt ? new Date(article.createdAt).toLocaleDateString('en-us', { year: 'numeric', month: 'short', day: 'numeric' }) : 'May be, 2018'}/>
                     <CardMedia className={customClasses.cardMedia} 
                         image={article.imageSource}
                         title={article.title}/>

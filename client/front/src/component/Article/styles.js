@@ -1,5 +1,6 @@
 export default {
     outerAnchor: {
-        textDecoration: 'none'
+        textDecoration: 'none',
+        height: '500px'
     }
 }

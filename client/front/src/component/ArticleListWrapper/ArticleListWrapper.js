@@ -19,8 +19,8 @@ class ArticleListWrapper extends Component<Props & RouterProps & WithStylesProps
     render = () => {
         const { isAuthenticated, classes, ...rest } = this.props;
         return (
-            <div>
-                {isAuthenticated && 
+            <React.Fragment>
+                {isAuthenticated &&
                     <Button 
                         component={Link} 
                         to={`/admin/article?prev=${encodeURI(this.props.location.pathname)}`} 
@@ -30,9 +30,10 @@ class ArticleListWrapper extends Component<Props & RouterProps & WithStylesProps
                         color="secondary" 
                         aria-label="create article">
                         <AddIcon/>
-                    </Button>}
+                    </Button>
+                }
                 <ArticleList {...rest}/>
-            </div>
+            </React.Fragment>
         );
     }
 }

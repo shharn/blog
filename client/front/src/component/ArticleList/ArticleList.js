@@ -52,10 +52,15 @@ class ArticleList extends Component<RouterProps & WithStylesProps & InfiniteScro
                     <Typography 
                         className={classes.emptyText} 
                         align="center"
-                        variant='display2'>
+                        variant="display2">
                         Coming Soon  :)
                     </Typography> :
-                    articles.map(article => <Article key={`article:${article.uid}`} article={article} customClasses={{ root: classes.article, cardMedia: classes.articleImage }}/>)}
+                    articles.map(article => 
+                        <Article 
+                            key={`article:${article.uid}`} 
+                            article={article} 
+                            customClasses={{ root: classes.article, cardMedia: classes.articleImage }}/>)
+                }
             </div>
         );
     }

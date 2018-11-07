@@ -1,10 +1,13 @@
 version: "3.2"
 services:
-    puppyloper.blog:
+    front:
         build:
             context: ./client
             dockerfile: Dockerfile.dev
         image: blog-front:dev
+        environment:
+            - NODE_ENV=development
+            - DEVELOPMENT=1
         volumes:
             - "./client:/app"
             - /app/node_modules/
@@ -14,7 +17,7 @@ services:
         ports:
             - "3000:3000"
 
-    api.puppyloper.blog:
+    api-server:
         build: 
             context: "./server"
             dockerfile: Dockerfile.dev

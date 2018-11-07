@@ -1,6 +1,5 @@
 FROM node:8.11.3-alpine as base
 WORKDIR /app
-ARG DEVELOPMENT
 COPY . .
 RUN yarn install && \
         yarn build:prod

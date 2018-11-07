@@ -9,9 +9,10 @@ import createSagaMiddleware from 'redux-saga';
 import createHistory from 'history/createBrowserHistory';
 import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux';
 import { createAutoUpdater } from './middleware/dataAutoUpdater';
-import { createActionConverter } from './middleware/actionConverter';
-import { menuNameToUIDConverter, menuConverterChecker } from './middleware/menuNameConverter';
-import { articleNameToUIDConverter, articleConverterChecker } from './middleware/articleNameConverter';
+import {
+    menuNameActionConverter,
+    articleNameActionConverter
+} from './middleware/blogActionConverter';
 import logger from 'redux-logger';
 import appReducer from './reducer';
 import type { AppState } from './reducer';
@@ -30,15 +31,15 @@ const history = createHistory();
 const routeMiddleware = routerMiddleware(history);
 const sagaMiddleware = createSagaMiddleware();
 const dataAutoUpdater = createAutoUpdater();
-const actionConverterForMenu = createActionConverter(menuConverterChecker, menuNameToUIDConverter);
-const actionConverterForArticle = createActionConverter(articleConverterChecker, articleNameToUIDConverter);
+const menuNameToUIDMiddlerware = menuNameActionConverter();
+const articleNameToUIDMiddleware = articleNameActionConverter();
 const isProduction = process.env.NODE_ENV === 'production';
 const middlewares = [
     ...(isProduction ? [] : [ logger ]),
     routeMiddleware,
     dataAutoUpdater,
-    actionConverterForMenu,
-    actionConverterForArticle,
+    menuNameToUIDMiddlerware,
+    articleNameToUIDMiddleware,
     sagaMiddleware
 ];
 const store = createStore(
@@ -74,7 +75,7 @@ const theme = createMuiTheme({
 
 const container = document.getElementById('root');
 if (container) {
-    ReactDOM.render(
+    ReactDOM.hydrate(
         <Provider store={store}>
             <ConnectedRouter history={history}>
                 <MuiThemeProvider theme={theme}>

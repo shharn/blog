@@ -7,8 +7,9 @@
 /coverage
 
 # production
-/build
-/public
+**/build
+**/public
+**/dist
 
 # git
 .git
