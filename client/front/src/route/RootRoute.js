@@ -10,7 +10,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import loadable from 'react-loadable';
 
 const Admin = loadable({
-    loader: () => import('../component/Admin'),
+    loader: () => import(/* webpackChunkName: "admin"*/ '../component/Admin'),
     loading: () => <CircularProgress size={30}/>
 })
 

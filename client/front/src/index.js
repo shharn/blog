@@ -1,89 +1,26 @@
 // @flow
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import RootRoute from './route/RootRoute';
+import App from './component/App';
 import registerServiceWorker from './registerServiceWorker';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import createSagaMiddleware from 'redux-saga';
-import createHistory from 'history/createBrowserHistory';
-import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux';
-import { createAutoUpdater } from './middleware/dataAutoUpdater';
-import {
-    menuNameActionConverter,
-    articleNameActionConverter
-} from './middleware/blogActionConverter';
-import logger from 'redux-logger';
-import appReducer from './reducer';
+import { ConnectedRouter } from 'react-router-redux';
+import createAppStore from './createAppStore';
 import type { AppState } from './reducer';
-import rootSaga from './saga';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import blue from '@material-ui/core/colors/blue';
-import pink from '@material-ui/core/colors/pink';
 
 export type StoreState = {
     app: AppState,
     router: any
 };
 
-const history = createHistory();
-const routeMiddleware = routerMiddleware(history);
-const sagaMiddleware = createSagaMiddleware();
-const dataAutoUpdater = createAutoUpdater();
-const menuNameToUIDMiddlerware = menuNameActionConverter();
-const articleNameToUIDMiddleware = articleNameActionConverter();
-const isProduction = process.env.NODE_ENV === 'production';
-const middlewares = [
-    ...(isProduction ? [] : [ logger ]),
-    routeMiddleware,
-    dataAutoUpdater,
-    menuNameToUIDMiddlerware,
-    articleNameToUIDMiddleware,
-    sagaMiddleware
-];
-const store = createStore(
-    combineReducers({
-        router: routerReducer,
-        app: appReducer
-    }),
-    applyMiddleware(...middlewares)
-);
-sagaMiddleware.run(rootSaga);
-
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            light: blue[400],
-            main: blue[500],
-            dark: blue[600]
-        },
-        secondary: {
-            light: pink[400],
-            main: pink[500],
-            dark: pink[600]
-        }
-    },
-    breakpoints: {
-        values: {
-            sm: 600,
-            md: 900,
-            lg: 1100
-        }
-    }
-});
+const { store, history } = createAppStore();
 
 const container = document.getElementById('root');
 if (container) {
     ReactDOM.hydrate(
         <Provider store={store}>
             <ConnectedRouter history={history}>
-                <MuiThemeProvider theme={theme}>
-                    <React.Fragment>
-                        <CssBaseline />
-                        <RootRoute />
-                    </React.Fragment>
-                </MuiThemeProvider>
+                <App/>
             </ConnectedRouter>
         </Provider>,
         container

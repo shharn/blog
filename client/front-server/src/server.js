@@ -1,16 +1,18 @@
-// var path = require('path');
-// var express = require('express');
-// var multer = require('multer');
-// var chalk = require('chalk');
-// var mkdirp = require('mkdirp');
-// var request = require('superagent');
 import path from 'path';
 import express from 'express';
 import multer from 'multer';
 import chalk from 'chalk';
 import mkdirp from 'mkdirp';
 import request from 'superagent';
-// import React from 'react';
+import fs from 'fs';
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
+import Loadable from 'react-loadable';
+import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'react-router-redux';
+import App from '../../front/src/component/App';
+import createAppStore from '../../front/src/createAppStore';
+
 const PORT = 3000;
 const ASSET_DIR = '../public/asset/image';
 const INDEX_HTML_FILE_PATH = path.join(__dirname, '../../public/app/index.html');
@@ -26,9 +28,10 @@ const INTERNAL_SERVER_ERROR_BODY = {
     message: 'The server is temporarily unavailable. Please try later :('
 };
 
+// will be deprecated
 const storage = multer.diskStorage({
     destination: (_, __, cb) => {
-        var res = mkdirp.sync(path.resolve(__dirname, ASSET_DIR));
+        mkdirp.sync(path.resolve(__dirname, ASSET_DIR));
         cb(null, path.resolve(__dirname, ASSET_DIR))
     },
     filename: (_, file, cb) => {
@@ -39,12 +42,13 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage
 });
+
 const app = express();
 
 app.disable('x-powered-by');
 
 app.use(express.static(path.resolve(__dirname, '../../public/app')));
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
     res.sendFile(INDEX_HTML_FILE_PATH);
 });
 app.use('/image', express.static(path.resolve(__dirname, '../../public/asset/image')));
@@ -83,14 +87,42 @@ upload.any(),
     res.sendStatus(HTTP_STATUS_SUCCESS);
 });
 
-app.get('/menus/:menuName/articles/:articleTitle', (req, res) => {
-    res.sendStatus(HTTP_STATUS_SUCCESS);
+app.get('/menus/:menuName/articles/:articleTitle', (req, res) =>{
+    fs.readFile(INDEX_HTML_FILE_PATH, 'utf8', (err, originalHTML) => {
+        if (!!err) {
+            console.error(`Error during reading index.html file\n.Error : ${err.message}`);
+            return res.status(HTTP_STATUS_INTERNAL_SERVER_ERROR).end()
+        }
+
+        const { store, history } = createAppStore();
+        const renderedReactAppHTML = ReactDOMServer.renderToString(
+            <Provider store={store}>
+                <ConnectedRouter history={history}>
+                    <App/>
+                </ConnectedRouter>
+            </Provider>
+        );
+        return res.send(
+            originalHTML.replace(
+                `<div id="root"></div>`,
+                `<div id="root">${renderedReactAppHTML}</div>`
+            )
+        );
+    });
 });
 
 app.all('*', (_, res) => {
     res.redirect('/');
 });
 
-app.listen(PORT, () => {
-    console.log(chalk.green(`Front-server is running on port ${PORT}`));
+
+
+Loadable.preloadAll().then(() => {
+    app.listen(PORT, (err) => {
+        if (!!err) {
+            console.error(`Error during listening on port ${PORT}\nError - ${err.message}`);
+            throw err;
+        }
+        console.log(chalk.green(`Front-server is running on port ${PORT}`));
+    });
 });
