@@ -14,10 +14,10 @@ import logger from 'redux-logger';
 import appReducer from './reducer';
 import rootSaga from './saga';
 
-const isWebBrowser = typeof window === 'object';
+const isSSR = typeof window === 'object';
 
-export default function createAppStore() {
-    const history = isWebBrowser ? createBrowserHistory() : createMemoryHistory();
+export default function createAppStore(preloadedState) {
+    const history = isSSR ? createBrowserHistory() : createMemoryHistory();
     const routeMiddleware = routerMiddleware(history);
     const sagaMiddleware = createSagaMiddleware();
     const dataAutoUpdater = createAutoUpdater();
@@ -37,6 +37,7 @@ export default function createAppStore() {
             router: routerReducer,
             app: appReducer
         }),
+        preloadedState,
         applyMiddleware(...middlewares)
     );
     sagaMiddleware.run(rootSaga);

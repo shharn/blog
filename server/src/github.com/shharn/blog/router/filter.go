@@ -2,7 +2,6 @@ package router
 
 import (
 	"net/http"
-	"strings"
 	"os"
 
 	"github.com/shharn/blog/config"
@@ -10,25 +9,33 @@ import (
 	"github.com/pkg/errors"
 )
 
+
 // Filter filters or pre-processes the request
 // Can be used for authentication or something like that
 type Filter interface {
 	Filter(w http.ResponseWriter, r *http.Request) error
+	
 }
+
+// FilterExceptionJudge checks if current request is special case
+type FilterExceptionJudge func(w http.ResponseWriter, r *http.Request) bool
 
 // AuthFilter is responsible for validating the session token
 type AuthFilter struct {
 	// Key is the secret key for JWT
 	Key string
+	// Exceptions is a list of FilterExceptionJudge
+	Exceptions []FilterExceptionJudge
 }
 
 // Filter in AuthFilter validates the token from the header
 func (af AuthFilter) Filter(w http.ResponseWriter, r *http.Request) error {
-	path := strings.ToLower(r.URL.Path[1:])
-	// should be refactored
-	if r.Method == "GET" || r.Method == "OPTIONS" || path == "login" || path == "check" || path == "logout" {
-		return nil
+	for _, judge := range af.Exceptions {
+		if judge(w, r) {
+			return nil
+		} 
 	}
+
 	clientToken := r.Header.Get("X-Session-Token")
 
 	if isValid, err := af.validateToken(clientToken, af.Key); err == nil {

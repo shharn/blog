@@ -1,4 +1,4 @@
-// @flow`
+// @flow
 import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -27,7 +27,8 @@ type Props = {
     getArticle: (articleName: string) => void,
     deleteArticle: (uid: string) => void,
     initFetchStatus: () => void,
-    setArticleToEdit: (article : Article) => void
+    setArticleToEdit: (article : Article) => void,
+    initArticleDatum: () => void
 };
 
 type StaticProps = {
@@ -36,8 +37,10 @@ type StaticProps = {
 
 class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {}, StaticProps> {
     componentDidMount = () => {
-        const articleName = this.props.match.params['articleName']
-        this.props.getArticle(articleName);
+        if (!!!this.props.article || this.props.article.title.length < 1) {
+            const articleName = this.props.match.params['articleName']
+            this.props.getArticle(articleName);
+        }
     }
 
     componentDidUpdate = () => {
@@ -49,6 +52,7 @@ class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {},
 
     componentWillUnmount = () => {
         this.props.initFetchStatus();
+        this.props.initArticleDatum();
     }
 
     getParentURL = (currPath: string): string => {
@@ -66,7 +70,7 @@ class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {},
 
     onEditButtonClicked = (): void => {
         this.props.setArticleToEdit(this.props.article);
-        this.props.history.push(`/admin/article?prevURL=${encodeURI(this.parentURL)}`);
+        this.props.history.push(`/admin/article?prevURL=${encodeURI(this.props.location.pathname)}`);
     }
 
     render = () => {

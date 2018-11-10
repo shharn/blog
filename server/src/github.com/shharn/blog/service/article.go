@@ -65,6 +65,23 @@ const (
 			}
 		}
 	`
+	getArticleByTitleQuery = `
+		query getArticleByTitle($title: string) {
+			articles (func: eq(title, $title)) {
+				uid,
+				title,
+				content,
+				summary,
+				imageSource,
+				createdAt
+				menu {
+					uid
+					name
+				}
+				views
+			}
+		}
+	`
 )
 
 type getTheHottestArticlesPayload struct {
@@ -239,4 +256,28 @@ func UpdateArticle(id string, article data.Article) error {
 		return errors.WithStack(err3)
 	}
 	return nil
+}
+
+func GetArticleByTitle(title string) (interface{}, error) {
+	c, err := db.Init()
+	defer c.CleanUp()
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	defer c.Commit()
+	vars := map[string]string{"$title": title}
+	res, err := c.QueryWithVars(getArticleByTitleQuery, vars)
+	if err != nil {
+		return nil, err
+	}
+
+	article := getArticlePayload{}
+	if err := json.Unmarshal(res.Json, &article); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	if len(article.Articles) > 0 {
+		return article.Articles[0], nil
+	}
+	return nil, nil
 }

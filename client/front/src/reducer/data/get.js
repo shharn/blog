@@ -15,6 +15,18 @@ export type GetState = {
     [key: string]: DataTemplate
 };
 
+const EmptyData = {
+    menus: [],
+    article: {
+        title: '',
+        createdAt: '',
+        content: '',
+        summary: ''
+    },
+    articles: [],
+    hottestArticles: []
+};
+
 const NO_ERROR: ClientError = {
     code: 0,
     message: ''
@@ -93,6 +105,16 @@ const reducer = (state: GetState = initialState, action: Action): GetState => {
                 }
             };
         }
+        case DataActionType.INITIALIZE_DATA:
+            return {
+                ...state,
+                [dataName]: {
+                    data : EmptyData[dataName],
+                    error: { ...NO_ERROR },
+                    fetchStatus: FetchStatus.INITIAL,
+                    fetchComplete: false
+                }
+            }
         default:
             return state;
     }

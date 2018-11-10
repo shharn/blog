@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/pkg/errors"
 	"github.com/shharn/blog/data"
@@ -10,6 +11,8 @@ import (
 	"github.com/shharn/blog/service"
 )
 
+const titleSep = "-"
+const whiteSpace = " "
 const defaultNumberOfHottestArticles = "5"
 
 // GetArticlesOnMenuHandler is for "GET /menus/:id/articles"
@@ -114,4 +117,23 @@ func DeleteArticleHandler(w http.ResponseWriter, rq *http.Request, params router
 		return nil, err
 	}
 	return nil, nil
+}
+
+
+func GetArticleByTitleHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
+	title, exists := params["title"]
+	if !exists  || len(title.(string)) < 1{
+		return nil, nil
+	}
+
+	title = replaceSeparatorToWhiteSpace(title.(string))
+	if article, err := service.GetArticleByTitle(title.(string)); err == nil {
+		return article, nil
+	} else {
+		return nil, err
+	}
+}
+
+func replaceSeparatorToWhiteSpace(title string) string {
+	return strings.TrimSpace(strings.Replace(title, titleSep, whiteSpace, -1))
 }

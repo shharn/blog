@@ -13,6 +13,7 @@ import { ConnectedRouter } from 'react-router-redux';
 import App from '../../front/src/component/App';
 import createAppStore from '../../front/src/createAppStore';
 
+const isDevelopment = process.env.NODE_ENV === 'development';
 const PORT = 3000;
 const ASSET_DIR = '../public/asset/image';
 const INDEX_HTML_FILE_PATH = path.join(__dirname, '../../public/app/index.html');
@@ -20,7 +21,7 @@ const TOKEN_HEADER_NAME = "X-Session-Token";
 const HTTP_STATUS_SUCCESS = 200;
 const HTTP_STATUS_UNAUTHORIZED = 401;
 const HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
-const API_SERVER_HOST = 'http://blog-api-server';
+const API_SERVER_HOST = isDevelopment ? 'http://api-server:5000' : 'http://blog-api-server';
 const UNAUTHORIZED_BODY = {
     message: 'Invalid Token'
 };
@@ -88,13 +89,46 @@ upload.any(),
 });
 
 app.get('/menus/:menuName/articles/:articleTitle', (req, res) =>{
-    fs.readFile(INDEX_HTML_FILE_PATH, 'utf8', (err, originalHTML) => {
+    fs.readFile(INDEX_HTML_FILE_PATH, 'utf8', async (err, originalHTML) => {
         if (!!err) {
             console.error(`Error during reading index.html file\n.Error : ${err.message}`);
             return res.status(HTTP_STATUS_INTERNAL_SERVER_ERROR).end()
         }
 
+        const articleTitle = req.params["articleTitle"];
+        if (!!!articleTitle || articleTitle.length < 1) {
+            return res.redirect('/');
+        }
+        const article =  await getArticleByTitle(articleTitle);
+        if (!!!article) {
+            return res.redirect('/');
+        }
+
+        const { content, createdAt, summary, title, menu } = article;
         const { store, history } = createAppStore();
+        const initialState = store.getState();
+        const newState = {
+            ...initialState,
+            app: {
+                ...initialState.app,
+                data: {
+                    ...initialState.app.data,
+                    get: {
+                        ...initialState.app.data.get,
+                        article: {
+                            ...initialState.app.data.get.article,
+                            data: {
+                                content,
+                                createdAt,
+                                summary,
+                                title,
+                                menu
+                            }
+                        }
+                    }
+                }
+            }
+        };
         const renderedReactAppHTML = ReactDOMServer.renderToString(
             <Provider store={store}>
                 <ConnectedRouter history={history}>
@@ -105,7 +139,12 @@ app.get('/menus/:menuName/articles/:articleTitle', (req, res) =>{
         return res.send(
             originalHTML.replace(
                 `<div id="root"></div>`,
-                `<div id="root">${renderedReactAppHTML}</div>`
+                `<div id="root">
+                    ${renderedReactAppHTML}
+                </div>
+                <script >
+                    window.__PRELOADED_STATE__ = ${JSON.stringify(newState).replace(/</g, '\\u003c')};
+                </script>`
             )
         );
     });
@@ -115,7 +154,25 @@ app.all('*', (_, res) => {
     res.redirect('/');
 });
 
-
+function getArticleByTitle(title) {
+    const path = `${API_SERVER_HOST}/articles/titles/${title}`;
+    return request
+        .get(path)
+        .timeout({
+            deadline: 3000
+        })
+        .accept('json')
+        .then(res => {
+            if (res.statusCode === 200) {
+                return res.body;
+            }
+            return null;
+        })
+        .catch(err => {
+            console.error(`Error during API request '${path}\nError - ${err.message}`);
+            return null;  
+        });
+}
 
 Loadable.preloadAll().then(() => {
     app.listen(PORT, (err) => {
@@ -123,6 +180,6 @@ Loadable.preloadAll().then(() => {
             console.error(`Error during listening on port ${PORT}\nError - ${err.message}`);
             throw err;
         }
-        console.log(chalk.green(`Front-server is running on port ${PORT}`));
+        console.log(chalk.green(`Front-server is running on port ${PORT}\nCurrent environment : ${isDevelopment ? 'development' : 'production'}`));
     });
 });

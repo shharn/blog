@@ -13,7 +13,11 @@ export type StoreState = {
     router: any
 };
 
-const { store, history } = createAppStore();
+const preloadedState = window.__PRELOADED_STATE__;
+
+delete window.__PRELOADED_STATE__;
+
+const { store, history } = createAppStore(preloadedState);
 
 const container = document.getElementById('root');
 if (container) {

@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"log"
+	"strings"
 
 	"github.com/shharn/blog/config"
 	"github.com/shharn/blog/handler"
@@ -21,7 +22,18 @@ func main() {
 		SetAllowedMethod(allowedMethods).
 		SetAllowedHeaders(allowedHeaders).
 		SetCORS()
-	r.Use(router.AuthFilter{Key: config.Key})
+	r.Use(router.AuthFilter{
+		Key: config.Key,
+		Exceptions: []router.FilterExceptionJudge{
+			0: func(w http.ResponseWriter, r *http.Request) bool {
+				return r.Method == "GET" || r.Method == "OPTIONS"
+			},
+			1: func(w http.ResponseWriter, r *http.Request) bool {
+				path := strings.ToLower(r.URL.Path[1:])
+				return path == "login" || path == "check" || path =="logout"
+			},
+		},
+	})
 
 	// for load balancer
 	r.Get("/", handler.NoopHandler)
@@ -39,6 +51,7 @@ func main() {
 	r.Get("/articles/hottest", handler.GetTheHottestArticlesHandler)
 	r.Post("/articles", handler.CreateArticleHandler)
 	r.Get("/articles/:id", handler.GetArticleHandler)
+	r.Get("/articles/titles/:title", handler.GetArticleByTitleHandler)
 	r.Patch("/articles/:id", handler.UpdateArticleHandler)
 	r.Delete("/articles/:id", handler.DeleteArticleHandler)
 

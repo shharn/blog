@@ -223,3 +223,10 @@ export const uploadImageFail = (error: ClientError): Action => ({
 export const initializeImageDialogStatus = (): Action => ({
     type: DataActionType.INITIALIZE_IMAGE_DIALOG_STATUS
 });
+
+export const initializeData = (dataName: string): Action => ({
+    type: DataActionType.INITIALIZE_DATA,
+    payload: {
+        dataName
+    }
+});
