@@ -7,7 +7,9 @@ services:
         image: blog-front:dev
         environment:
             - NODE_ENV=development
-            - DEVELOPMENT=1
+            - TZ=Asia/Seoul
+            - BUCKET_NAME=puppyloper-test
+            - PROJECT_ID=blog-219703
         volumes:
             - "./client:/app"
             - /app/node_modules/

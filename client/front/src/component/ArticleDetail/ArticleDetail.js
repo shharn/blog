@@ -40,14 +40,18 @@ class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {},
         if (!!!this.props.article || this.props.article.title.length < 1) {
             const articleName = this.props.match.params['articleName']
             this.props.getArticle(articleName);
+        } else {
+            document.title = this.props.article.title;
         }
+
     }
 
     componentDidUpdate = () => {
-        if (!this.props.article || this.props.deleteFetchStatus === FetchStatus.SUCCESS) {
+        if (!!!this.props.article || this.props.deleteFetchStatus === FetchStatus.SUCCESS) {
             let url = this.getParentURL(this.props.location.pathname);
             this.props.history.push(url);
         }
+        document.title = this.props.article.title;
     }
 
     componentWillUnmount = () => {

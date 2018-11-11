@@ -19,6 +19,10 @@ class ArticleList extends Component<RouterProps & WithStylesProps & InfiniteScro
             prevMenuName: this.props.match.params['menuName']
     };
 
+    componentDidMount() {
+        document.title = `Puppyloper's blog`;
+    }
+
     componentDidUpdate = () => {
         if (this.isMenuChanged()) {
             this.props.initLoader();
