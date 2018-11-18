@@ -68,13 +68,10 @@ func makeToken(info *data.LoginInformation) *jwt.Token {
 // CheckHandler is handler for "/check"
 func CheckHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, error) {
 	clientToken := rq.Header.Get("X-Session-Token")
-	if isValid, err := validateToken(clientToken); err != nil {
-		return nil, err
-	} else {
-		return data.Authentication{
-			IsValid: isValid,
-		}, nil
-	}
+	isValid, _ := validateToken(clientToken)
+	return data.Authentication{
+		IsValid: isValid,
+	}, nil
 }
 
 func validateToken(tokenString string) (bool, error) {

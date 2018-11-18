@@ -34,7 +34,7 @@ const mapStateToProps = (state: StoreState): Object => {
 const mapDispatchToProps = (dispatch: Dispatch): Object => ({
     getArticle: (articleName: string) : void=> dispatch(requestDataWithNameAndURL(articleName, `article`, 'title', `/articles/${PLACEHOLDER_NAME_TO_CONVERT}`)),
     deleteArticle: (uid: string): void => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, DataName.ARTICLE)),
-    initFetchStatus: (): void => dispatch(initializeMutationStatus(DataName.ARTICLE, MutationOperationType.DELETE)),
+    initDeleteFetchStatus: (): void => dispatch(initializeMutationStatus(DataName.ARTICLE, MutationOperationType.DELETE)),
     setArticleToEdit: (article: Article): void => dispatch(setDataForCreateOrEditArticle(true, article)),
     initArticleDatum: (): void => dispatch(initializeData('article'))
 });

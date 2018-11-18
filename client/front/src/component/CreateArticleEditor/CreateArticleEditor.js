@@ -19,7 +19,10 @@ import keycode from 'keycode';
 import className from 'classnames';
 import './styles.css';
 
-const IMAGE_BASE_URL = '/image';
+const IMAGE_BASE_URL = process.env.IMAGE_BASE_URL;
+const BUCKET_NAME = process.env.BUCKET_NAME;
+const FOLDER_NAME = process.env.IMAGE_FOLDER_NAME;
+const CDN_BASE_URL = `${IMAGE_BASE_URL}/${BUCKET_NAME}/${FOLDER_NAME}`;
 
 function findLinkEntities(contentBlock: any, callback: Function, contentState: any): void {
     contentBlock.findEntityRanges(
@@ -199,7 +202,7 @@ class CreateArticleEditor extends Component<Props, State> {
             const contentStateWithEntity = contentState.createEntity(
                 'image',
                 'IMMUTABLE',
-                { src: `${IMAGE_BASE_URL}/${file.name}` }
+                { src: `${CDN_BASE_URL}/${file.name}` }
             );
             const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
             newEditorState = EditorState.set(

@@ -1,6 +1,16 @@
 FROM node:8.11.3-alpine
 WORKDIR /app
 COPY . .
-RUN yarn install && \
+ENV NODE_ENV=development \
+    TZ=Asia/Seoul \
+    BUCKET_NAME=puppyloper-test \
+    IMAGE_FOLDER_NAME=images \
+    PROJECT_ID=blog-219703 \
+    IMAGE_BASE_URL=https://storage.googleapis.com \
+    GOOGLE_APPLICATION_CREDENTIALS=./storage-credential.json
+RUN apk update && \
+    apk upgrade && \
+    apk add tzdata && \
+    yarn install && \
     yarn add nodemon
 CMD ["yarn", "start:dev"]
