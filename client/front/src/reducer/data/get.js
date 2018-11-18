@@ -8,7 +8,8 @@ type DataTemplate = {
     data: Array<Object> | Object,
     error: ClientError,
     fetchStatus: $Values<FetchStatus>,
-    fetchComplete: boolean
+    fetchComplete: boolean,
+    isServerRendered? : boolean
 };
 
 export type GetState = {
@@ -48,7 +49,8 @@ const initialState: GetState = {
         },
         error: { ...NO_ERROR },
         fetchStatus: FetchStatus.INITIAL,
-        fetchComplete: false
+        fetchComplete: false,
+        isServerRendered: false
     },
     articles: {
         data: [],
@@ -115,6 +117,15 @@ const reducer = (state: GetState = initialState, action: Action): GetState => {
                     fetchComplete: false
                 }
             }
+        case DataActionType.INITIALIZE_SERVER_RENDERING_FLAG:
+            const maybeFalse = action.payload.maybeFalse;
+            return {
+                ...state,
+                article: {
+                    ...state.article,
+                    isServerRendered: maybeFalse
+                }
+            };
         default:
             return state;
     }

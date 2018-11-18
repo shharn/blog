@@ -23,12 +23,13 @@ type Props = {
     fetchStatus: $Values<FetchStatus>,
     isAuthenticated: boolean,
     deleteFetchStatus: $Values<FetchStatus>,
+    isServerRendered: boolean,
 
     getArticle: (articleName: string) => void,
     deleteArticle: (uid: string) => void,
     initDeleteFetchStatus: () => void,
     setArticleToEdit: (article : Article) => void,
-    initArticleDatum: () => void
+    initServerRenderingFlag: () => void
 };
 
 type StaticProps = {
@@ -37,9 +38,13 @@ type StaticProps = {
 
 class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {}, StaticProps> {
     componentDidMount = () => {
-        const articleName = this.props.match.params['articleName']
-        this.props.getArticle(articleName);
-        document.title = this.props.article.title;
+        if (!this.props.isServerRendered) {
+            const articleName = this.props.match.params['articleName']
+            this.props.getArticle(articleName);
+            document.title = this.props.article.title;
+        } else {
+            this.props.initServerRenderingFlag();
+        }
     }
 
     componentDidUpdate = () => {
@@ -49,10 +54,6 @@ class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {},
             this.props.history.push(url);
         }
         document.title = this.props.article.title;
-    }
-
-    componentWillUnmount = () => {
-        // this.props.initArticleDatum();
     }
 
     getParentURL = (currPath: string): string => {

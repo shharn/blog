@@ -230,3 +230,10 @@ export const initializeData = (dataName: string): Action => ({
         dataName
     }
 });
+
+export const changeServerRenderingFlag = (maybeFalse: boolean): Action => ({
+    type: DataActionType.INITIALIZE_SERVER_RENDERING_FLAG,
+    payload: {
+        maybeFalse
+    }
+});

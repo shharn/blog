@@ -50,7 +50,8 @@ export function articleDetail(req, res) {
                                 summary,
                                 title,
                                 menu
-                            }
+                            },
+                            isServerRendered: true
                         }
                     }
                 }
