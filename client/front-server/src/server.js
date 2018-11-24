@@ -16,36 +16,33 @@ import {
 import { articleDetail } from './handler';
 import { HTTPStatusCode } from './constant';
 
-const { OK } = HTTPStatusCode;
+const { OK, INTERNAL_SERVER_ERROR } = HTTPStatusCode;
 const PORT = 3000;
-// const ASSET_DIR = '../public/asset/image';
-
-// will be deprecated
-// const storage = multer.diskStorage({
-//     destination: (_, __, cb) => {
-//         mkdirp.sync(path.resolve(__dirname, ASSET_DIR));
-//         cb(null, path.resolve(__dirname, ASSET_DIR))
-//     },
-//     filename: (_, file, cb) => {
-//         cb(null, file.fieldname);
-//     }
-// });
 
 const app = express();
 
 app.disable('x-powered-by');
 
 app.use(express.static(path.resolve(__dirname, '../../public/app')));
-// app.use('/image', express.static(path.resolve(__dirname, '../../public/asset/image')));
 
 app.get('/', (_, res) => {
     res.sendFile(INDEX_HTML_FILE_PATH);
 });
 
-app.post('/upload', auth, uploader.any(), uploadeImage, (req, res) => {
-    console.log('success uploading images');
-    res.sendStatus(OK);
-});
+app.post('/upload', 
+    auth, 
+    uploader.any(), 
+    uploadeImage, (req, res) => {
+        if (req.failedFileName) {
+            res.sendStatus(INTERNAL_SERVER_ERROR).end();
+        } else {
+            const fileListString = req.files.map(file => file.cloudStoragePublicURL).join('\n');
+            logger.info(`All files are successfully uploaded. The below list is the public URL of images.\n
+                ${fileListString}`);
+            res.sendStatus(OK).end();
+        }
+    }
+);
 
 app.get('/menus/:menuName/articles/:articleTitle', articleDetail);
 

@@ -115,7 +115,7 @@ export function* uploadImageRequestHandler(action: Action) : Generator<request.R
     } else {
         yield put(uploadImageFail({
             code: response.status,
-            message: response.body.message || 'Fail to upload images'
+            message: 'Fail to upload images'
         }));
     }
 }

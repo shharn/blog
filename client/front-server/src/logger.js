@@ -4,28 +4,20 @@ import {
     transports,
     format
 } from 'winston';
+import moment from 'moment-timezone';
 import { IS_DEVELOPMENT } from './constant';
 
-const { combine, timestamp, json} = format;
-
-const myTransports = [
-    new transports.File({
-        dirname: 'log',
-        filename: `${new Date().toLocaleString('ko-kr', {
-            day: 'numeric',
-            month: 'numeric',
-            year: 'numeric'
-        }).replace(/\. /g, '-')}.log`
-    })
-];
-
-if (IS_DEVELOPMENT) {
-    myTransports.push(new transports.Console())
-}
+const TIMEZONE = process.env.TZ;
+const TIMESTAMP_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+const timestamp = format((info, _) => {
+    info.timestamp = moment().tz(TIMEZONE).format(TIMESTAMP_FORMAT);
+    return info;
+});
+const { combine, json} = format;
 
 const logger = createLogger({
-    levels: IS_DEVELOPMENT ? config.syslog.debug : config.syslog.warning,
-    transports: myTransports,
+    levels: IS_DEVELOPMENT ? config.syslog.debug : config.syslog.error,
+    transports: [ new transports.Console() ],
     format: combine(
         timestamp(),
         json()

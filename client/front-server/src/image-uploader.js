@@ -31,31 +31,34 @@ export function uploadeImage(req, _, next) {
     if (!req.files) {
         return next();
     }
-    req.files.forEach(file => {
-        const fileName = file.originalname;
-        const fileObj = bucket.file(`${FOLDER_NAME}/${fileName}`);
-        const stream = fileObj.createWriteStream({
-            gzip: true,
-            metadata: {
-                contentType: file.mimetype,
-            },
-            resumable: false
-        }).on('error', err => {
-            console.log(`stream.on(error). error : ${err.toString}`);
-            logger.error(`Error during streaming the file. Error : ${err.message}`);
-            file.cloudStorageError = err;
-            next(err);
-        }).on('finish', () => {
-            console.log('string.on(finish');
-            file.cloudStorageObject = fileName;
-            fileObj.makePublic().then(() => {
-                file.cloudStoragePublicURL = getPublicURL(fileName);
-                next();
+    const uploads = req.files.map(file => {
+        return new Promise((resolve, reject) => {
+            const fileName = file.originalname;
+            const fileObj = bucket.file(`${FOLDER_NAME}/${fileName}`);
+            const stream = fileObj.createWriteStream({
+                gzip: true,
+                metadata: {
+                    contentType: file.mimetype
+                },
+                resumable: false
+            }).on('error', err => {
+                reject({ err, fileName });
+            }).on('finish', () => {
+                fileObj.makePublic().then(() => {
+                    file.cloudStoragePublicURL = getPublicURL(fileName);
+                    resolve();
+                });
             });
+            stream.end(file.buffer);
         });
-
-        stream.end(file.buffer);
     });
+
+    Promise.all(uploads)
+        .then(() => next())
+        .catch(({err, failedFileName }) => {
+            logger.error(`[image-uploader] Failed to upload ${failedFileName} to GCP bucket : ${err.toString}`);
+            req.failedFileName = failedFileName;
+        });
 }
 
 function getPublicURL(fileName) {
