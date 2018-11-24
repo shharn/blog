@@ -12,7 +12,6 @@ const REQUEST_TIMEOUT_MS = 10000;
 
 export function auth(req, res, next) {
     const token = req.header(TOKEN_HEADER_NAME);
-    logger.info(`${req.method}-${req.originalUrl}-${token}`);
     if (!!token && token.length > 0) {
         request
             .get(`${API_SERVER_HOST}/check`)
@@ -25,6 +24,7 @@ export function auth(req, res, next) {
                 if (res.statusCode === OK && res.body.isValid) {
                     next();
                 } else {
+                    logger.warning(`Invalid token received = ${token}`)
                     res
                         .status(UNAUTHORIZED)
                         .json(HTTPBodyPreset[UNAUTHORIZED]);

@@ -3,6 +3,7 @@ import express from 'express';
 import chalk from 'chalk';
 import { 
     INDEX_HTML_FILE_PATH,
+    ERROR_PAGE_FILE_PATH,
     IS_DEVELOPMENT
 } from './constant';
 import Loadable from 'react-loadable';
@@ -55,7 +56,7 @@ app.all('*', (req, res) => {
 // error handler
 app.use((err, req, res, next) => {
     logger.error(`Unhandled error : ${err.message}`);
-    // res.sendFile(INTERNAL_SERVER_ERROR_HTML_FILE);
+    res.sendFile(ERROR_PAGE_FILE_PATH);
 });
 
 Loadable.preloadAll().then(() => {

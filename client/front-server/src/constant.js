@@ -8,6 +8,8 @@ export const TOKEN_HEADER_NAME = "X-Session-Token";
 
 export const INDEX_HTML_FILE_PATH = path.join(__dirname, '../../public/app/index.html');
 
+export const ERROR_PAGE_FILE_PATH = path.join(__dirname, '../../public/app/error.html');
+
 export const HTTPStatusCode = {
     OK: 200,
     UNAUTHORIZED: 401,
