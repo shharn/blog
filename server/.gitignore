@@ -1,4 +1,4 @@
 src/
-!src/github.com/shharn
-**/bin/**
-**/pkg/**
+!src/github.com/shharn/**
+**/bin
+**/pkg
