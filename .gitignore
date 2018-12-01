@@ -3,3 +3,7 @@
 **/*.log
 
 **/Dockerfile*
+
+**/*.yaml
+**/kubernetes/
+**/.dockerignore
