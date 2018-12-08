@@ -36,7 +36,7 @@ func (af AuthFilter) Filter(w http.ResponseWriter, r *http.Request) error {
 		} 
 	}
 
-	clientToken := r.Header.Get("X-Session-Token")
+	clientToken := r.Header.Get(TokenName)
 
 	if isValid, err := af.validateToken(clientToken, af.Key); err == nil {
 		if isValid {

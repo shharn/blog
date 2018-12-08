@@ -2,10 +2,18 @@ package router
 
 import (
 	"fmt"
-	"log"
 	"net/http"
-	"runtime/debug"
+	"os"
 	"strings"
+
+	"github.com/pkg/errors"
+	"github.com/shharn/blog/logger"
+	log "github.com/sirupsen/logrus"
+)
+
+const (
+	// TokenName represents header name which contains session token data
+	TokenName = "X-Session-Token"
 )
 
 var (
@@ -147,25 +155,43 @@ func (r *Router) add(method, path string, handler Handler) {
 
 // ServerHTTP is the http.Handler interface method
 func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
-	log.Printf("%s  %s %s %s", rq.Method, rq.URL, rq.Header.Get("X-Session-Token"), rq.RemoteAddr)
-
 	defer func() {
 		if rcv := recover(); rcv != nil {
-			log.Printf("[Unhandled Error] : %s\nStackTrace : %s", rcv, debug.Stack())
+			if err, ok  := rcv.(error); ok {
+				logger.Logger.WithFields(log.Fields{
+					"stacktrace": fmt.Sprintf("%+v", err),
+				}).Error(err.Error())
+			} else {
+				err = errors.New(fmt.Sprintf("%v", rcv))
+				logger.Logger.WithFields(log.Fields{
+					"stacktrace": fmt.Sprintf("%+v", err),
+				}).Error(err.Error())
+			}
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 	}()
+
+	logger.Logger.WithFields(log.Fields{
+		"client_ip": GetClientAddress(rq),
+		"path": rq.URL.Path,
+		"params": rq.URL.Query(),
+		"token": rq.Header.Get(TokenName),
+	}).Info("Incoming http request log")
 
 	w.Header().Set("Content-Type", "application/json")
 	err := r.consume(w, rq);
 	if err != nil {
 		if t, ok := err.(RouterError); ok {
-			log.Printf("[Error] %v\n[Inner] %v", t.Error(), fmt.Sprintf("%+v", t.innerError))
+			logger.Logger.WithFields(log.Fields{
+				"stacktrace": fmt.Sprintf("%+v", t.innerError),
+			}).Error(t.Error())
 			bytes, _ := r.Marshaler.Marshal(t)
 			w.WriteHeader(t.Code)
 			w.Write(bytes)
 		} else {
-			log.Printf("[Error] %v\n", err.Error())
+			logger.Logger.WithFields(log.Fields{
+				"stacktrace": fmt.Sprintf("%+v", err),
+			}).Error(err.Error())
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 	}
@@ -271,5 +297,17 @@ func NewRouter() *Router {
 		Dispatchers:       map[string][]RouterContext{},
 		Filters:           []Filter{},
 		Marshaler:         JSONMarshaler{},
+	}
+}
+
+// GetClientAddress gives you a client IP
+func GetClientAddress(rq *http.Request) string {
+	currentEnv := os.Getenv("ENVIRONMENT")
+	if currentEnv == "development" {
+		return rq.RemoteAddr
+	} else if (currentEnv == "production") {
+		return rq.Header.Get("X-Forwarded-For")
+	} else {
+		return ""
 	}
 }

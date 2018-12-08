@@ -16,7 +16,7 @@ const timestamp = format((info, _) => {
 const { combine, json} = format;
 
 const logger = createLogger({
-    levels: IS_DEVELOPMENT ? config.syslog.debug : config.syslog.error,
+    levels: IS_DEVELOPMENT ? config.syslog.debug : config.syslog.info,
     transports: [ new transports.Console() ],
     format: combine(
         timestamp(),

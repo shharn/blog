@@ -35,7 +35,7 @@ func UpdateMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Pa
 		err  error
 	)
 	if err = json.NewDecoder(rq.Body).Decode(&menu); err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 	err = service.UpdateMenu(menu)
 	return nil, err

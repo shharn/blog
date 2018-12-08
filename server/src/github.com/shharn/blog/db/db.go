@@ -3,11 +3,12 @@ package db
 import (
 	"context"
 	"encoding/json"
-	"log"
 
 	"github.com/dgraph-io/dgo"
 	"github.com/dgraph-io/dgo/protos/api"
 	"github.com/pkg/errors"
+	"github.com/shharn/blog/logger"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 
@@ -41,6 +42,9 @@ func Init() (*Client, error) {
 
 // Query sends a request for query without vars
 func (c *Client) Query(q string) (*api.Response, error) {
+	logger.Logger.WithFields(logrus.Fields{
+		"query": q,
+	}).Trace("db.Client.Query")
 	res, err := c.tx.Query(c.ctx, q)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -50,6 +54,10 @@ func (c *Client) Query(q string) (*api.Response, error) {
 
 // QueryWithVars sends a request for query with vars
 func (c *Client) QueryWithVars(q string, vars map[string]string) (*api.Response, error) {
+	logger.Logger.WithFields(logrus.Fields{
+		"query": q,
+		"vars": vars,
+	}).Trace("db.Client.QueryWithVars")
 	res, err := c.tx.QueryWithVars(c.ctx, q, vars)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -59,6 +67,9 @@ func (c *Client) QueryWithVars(q string, vars map[string]string) (*api.Response,
 
 // Mutate sends a request for more than one mutation tasks
 func (c *Client) Mutate(md MutationData) (*api.Assigned, error) {
+	logger.Logger.WithFields(logrus.Fields{
+		"mutation_data": md,
+	}).Trace("db.Client.Mutate")
 	mu := &api.Mutation{}
 	mmd, err := json.Marshal(md)
 	if err != nil {
@@ -74,6 +85,11 @@ func (c *Client) Mutate(md MutationData) (*api.Assigned, error) {
 
 // AddEdge sends a request for adding a edge between the nodes
 func (c *Client) AddEdge(subject, predicate, objID string) (*api.Assigned, error) {
+	logger.Logger.WithFields(logrus.Fields{
+		"subject": subject,
+		"predicate": predicate,
+		"object_id": objID,
+	}).Trace("db.Client.AddEdge")
 	mu := &api.Mutation{}
 	mu.Set = append(mu.Set, &api.NQuad{
 		Subject:   subject,
@@ -82,7 +98,6 @@ func (c *Client) AddEdge(subject, predicate, objID string) (*api.Assigned, error
 	})
 
 	res, err := c.tx.Mutate(c.ctx, mu)
-	log.Printf("[AddEdge] res : %v\n", res)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -91,6 +106,9 @@ func (c *Client) AddEdge(subject, predicate, objID string) (*api.Assigned, error
 
 // DeleteNode sends a request for a single task which deletes a node
 func (c *Client) DeleteNode(uid string) (*api.Assigned, error) {
+	logger.Logger.WithFields(logrus.Fields{
+		"uid": uid,
+	}).Trace("db.Client.DeleteNode")
 	d := map[string]string{"uid": uid}
 	md, err := json.Marshal(d)
 	if err != nil {
@@ -110,6 +128,11 @@ func (c *Client) DeleteNode(uid string) (*api.Assigned, error) {
 
 // DeleteEdge sends a request for a single task which deletes a edge between the nodes
 func (c *Client) DeleteEdge(subject, predicate, objValue string) (*api.Assigned, error) {
+	logger.Logger.WithFields(logrus.Fields{
+		"subject": subject,
+		"predicate": predicate,
+		"object_id": objValue,
+	}).Trace("db.Client.DeleteEdge")
 	mu := &api.Mutation{}
 	mu.Del = append(mu.Del, &api.NQuad{
 		Subject:   subject,
@@ -125,6 +148,9 @@ func (c *Client) DeleteEdge(subject, predicate, objValue string) (*api.Assigned,
 
 // Delete makes a request for multiple tasks at once
 func (c *Client) Delete(md MutationData) (*api.Assigned, error) {
+	logger.Logger.WithFields(logrus.Fields{
+		"mutation_data": md,
+	}).Trace("db.Client.Delete")
 	dd, err := json.Marshal(md)
 	if err != nil {
 		return nil, errors.WithStack(err)
