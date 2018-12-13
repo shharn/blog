@@ -1,6 +1,6 @@
-version: 2
+version: 2.1
 jobs:
-    build_and_test:
+    build:
         docker:
             - image: circleci/node:8.11.3-alpine
           #- image: circleci/golang:1.11.1-alpine3.8
@@ -16,13 +16,21 @@ jobs:
               paths:
                   - node_modules
               key: v1-dependencies-{{ checksum "package.json" }}
-          - run:
-              name: Run tests
-              command: yarn test
-          - store_test_results:
-              path: test-results
+    test:
+        docker:
+            - image: circleci/node:8.11.3-alpine
+        working_directory: ~/repo
+        steps:
+            - checkout
+            - restore_cache:
+                keys:
+                    - v1-dependencies-{{ checksum "package.json" }}
+                    - v1-dependencies-
+            - run: yarn test
+            - store_test_results: /test_results
     workflows:
         version: 2
-        ultimate_pipeline:
+        build_and_test:
             jobs:
-                - build_and_test
+                - build
+                - test
