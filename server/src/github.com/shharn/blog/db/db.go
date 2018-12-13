@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"encoding/json"
 
 	"github.com/dgraph-io/dgo"
@@ -166,22 +167,24 @@ func (c *Client) Delete(md MutationData) (*api.Assigned, error) {
 }
 
 // Commit DOES commit the transaction
-func (c *Client) Commit() error {
+func (c *Client) Commit() {
 	defer c.tx.Discard(c.ctx)
 	if err := c.tx.Commit(c.ctx); err != nil {
-		return errors.WithStack(err)
+		err = errors.WithStack(err)
+		logger.Logger.WithFields(logrus.Fields{
+			"stacktrace": fmt.Sprintf("%+v", err),
+		}).Error(err.Error())
 	}
-	return nil
 }
 
 // CleanUp releases the underlying resources
-func (c *Client) CleanUp() error {
-	if c == nil {
-		return nil
+func (c *Client) CleanUp() {
+	if c != nil {
+		if err := c.conn.Close(); err != nil {
+			err = errors.WithStack(err)
+			logger.Logger.WithFields(logrus.Fields{
+				"stacktrace": fmt.Sprintf("%+v", err),
+			}).Error(err.Error())
+		}
 	}
-
-	if err := c.conn.Close(); err != nil {
-		return errors.WithStack(err)
-	}
-	return nil
 }

@@ -8,7 +8,7 @@ import {
 import logger from './logger';
 
 const { OK, UNAUTHORIZED, INTERNAL_SERVER_ERROR } = HTTPStatusCode;
-const REQUEST_TIMEOUT_MS = 10000;
+const REQUEST_TIMEOUT_MS = 3 * 1000;
 
 export function auth(req, res, next) {
     const token = req.header(TOKEN_HEADER_NAME);

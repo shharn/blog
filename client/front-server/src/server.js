@@ -65,6 +65,6 @@ Loadable.preloadAll().then(() => {
             logger.error(`Error during listening on port ${PORT}. Error - ${err.message}`);
             throw err;
         }
-        logger.info(chalk.green(`Front-server is running on port ${PORT}\nCurrent environment : ${IS_DEVELOPMENT ? 'development' : 'production'}`));
+        logger.info(chalk.green(`Front-server is running on port ${PORT}`));
     });
 });

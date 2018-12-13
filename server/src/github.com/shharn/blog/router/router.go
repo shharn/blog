@@ -172,6 +172,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 	}()
 
 	logger.Logger.WithFields(log.Fields{
+		"headers": rq.Header,
 		"client_ip": GetClientAddress(rq),
 		"path": rq.URL.Path,
 		"params": rq.URL.Query(),
