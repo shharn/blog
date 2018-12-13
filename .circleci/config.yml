@@ -3,15 +3,16 @@ jobs:
     build:
         docker:
             - image: circleci/node:8.11.3
-          #- image: circleci/golang:1.11.1-alpine3.8
         working_directory: ~/repo
         steps:
           - checkout
           - restore_cache:
               keys:
-                  - v1-dependencies-{{ checksum "package.json" }}
+                  - v1-dependencies-{{ checksum "client/package.json" }}
                   - v1-dependencies-
-          - run: yarn install
+          - run: 
+              working_directory: ~/repo/client
+              command: yarn install
           - save_cache:
               paths:
                   - node_modules
@@ -26,7 +27,9 @@ jobs:
                 keys:
                     - v1-dependencies-{{ checksum "client/package.json" }}
                     - v1-dependencies-
-            - run: yarn test
+            - run: 
+                  working_directory: ~/repo/client
+                  command: yarn test
             - store_test_results: 
                 path: /test_results
 workflows:
