@@ -310,7 +310,7 @@ describe('Should handle UPLOAD_IMAGE', () => {
     });
 
     test('Invalid token', () => {
-        const mockMessage = 'test error message';
+        const mockMessage = 'Fail to upload images';
         const mockResponse = {
             status: 401,
             body: {

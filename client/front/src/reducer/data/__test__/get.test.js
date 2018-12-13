@@ -23,7 +23,8 @@ const initial = {
         },
         error: { ...NO_ERROR },
         fetchStatus: FetchStatus.INITIAL,
-        fetchComplete: false
+        fetchComplete: false,
+        isServerRendered: false
     },
     articles: {
         data: [],
