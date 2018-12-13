@@ -8,15 +8,15 @@ jobs:
           - checkout
           - restore_cache:
               keys:
-                  - v1-dependencies-{{ checksum "client/package.json" }}
-                  - v1-dependencies-
+                  - node-modules-{{ checksum "client/package.json" }}
+                  - node-modules-
           - run: 
               working_directory: ~/repo/client
               command: yarn install
           - save_cache:
               paths:
-                  - node_modules
-              key: v1-dependencies-{{ checksum "client/package.json" }}
+                  - client/node_modules
+              key: node-modules-{{ checksum "client/package.json" }}
     test:
         docker:
             - image: circleci/node:8.11.3
@@ -25,8 +25,8 @@ jobs:
             - checkout
             - restore_cache:
                 keys:
-                    - v1-dependencies-{{ checksum "client/package.json" }}
-                    - v1-dependencies-
+                    - node-modules-{{ checksum "client/package.json" }}
+                    - node-modules-
             - run: 
                   working_directory: ~/repo/client
                   command: yarn test
