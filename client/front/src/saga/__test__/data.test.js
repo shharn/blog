@@ -348,5 +348,5 @@ describe('Should handle UPLOAD_IMAGE', () => {
 });
 
 test('test fail', () => {
-    expect('test fail', 'test fail !!');
+    expect('test fail').toEqual('test fail!!!');
 });
