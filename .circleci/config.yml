@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-    build:
+    build-front:
         docker:
             - image: circleci/node:8.11.3
         working_directory: ~/repo
@@ -17,7 +17,7 @@ jobs:
               paths:
                   - client/node_modules
               key: node-modules-{{ checksum "client/package.json" }}
-    test:
+    test-front:
         docker:
             - image: circleci/node:8.11.3
         working_directory: ~/repo
@@ -29,14 +29,16 @@ jobs:
                     - node-modules-
             - run: 
                   working_directory: ~/repo/client
-                  command: yarn test
+                  command: |
+                      yarn test:ci
+                      mv jest_result.json ~/test_results/jest
             - store_test_results: 
-                path: /test_results
+                path: ~/test_results
 workflows:
     version: 2
     build_and_test:
         jobs:
-            - build
-            - test:
+            - build-front
+            - test-front:
                 requires:
-                    - build
+                    - build-front
