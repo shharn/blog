@@ -93,6 +93,7 @@
     "start:prod": "node fron-server/bootstrap.js",
     "build:prod": " node front/scripts/build.js",
     "test": "node front/scripts/test.js --env=jsdom",
+    "test:ci": "node front/scripts/test.js --env=jsdom --json --outputFile=jest_result.json",
     "flow": "flow"
   },
   "jest": {
