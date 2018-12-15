@@ -32,7 +32,7 @@ jobs:
                   command: |
                       mkdir -p ~/test_results
                       yarn test:ci
-                      mv jest_result.json ~/test_results/.jest_result.json
+                      mv jest_result.json ~/test_results/jest_result.json
             - store_test_results: 
                 path: ~/test_results
 workflows:
