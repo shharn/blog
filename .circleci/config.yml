@@ -30,9 +30,9 @@ jobs:
             - run: 
                   working_directory: ~/repo/client
                   command: |
-                      mkdir -p ~/test_results/jest
+                      mkdir -p ~/test_results
                       yarn test:ci
-                      mv jest_result.json ~/test_results/jest
+                      mv jest_result.json ~/test_results/.jest_result.json
             - store_test_results: 
                 path: ~/test_results
 workflows:
