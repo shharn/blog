@@ -2,6 +2,8 @@ package router
 
 import (
 	"strings"
+
+	"github.com/shharn/blog/logger"
 )
 
 // Params represents the param values on URL
@@ -18,10 +20,17 @@ func parseURL(pattern, path string) Params {
 
 	params := Params{}
 	splittedPattern, splittedPath := strings.Split(pattern, "/"), strings.Split(path, "/")
+	if len(splittedPattern) != len(splittedPath) {
+		return params
+	}
 	for index, splittedPattern := range splittedPattern {
+		currPath := splittedPath[index]
 		if len(splittedPattern) > 0 && splittedPattern[0] == ':' {
-			params[splittedPattern[1:]] = splittedPath[index]
-		}
+			params[splittedPattern[1:]] = currPath
+		} else if splittedPattern != currPath { // unmatched pattern & path detected
+			logger.Logger.Errorf("Unmatched pattern & path. Pattern: %v, Path: %v", pattern, path)
+			return Params{}
+		} 
 	}
 	return params
 }
