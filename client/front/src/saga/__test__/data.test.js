@@ -346,7 +346,3 @@ describe('Should handle UPLOAD_IMAGE', () => {
         expect(next).toEqual({ done: true });
     });
 });
-
-test('test fail', () => {
-    expect('test fail').toEqual('test fail!!!');
-});
