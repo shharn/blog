@@ -50,6 +50,7 @@ jobs:
             - run:
                 working_directory: ~/repo/server
                 command: |
+                    export GOPATH=$(pwd)/server
                     make test
 workflows:
     version: 2
