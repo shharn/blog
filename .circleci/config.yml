@@ -59,4 +59,4 @@ workflows:
             - test-front:
                 requires:
                     - build-front
-            - test-apiserver:
+            - test-apiserver
