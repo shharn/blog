@@ -2,11 +2,11 @@ package main
 
 import (
 	"net/http"
-	"log"
 	"strings"
 
 	"github.com/shharn/blog/config"
 	"github.com/shharn/blog/handler"
+	"github.com/shharn/blog/logger"
 	"github.com/shharn/blog/router"
 )
 
@@ -57,11 +57,11 @@ func main() {
 
 	if err := handler.RegenerateKey(); err == nil {
 		if err := http.ListenAndServe(":5000", r); err != nil {
-			log.Printf("%+v\n", err)
+			logger.Logger.Error(err)
 		} else {
-			log.Println("Listening on port 80\v")
+			logger.Logger.Info("Listening on port 5000")
 		}
 	} else {
-		log.Printf("%+v\n", err)
+		logger.Logger.Error(err)
 	}
 }

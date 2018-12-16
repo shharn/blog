@@ -158,14 +158,10 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 	defer func() {
 		if rcv := recover(); rcv != nil {
 			if err, ok  := rcv.(error); ok {
-				logger.Logger.WithFields(log.Fields{
-					"stacktrace": fmt.Sprintf("%+v", err),
-				}).Error(err.Error())
+				logger.Logger.Error(err)
 			} else {
 				err = errors.New(fmt.Sprintf("%v", rcv))
-				logger.Logger.WithFields(log.Fields{
-					"stacktrace": fmt.Sprintf("%+v", err),
-				}).Error(err.Error())
+				logger.Logger.Error(err)
 			}
 			w.WriteHeader(http.StatusInternalServerError)
 		}
@@ -183,16 +179,12 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 	err := r.consume(w, rq);
 	if err != nil {
 		if t, ok := err.(RouterError); ok {
-			logger.Logger.WithFields(log.Fields{
-				"stacktrace": fmt.Sprintf("%+v", t.innerError),
-			}).Error(t.Error())
+			logger.Logger.ErrorWithMessage(t.Error(), t.innerError)
 			bytes, _ := r.Marshaler.Marshal(t)
 			w.WriteHeader(t.Code)
 			w.Write(bytes)
 		} else {
-			logger.Logger.WithFields(log.Fields{
-				"stacktrace": fmt.Sprintf("%+v", err),
-			}).Error(err.Error())
+			logger.Logger.Error(err)
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 	}

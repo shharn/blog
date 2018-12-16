@@ -3,6 +3,7 @@ package router
 import (
 	"strings"
 
+	"github.com/pkg/errors"
 	"github.com/shharn/blog/logger"
 )
 
@@ -28,7 +29,7 @@ func parseURL(pattern, path string) Params {
 		if len(splittedPattern) > 0 && splittedPattern[0] == ':' {
 			params[splittedPattern[1:]] = currPath
 		} else if splittedPattern != currPath { // unmatched pattern & path detected
-			logger.Logger.Errorf("Unmatched pattern & path. Pattern: %v, Path: %v", pattern, path)
+			logger.Logger.Error(errors.Errorf("Unmatched pattern & path. Pattern: %v, Path: %v", pattern, path))
 			return Params{}
 		} 
 	}

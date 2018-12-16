@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"fmt"
 	"encoding/json"
 
 	"github.com/dgraph-io/dgo"
@@ -171,9 +170,7 @@ func (c *Client) Commit() {
 	defer c.tx.Discard(c.ctx)
 	if err := c.tx.Commit(c.ctx); err != nil {
 		err = errors.WithStack(err)
-		logger.Logger.WithFields(logrus.Fields{
-			"stacktrace": fmt.Sprintf("%+v", err),
-		}).Error(err.Error())
+		logger.Logger.Error(err)
 	}
 }
 
@@ -182,9 +179,7 @@ func (c *Client) CleanUp() {
 	if c != nil {
 		if err := c.conn.Close(); err != nil {
 			err = errors.WithStack(err)
-			logger.Logger.WithFields(logrus.Fields{
-				"stacktrace": fmt.Sprintf("%+v", err),
-			}).Error(err.Error())
+			logger.Logger.Error(err)
 		}
 	}
 }
