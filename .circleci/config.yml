@@ -66,11 +66,11 @@ jobs:
             - run:
                 name: Setup Google Cloud SDK
                 command: |
-                    echo $SERVICE_KEY | sudo gcloud auth activate-service-account --key-file=-
+                    echo $SERVICE_KEY | gcloud auth activate-service-account --key-file=-
                     set -x
-                    sudo gcloud --quiet config set project $PROJECT_ID
-                    sudo gcloud --quiet config set compute/zone $COMPUTE_ZONE
-                    sudo gcloud --quiet container clusters get-credentials $CLUSTER_NAME
+                    gcloud --quiet config set project $PROJECT_ID
+                    gcloud --quiet config set compute/zone $COMPUTE_ZONE
+                    gcloud --quiet container clusters get-credentials $CLUSTER_NAME
             - run:
                 name: Build docker image
                 command: |
