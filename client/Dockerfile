@@ -1,4 +1,7 @@
 FROM node:8.11.3-alpine as base
+
+ARG PROJECT_ID
+
 WORKDIR /app
 COPY . .
 RUN yarn install && \
@@ -7,10 +10,10 @@ RUN yarn install && \
 FROM node:8.11.3-alpine
 WORKDIR /app
 ENV NODE_ENV=production \
-    TZ=Asia/Seoul \
-    BUCKET_NAME=puppyloper-blog \
-    PROJECT_ID=blog-xxxx \
+    BUCKET_NAME=puppyloper-test \
+    PROJECT_ID=${PROJECT_ID} \
     IMAGE_BASE_URL=https://storage.googleapis.com \
+    IMAGE_FOLDER_NAME=images \
     GOOGLE_APPLICATION_CREDENTIALS=./storage-credential.json
 COPY --from=base /app/public /app/public
 COPY --from=base /app/front-server /app/front-server
