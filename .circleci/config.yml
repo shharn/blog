@@ -64,11 +64,6 @@ jobs:
             - checkout
             - setup_remote_docker
             - run:
-                name: Remove unneccessary files
-                command: |
-                    sudo rm -rf /usr/local/android-sdk-linux
-                    sudo rm -rf /home/ubuntu/.android
-            - run:
                 name: Install utils
                 command: |
                     apt-get update
