@@ -109,6 +109,6 @@ workflows:
                     - test-front
                     - test-apiserver
                 filters:
-                    branchs:
+                    branches:
                         only: master
         
