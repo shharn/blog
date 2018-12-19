@@ -68,11 +68,8 @@ jobs:
                 command: |
                     gcloud auth configure-docker
 
-                    docker build --file server/Dockerfile.prod blog-api-server
-                    docker build --file client/Dockerfile.prod blog-front-server
-
-                    docker tag blog-api-server us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
-                    docker tag blog-front-server us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
+                    docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 server
+                    docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 client
 
                     docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
                     docker push us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1

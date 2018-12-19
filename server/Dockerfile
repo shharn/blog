@@ -3,7 +3,7 @@ WORKDIR /go
 COPY . /go
 RUN apk update && \
     apk upgrade && \
-    apk add git tzdata&& \
+    apk add git tzdata make && \
     make install
 
 FROM golang:1.11.1-alpine3.8

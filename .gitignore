@@ -5,5 +5,5 @@
 **/*.yaml
 **/kubernetes/
 **/.dockerignore
-
+**/*.dev
 *credential*.json
