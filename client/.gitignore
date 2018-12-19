@@ -14,9 +14,6 @@ public
 # git
 .git
 
-# credential
-*credential*.json
-
 # misc
 .DS_Store
 .env.local

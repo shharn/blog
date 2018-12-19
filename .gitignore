@@ -2,8 +2,8 @@
 **/.vscode/
 **/*.log
 
-**/Dockerfile*
-
 **/*.yaml
 **/kubernetes/
 **/.dockerignore
+
+*credential*.json

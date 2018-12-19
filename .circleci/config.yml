@@ -11,6 +11,7 @@ jobs:
                   - node-modules-{{ checksum "client/package.json" }}
                   - node-modules-
           - run: 
+              name: Install client-side dependencies
               working_directory: ~/repo/client
               command: yarn install
           - save_cache:
@@ -28,9 +29,10 @@ jobs:
                     - node-modules-{{ checksum "client/package.json" }}
                     - node-modules-
             - run: 
-                  working_directory: ~/repo/client
-                  command: |
-                      yarn test
+                name: Run tests of client-side application
+                working_directory: ~/repo/client
+                command: |
+                    yarn test
     build-apiserver:
         docker:
             - image: circleci/golang:1.11.1
@@ -38,6 +40,7 @@ jobs:
         steps:
             - checkout
             - run:
+                name: Build a golang application
                 working_directory: ~/repo/server
                 command: |
                     make install
@@ -48,10 +51,50 @@ jobs:
         steps:
             - checkout
             - run:
+                name: Run tests of go application
                 working_directory: ~/repo/server
                 command: |
                     export GOPATH=$(pwd)
                     make test
+    deploy:
+        docker:
+            - image: google/cloud-sdk
+        working_directory: ~/repo
+        steps:
+            - checkout
+            - setup_remote_docker
+            - run:
+                name: Install utils
+                command: |
+                    apt-get update
+                    apt-get install jq
+            - run:
+                name: Build docker image & push images to container registry
+                command: |
+                    gcloud auth configure-docker
+
+                    docker build --file server/Dockerfile.prod blog-api-server
+                    docker build --file client/Dockerfile.prod blog-front-server
+
+                    docker tag blog-api-server us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
+                    docker tag blog-front-server us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
+
+                    docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
+                    docker push us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
+            - run:
+                name: Setup Google Cloud SDK
+                command: |
+                    echo $SERVICE_KEY | sudo gcloud auth activate-service-account --key-file=-
+                    set -x
+                    sudo gcloud --quiet config set project $PROJECT_ID
+                    sudo gcloud --quiet config set compute/zone $COMPUTE_ZONE
+                    sudo gcloud --quiet container clusters get-credentials $CLUSTER_NAME
+            - run:
+                name: Let's deploy the app!
+                command: |
+                    kubectl apply -f k8s.yaml
+                    kubectl rollout status deployment
+                    kubectl get pods
 workflows:
     version: 2
     build_and_test:
@@ -61,3 +104,11 @@ workflows:
                 requires:
                     - build-front
             - test-apiserver
+            - deploy:
+                requires:
+                    - test-front
+                    - test-apiserver
+                filters:
+                    branchs:
+                        only: master
+        
