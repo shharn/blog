@@ -74,27 +74,26 @@ jobs:
                     gcloud --quiet config set project $PROJECT_ID
                     gcloud --quiet config set compute/zone $COMPUTE_ZONE
             - setup_remote_docker
-            # - run:
-            #     name: Build docker image
-            #     command: |
-            #         docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 server
-            #         docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 --build-arg PROJECT_ID=$PROJECT_ID client
-            # - run:
-            #     name: Push docker images to container registry
-            #     command: |
-            #         gcloud auth configure-docker
-            #         gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us.gcr.io
-            #         docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
-            #         docker push us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
+            - run:
+                name: Build docker image
+                command: |
+                    docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 server
+                    docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 --build-arg PROJECT_ID=$PROJECT_ID client
+            - run:
+                name: Push docker images to container registry
+                command: |
+                    gcloud auth configure-docker
+                    gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us.gcr.io
+                    docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
+                    docker push us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
             - run:
                 name: Let's deploy the app!
                 command: |
                     apt-get install -qq -y gettext
                     envsubst < k8s.yaml > k8s_substitued.yaml
-                    cat k8s_substitued.yaml
-                    # kubectl apply -f k8s_substitued.yaml
-                    # kubectl rollout status deployment
-                    # kubectl get pods
+                    kubectl apply -f k8s_substitued.yaml
+                    kubectl rollout status deployment
+                    kubectl get pods
 workflows:
     version: 2
     build_and_test:
