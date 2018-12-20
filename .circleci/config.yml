@@ -80,8 +80,7 @@ jobs:
                     docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 server
                     docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 --build-arg PROJECT_ID=$PROJECT_ID client
 
-                    gcloud init
-                    docker-credential-gcloud list
+                    curl "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" -H "Metadata-Flavor: Google"
 
                     docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
                     docker push us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
