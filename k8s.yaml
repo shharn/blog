@@ -1,0 +1,210 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: front-server-service
+spec:
+    type: NodePort
+    selector:
+        app: blog-front
+        tier: front
+    ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+      name: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: blog-front
+spec:
+    selector:
+        matchLabels:
+            app: blog-front
+            tier: front
+    replicas: 1
+    strategy:
+        type: RollingUpdate
+        rollingUpdate:
+            maxUnavailable: 1
+            maxSurge: 2
+    template:
+        metadata:
+            labels:
+                app: blog-front
+                tier: front
+        spec:
+            containers:
+                - name: blog-front
+                  image: us.gcr.io/${PROJECT_ID}/blog-front-server:${CIRCLE_SHA1}
+                  imagePullPolicy: Always
+                  ports:
+                      - containerPort: 3000
+                        name: http
+                      - containerPort: 3001
+                        name: https
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: dgraph-server
+    labels:
+        db: dgraph
+spec:
+    ports:
+    - protocol: TCP
+      name: dgraph-server-port
+      port: 9080
+      targetPort: 9080
+    selector:
+        db: dgraph
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+    name: dgraph
+spec:
+    selector:
+        matchLabels:
+            db: dgraph
+            tier: backend
+    serviceName: "dgraph"
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                db: dgraph
+                tier: backend
+        spec:
+            terminationGracePeriodSeconds: 30
+            containers:
+            - name: dgraph-zero
+              image: dgraph/dgraph:v1.0.9
+              args:
+                - dgraph
+                - zero
+                - --my=localhost:5080
+              ports:
+              - containerPort: 5080
+                name: grpc
+              - containerPort: 6080
+                name: http
+              volumeMounts:
+              - name: dgraph-pv
+                mountPath: /dgraph-data
+            - name: dgraph-server
+              image: dgraph/dgraph:v1.0.9
+              args:
+                - dgraph
+                - server
+                - --my=localhost:7080
+                - --lru_mb=2048
+                - --zero=localhost:5080
+              ports:
+              - containerPort: 8080
+                name: http
+              - containerPort: 9080
+                name: grpc
+              volumeMounts:
+              - name: dgraph-pv
+                mountPath: /dgraph-data
+    volumeClaimTemplates:
+    - metadata:
+          name: dgraph-pv
+      spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+                storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: api-server-service
+spec:
+    type: NodePort
+    selector:
+        app: api-server
+        tier: backend
+    ports:
+    - protocol: TCP
+      name: http
+      port: 80
+      targetPort: 5000
+    - protocol: TCP
+      name: https
+      port: 443
+      targetPort: 5001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: api-server
+spec:
+    selector:
+        matchLabels:
+            app: api-server
+            tier: backend
+    strategy: 
+        type: RollingUpdate
+        rollingUpdate:
+            maxUnavailable: 1
+            maxSurge: 2
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                app: api-server
+                tier: backend
+        spec:
+            containers:
+                - name: blog-api-server
+                  image: us.gcr.io/${PROJECT_ID}/blog-api-server:${CIRCLE_SHA1}
+                  imagePullPolicy: Always
+                  ports:
+                      - containerPort: 5000
+                        name: http
+                      - containerPort: 5001
+                        name: https
+# ---
+# apiVersion: v1
+# data:
+#   tls.crt: /var/lib/secrets/front/front.cert
+#   tls.key: /var/lib/secrets/front/front.key
+# kind: Secret
+# metadata:
+#   name: blog-front-cert
+# type: Opaque
+# ---
+# apiVersion: v1
+# data:
+#   tls.crt: /var/lib/secrets/api/api.cert
+#   tls.key: /var/lib/secrets/api/api.key
+# kine: Secret
+# metadata:
+#   name: blog-api-server-cert
+# type: Opaque
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: blog-ingress
+spec:
+  # tls:
+  #   secretName: blog-front-cert
+  #   secretName: blog-api-server-cert
+  rules:
+  - host: blog.puppyloper.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: front-server-service
+          servicePort: 3000
+  - host: api.puppyloper.blog
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: api-server-service
+          servicePort: 5000

@@ -2,7 +2,7 @@
 **/.vscode/
 **/*.log
 
-**/*.yaml
+**/docker-compose*.yaml
 **/kubernetes/
 **/.dockerignore
 **/*.dev
