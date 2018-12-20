@@ -73,6 +73,7 @@ jobs:
                     echo $DEPLOY_SERVICE_ACCOUNT_CREDENTIAL | gcloud auth activate-service-account $DEPLOY_SERVICE_ACCOUNT_EMAIL --key-file=-
                     gcloud --quiet config set project $PROJECT_ID
                     gcloud --quiet config set compute/zone $COMPUTE_ZONE
+                    gcloud --quiet container clusters get-credentials $CLUSTER_NAME
             - setup_remote_docker
             - run:
                 name: Build docker image
@@ -89,6 +90,7 @@ jobs:
             - run:
                 name: Let's deploy the app!
                 command: |
+                    apt-get update
                     apt-get install -qq -y gettext
                     envsubst < k8s.yaml > k8s_substitued.yaml
                     kubectl apply -f k8s_substitued.yaml
