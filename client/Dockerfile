@@ -24,4 +24,4 @@ RUN yarn add \
     superagent@^3.8.2 \
     mkdirp@^0.5.1 \
     winston@^3.1.0
-CMD ["node", "front-server/server.js"]
+CMD ["yarn", "start:prod"]

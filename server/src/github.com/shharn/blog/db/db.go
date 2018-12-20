@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	dgraphAddress = "dgraph-server:9080"
+	dgraphAddress = "dgraph-server-service:9080"
 )
 
 // MutationData represents a struct to execute multiple mutation at a single network request
