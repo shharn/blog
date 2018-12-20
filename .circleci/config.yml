@@ -70,7 +70,7 @@ jobs:
             - run:
                 name: Setup Google Cloud SDK
                 command: |
-                    echo $CREDENTIAL_JSON | gcloud auth activate-service-account $SERVICE_ACCOUNT_EMAIL --key-file=-
+                    echo $DEPLOY_SERVICE_ACCOUNT_CREDENTIAL | gcloud auth activate-service-account $DEPLOY_SERVICE_ACCOUNT_EMAIL --key-file=-
                     gcloud --quiet config set project $PROJECT_ID
                     gcloud --quiet config set compute/zone $COMPUTE_ZONE
                     #gcloud --quiet container clusters get-credentials $CLUSTER_NAME
