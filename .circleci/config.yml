@@ -80,6 +80,9 @@ jobs:
                     docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 server
                     docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 --build-arg PROJECT_ID=$PROJECT_ID client
 
+                    gcloud init
+                    docker-credential-gcloud list
+
                     docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
                     docker push us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
             # - run:
