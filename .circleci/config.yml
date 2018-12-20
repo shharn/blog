@@ -67,7 +67,6 @@ jobs:
                 command: |
                     set -x
                     echo $STORAGE_CREDENTIAL_JSON > client/storage-credential.json
-            - setup_remote_docker
             - run:
                 name: Setup Google Cloud SDK
                 command: |
@@ -75,26 +74,19 @@ jobs:
                     gcloud --quiet config set project $PROJECT_ID
                     gcloud --quiet config set compute/zone $COMPUTE_ZONE
                     #gcloud --quiet container clusters get-credentials $CLUSTER_NAME
-
-                    gcloud auth configure-docker
+            - setup_remote_docker
+            - run:
+                name: Build docker image
+                command: |
                     docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 server
                     docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 --build-arg PROJECT_ID=$PROJECT_ID client
-
-                    curl "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token" -H "Metadata-Flavor: Google"
-
+            - run:
+                name: Push docker images to container registry
+                command: |
+                    gcloud auth configure-docker
+                    gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us.gcr.io
                     docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
                     docker push us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
-            # - run:
-            #     name: Build docker image
-            #     command: |
-            #         gcloud auth configure-docker
-            #         docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 server
-            #         docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 --build-arg PROJECT_ID=$PROJECT_ID client
-            # - run:
-            #     name: Push docker images to container registry
-            #     command: |
-            #         docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
-            #         docker push us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
             - run:
                 name: Let's deploy the app!
                 command: |
