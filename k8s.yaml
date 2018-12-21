@@ -3,7 +3,7 @@ kind: Service
 metadata:
     name: front-server-service
 spec:
-    type: ClusterIP
+    type: NodePort
     selector:
         app: blog-front
         tier: front
@@ -44,7 +44,7 @@ kind: Service
 metadata:
     name: api-server-service
 spec:
-    type: ClusterIP
+    type: NodePort
     selector:
         app: api-server
         tier: backend
