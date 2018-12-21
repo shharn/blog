@@ -93,6 +93,7 @@ jobs:
                     apt-get update
                     apt-get install -qq -y gettext
                     envsubst < k8s.yaml > k8s_substitued.yaml
+                    cat k8s_substitued.yaml
                     kubectl apply -f k8s_substitued.yaml
                     kubectl rollout status deployment
                     kubectl get pods

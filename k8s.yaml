@@ -187,45 +187,24 @@ spec:
                         name: http
                       - containerPort: 5001
                         name: https
-# ---
-# apiVersion: v1
-# data:
-#   tls.crt: /var/lib/secrets/front/front.cert
-#   tls.key: /var/lib/secrets/front/front.key
-# kind: Secret
-# metadata:
-#   name: blog-front-cert
-# type: Opaque
-# ---
-# apiVersion: v1
-# data:
-#   tls.crt: /var/lib/secrets/api/api.cert
-#   tls.key: /var/lib/secrets/api/api.key
-# kine: Secret
-# metadata:
-#   name: blog-api-server-cert
-# type: Opaque
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: blog-ingress
+    name: blog-ingress
 spec:
-  # tls:
-  #   secretName: blog-front-cert
-  #   secretName: blog-api-server-cert
-  rules:
-  - host: blog.puppyloper.com
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: front-server-service
-          servicePort: 3000
-  - host: api.puppyloper.blog
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: api-server-service
-          servicePort: 5000
+    rules:
+    - host: blog.puppyloper.com
+      http:
+          paths:
+          - path: /
+            backend:
+                serviceName: front-server-service
+                servicePort: 3000
+    - host: api.puppyloper.blog
+      http:
+          paths:
+          - path: /
+            backend:
+                serviceName: api-server-service
+                servicePort: 5000

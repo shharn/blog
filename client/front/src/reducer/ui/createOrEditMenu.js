@@ -1,4 +1,4 @@
-// @flow`
+// @flow
 import { UI as UIActionType } from '../../action/types';
 
 import type {

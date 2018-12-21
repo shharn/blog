@@ -5,7 +5,7 @@ import { disableEditableCell } from '../../action/ui';
 import type { Dispatch } from '../../action/types';
 import type { Mutation } from '../../reducer/data/mutation';
 
-type OwnPropsType = {
+type OwnPropsTypes = {
     rowId: number,
     cellName: string,
     value: string,
