@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	allowedOrigin = []string{ "puppyloper.blog" }
+	allowedOrigin = []string{ "blog.puppyloper.com" }
 	allowedMethods = "GET, POST, DELETE, OPTIONS, PATCH"
 	allowedHeaders = "Access-Control-Request-Headers,Access-Control-Request-Headers, Access-Control-Request-Method, Origin, Content-Type, Accept, X-Session-Token"
 )

@@ -89,9 +89,9 @@ spec:
               imagePullPolilcy: IfNotPresent
               ports:
               - containerPort: 5080
-                name: grpc
+                name: zero-grpc
               - containerPort: 6080
-                name: http
+                name: zero-http
               volumeMounts:
               - name: dgraph-pv
                 mountPath: /dgraph-data
@@ -106,9 +106,9 @@ spec:
               imagePullPolicy: IfNotPresent
               ports:
               - containerPort: 8080
-                name: http
+                name: alpha-http
               - containerPort: 9080
-                name: grpc
+                name: alpha-grpc
               volumeMounts:
               - name: dgraph-pv
                 mountPath: /dgraph-data
@@ -139,8 +139,8 @@ spec:
           accessModes:
               - "ReadWriteOnce"
           resources:
-            requests:
-                storage: 10Gi
+              requests:
+                  storage: 10Gi
 ---
 apiVersion: v1
 kind: Service
@@ -156,10 +156,6 @@ spec:
       name: http
       port: 80
       targetPort: 5000
-    - protocol: TCP
-      name: https
-      port: 443
-      targetPort: 5001
 ---
 apiVersion: apps/v1
 kind: Deployment

@@ -23,9 +23,6 @@ import type {
     Menu,
     Article
 } from '../../flowtype';
-import type {
-    Element
-} from 'react';
 
 const errorMessageFormat: string = 'Should input the %s';
 const listToValidate: Array<string> = [ 'title', 'summary', 'content' ];
@@ -174,7 +171,7 @@ class CreateArticle extends Component<Props & WithStylesProps & RouterProps, Sta
     }
 
     render = () => {
-        const { classes, menus, isEditMode, article, fetchStatus } = this.props;
+        const { classes, isEditMode, article, fetchStatus } = this.props;
         const { title, summary, imageSource, menuID } = this.state.data;
         const { error } = this.state;
         return (
