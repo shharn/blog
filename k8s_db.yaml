@@ -31,7 +31,7 @@ spec:
           - "-c"
           - |
             set -ex
-            dgraph zero --my=$(hostname -f):5080
+            dgraph zero --my=localhost:5080
       - name: alpha
         image: dgraph/dgraph:v1.0.11
         imagePullPolicy: IfNotPresent
@@ -53,7 +53,7 @@ spec:
           - "-c"
           - |
             set -ex
-            dgraph alpha --my=$(hostname -f):7080 --lru_mb 2048 --zero dgraph-0.dgraph.${POD_NAMESPACE}.svc.cluster.local:5080
+            dgraph alpha --my=localhost:7080 --lru_mb 2048 --zero dgraph-0.dgraph.${POD_NAMESPACE}.svc.cluster.local:5080
       terminationGracePeriodSeconds: 60
       volumes:
       - name: pv

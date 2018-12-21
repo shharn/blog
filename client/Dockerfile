@@ -17,6 +17,7 @@ ENV NODE_ENV=production \
     GOOGLE_APPLICATION_CREDENTIALS=./storage-credential.json
 COPY --from=base /app/public /app/public
 COPY --from=base /app/front-server /app/front-server
+COPY --from=base /app/package.json /app/package.json
 RUN yarn add \ 
     express@^4.16.4 \
     chalk@^2.4.1 \
