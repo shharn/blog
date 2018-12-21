@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+    name: dgraph
+spec:
+    serviceName: "dgraph"
+    replicas: 1
+    selector:
+        matchLabels:
+            db: dgraph
+            tier: backend
+    template:
+        metadata:
+            labels:
+                db: dgraph
+                tier: backend
+        spec:
+            containers:
+            - name: zero
+              image: dgraph/dgraph:v1.0.11
+              imagePullPolilcy: IfNotPresent
+              ports:
+              - containerPort: 5080
+                name: zero-grpc
+              - containerPort: 6080
+                name: zero-http
+              volumeMounts:
+              - name: dgraph-pv
+                mountPath: /dgraph-data
+              command:
+                - bash
+                - "-c"
+                - |
+                  set -ex
+                  dgraph zero --my=$(hostname -f):5080
+            - name: alpha
+              image: dgraph/dgraph:v1.0.11
+              imagePullPolicy: IfNotPresent
+              ports:
+              - containerPort: 8080
+                name: alpha-http
+              - containerPort: 9080
+                name: alpha-grpc
+              volumeMounts:
+              - name: dgraph-pv
+                mountPath: /dgraph-data
+              env:
+                  - name: POD_NAMESPACE
+                    valueFrom:
+                        fieldRef:
+                            fieldPath: metadata.namespace
+              command:
+                  - bash
+                  - "-c"
+                  - |
+                    set -ex
+                    dgraph alpha --my=$(hostname -f):7080 --lru_mb 2048 --zero dgraph-0.dgraph.${POD_NAMESPACE}.svc.cluster.local:5080
+          terminationGracePeriodSeconds: 60
+          volumes:
+          - name: dgraph-pv
+            persistentVolumeClaim:
+                claimName: dgraph-pv
+    updateStrategy:
+        type: RollingUpdate
+    volumeClaimTemplates:
+    - metadata:
+          name: dgraph-pv
+      spec:
+          accessModes: [ "ReadWriteOnce" ]
+          storageClassName: "persistent-volume"
+          resources:
+              requests:
+                  storage: 10Gi
