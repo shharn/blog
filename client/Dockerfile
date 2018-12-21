@@ -1,9 +1,10 @@
-FROM node:8.11.3-alpine as base
+FROM node:8.11.3-alpine
 
 ARG PROJECT_ID
 ARG BUCKET_NAME
 
 ENV NODE_ENV=production \
+    TZ=Asia/Seoul \
     BUCKET_NAME=${BUCKET_NAME} \
     PROJECT_ID=${PROJECT_ID} \
     IMAGE_BASE_URL=https://storage.googleapis.com \
