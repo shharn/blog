@@ -96,7 +96,7 @@ jobs:
                     # cat k8s_substitued.yaml
                     # kubectl apply -f k8s_substitued.yaml
                     kubectl apply -f k8s_db.yaml
-                    kubectl rollout status deployment/${PROJECT_ID}
+                    kubectl rollout status deployment/$PROJECT_ID
                     kubectl get pods
 workflows:
     version: 2
