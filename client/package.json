@@ -90,7 +90,7 @@
     "start:front-server": "nodemon --watch front-server/src --exec yarn run:front-server",
     "run:front-server": "node front-server/bootstrap.js",
     "build:dev": "node front/scripts/build.dev.js",
-    "start:prod": "node fron-server/bootstrap.js",
+    "start:prod": "node front-server/bootstrap.js",
     "build:prod": " node front/scripts/build.js",
     "test": "node front/scripts/test.js --env=jsdom",
     "flow": "flow"
