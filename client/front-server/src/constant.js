@@ -2,7 +2,7 @@ import path from 'path';
 
 export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 
-export const API_SERVER_HOST = IS_DEVELOPMENT ? 'http://api-server:5000' : 'http://api-server-service';
+export const API_SERVER_HOST = IS_DEVELOPMENT ? 'http://api-server:5000' : 'http://api-server-service:5000';
 
 export const TOKEN_HEADER_NAME = "X-Session-Token";
 

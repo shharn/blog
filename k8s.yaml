@@ -9,7 +9,7 @@ spec:
         tier: front
     ports:
     - protocol: TCP
-      port: 80
+      port: 3000
       targetPort: 3000
       name: http
 ---
@@ -38,8 +38,6 @@ spec:
                   ports:
                       - containerPort: 3000
                         name: http
-                      - containerPort: 3001
-                        name: https
 ---
 apiVersion: v1
 kind: Service
@@ -56,16 +54,6 @@ spec:
       port: 9080
       targetPort: 9080
 ---
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-    name: persistent-volume
-provisioner: kubernetes.io/gce-pd
-reclaimPolicy: Retain
-parameters:
-    type: pd-standard
-    repliation-type: none
----
 apiVersion: v1
 kind: Service
 metadata:
@@ -78,7 +66,7 @@ spec:
     ports:
     - protocol: TCP
       name: http
-      port: 80
+      port: 5000
       targetPort: 5000
 ---
 apiVersion: apps/v1
@@ -92,9 +80,6 @@ spec:
             tier: backend
     strategy: 
         type: RollingUpdate
-        rollingUpdate:
-            maxUnavailable: 1
-            maxSurge: 2
     replicas: 1
     template:
         metadata:
@@ -109,8 +94,6 @@ spec:
                   ports:
                       - containerPort: 5000
                         name: http
-                      - containerPort: 5001
-                        name: https
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -125,7 +108,7 @@ spec:
             backend:
                 serviceName: front-server-service
                 servicePort: 3000
-    - host: api.puppyloper.blog
+    - host: api.puppyloper.com
       http:
           paths:
           - path: /
