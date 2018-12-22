@@ -78,17 +78,17 @@ jobs:
             - run:
                 name: Build docker image
                 command: |
-                    docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:test --build-arg PROJECT_ID=$PROJECT_ID --build-arg BUCKET_NAME=$BUCKET_NAME client
-                    # docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 server
-                    # docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 --build-arg PROJECT_ID=$PROJECT_ID client
+                    # docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:test --build-arg PROJECT_ID=$PROJECT_ID --build-arg BUCKET_NAME=$BUCKET_NAME client
+                    docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 server
+                    docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 --build-arg PROJECT_ID=$PROJECT_ID client
             - run:
                 name: Push docker images to container registry
                 command: |
                     gcloud auth configure-docker
                     gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us.gcr.io
-                    # docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
-                    # docker push us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
-                    docker push us.gcr.io/$PROJECT_ID/blog-front-server:test
+                    docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
+                    docker push us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
+                    # docker push us.gcr.io/$PROJECT_ID/blog-front-server:test
             - run:
                 name: Let's deploy the app!
                 command: |
