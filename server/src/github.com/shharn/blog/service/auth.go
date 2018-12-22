@@ -12,7 +12,7 @@ const (
 	authenticationQuery = `
 		query authenticate($email: string, $pswd: string) {
 			result (func: eq(email, $email)) {
-				checkpwd(pswd, $pswd)
+				isValid: checkpwd(pswd, $pswd)
 			}
 		}
 	`
@@ -23,11 +23,7 @@ type authenticationPayload struct {
 }
 
 type authenticationResult struct {
-	Pswd []realResult `json:"pswd,omitempty"`
-}
-
-type realResult struct {
-	Checkpwd bool `json:"checkpwd"`
+	IsValid bool `json:"isValid"`
 }
 
 // Authenticated receives email & password. Then check the parameters on Databse
@@ -64,7 +60,7 @@ func Authenticate(email, password string) (bool, error) {
 		return false, nil
 	}
 
-	if authResult.Result[0].Pswd[0].Checkpwd {
+	if authResult.Result[0].IsValid {
 		return true, nil
 	} else {
 		return false, nil
