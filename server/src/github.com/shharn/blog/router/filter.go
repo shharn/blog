@@ -79,7 +79,7 @@ type CORSFilter struct {
 
 // Filter for CORSFilter
 func (cf CORSFilter) Filter(w http.ResponseWriter, rq *http.Request) error {
-	isException : =false
+	isException := false
 	for _, judge := range cf.Exceptions {
 		if judge(w, rq) {
 			isException = true
