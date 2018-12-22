@@ -41,7 +41,7 @@ export function* processLogin(action: Action): Generator<request.Response | PutE
         } else {
             yield put(loginFailed({
                 code: response.status,
-                message: response.body.message
+                message: response.body.message || 'Unknown error'
             }));
         }
     }
