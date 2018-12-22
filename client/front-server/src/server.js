@@ -24,11 +24,6 @@ const app = express();
 
 app.disable('x-powered-by');
 
-app.use((req, res, next) => {
-    logger.info(`Request URL : ${req.url}`);
-    next();
-});
-
 app.use(express.static(STATIC_FILES_PATH, {
     dotfiles: 'ignore',
     index: false,

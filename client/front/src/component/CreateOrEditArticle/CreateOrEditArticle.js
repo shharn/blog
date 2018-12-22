@@ -136,7 +136,7 @@ class CreateArticle extends Component<Props & WithStylesProps & RouterProps, Sta
         }
 
         const { isEditMode, submitNewArticle, submitUpdatedArticle } = this.props
-        isEditMode ? submitUpdatedArticle({ uid: data.uid, ... dataToSend }) : submitNewArticle(dataToSend);
+        isEditMode ? submitUpdatedArticle({ uid: data.uid, ...dataToSend }) : submitNewArticle(dataToSend);
     }
 
     getJSONStringContent = (): string => {
