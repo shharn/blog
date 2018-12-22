@@ -31,6 +31,16 @@ const blockToHTML = (block): Element<*> => {
             return <h6/>;
         case 'code-block': 
             return <pre/>;
+        case 'unordered-list-item':
+            return {
+                element: <li/>,
+                nest: <ul/>
+            };
+        case 'ordered-list-item':
+            return {
+              element: <li/>,
+              nest: <ol/>  
+            };
         case 'unstyled':
             return block.text.length > 0 ? <p/> : <br/>;
         default:
