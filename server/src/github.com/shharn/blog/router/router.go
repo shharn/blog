@@ -165,7 +165,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 	defer func() {
 		if rcv := recover(); rcv != nil {
 			if err, ok  := rcv.(error); ok {
-				wrapped := errors.Wrap(err)
+				wrapped := errors.WithStack(err)
 				logger.Logger.Error(wrapped)
 			} else {
 				err = errors.New(fmt.Sprintf("%v", rcv))
