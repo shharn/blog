@@ -84,7 +84,14 @@ func (r *Router) SetCORS() *Router {
 		},
 	})
 	(*r).Dispatchers["OPTIONS"] = ctxs
-	r.Use(CORSFilter{CORSContext: r.CORSContext})
+	r.Use(CORSFilter{
+		CORSContext: r.CORSContext,
+		Exceptions: []router.FilterExceptionJudge{
+			0: func(w http.ResponseWriter, r *http.Request) bool {
+				return r.Method == "GET"
+			},
+		},
+	})
 	return r
 }
 
@@ -170,6 +177,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 	logger.Logger.WithFields(log.Fields{
 		"headers": rq.Header,
 		"client_ip": GetClientAddress(rq),
+		"method": rq.Method,
 		"path": rq.URL.Path,
 		"params": rq.URL.Query(),
 		"token": rq.Header.Get(TokenName),

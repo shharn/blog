@@ -14,7 +14,6 @@ import (
 // Can be used for authentication or something like that
 type Filter interface {
 	Filter(w http.ResponseWriter, r *http.Request) error
-	
 }
 
 // FilterExceptionJudge checks if current request is special case
@@ -73,10 +72,18 @@ func (af AuthFilter) validateToken(token, key string) (bool, error) {
 // CORSFilter just set CORS headers
 type CORSFilter struct {
 	CORSContext CORSContext
+	// Exceptions is a list of FilterExceptionJudge
+	Exceptions []FilterExceptionJudge
 }
 
 // Filter for CORSFilter
 func (cf CORSFilter) Filter(w http.ResponseWriter, rq *http.Request) error {
+	for _, judge := range af.Exceptions {
+		if judge(w, r) {
+			return nil
+		} 
+	}
+	
 	var allowedOrigin string
 	currentEnv := os.Getenv("ENVIRONMENT")
 	if currentEnv == "development" {
