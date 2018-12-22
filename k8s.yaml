@@ -93,12 +93,12 @@ spec:
     - host: blog.puppyloper.com
       http:
           paths:
-            backend:
-                serviceName: front-server-service
-                servicePort: 3000
+          - backend:
+              serviceName: front-server-service
+              servicePort: 3000
     - host: api.puppyloper.com
       http:
           paths:
-            backend:
-                serviceName: api-server-service
-                servicePort: 5000
+          - backend:
+              serviceName: api-server-service
+              servicePort: 5000
