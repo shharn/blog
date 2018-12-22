@@ -86,7 +86,7 @@ func (r *Router) SetCORS() *Router {
 	(*r).Dispatchers["OPTIONS"] = ctxs
 	r.Use(CORSFilter{
 		CORSContext: r.CORSContext,
-		Exceptions: []router.FilterExceptionJudge{
+		Exceptions: []FilterExceptionJudge{
 			0: func(w http.ResponseWriter, r *http.Request) bool {
 				return r.Method == "GET"
 			},

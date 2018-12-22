@@ -78,12 +78,12 @@ type CORSFilter struct {
 
 // Filter for CORSFilter
 func (cf CORSFilter) Filter(w http.ResponseWriter, rq *http.Request) error {
-	for _, judge := range af.Exceptions {
-		if judge(w, r) {
+	for _, judge := range cf.Exceptions {
+		if judge(w, rq) {
 			return nil
 		} 
 	}
-	
+
 	var allowedOrigin string
 	currentEnv := os.Getenv("ENVIRONMENT")
 	if currentEnv == "development" {
