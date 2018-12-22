@@ -78,7 +78,7 @@ jobs:
             - run:
                 name: Build docker image
                 command: |
-                    docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:test --build-arg PROJECT_ID=$PROJECT_ID client
+                    docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:test --build-arg PROJECT_ID=$PROJECT_ID BUCKET_NAME=$BUCKET_NAME client
                     # docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 server
                     # docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 --build-arg PROJECT_ID=$PROJECT_ID client
             - run:
