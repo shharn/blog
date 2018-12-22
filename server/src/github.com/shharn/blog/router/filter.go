@@ -87,7 +87,7 @@ func (cf CORSFilter) Filter(w http.ResponseWriter, rq *http.Request) error {
 		}
 	}
 	
-	origin := getOriginFromRequest(rq)
+	origin := rq.Header.Get("Origin")
 	allowedOrigin := origin
 	if !isException {
 		currentEnv := os.Getenv("ENVIRONMENT")
