@@ -17,8 +17,20 @@ const getLastSplittedFromImageSrc = (src: string): string => {
 
 const blockToHTML = (block): Element<*> => {
     switch(block.type.toLowerCase()) {
+        case 'header-one':
+            return <h1/>;
+        case 'header-two':
+            return <h2/>;
+        case 'header-three':
+            return <h3/>;
+        case 'header-four':
+            return <h4/>;
+        case 'header-five':
+            return <h5/>;
+        case 'header-six':
+            return <h6/>;
         case 'code-block': 
-            return <pre/>
+            return <pre/>;
         case 'unstyled':
             return block.text.length > 0 ? <p/> : <br/>;
         default:
