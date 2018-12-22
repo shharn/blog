@@ -5,6 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/shharn/blog/db"
+	"github.com/shharn/blog/logger"
 )
 
 const (
@@ -57,6 +58,7 @@ func Authenticate(email, password string) (bool, error) {
 	if err = json.Unmarshal(res.Json, &authResult); err != nil {
 		return false, errors.WithStack(err)
 	}
+	logger.Logger.Infof("Auth Response. string - %v, marshaled - %v", string(res.Json[:]), authResult)
 
 	if len(authResult.Result) < 1 {
 		return false, nil

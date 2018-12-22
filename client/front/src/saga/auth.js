@@ -39,9 +39,10 @@ export function* processLogin(action: Action): Generator<request.Response | PutE
         if (response.status === 200) {
             yield put(loginSuccess(response.body));
         } else {
+            var message = response.body ? (response.body.message || 'Unknown error') : 'Unknown error';
             yield put(loginFailed({
                 code: response.status,
-                message: response.body.message || 'Unknown error'
+                message
             }));
         }
     }
