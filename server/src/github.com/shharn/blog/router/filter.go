@@ -3,6 +3,7 @@ package router
 import (
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/shharn/blog/config"
 	"github.com/dgrijalva/jwt-go"
@@ -78,34 +79,43 @@ type CORSFilter struct {
 
 // Filter for CORSFilter
 func (cf CORSFilter) Filter(w http.ResponseWriter, rq *http.Request) error {
-	var isException bool = false
-	allowedOrigin := rq.Host
 	for _, judge := range cf.Exceptions {
 		if judge(w, rq) {
-			isException = true
-			break
+			return nil
 		}
 	}
-
-	if !isException {
-		currentEnv := os.Getenv("ENVIRONMENT")
-		if currentEnv == "development" {
-			allowedOrigin = "*"
+	
+	origin := getOriginFromRequest(rq)
+	var allowedOrigin string
+	currentEnv := os.Getenv("ENVIRONMENT")
+	if currentEnv == "development" {
+		allowedOrigin = "*"
+	} else {
+		if contains(cf.CORSContext.AllowedOrigins, origin) {
+			allowedOrigin = origin
 		} else {
-			host := rq.Host
-			if contains(cf.CORSContext.AllowedOrigins, host) {
-				allowedOrigin = host
-			} else {
-				return RouterError{
-					Code: http.StatusForbidden,
-					MessageForClient: "You're not allowed to use ajax call",
-				}
+			return RouterError{
+				Code: http.StatusForbidden,
+				MessageForClient: "You're not allowed",
 			}
 		}
 	}
-
 	w.Header().Set("Access-Control-Allow-Origin", allowedOrigin)
 	w.Header().Set("Access-Control-Allow-Methods", cf.CORSContext.AllowedMethods)
 	w.Header().Set("Access-Control-Allow-Headers", cf.CORSContext.AllowedHeaders)
 	return nil
+}
+
+func  getOriginFromRequest(rq *http.Request) string {
+	rawOrigin := rq.Header.Get("Origin")
+	trimmed := strings.TrimSpace(rawOrigin)
+	if len(trimmed) < 1 {
+		return ""
+	}
+	schemaAndPath := strings.Split(trimmed, "://")
+	if len(schemaAndPath) == 2 {
+		return schemaAndPath[1]
+	} else {
+		return ""
+	}
 }
