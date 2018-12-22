@@ -33,7 +33,7 @@ spec:
         spec:
             containers:
                 - name: blog-front
-                  image: us.gcr.io/${PROJECT_ID}/blog-front-server:test
+                  image: us.gcr.io/${PROJECT_ID}/blog-front-server:${CIRCLE_SHA1}
                   imagePullPolicy: Always
                   ports:
                       - containerPort: 3000
@@ -74,7 +74,7 @@ spec:
         spec:
             containers:
                 - name: blog-api-server
-                  image: us.gcr.io/${PROJECT_ID}/blog-api-server:test
+                  image: us.gcr.io/${PROJECT_ID}/blog-api-server:${CIRCLE_SHA1}
                   imagePullPolicy: Always
                   ports:
                       - containerPort: 5000

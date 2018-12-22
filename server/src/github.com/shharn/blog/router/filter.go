@@ -78,27 +78,32 @@ type CORSFilter struct {
 
 // Filter for CORSFilter
 func (cf CORSFilter) Filter(w http.ResponseWriter, rq *http.Request) error {
+	var isException bool = false
+	allowedOrigin := rq.Host
 	for _, judge := range cf.Exceptions {
 		if judge(w, rq) {
-			return nil
-		} 
+			isException = true
+			break
+		}
 	}
 
-	var allowedOrigin string
-	currentEnv := os.Getenv("ENVIRONMENT")
-	if currentEnv == "development" {
-		allowedOrigin = "*"
-	} else {
-		host := rq.Host
-		if contains(cf.CORSContext.AllowedOrigins, host) {
-			allowedOrigin = host
+	if !isException {
+		currentEnv := os.Getenv("ENVIRONMENT")
+		if currentEnv == "development" {
+			allowedOrigin = "*"
 		} else {
-			return RouterError{
-				Code: http.StatusForbidden,
-				MessageForClient: "You're not allowed to use ajax call",
+			host := rq.Host
+			if contains(cf.CORSContext.AllowedOrigins, host) {
+				allowedOrigin = host
+			} else {
+				return RouterError{
+					Code: http.StatusForbidden,
+					MessageForClient: "You're not allowed to use ajax call",
+				}
 			}
 		}
 	}
+
 	w.Header().Set("Access-Control-Allow-Origin", allowedOrigin)
 	w.Header().Set("Access-Control-Allow-Methods", cf.CORSContext.AllowedMethods)
 	w.Header().Set("Access-Control-Allow-Headers", cf.CORSContext.AllowedHeaders)

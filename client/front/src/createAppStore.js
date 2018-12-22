@@ -23,9 +23,10 @@ export default function createAppStore(preloadedState) {
     const dataAutoUpdater = createAutoUpdater();
     const menuNameToUIDMiddlerware = menuNameActionConverter();
     const articleNameToUIDMiddleware = articleNameActionConverter();
-    const isProduction = process.env.NODE_ENV === 'production';
+    // const isProduction = process.env.NODE_ENV === 'production';
     const middlewares = [
-        ...(isProduction ? [] : [ logger ]),
+        // ...(isProduction ? [] : [ logger ]),
+        logger,
         routeMiddleware,
         dataAutoUpdater,
         menuNameToUIDMiddlerware,
