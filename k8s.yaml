@@ -34,7 +34,7 @@ spec:
             containers:
                 - name: blog-front
                   image: us.gcr.io/${PROJECT_ID}/blog-front-server:${CIRCLE_SHA1}
-                  imagePullPolicy: Always
+                  imagePullPolicy: IfNotPresent
                   ports:
                       - containerPort: 3000
                         name: http
@@ -75,7 +75,7 @@ spec:
             containers:
                 - name: blog-api-server
                   image: us.gcr.io/${PROJECT_ID}/blog-api-server:${CIRCLE_SHA1}
-                  imagePullPolicy: Always
+                  imagePullPolicy: IfNotPresent
                   ports:
                       - containerPort: 5000
                         name: http
