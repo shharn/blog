@@ -6,9 +6,11 @@ export const API_SERVER_HOST = IS_DEVELOPMENT ? 'http://api-server:5000' : 'http
 
 export const TOKEN_HEADER_NAME = "X-Session-Token";
 
-export const INDEX_HTML_FILE_PATH = path.join(__dirname, '../../public/app/index.html');
+export const STATIC_FILES_PATH = path.join(__dirname, '../../public/app');
 
-export const ERROR_PAGE_FILE_PATH = path.join(__dirname, '../../public/app/error.html');
+export const INDEX_HTML_FILE_PATH = path.join(STATIC_FILES_PATH, 'index.html');
+
+export const ERROR_PAGE_FILE_PATH = path.join(STATIC_FILES_PATH, 'error.html');
 
 export const HTTPStatusCode = {
     OK: 200,

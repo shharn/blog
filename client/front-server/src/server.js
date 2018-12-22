@@ -2,9 +2,9 @@ import path from 'path';
 import express from 'express';
 import chalk from 'chalk';
 import { 
+    STATIC_FILES_PATH,
     INDEX_HTML_FILE_PATH,
-    ERROR_PAGE_FILE_PATH,
-    IS_DEVELOPMENT
+    ERROR_PAGE_FILE_PATH
 } from './constant';
 import Loadable from 'react-loadable';
 import { auth } from './middleware';
@@ -24,7 +24,17 @@ const app = express();
 
 app.disable('x-powered-by');
 
-app.use(express.static(path.resolve(__dirname, '../../public/app')));
+app.use((req, res, next) => {
+    logger.info(`Request URL : ${req.url}`);
+    next();
+});
+
+app.use(express.static(STATIC_FILES_PATH, {
+    dotfiles: 'ignore',
+    index: false,
+    etag: true,
+    lastModified: true
+}));
 
 app.get('/', (_, res) => {
     res.sendFile(INDEX_HTML_FILE_PATH);

@@ -7,7 +7,7 @@ import {
 import moment from 'moment-timezone';
 import { IS_DEVELOPMENT } from './constant';
 
-const TIMEZONE = process.env.TZ;
+const TIMEZONE = process.env.TZ || 'Asia/Seoul';
 const TIMESTAMP_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 const timestamp = format((info, _) => {
     info.timestamp = moment().tz(TIMEZONE).format(TIMESTAMP_FORMAT);
