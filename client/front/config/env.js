@@ -77,7 +77,7 @@ function getClientEnvironment(publicUrl) {
         // This should only be used as an escape hatch. Normally you would put
         // images into the `src` and `import` them in code to get their paths.
         PUBLIC_URL: publicUrl,
-        API_SERVER_URL: process.env.NODE_ENV === 'development' ? 'localhost:5000' : 'api.puppyloper.blog',
+        API_SERVER_URL: process.env.NODE_ENV === 'development' ? 'localhost:5000' : 'api.puppyloper.com',
         BUCKET_NAME: process.env.BUCKET_NAME,
         IMAGE_FOLDER_NAME: process.env.IMAGE_FOLDER_NAME,
         IMAGE_BASE_URL: 'https://storage.googleapis.com'
