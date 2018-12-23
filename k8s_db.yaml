@@ -35,86 +35,71 @@ spec:
     selector:
         db: dgraph
     ports:
-    - protocol: TCP
-      name: dgraph-server-port
-      port: 9080
-      targetPort: 9080
+      - protocol: TCP
+        name: dgraph-server-port
+        port: 9080
+        targetPort: 9080
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: dgraph
+    name: dgraph
 spec:
-  serviceName: "dgraph"
-  replicas: 1
-  selector:
-      matchLabels:
-        db: dgraph
-  template:
-    metadata:
-      labels:
-        db: dgraph
-        tier: backend
-    spec:
-      containers:
-      - name: zero
-        image: dgraph/dgraph:v1.0.11
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 5080
-          name: zero-grpc
-        - containerPort: 6080
-          name: zero-http
-        volumeMounts:
-        - name: blog-dgraph-pv
-          mountPath: /dgraph
-        command:
-          - bash
-          - "-c"
-          - |
-            set -ex
-            dgraph zero --my=localhost:5080
-      - name: alpha
-        image: dgraph/dgraph:v1.0.11
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 8080
-          name: alpha-http
-        - containerPort: 9080
-          name: alpha-grpc
-        volumeMounts:
-        - name: blog-dgraph-pv
-          mountPath: /dgraph
-        env:
-          - name: POD_NAMESPACE
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.namespace
-        command:
-          - bash
-          - "-c"
-          - |
-            set -ex
-            dgraph alpha --my=localhost:7080 --lru_mb 2048 --zero dgraph-0.dgraph.${POD_NAMESPACE}.svc.cluster.local:5080
+    serviceName: "dgraph"
+    replicas: 1
+    selector:
+        matchLabels:
+            db: dgraph
+    template:
+        metadata:
+            labels:
+                db: dgraph
+                tier: backend
+        spec:
+            containers:
+            - name: zero
+              image: dgraph/dgraph:v1.0.11
+              imagePullPolicy: IfNotPresent
+              ports:
+                - containerPort: 5080
+                  name: zero-grpc
+                - containerPort: 6080
+                  name: zero-http
+              volumeMounts:
+                - name: blog-dgraph-pv
+                  mountPath: /dgraph
+              command:
+                - bash
+                - "-c"
+                - |
+                  set -ex
+                  dgraph zero --my=localhost:5080
+            - name: alpha
+              image: dgraph/dgraph:v1.0.11
+              imagePullPolicy: IfNotPresent
+              ports:
+                - containerPort: 8080
+                  name: alpha-http
+                - containerPort: 9080
+                  name: alpha-grpc
+              volumeMounts:
+                - name: blog-dgraph-pv
+                  mountPath: /dgraph
+              env:
+                - name: POD_NAMESPACE
+                  valueFrom:
+                      fieldRef:
+                          fieldPath: metadata.namespace
+              command:
+                - bash
+                - "-c"
+                - |
+                  set -ex
+                  dgraph alpha --my=localhost:7080 --lru_mb 2048 --zero dgraph-0.dgraph.${POD_NAMESPACE}.svc.cluster.local:5080
       terminationGracePeriodSeconds: 60
-      # volumes:
-      # - name: pv
-      #   persistentVolumeClaim:
-      #     claimName: pv
       volumes:
-      - name: blog-dgraph-pv
+        - name: blog-dgraph-pv
           persistentVolumnClaim:
               claimName: blog-dgraph-pvc
-  updateStrategy:
-    type: RollingUpdate
-  # volumeClaimTemplates:
-  # - metadata:
-  #     name: pv
-  #     annotations:
-  #       volume.alpha.kubernetes.io/storage-class: anything
-  #   spec:
-  #     accessModes:
-  #       - "ReadWriteOnce"
-  #     resources:
-  #       requests:
-  #         storage: 5Gi
+    updateStrategy:
+        type: RollingUpdate
