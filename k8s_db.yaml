@@ -22,7 +22,7 @@ spec:
     accessModes:
         - ReadWriteOnce
     resources:
-        requiests:
+        requests:
             storage: 30Gi
 ---
 apiVersion: v1
