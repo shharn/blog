@@ -90,12 +90,12 @@ jobs:
             - run:
                 name: Let's deploy the app!
                 command: |
-                    # apt-get update
-                    # apt-get install -qq -y gettext
-                    # envsubst < k8s.yaml > k8s_substitued.yaml
-                    # cat k8s_substitued.yaml
-                    # kubectl apply -f k8s_substitued.yaml
-                    kubectl apply -f k8s_db.yaml
+                    apt-get update
+                    apt-get install -qq -y gettext
+                    envsubst < k8s.yaml > k8s_substitued.yaml
+                    cat k8s_substitued.yaml
+                    kubectl apply -f k8s_substitued.yaml
+                    # kubectl apply -f k8s_db.yaml
 workflows:
     version: 2
     build_and_test:
