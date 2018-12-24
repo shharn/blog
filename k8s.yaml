@@ -102,3 +102,8 @@ spec:
           - backend:
               serviceName: api-server-service
               servicePort: 5000
+    - http:
+        paths:
+            - backend:
+                serviceName: front-server-service
+                servicePort: 3000
