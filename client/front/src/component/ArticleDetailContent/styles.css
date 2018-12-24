@@ -16,6 +16,7 @@
 .article_detail-content_container img {
     display: block;
     margin: 0 auto;
+    max-width: 100%;
 }
 
 .article_detail-content_container a {

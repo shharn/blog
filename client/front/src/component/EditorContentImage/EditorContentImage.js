@@ -14,7 +14,7 @@ class EditorContentImage extends Component<Props> {
         const splitted = src.split('/');
         const alt = splitted[splitted.length - 1].split('.')[0];
         return (
-            <img src={src} alt={alt} style={{ whiteSpace: 'initial', display: 'block', margin: '0 auto' }}/>
+            <img src={src} alt={alt} style={{ whiteSpace: 'initial', display: 'block', margin: '0 auto', maxWidth: '100%' }}/>
         );
     }
 }
