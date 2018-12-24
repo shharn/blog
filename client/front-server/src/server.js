@@ -32,7 +32,9 @@ app.use(express.static(STATIC_FILES_PATH, {
     dotfiles: 'ignore',
     index: false,
     etag: true,
-    lastModified: true
+    lastModified: true,
+    cacheControl: true,
+    maxAge: 31536000000
 }));
 
 app.get('/', (_, res) => {
