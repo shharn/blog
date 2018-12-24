@@ -40,6 +40,7 @@ func (appLogger *AppLogger) WithFields(fields log.Fields) *log.Entry {
 func NewLogger() *AppLogger{
 	var logger *log.Logger = log.New()
 	logger.SetFormatter(&log.JSONFormatter{})
+	logger.SetOutput(os.Stdout)
 	logLevel := os.Getenv("LOG_LEVEL")
 	if len(logLevel) < 1 {
 		logLevel = "info"

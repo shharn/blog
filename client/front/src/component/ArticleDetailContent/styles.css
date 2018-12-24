@@ -28,3 +28,8 @@
 .article_detail-content_container li {
     margin: 10px 0;
 }
+
+.article_detail-content_container p {
+    margin: 0;
+    line-height: 1.7;
+}
