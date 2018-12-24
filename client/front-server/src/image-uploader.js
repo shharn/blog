@@ -38,9 +38,11 @@ export function uploadeImage(req, _, next) {
             const stream = fileObj.createWriteStream({
                 gzip: true,
                 metadata: {
-                    contentType: file.mimetype
+                    contentType: file.mimetype,
+                    cacheControl: 'public, max-age=31536000'
                 },
-                resumable: false
+                resumable: false,
+                predefinedAcl: 'publicRead'
             }).on('error', err => {
                 reject({ err, fileName });
             }).on('finish', () => {
