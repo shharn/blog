@@ -36,8 +36,11 @@ spec:
                   image: us.gcr.io/${PROJECT_ID}/blog-front-server:${CIRCLE_SHA1}
                   imagePullPolicy: IfNotPresent
                   ports:
-                      - containerPort: 3000
-                        name: http
+                    - containerPort: 3000
+                      name: http
+                  env:
+                    - name: INTERNAL_API_SERVER_FQDN
+                      value: api-server-service.default.svc.cluster.local:5000
 ---
 apiVersion: v1
 kind: Service
@@ -77,8 +80,8 @@ spec:
                   image: us.gcr.io/${PROJECT_ID}/blog-api-server:${CIRCLE_SHA1}
                   imagePullPolicy: IfNotPresent
                   ports:
-                      - containerPort: 5000
-                        name: http
+                    - containerPort: 5000
+                      name: http
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress

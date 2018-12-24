@@ -1,4 +1,3 @@
-import path from 'path';
 import express from 'express';
 import chalk from 'chalk';
 import { 
@@ -23,6 +22,11 @@ const PORT = 3000;
 const app = express();
 
 app.disable('x-powered-by');
+
+app.use((req, _, next) => {
+    logger.info(`Request URL : ${req.originalUrl}`);
+    next();
+});
 
 app.use(express.static(STATIC_FILES_PATH, {
     dotfiles: 'ignore',

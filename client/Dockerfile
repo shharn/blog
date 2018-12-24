@@ -10,7 +10,6 @@ ENV NODE_ENV=production \
     IMAGE_BASE_URL=https://storage.googleapis.com \
     IMAGE_FOLDER_NAME=images \
     GOOGLE_APPLICATION_CREDENTIALS=./storage-credential.json
-
 WORKDIR /app
 COPY . .
 RUN yarn install && \

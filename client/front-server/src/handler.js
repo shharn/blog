@@ -4,7 +4,7 @@ import request from 'superagent';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import {
-    API_SERVER_HOST,
+    INTERNAL_API_SERVER_FQDN,
     INDEX_HTML_FILE_PATH,
     HTTPStatusCode
 } from './constant';
@@ -17,17 +17,17 @@ const { INTERNAL_SERVER_ERROR } = HTTPStatusCode;
 
 export function articleDetail(req, res) {
     fs.readFile(INDEX_HTML_FILE_PATH, 'utf8', async (err, originalHTML) => {
-        if (!!err) {
+        if (err) {
             logger.error(`Error during reading index.html file\n.Error : ${err.message}`);
             return res.status(INTERNAL_SERVER_ERROR).end()
         }
 
         const articleTitle = req.params["articleTitle"];
-        if (!!!articleTitle || articleTitle.length < 1) {
+        if (articleTitle || articleTitle.length < 1) {
             return res.redirect('/');
         }
         const article =  await getArticleByTitle(articleTitle);
-        if (!!!article) {
+        if (article) {
             return res.redirect('/');
         }
 
@@ -79,7 +79,7 @@ export function articleDetail(req, res) {
 }
 
 function getArticleByTitle(title) {
-    const path = `${API_SERVER_HOST}/articles/titles/${title}`;
+    const path = `${INTERNAL_API_SERVER_FQDN}/articles/titles/${title}`;
     return request
         .get(path)
         .timeout({
@@ -89,8 +89,10 @@ function getArticleByTitle(title) {
         .then(res => {
             if (res.statusCode === 200) {
                 return res.body;
+            } else {
+                logger.error(`Fail to fetch an article by title. Path : ${path}, statusCode : ${res.statusCode}`);
+                return null;
             }
-            return null;
         })
         .catch(err => {
             logger.error(`Error during API request '${path}\nError - ${err.message}`);
