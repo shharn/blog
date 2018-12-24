@@ -39,8 +39,8 @@ spec:
                     - containerPort: 3000
                       name: http
                   env:
-                    - name: INTERNAL_API_SERVER_FQDN
-                      value: api-server-service.default.svc.cluster.local:5000
+                    - name: INTERNAL_API_SERVER_SERVICE
+                      value: api-server-service:5000
 ---
 apiVersion: v1
 kind: Service

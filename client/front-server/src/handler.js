@@ -4,7 +4,7 @@ import request from 'superagent';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import {
-    INTERNAL_API_SERVER_FQDN,
+    INTERNAL_API_SERVER_SERVICE,
     INDEX_HTML_FILE_PATH,
     HTTPStatusCode
 } from './constant';
@@ -23,7 +23,6 @@ export function articleDetail(req, res) {
         }
 
         const articleTitle = req.params["articleTitle"];
-        logger.info(`Article title : ${articleTitle}`);
         if (!articleTitle || articleTitle.length < 1) {
             return res.redirect('/');
         }
@@ -31,6 +30,7 @@ export function articleDetail(req, res) {
         try {
             article = await getArticleByTitle(articleTitle);
             if (!article) {
+                logger.info(`article is null`);
                 return res.redirect('/');
             }
         } catch (ex) {
@@ -86,8 +86,7 @@ export function articleDetail(req, res) {
 }
 
 function getArticleByTitle(title) {
-    const path = `${INTERNAL_API_SERVER_FQDN}/articles/titles/${title}`;
-    logger.info(`path : ${path}`);
+    const path = `${INTERNAL_API_SERVER_SERVICE}/articles/titles/${title}`;
     return request
         .get(path)
         .timeout({
@@ -95,7 +94,6 @@ function getArticleByTitle(title) {
         })
         .accept('json')
         .then(res => {
-            logger.info(JSON.stringify(res));
             if (res.statusCode === 200) {
                 return res.body;
             } else {

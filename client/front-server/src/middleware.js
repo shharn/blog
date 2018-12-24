@@ -1,6 +1,6 @@
 import request from 'superagent';
 import {
-    INTERNAL_API_SERVER_FQDN,
+    INTERNAL_API_SERVER_SERVICE,
     TOKEN_HEADER_NAME,
     HTTPStatusCode,
     HTTPBodyPreset,
@@ -14,7 +14,7 @@ export function auth(req, res, next) {
     const token = req.header(TOKEN_HEADER_NAME);
     if (!!token && token.length > 0) {
         request
-            .get(`${INTERNAL_API_SERVER_FQDN}/check`)
+            .get(`${INTERNAL_API_SERVER_SERVICE}/check`)
             .set(TOKEN_HEADER_NAME, token)
             .timeout({
                 deadline: REQUEST_TIMEOUT_MS

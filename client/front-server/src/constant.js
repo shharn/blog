@@ -2,7 +2,7 @@ import path from 'path';
 
 export const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 
-export const INTERNAL_API_SERVER_FQDN = process.env.INTERNAL_API_SERVER_FQDN;
+export const INTERNAL_API_SERVER_SERVICE = process.env.INTERNAL_API_SERVER_SERVICE;
 
 export const TOKEN_HEADER_NAME = "X-Session-Token";
 
