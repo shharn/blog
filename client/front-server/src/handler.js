@@ -23,11 +23,18 @@ export function articleDetail(req, res) {
         }
 
         const articleTitle = req.params["articleTitle"];
-        if (articleTitle || articleTitle.length < 1) {
+        logger.info(`Article title : ${articleTitle}`);
+        if (!articleTitle || articleTitle.length < 1) {
             return res.redirect('/');
         }
-        const article =  await getArticleByTitle(articleTitle);
-        if (article) {
+        let article;
+        try {
+            article = await getArticleByTitle(articleTitle);
+            if (!article) {
+                return res.redirect('/');
+            }
+        } catch (ex) {
+            logger.error(`Error during the fetching the article - ${ex.message}`);
             return res.redirect('/');
         }
 
@@ -80,6 +87,7 @@ export function articleDetail(req, res) {
 
 function getArticleByTitle(title) {
     const path = `${INTERNAL_API_SERVER_FQDN}/articles/titles/${title}`;
+    logger.info(`path : ${path}`);
     return request
         .get(path)
         .timeout({
@@ -87,6 +95,7 @@ function getArticleByTitle(title) {
         })
         .accept('json')
         .then(res => {
+            logger.info(JSON.stringify(res));
             if (res.statusCode === 200) {
                 return res.body;
             } else {
