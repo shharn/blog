@@ -26,7 +26,6 @@ export default function createAppStore(preloadedState) {
     const isProduction = process.env.NODE_ENV === 'production';
     const middlewares = [
         ...(isProduction ? [] : [ logger ]),
-        logger,
         routeMiddleware,
         dataAutoUpdater,
         menuNameToUIDMiddlerware,

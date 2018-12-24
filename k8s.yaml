@@ -85,7 +85,7 @@ kind: Ingress
 metadata:
     name: blog-ingress
     annotations:
-        kubernetes.io/ingress.global-static-ip-name: blog-public-static-ip
+        kubernetes.io/ingress.global-static-ip-name: blog-public-static-address
     labels:
         app: blog-ingress
 spec:

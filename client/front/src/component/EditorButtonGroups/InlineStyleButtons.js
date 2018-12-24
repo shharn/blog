@@ -28,7 +28,7 @@ class InlineStyleButtons extends React.Component<Props & WithStylesProps> {
                 {INLINE_STYLES.map(type => 
                     <EditorStyleButton 
                         key={`inlineButton:${type.style}`} 
-                        active={type.style === currentStyle}
+                        active={type.style === currentStyle.get(type.style)}
                         icon={type.icon} 
                         style={type.style} 
                         onToggle={this.props.onToggle}/>)}

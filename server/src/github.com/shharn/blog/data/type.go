@@ -36,5 +36,5 @@ type Article struct {
 	Content     string  `json:"content,omitempty"`
 	CreatedAt   string  `json:"createdAt,omitempty"`
 	Menu        *[]Menu `json:"menu,omitempty"`
-	Views	int `json:"views,omitempty"`
+	Views	int `json:"views"`
 }
