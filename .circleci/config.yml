@@ -100,15 +100,15 @@ workflows:
     version: 2
     build_and_test:
         jobs:
-            # - build-front
-            # - test-front:
-            #     requires:
-            #         - build-front
-            # - test-apiserver
+            - build-front
+            - test-front:
+                requires:
+                    - build-front
+            - test-apiserver
             - deploy:
-                # requires:
-                #     - test-front
-                #     - test-apiserver
+                requires:
+                    - test-front
+                    - test-apiserver
                 filters:
                     branches:
                         only: master
