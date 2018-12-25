@@ -4,6 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import blue from '@material-ui/core/colors/blue';
 import pink from '@material-ui/core/colors/pink';
 import RootRoute from '../../route/RootRoute';
+import GlobalStyle from './GlobalStyle';
 
 const theme = createMuiTheme({
     palette: {
@@ -33,6 +34,7 @@ class App extends Component {
             <MuiThemeProvider theme={theme}>
                 <React.Fragment>
                     <CssBaseline />
+                    <GlobalStyle />
                     <RootRoute />
                 </React.Fragment>
             </MuiThemeProvider>
