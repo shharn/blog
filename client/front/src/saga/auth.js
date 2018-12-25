@@ -82,7 +82,12 @@ export function* processLogout(action: Action): Generator<request.Response | Put
     } else {
         if (response.status === 200) {
             yield put(logoutSuccess());
-        } else {
+        } else if (response.status === 401) {
+            yield put(logoutFailed({
+                code: response.status,
+                message: 'Invalid Token'
+            }));
+        }else {
             yield put(logoutFailed({
                 code: response.status,
                 message: 'Fail to logout'

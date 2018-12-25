@@ -298,7 +298,7 @@ describe('app.auth reducer test', () => {
                 ...initialState,
                 authStatus: AuthStatus.INITIAL,
                 error: { ...testError },
-                isAuthenticated: true
+                isAuthenticated: false
             };
             expect(actual).toEqual(expected);
         });

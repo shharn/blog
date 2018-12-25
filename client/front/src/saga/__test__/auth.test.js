@@ -223,6 +223,31 @@ describe('Should handle REQUEST_LOGOUT', () => {
         const clone = gen.clone();
         const mockMessage = 'Invalid Token'
         const mockResponse = {
+            status: 401,
+            body: {
+                message: mockMessage
+            }
+        };
+    
+        let next = clone.next(requestLogout, mockToken);
+        expect(next.value).toEqual(call(requestLogout, mockToken));
+
+        next = clone.next(mockResponse);
+        expect(next.value).toEqual(put(logoutFailed({
+            code: 401,
+            message: mockMessage
+        })));
+
+        next = clone.next();
+        expect(next).toEqual({ done: true });
+
+        expect(ls.get(Token.key)).toBeNull();
+    });
+
+    test(`Network is online, with invalid token`, () => {
+        const clone = gen.clone();
+        const mockMessage = 'Fail to logout'
+        const mockResponse = {
             status: 500,
             body: {
                 message: mockMessage
