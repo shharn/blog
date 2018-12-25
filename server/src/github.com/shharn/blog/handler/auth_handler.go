@@ -3,9 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
-	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
 	"github.com/shharn/blog/data"
 	"github.com/shharn/blog/router"
@@ -43,15 +41,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) 
 		IsValid: true,
 		Token:   clientToken,
 	}, nil
-}
-
-func makeToken(info *data.LoginInformation) *jwt.Token {
-	token := jwt.New(jwt.SigningMethodHS256)
-	claims := make(jwt.MapClaims)
-	claims["iat"] = time.Now().Unix()
-	claims["email"] = info.Email
-	token.Claims = claims
-	return token
 }
 
 // CheckHandler is handler for "/check"
