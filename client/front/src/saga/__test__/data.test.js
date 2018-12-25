@@ -248,7 +248,7 @@ describe('Should handle REQUEST_MUTATE_DATA', () => {
             const mockResponse = {
                 status: 401,
                 body: {
-                    message: 'test error message'
+                    message: 'Invalid token'
                 }
             };
             const clone = gen.clone();

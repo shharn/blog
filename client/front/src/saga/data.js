@@ -85,9 +85,17 @@ export function* dataMutationRequestHandler(action: Action) : Generator<request.
     if (response.status === 200) {
         yield put(dataMutationSuccess(dataName, operationType, response.body));
     } else {
+        let message;
+        if (isNetworkOffline(response)) {
+            message = 'Network is Offline :(';
+        } else if (response.status == 401) {
+            message = 'Invalid token';
+        } else {
+            message = 'Error occured. Please try it later';
+        }
         yield put(dataMutationFail(dataName, operationType, {
                 code: response.status == null ? -1 : response.status,
-                message: response.status == null ? 'Network is Offline :(' : 'Error occured. Please try it later'
+                message
             }));
     }
 }
