@@ -24,8 +24,10 @@ class HottestArticleList extends React.Component<Props & WithStylesProps & Route
     innerContainer: ?HTMLDivElement;
 
     render = () => {
-        const { classes } = this.props;
+        const { classes, reduxProps } = this.props;
         const articles = this.props.data;
+        const isEmpty = (reduxProps && reduxProps.fetchStatus === FetchStatus.SUCCESS) &&
+            (articles && articles.length);
         return (
             <div className={classes.container}>
                 {articles.length > 0 ? 
@@ -36,12 +38,13 @@ class HottestArticleList extends React.Component<Props & WithStylesProps & Route
                         </div>
                         {this.props.children}
                     </React.Fragment> :
-                    <Typography 
-                        className={classes.emptyMessage}
-                        align="center"
-                        variant='display2'>
-                        Coming Soon  :)
-                    </Typography>
+                    isEmpty ?
+                        <Typography 
+                            className={classes.emptyMessage}
+                            align="center"
+                            variant='display2'>
+                            Coming Soon  :)
+                        </Typography> : ''
                 }
             </div>
         );

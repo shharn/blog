@@ -3,9 +3,6 @@ import { Data as DataActionType } from '../action/types';
 import { PLACEHOLDER_NAME_TO_CONVERT } from '../constant';
 import { createActionConverter } from './actionConverter';
 
-const NAME_SEPERATOR = '-';
-const WHITE_SPACE = ' ';
-
 const menuDataFilter = (state: AppState): Object => state.app.data.get.menus.data;
 
 const menuNameConverterChecker = (action: Action): boolean => 
@@ -14,7 +11,7 @@ const menuNameConverterChecker = (action: Action): boolean =>
 
 const articleDataFilter = (state: AppState): Object => {
     let data = state.app.data.get.articles.data;
-    if (!!!data.length) {
+    if (!data.length) {
         data = state.app.data.get.hottestArticles.data;
     }
     return data;
@@ -31,31 +28,24 @@ const createDataNameToUIDConverter = (targetDataFilter) => {
 }
     
 const dataNameToUIDConverter = (action, srcData, targetDataFilter) => {
-    // 'name' is always lowercase
     const { name,  dataName, propName } = action.payload;
     let { url } = action.payload;
     const data = targetDataFilter(srcData);
-    let splitted = name.toLowerCase().split(NAME_SEPERATOR); // some_menu_example => ['some', 'name', example']
+    let decodedName = decodeURIComponent(name);
+    console.log(`encoded: ${name}, decoded: ${decodedName}`);
     let result = data.filter(datum => {
-        // ex) Some Menu Example => some menu example => ['some', 'menu', 'example']
-        let splitted2 = datum[propName].toLowerCase().split(WHITE_SPACE);
-        if (splitted.length !== splitted2.length) return false;
-        for (let i = 0; i < splitted.length; i++) {
-            if (splitted[i] !== splitted2[i]) {
-                return false;
-            }
-        }
-        return true;
+        const found = datum[propName] === decodedName;
+        console.log(`candidate : ${datum[propName]}, found : ${found}`);
+        return found;
     });
     let uid = result && result.length > 0 ? result[0].uid : null
-    url = action.payload.url.replace(PLACEHOLDER_NAME_TO_CONVERT, uid);
-
-    
+    const convertedURL = action.payload.url.replace(PLACEHOLDER_NAME_TO_CONVERT, uid);
+    console.log(`before : ${url}, after : ${convertedURL}`);
     return {
         type: DataActionType.REQUEST_GET_DATA_WITH_URL,
         payload: {
             dataName,
-            url,
+            url: convertedURL,
         }
     };
 };

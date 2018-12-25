@@ -39,7 +39,7 @@ export function* dataGetRequestHandler(action: Action) : Generator<request.Respo
     } else {
         yield put(dataResponseFailed({
             code: response.status == null ? -1 : response.status,
-            message: response.status == null ? "Network is Offline :(" : response.body.message
+            message: response.status == null ? 'Network is Offline :(' : 'Error occured. Please try it later'
         }, dataName));
     }
 }
@@ -53,7 +53,7 @@ export function* dataGetRequestWithURLHandler(action: Action) : Generator<reques
     } else {
         yield put(dataResponseFailed({ 
             code: response.status == null ? -1 : response.status,
-            message: response.status == null ? "Network is Offline :(" : response.body.message
+            message: response.status == null ? 'Network is Offline :(' : 'Error occured. Please try it later'
         }, dataName));
     }
 }
@@ -87,7 +87,7 @@ export function* dataMutationRequestHandler(action: Action) : Generator<request.
     } else {
         yield put(dataMutationFail(dataName, operationType, {
                 code: response.status == null ? -1 : response.status,
-                message: response.status == null ? 'Network is Offline :(' : response.body.message
+                message: response.status == null ? 'Network is Offline :(' : 'Error occured. Please try it later'
             }));
     }
 }

@@ -13,6 +13,58 @@ type inputAndOutput struct {
 }
 
 var testData map[string][]inputAndOutput = map[string][]inputAndOutput{
+	"*": []inputAndOutput{
+		0: inputAndOutput{
+			input: "/",
+			output: Params{},
+		},
+		1: inputAndOutput{
+			input: "/asdf",
+			output: Params{},
+		},
+		2: inputAndOutput{
+			input: "/123/dvaks",
+			output: Params{},
+		},
+	},
+	"/asdf/*": []inputAndOutput{
+		0: inputAndOutput{
+			input: "/asdf/0x11",
+			output: Params{},
+		},
+		1: inputAndOutput{
+			input: "/asdf/false/1213",
+			output: Params{},
+		},
+	},
+	"/asdf/:id/*": []inputAndOutput{
+		0: inputAndOutput{
+			input: "/asdf/000/gkdj",
+			output: Params{
+				"id": "000",
+			},
+		},
+	},
+	"/path/:aa/*/:bb": []inputAndOutput{
+		0: inputAndOutput{
+			input: "/path/1/path2/2",
+			output: Params{
+				"aa": "1",
+				"bb": "2",
+			},
+		},
+		1: inputAndOutput{
+			input: "/path/1/path222/2",
+			output: Params{
+				"aa": "1",
+				"bb": "2",
+			},
+		},
+		2: inputAndOutput{
+			input:"/path/1/path2/3/fff",
+			output: Params{},
+		},
+	},
 	"/": []inputAndOutput{
 		0: inputAndOutput{
 			input: "/",

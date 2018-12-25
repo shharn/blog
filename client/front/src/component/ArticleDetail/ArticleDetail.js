@@ -6,8 +6,8 @@ import MetaInfo from '../MetaInfo';
 import ArticleDetailContent from '../ArticleDetailContent';
 import ButtonGroup from '../ArticleDetailButtonGroup';
 import { FetchStatus } from '../../constant';
-import CircularProgress from '@material-ui/core/LinearProgress';
 import Divider from '@material-ui/core/Divider';
+import CenteredCircularProgress from '../CenteredCircularProgress';
 import { withStyles } from '@material-ui/core/styles';
 import styles from './styles';
 import type { 
@@ -79,7 +79,7 @@ class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {},
         return (
             article ? 
                 fetchStatus === FetchStatus.WAIT || fetchStatus === FetchStatus.INITIAL ?
-                    <CircularProgress size={30}/> :
+                    <CenteredCircularProgress/> :
                     <Paper elevation={4} className={classes.container}>
                         {fetchStatus === FetchStatus.FAIL ?
                             <Typography variant="subheading">Temporarily not available :(</Typography> :
@@ -96,7 +96,7 @@ class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {},
                                 onDeleteButtonClicked={this.onDeleteButtonClicked}
                             />
                     </Paper> :
-                <Typography className={classes.noArticleText} variant="display1">No Article Found</Typography>
+                <Typography className={classes.centered} variant="display1">No Article Found</Typography>
         );
     }
 }

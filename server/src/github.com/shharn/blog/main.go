@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/shharn/blog/config"
+	"github.com/pkg/errors"
 	"github.com/shharn/blog/handler"
 	"github.com/shharn/blog/logger"
 	"github.com/shharn/blog/router"
@@ -23,7 +23,6 @@ func main() {
 		SetAllowedHeaders(allowedHeaders).
 		SetCORS()
 	r.Use(router.AuthFilter{
-		Key: config.Key,
 		Exceptions: []router.FilterExceptionJudge{
 			0: func(w http.ResponseWriter, r *http.Request) bool {
 				return r.Method == "GET" || r.Method == "OPTIONS"
@@ -55,13 +54,9 @@ func main() {
 	r.Patch("/articles/:id", handler.UpdateArticleHandler)
 	r.Delete("/articles/:id", handler.DeleteArticleHandler)
 
-	if err := handler.RegenerateKey(); err == nil {
-		if err := http.ListenAndServe(":5000", r); err != nil {
-			logger.Logger.Error(err)
-		} else {
-			logger.Logger.Info("Listening on port 5000")
-		}
+	if err := http.ListenAndServe(":5000", r); err != nil {
+		logger.Logger.Error(errors.WithStack(err))
 	} else {
-		logger.Logger.Error(err)
+		logger.Logger.Info("Listening on port 5000")
 	}
 }

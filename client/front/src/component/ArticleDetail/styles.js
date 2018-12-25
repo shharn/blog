@@ -12,10 +12,10 @@ export default theme => ({
     divider: {
         marginTop: '35px',
     },
-    noArticleText: {
+    centered: {
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)'
-    }
+    },
 })

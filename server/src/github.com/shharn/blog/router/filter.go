@@ -5,9 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/shharn/blog/config"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/pkg/errors"
+	"github.com/shharn/blog/session"
 )
 
 
@@ -22,8 +20,6 @@ type FilterExceptionJudge func(w http.ResponseWriter, r *http.Request) bool
 
 // AuthFilter is responsible for validating the session token
 type AuthFilter struct {
-	// Key is the secret key for JWT
-	Key string
 	// Exceptions is a list of FilterExceptionJudge
 	Exceptions []FilterExceptionJudge
 }
@@ -38,36 +34,15 @@ func (af AuthFilter) Filter(w http.ResponseWriter, r *http.Request) error {
 
 	clientToken := r.Header.Get(TokenName)
 
-	if isValid, err := af.validateToken(clientToken, af.Key); err == nil {
-		if isValid {
-			return nil
-		} 
+	if isValid := session.TokenManager.ValidateToken(clientToken); isValid {
+		return nil
+	} else {
 		return RouterError{
 			Code: http.StatusUnauthorized,
 			MessageForClient: "Invalid token",
 			innerError: nil,
 		}
-	} else {
-		return RouterError{
-			Code: http.StatusInternalServerError,
-			MessageForClient: mapStatusCodeToMessage[http.StatusInternalServerError],
-			innerError: errors.WithStack(err),
-		}
 	}
-}
-
-func (af AuthFilter) validateToken(token, key string) (bool, error) {
-	if len(token) < 1 {
-		return false, nil
-	}
-	parsedToken, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
-		return []byte(config.Key), nil
-	})
-
-	if err != nil {
-		return false, errors.WithStack(err)
-	}
-	return parsedToken.Valid, nil
 }
 
 // CORSFilter just set CORS headers

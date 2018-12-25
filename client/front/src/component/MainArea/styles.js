@@ -2,6 +2,7 @@ import { Styles } from '../../constant';
 
 export default theme => ({
     content: {
+        position: 'relative',
         width: '100%',
         padding: theme.spacing.unit * 2,
         height: 'auto',

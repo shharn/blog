@@ -12,6 +12,12 @@ type AppLogger struct {
 	logger *log.Logger
 }
 
+func (appLogger *AppLogger) Fatal(err error) {
+	appLogger.logger.WithFields(log.Fields{
+		"stacktrace": fmt.Sprintf("%+v", err),
+	}).Fatal(err.Error())
+}
+
 func (appLogger *AppLogger) Error(err error) {
 	appLogger.logger.WithFields(log.Fields{
 		"stacktrace": fmt.Sprintf("%+v", err),

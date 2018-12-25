@@ -29,8 +29,6 @@ import type { request } from 'superagent';
 export function* processLogin(action: Action): Generator<request.Response | PutEffect, void, void> {
     const response: request.Response = yield call(requestLogin, action.payload.loginInfo);
     if (isNetworkOffline(response)) {
-        // In this case, I think that using another action for 'net`work offline' is better idea
-        // because more expressive / meaningful
         yield put(loginFailed({
             code: -1,
             message: 'Network is offline :('
@@ -39,7 +37,7 @@ export function* processLogin(action: Action): Generator<request.Response | PutE
         if (response.status === 200) {
             yield put(loginSuccess(response.body));
         } else {
-            var message = response.body ? (response.body.message || 'Unknown error') : 'Unknown error';
+            var message = response.body ? (response.body.message || 'Please try it later') : 'Please try it later';
             yield put(loginFailed({
                 code: response.status,
                 message
@@ -87,7 +85,7 @@ export function* processLogout(action: Action): Generator<request.Response | Put
         } else {
             yield put(logoutFailed({
                 code: response.status,
-                message: response.body.message
+                message: 'Fail to logout'
             }));
         }
     }

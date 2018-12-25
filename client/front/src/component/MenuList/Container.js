@@ -18,8 +18,8 @@ const mapStateToProps = (state: StoreState, ownProps: { switchToList: () => void
         editableRowId,
         editableCellName,
         menus,
-        updateMutationState: state.app.data.mutation.menus.update,
-        deleteMutationState: state.app.data.mutation.menus.delete,
+        updateMutationStatus: state.app.data.mutation.menus.update,
+        deleteMutationStatus: state.app.data.mutation.menus.delete,
         ...ownProps
     };
 };

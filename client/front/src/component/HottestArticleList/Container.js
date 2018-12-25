@@ -15,6 +15,9 @@ const infScrOptions: InfiniteScrollableOptions = {
     dataProvider: (state: StoreState): mixed => state.app.data.get.hottestArticles.data,
     statusProvider: (state: StoreState): mixed => state.app.data.get.hottestArticles.fetchStatus,
     errorProvider: (state: StoreState):mixed => state.app.data.get.hottestArticles.error,
+    reduxPropsProvider: (state: StoreState): mixed => ({
+        fetchStatus: state.app.data.get.hottestArticles.fetchStats
+    }),
     statusWait: FetchStatus.WAIT,
     statusSuccess: FetchStatus.SUCCESS,
     statusFail: FetchStatus.FAIL,

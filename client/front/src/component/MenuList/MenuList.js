@@ -43,42 +43,44 @@ class MeuList extends React.Component<Props & WithStylesProps> {
     }
 
     getErrorMessage = (): string => {
-        const { updateMutationState, deleteMutationState } = this.props;
-        return updateMutationState.status === FetchStatus.FAIL ?
-            updateMutationState.error.message : deleteMutationState.error.message;
+        const { updateMutationStatus, deleteMutationStatus } = this.props;
+        return updateMutationStatus.status === FetchStatus.FAIL ?
+            updateMutationStatus.error.message : deleteMutationStatus.error.message;
     }
 
     render = () => {
-        const { menus, classes, updateMutationState, deleteMutationState } = this.props;
+        const { menus, classes, updateMutationStatus, deleteMutationStatus } = this.props;
+        const isEmpty = (updateMutationStatus === FetchStatus.SUCCESS || deleteMutationStatus === FetchStatus.SUCCESS) &&
+            (menus && menus.length);
         return (
             <div className={classes.tableContainer}>
-                {menus.length > 0 ? 
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            {headerNames.map(name => 
-                                <TableCell 
-                                    classes={{
-                                        root: classes.cellRoot
-                                    }}
-                                    variant='head' 
-                                    key={name}>
-                                    {name}
-                                </TableCell>)}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {menus.map(menu => <MenuTableRow key={menu.uid} menu={menu}/>)}
-                    </TableBody>
-                </Table> :
-                <Typography 
-                    className={classes.emptyMessage}
-                    variant="title"  
-                    align="center">
-                    No Menu :(
-                </Typography>
+                {isEmpty ? 
+                    <Typography 
+                        className={classes.emptyMessage}
+                        variant="title"  
+                        align="center">
+                        No Menu :(
+                    </Typography> :
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                {headerNames.map(name => 
+                                    <TableCell 
+                                        classes={{
+                                            root: classes.cellRoot
+                                        }}
+                                        variant='head' 
+                                        key={name}>
+                                        {name}
+                                    </TableCell>)}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {menus.map(menu => <MenuTableRow key={menu.uid} menu={menu}/>)}
+                        </TableBody>
+                    </Table>
                 }
-                {(updateMutationState.status === FetchStatus.FAIL || deleteMutationState.status === FetchStatus.FAIL) &&
+                {(updateMutationStatus.status === FetchStatus.FAIL || deleteMutationStatus.status === FetchStatus.FAIL) &&
                     <Typography
                         variant="body1"
                         align="center">

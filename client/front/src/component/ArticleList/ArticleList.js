@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Article from '../Article';
 import { withStyles } from '@material-ui/core/styles';
+import { FetchStatus } from '../../constant';
 import styles from './styles';
 import type { 
     RouterProps,
@@ -42,14 +43,15 @@ class ArticleList extends Component<RouterProps & WithStylesProps & InfiniteScro
 
     moveToOnlyOneArticle = (): void => {
         const article = this.props.data[0];
-        const replacedTitle = article.title.toLowerCase().replace(/\s/g, '-');
+        const replacedTitle = encodeURIComponent(article.title);
         this.props.history.push(`${this.props.location.pathname}/${replacedTitle}`)
     }
 
     render = () => {
-        const { classes } = this.props;
+        const { classes, reduxProps } = this.props;
         const articles = this.props.data;
-        const isEmpty = !articles || articles.length < 1;
+        const isEmpty =  (reduxProps && reduxProps.fetchStatus === FetchStatus.SUCCESS) &&
+            (!articles || articles.length < 1);
         return (
             <div className={classes.listContainer}>
                 {isEmpty ? 

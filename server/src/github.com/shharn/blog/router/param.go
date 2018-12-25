@@ -28,7 +28,7 @@ func parseURL(pattern, path string) Params {
 		currPath := splittedPath[index]
 		if len(splittedPattern) > 0 && splittedPattern[0] == ':' {
 			params[splittedPattern[1:]] = currPath
-		} else if splittedPattern != currPath { // unmatched pattern & path detected
+		} else if splittedPattern != "*" && splittedPattern != currPath { // unmatched pattern & path detected
 			logger.Logger.Error(errors.Errorf("Unmatched pattern & path. Pattern: %v, Path: %v", pattern, path))
 			return Params{}
 		} 

@@ -16,6 +16,9 @@ const infScrOptions: InfiniteScrollableOptions = {
     dataProvider: (state: StoreState) => state.app.data.get.articles.data,
     statusProvider: (state: StoreState) => state.app.data.get.articles.fetchStatus,
     errorProvider: (state: StoreState) => state.app.data.get.articles.error,
+    reduxPropsProvider: (state: StoreState) => ({
+        fetchStatus: state.app.data.get.articles.fetchStatus
+    }),
     statusWait: FetchStatus.WAIT,
     statusSuccess: FetchStatus.SUCCESS,
     statusFail: FetchStatus.FAIL,
@@ -30,7 +33,7 @@ const infScrOptions: InfiniteScrollableOptions = {
     loaderArgs: function() {
         return this.props.match.params["menuName"];
     },
-    loading: () => <LinearProgress />,
+    loading: () => <LinearProgress size={30} />,
     useRedux: true
 }
 

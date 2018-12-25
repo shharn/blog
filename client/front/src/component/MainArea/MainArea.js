@@ -1,31 +1,31 @@
 // @flow
 import React, { Component } from 'react';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
 import { Route, Switch } from 'react-router';
 import PrivateRoute from '../PrivateRoute';
+import CenteredCircularProgress from '../CenteredCircularProgress';
 import Loadable from 'react-loadable';
 import styles from './styles';
 import type { WithStylesProps } from '../../flowtype';
 
 const HottestArticleList = Loadable({
     loader: () =>  import('../HottestArticleList'),
-    loading: () => <CircularProgress size={30}/>
+    loading: () => <CenteredCircularProgress />
   });
   
 const ArticleListWrapper  = Loadable({
-loader: () => import(/* webpackPrefetch: true */ '../ArticleListWrapper'),
-loading: () => <CircularProgress size={30}/>
+    loader: () => import(/* webpackPrefetch: true */ '../ArticleListWrapper'),
+    loading: () => <CenteredCircularProgress />
 });
 
 const CreateArticle = Loadable({
     loader: () => import('../CreateOrEditArticle'),
-    loading: () => <CircularProgress size={30}/>
+    loading: () => <CenteredCircularProgress />
 });
 
 const ArticleDetail = Loadable({
     loader: () => import('../ArticleDetail'),
-    loading: () => <CircularProgress size={30}/>
+    loading: () => <CenteredCircularProgress />
 });
 
 class MainArea extends Component<WithStylesProps> {

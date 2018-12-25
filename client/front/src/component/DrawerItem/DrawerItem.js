@@ -54,7 +54,7 @@ class DrawerItem extends Component<Props & WithStylesProps, State> {
                 </div>
             );
         } else {
-            let to = url && url.length > 0 ? url : `/menus/${name.toLowerCase().replace(' ', '-')}/articles`;
+            let to = url && url.length > 0 ? url : `/menus/${encodeURIComponent(name)}/articles`;
             return (
                 <ListItem button component={Link} to={to}>
                     <ListItemText primary={name}/>

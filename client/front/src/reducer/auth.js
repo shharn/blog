@@ -92,7 +92,7 @@ const reducer = (state: AuthState = initialState, action: Action): AuthState => 
                 ...state,
                 error,
                 authStatus: AuthStatus.INITIAL,
-                isAuthenticated: true
+                isAuthenticated: false // anyway change UI to logout button as if normally processed
             };
         default:
             return state;

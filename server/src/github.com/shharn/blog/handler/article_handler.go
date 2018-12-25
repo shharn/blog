@@ -3,7 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
-	"strings"
+	"net/url"
 
 	"github.com/pkg/errors"
 	"github.com/shharn/blog/data"
@@ -126,14 +126,19 @@ func GetArticleByTitleHandler(w http.ResponseWriter, rq *http.Request, params ro
 		return nil, nil
 	}
 
-	title = replaceSeparatorToWhiteSpace(title.(string))
-	if article, err := service.GetArticleByTitle(title.(string)); err == nil {
+	decodedTitle, err := decodeURIComponent(title.(string))
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	if article, err := service.GetArticleByTitle(decodedTitle); err == nil {
 		return article, nil
 	} else {
 		return nil, err
 	}
 }
 
-func replaceSeparatorToWhiteSpace(title string) string {
-	return strings.TrimSpace(strings.Replace(title, titleSep, whiteSpace, -1))
+func decodeURIComponent(str string) (string, error) {
+	result, err := url.QueryUnescape(str)
+	return result, err
 }
