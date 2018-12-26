@@ -1,6 +1,5 @@
 export default {
     listContainer: {
-        overflowY: 'scroll',
         height: '100%'
     },
     circularProgress: {
