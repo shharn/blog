@@ -27,7 +27,7 @@ class Article extends Component<Props & WithStylesProps> {
         return (
             <Link 
                 className={classes.outerAnchor} 
-                to={`/menus/${article.menu[0].name.toLowerCase().replace(/\s/g, '-')}/articles/${encodeURIComponent(article.title)}`}
+                to={`/menus/${encodeURIComponent(article.menu[0].name)}/articles/${encodeURIComponent(article.title)}`}
             >
                 <Card className={customClasses.root}>
                     <CardHeader 

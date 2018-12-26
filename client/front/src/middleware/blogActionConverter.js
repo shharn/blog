@@ -32,15 +32,9 @@ const dataNameToUIDConverter = (action, srcData, targetDataFilter) => {
     let { url } = action.payload;
     const data = targetDataFilter(srcData);
     let decodedName = decodeURIComponent(name);
-    console.log(`encoded: ${name}, decoded: ${decodedName}`);
-    let result = data.filter(datum => {
-        const found = datum[propName] === decodedName;
-        console.log(`candidate : ${datum[propName]}, found : ${found}`);
-        return found;
-    });
+    let result = data.filter(datum => datum[propName] === decodedName);
     let uid = result && result.length > 0 ? result[0].uid : null
     const convertedURL = action.payload.url.replace(PLACEHOLDER_NAME_TO_CONVERT, uid);
-    console.log(`before : ${url}, after : ${convertedURL}`);
     return {
         type: DataActionType.REQUEST_GET_DATA_WITH_URL,
         payload: {
