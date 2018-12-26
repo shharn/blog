@@ -36,6 +36,8 @@ const blockToHTML = (block): Element<*> => {
                 element: <li/>,
                 nest: <ul/>
             };
+        case 'blockquote':
+            return <blockquote/>;
         case 'ordered-list-item':
             return {
               element: <li/>,
