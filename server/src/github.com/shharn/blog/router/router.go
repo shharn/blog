@@ -77,21 +77,11 @@ func (r *Router) SetCORS() *Router {
 	ctxs = append(ctxs, RouterContext{
 		Pattern: "*",
 		Handler: func(w http.ResponseWriter, rq *http.Request, params Params) (interface{}, error) {
-			// w.Header().Set("Access-Control-Allow-Origin", r.CORSContext.AllowedOrigins)
-			// w.Header().Set("Access-Control-Allow-Methods", r.CORSContext.AllowedMethods)
-			// w.Header().Set("Access-Control-Allow-Headers", r.CORSContext.AllowedHeaders)
 			return nil, nil
 		},
 	})
 	(*r).Dispatchers["OPTIONS"] = ctxs
-	r.Use(CORSFilter{
-		CORSContext: r.CORSContext,
-		Exceptions: []FilterExceptionJudge{
-			0: func(w http.ResponseWriter, r *http.Request) bool {
-				return r.Method == "GET"
-			},
-		},
-	})
+	r.Use(CORSFilter{CORSContext: r.CORSContext})
 	return r
 }
 

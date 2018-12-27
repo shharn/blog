@@ -54,28 +54,18 @@ type CORSFilter struct {
 
 // Filter for CORSFilter
 func (cf CORSFilter) Filter(w http.ResponseWriter, rq *http.Request) error {
-	isException := false
-	for _, judge := range cf.Exceptions {
-		if judge(w, rq) {
-			isException = true
-			break
-		}
-	}
-	
 	origin := rq.Header.Get("Origin")
 	allowedOrigin := origin
-	if !isException {
-		currentEnv := os.Getenv("ENVIRONMENT")
-		if currentEnv == "development" {
-			allowedOrigin = "*"
+	currentEnv := os.Getenv("ENVIRONMENT")
+	if currentEnv == "development" {
+		allowedOrigin = "*"
+	} else {
+		if contains(cf.CORSContext.AllowedOrigins, origin) {
+			allowedOrigin = origin
 		} else {
-			if contains(cf.CORSContext.AllowedOrigins, origin) {
-				allowedOrigin = origin
-			} else {
-				return RouterError{
-					Code: http.StatusForbidden,
-					MessageForClient: "You're not allowed",
-				}
+			return RouterError{
+				Code: http.StatusForbidden,
+				MessageForClient: "You're not allowed",
 			}
 		}
 	}
