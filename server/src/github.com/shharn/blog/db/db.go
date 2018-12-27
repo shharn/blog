@@ -83,6 +83,44 @@ func (c *Client) Mutate(md MutationData) (*api.Assigned, error) {
 	return assigned, nil
 }
 
+// MutateWithNquad mutates with NQuad
+func (c *Client) MutateWithNquad(subject, predicate string, objectValue interface{}) (*api.Assigned, error) {
+	logger.Logger.WithFields(logrus.Fields{
+		"subject": subject,
+		"predicate": predicate,
+		"objectValue": objectValue,
+	}).Trace("db.Client.MutateWithNQuad")
+	val := &api.Value{}
+	switch v := objectValue.(type) {
+	case int:
+		val.Val = &api.Value_IntVal{IntVal: int64(v)}
+	case int64:
+		val.Val = &api.Value_IntVal{IntVal: v}
+	case bool:
+		val.Val = &api.Value_BoolVal{BoolVal: v}
+	case string:
+		val.Val = &api.Value_StrVal{StrVal: v}
+	default:
+		if strVal, ok := v.(string); ok {
+			val.Val = &api.Value_StrVal{StrVal: strVal}
+		} else {
+			return nil, errors.New("Cannot convert unsupported type to string")
+		}
+	}
+	mu := &api.Mutation{}
+	mu.Set = append(mu.Set, &api.NQuad{
+		Subject: subject,
+		Predicate: predicate,
+		ObjectValue: val,
+	})
+
+	if res, err := c.tx.Mutate(c.ctx, mu); err == nil {
+		return res, nil
+	} else {
+		return nil, errors.WithStack(err)
+	}
+}
+
 // AddEdge sends a request for adding a edge between the nodes
 func (c *Client) AddEdge(subject, predicate, objID string) (*api.Assigned, error) {
 	logger.Logger.WithFields(logrus.Fields{

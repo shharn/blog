@@ -44,8 +44,5 @@ func newKeyManager() *keyManager {
 		rwLock: &sync.RWMutex{},
 	}
 	instance.GenerateKey()
-	logger.Logger.WithFields(logrus.Fields{
-		"key": instance.GetKey(),
-	}).Trace("First key value")
 	return instance
 }

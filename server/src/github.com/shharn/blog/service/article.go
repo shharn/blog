@@ -191,10 +191,16 @@ func GetArticle(id string) (interface{}, error) {
 		return nil, errors.WithStack(err)
 	}
 
-	if len(articles.Articles) > 0 {
-		return articles.Articles[0], nil
+	if len(articles.Articles) < 1 {
+		return nil, errors.Errorf("No article exists. uid : %v", id)
 	}
-	return nil, nil
+	
+	article := articles.Articles[0]
+	if _, err := c.MutateWithNquad(id, "views", article.Views + 1); err == nil {
+		return article, nil
+	} else {
+		return nil, err
+	}
 }
 
 // DeleteArticle removes an article node with uid
