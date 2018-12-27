@@ -81,7 +81,15 @@ func (r *Router) SetCORS() *Router {
 		},
 	})
 	(*r).Dispatchers["OPTIONS"] = ctxs
-	r.Use(CORSFilter{CORSContext: r.CORSContext})
+	r.Use(CORSFilter{
+		CORSContext: r.CORSContext,
+		Exceptions: []FilterExceptionJudge{
+			0: func(w http.ResponseWriter, r *http.Request) bool {
+				path := r.URL.Path
+				return path == "/"
+			},
+		},
+	})
 	return r
 }
 

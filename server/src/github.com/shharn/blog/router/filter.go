@@ -54,6 +54,12 @@ type CORSFilter struct {
 
 // Filter for CORSFilter
 func (cf CORSFilter) Filter(w http.ResponseWriter, rq *http.Request) error {
+	for _, judge := range cf.Exceptions {
+		if judge(w, rq) {
+			return nil
+		} 
+	}
+
 	origin := rq.Header.Get("Origin")
 	allowedOrigin := origin
 	currentEnv := os.Getenv("ENVIRONMENT")
