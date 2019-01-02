@@ -88,6 +88,10 @@ func (r *Router) SetCORS() *Router {
 				path := r.URL.Path
 				return path == "/"
 			},
+			1: func(w http.ResponseWriter, r *http.Request) bool {
+				path := strings.ToLower(r.URL.Path[1:])
+				return path == "check";
+			},
 		},
 	})
 	return r
