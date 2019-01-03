@@ -12,7 +12,7 @@ import (
 const (
 	getTheHottestArticlesQuery = `
 		query getTheHottestArticles($offset: int, $count: int) {
-			articles (func: has(title), orderdesc: views, offset: $offset, first: $count){
+			articles (func: has(title), orderdesc: createdAt, orderdesc: views, offset: $offset, first: $count){
 				uid
 				title
 				menu {
