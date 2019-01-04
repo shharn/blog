@@ -2,10 +2,10 @@
 import React, { Component } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import TextField from '@material-ui/core/TextField';
+// import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
+// import SearchIcon from '@material-ui/icons/Search';
 import { withStyles } from '@material-ui/core/styles';
 import EmptyCenter from './EmptyCenter';
 import Button from '@material-ui/core/Button';
@@ -22,9 +22,9 @@ type Props = {
 };
 
 class TopBar extends Component<Props & WithStylesProps> {
-    handleSearchToggle = (): void => {
-        console.log('handleSearchToggle');
-    }
+    // handleSearchToggle = (): void => {
+    //     console.log('handleSearchToggle');
+    // }
 
     handleAuthButtonClick = (): void => {
         const { isAuthenticated } = this.props;
@@ -42,12 +42,12 @@ class TopBar extends Component<Props & WithStylesProps> {
                           </IconButton>  
                       </div>
                       <EmptyCenter />
-                      <div>
+                      {/* <div>
                           <IconButton className={classes.navSearchIcon} onClick={this.handleSearchToggle}>
                               <SearchIcon/>
                           </IconButton>
                           <TextField className={classes.searchInput} placeholder="Search"></TextField>
-                      </div>
+                      </div> */}
                     <div className={classes.buttonContainer}>
                         <Button
                             classes={{
