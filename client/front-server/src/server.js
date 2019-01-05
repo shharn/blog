@@ -17,6 +17,7 @@ import { articleDetail } from './handler';
 import { HTTPStatusCode } from './constant';
 
 const { OK, INTERNAL_SERVER_ERROR } = HTTPStatusCode;
+const HEALTH_CHECK_PATH = '/healthz';
 const PORT = 3000;
 
 const app = express();
@@ -25,7 +26,7 @@ app.disable('x-powered-by');
 
 app.use((req, res, next) => {
     logger.info(`Request URL : ${req.originalUrl}, Protocol: ${req.protocol}`);
-    if (req.protocol === 'http') {
+    if (req.originalUrl !== HEALTH_CHECK_PATH && req.protocol === 'http') {
         res.redirect(`https://${req.hostname}/${req.originalUrl}`);
         return;
     }
@@ -40,6 +41,10 @@ app.use(express.static(STATIC_FILES_PATH, {
     cacheControl: true,
     maxAge: 31536000000
 }));
+
+app.get(HEALTH_CHECK_PATH, (_, res) => {
+    res.statusCode(OK);
+});
 
 app.get('/', (_, res) => {
     res.sendFile(INDEX_HTML_FILE_PATH);

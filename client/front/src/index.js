@@ -2,7 +2,7 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import App from './component/App';
-// import registerServiceWorker from './registerServiceWorker';
+import registerServiceWorker from './registerServiceWorker';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import createAppStore from './createAppStore';
@@ -29,7 +29,7 @@ if (container) {
         </Provider>,
         container
     );
-    // registerServiceWorker();
+    registerServiceWorker();
 } else {
     throw new Error(`Cannot find an element with id 'root'`);
 }
