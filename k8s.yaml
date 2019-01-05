@@ -38,10 +38,10 @@ spec:
                   ports:
                     - containerPort: 3000
                       name: http
-                readinesProbe:
-                    httpGet:
-                        path: /healthz
-                        port: 3000
+                  readinessProbe:
+                      httpGet:
+                          path: /healthz
+                          port: 3000
 ---
 apiVersion: v1
 kind: Service
