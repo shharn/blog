@@ -25,11 +25,11 @@ const app = express();
 app.disable('x-powered-by');
 
 app.use((req, res, next) => {
-    logger.info(`Request URL : ${req.originalUrl}, Protocol: ${req.protocol}`);
-    if (req.originalUrl !== HEALTH_CHECK_PATH && req.protocol === 'http') {
-        res.redirect(`https://${req.hostname}${req.originalUrl}`);
-        return;
-    }
+    logger.info(`Request URL : ${req.originalUrl}, Protocol: ${req.protocol}, Headers: ${JSON.stringfiy(req.headers)}`);
+    // if (req.originalUrl !== HEALTH_CHECK_PATH && req.protocol === 'http') {
+    //     res.redirect(`https://${req.hostname}${req.originalUrl}`);
+    //     return;
+    // }
     next();
 });
 
