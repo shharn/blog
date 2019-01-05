@@ -26,10 +26,12 @@ app.disable('x-powered-by');
 
 app.use((req, res, next) => {
     logger.info(`Request URL : ${req.originalUrl}, Protocol: ${req.protocol}, Headers: ${JSON.stringify(req.headers)}`);
-    // if (req.originalUrl !== HEALTH_CHECK_PATH && req.protocol === 'http') {
-    //     res.redirect(`https://${req.hostname}${req.originalUrl}`);
-    //     return;
-    // }
+    const protocol = req.headers['x-forwarded-proto'] || '';
+    const isHttp = protocol === 'http';
+    if (req.originalUrl !== HEALTH_CHECK_PATH && isHttp) {
+        res.redirect(`https://${req.hostname}${req.originalUrl}`);
+        return;
+    }
     next();
 });
 
