@@ -25,7 +25,7 @@ const app = express();
 app.disable('x-powered-by');
 
 app.use((req, res, next) => {
-    logger.info(`Request URL : ${req.originalUrl}, Protocol: ${req.protocol}, Headers: ${JSON.stringfiy(req.headers)}`);
+    logger.info(`Request URL : ${req.originalUrl}, Protocol: ${req.protocol}, Headers: ${JSON.stringify(req.headers)}`);
     // if (req.originalUrl !== HEALTH_CHECK_PATH && req.protocol === 'http') {
     //     res.redirect(`https://${req.hostname}${req.originalUrl}`);
     //     return;
