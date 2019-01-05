@@ -31,3 +31,8 @@
 .article_detail-content_container p {
     margin: 0;
 }
+
+.article_detail-content_container pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
