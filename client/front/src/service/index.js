@@ -3,7 +3,7 @@ import request from 'superagent';
 import { HEADER_NAME_FOR_TOKEN } from '../constant';
 import type { LoginInformation } from '../flowtype';
 
-const PROTOCOL = window.location.protocol;
+const PROTOCOL = 'http:';
 
 export function requestLogin(loginInfo: LoginInformation): Promise<request.Response | Error> {
     return request

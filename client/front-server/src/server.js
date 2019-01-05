@@ -23,8 +23,12 @@ const app = express();
 
 app.disable('x-powered-by');
 
-app.use((req, _, next) => {
+app.use((req, res, next) => {
     logger.info(`Request URL : ${req.originalUrl}`);
+    // if (req.protocol === 'http') {
+    //     res.redirect(`https://blog.puppyloper.com/${req.originalUrl}`);
+    //     return;
+    // }
     next();
 });
 
