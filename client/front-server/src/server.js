@@ -43,7 +43,7 @@ app.use(express.static(STATIC_FILES_PATH, {
 }));
 
 app.get(HEALTH_CHECK_PATH, (_, res) => {
-    res.statusCode(OK);
+    res.sendStatus(OK).end();
 });
 
 app.get('/', (_, res) => {
