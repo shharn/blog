@@ -30,6 +30,7 @@
 
 .article_detail-content_container p {
     margin: 0;
+    word-wrap: break-word;
 }
 
 .article_detail-content_container pre {
