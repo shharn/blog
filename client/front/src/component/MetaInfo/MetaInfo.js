@@ -18,7 +18,7 @@ class MetaInfo extends Component<Props & WithStylesProps> {
             <div className={classes.root}>
                 <Avatar
                     alt="Seunghwan Han"
-                    src="https://storage.googleapis.com/puppyloper-blog/images/me_icon_40x40.png"
+                    src="https://storage.googleapis.com/puppyloper-blog/images/me_icon_2_50x50.png"
                     className={classes.avatar}></Avatar>
                 <Typography 
                     className={classes.createdAt} 

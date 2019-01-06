@@ -5,8 +5,8 @@ export default ({
         alignItems: 'center'
     },
     avatar: {
-        width: '40px',
-        height: '40px',
+        width: '50px',
+        height: '50px',
     },
     createdAt: {
         margin: '0 15px'

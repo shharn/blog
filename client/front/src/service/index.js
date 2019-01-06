@@ -3,7 +3,7 @@ import request from 'superagent';
 import { HEADER_NAME_FOR_TOKEN } from '../constant';
 import type { LoginInformation } from '../flowtype';
 
-const PROTOCOL = 'https:';
+const PROTOCOL = process.env.NODE_ENV === 'production' ? 'https:' : 'http:';
 
 export function requestLogin(loginInfo: LoginInformation): Promise<request.Response | Error> {
     return request
