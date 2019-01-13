@@ -23,7 +23,7 @@ export function articleDetail(req, res) {
         }
 
         const articleTitle = req.params["articleTitle"];
-        logger.debug(`ArticleTitle param value : ${articleTitle}`);
+        logger.info(`ArticleTitle param value : ${articleTitle}`);
         if (!articleTitle || articleTitle.length < 1) {
             return res.redirect('/');
         }
@@ -89,7 +89,7 @@ export function articleDetail(req, res) {
 function getArticleByTitle(title) {
     const encoded = encodeURIComponent(title);
     const path = `${INTERNAL_API_SERVER_SERVICE}/articles/titles/${encoded}`;
-    logger.debug(`Request to API server path : ${path}`);
+    logger.info(`Request to API server path : ${path}`);
     return request
         .get(path)
         .timeout({
