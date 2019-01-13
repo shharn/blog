@@ -176,15 +176,18 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, rq *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 	}()
-
-	logger.Logger.WithFields(log.Fields{
-		"headers": rq.Header,
-		"client_ip": GetClientAddress(rq),
-		"method": rq.Method,
-		"path": rq.URL.Path,
-		"params": rq.URL.Query(),
-		"token": rq.Header.Get(TokenName),
-	}).Info("Incoming http request log")
+	
+	ua := rq.Header.Get("User-Agent")
+	if (!strings.Contains(ua, "GoogleHC")) {
+		logger.Logger.WithFields(log.Fields{
+			"headers": rq.Header,
+			"client_ip": GetClientAddress(rq),
+			"method": rq.Method,
+			"path": rq.URL.Path,
+			"params": rq.URL.Query(),
+			"token": rq.Header.Get(TokenName),
+		}).Info("Incoming http request log")
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	err := r.consume(w, rq);

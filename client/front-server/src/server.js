@@ -25,7 +25,10 @@ const app = express();
 app.disable('x-powered-by');
 
 app.use((req, res, next) => {
-    logger.info(`Request URL : ${req.originalUrl}, Protocol: ${req.protocol}, Headers: ${JSON.stringify(req.headers)}`);
+    const ua = req.headers['user-agent'];
+    if (!ua.startsWith('kube-probe') && !ua.startsWith('GoogleHC')) {
+        logger.info(`Request URL : ${req.originalUrl}, Protocol: ${req.protocol}, Headers: ${JSON.stringify(req.headers)}`);
+    }
     const protocol = req.headers['x-forwarded-proto'] || '';
     const isHttp = protocol === 'http';
     if (req.originalUrl !== HEALTH_CHECK_PATH && isHttp) {
