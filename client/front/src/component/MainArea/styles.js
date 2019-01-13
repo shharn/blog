@@ -1,7 +1,7 @@
 import { Styles } from '../../constant';
 
 export default theme => ({
-    content: {
+    main: {
         position: 'relative',
         width: '100%',
         padding: theme.spacing.unit * 2,
@@ -13,5 +13,5 @@ export default theme => ({
           marginTop: 64,
           marginLeft: Styles.drawerWidth
         }
-      }
+      },
 });

@@ -32,7 +32,7 @@ class MainArea extends Component<WithStylesProps> {
     render = () => {
         const { classes } = this.props;
         return (
-            <main className={classes.content}>
+            <main className={classes.main}>
                 <Switch>
                     <Route exact path="/" component={HottestArticleList}/>
                     <Route exact path="/menus/:menuName/articles" component={ArticleListWrapper}/>

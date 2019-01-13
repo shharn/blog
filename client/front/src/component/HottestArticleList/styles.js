@@ -2,19 +2,23 @@ export default theme => ({
     container: {
         margin: '0 auto',
         position: 'relative',
-        height: 'calc(100vh - 112px)',
+        height: 'calc(100vh - 96px)',
         overflow: 'auto',
         padding: '2px',
         [theme.breakpoints.up('lg')]: {
             overflow: 'hidden'
         }
     },
+    header: {
+        margin: '15px 10px',
+        color: 'rgba(0, 0, 0, 0.9)'
+    },
     firstCard: {
         width: '100%',
         [theme.breakpoints.up('lg')]: {
             float: 'left',
             width: 'calc(60% - 10px)',
-            height: 'calc(100% - 3px)',
+            height: 'calc(100% - 78px)',
             marginRight: '10px'
         }
     },
@@ -31,7 +35,7 @@ export default theme => ({
         [theme.breakpoints.up('lg')]: {
             display: 'block',
             width: '40%',
-            height: 'calc(100% - 3px)',
+            height: 'calc(100% - 70px)',
             overflow: 'auto',
             marginTop: '0',
         }

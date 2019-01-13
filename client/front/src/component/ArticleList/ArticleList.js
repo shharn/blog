@@ -49,25 +49,29 @@ class ArticleList extends Component<RouterProps & WithStylesProps & InfiniteScro
 
     render = () => {
         const { classes, reduxProps } = this.props;
+        const menuName = decodeURIComponent(this.props.match.params['menuName']);
         const articles = this.props.data;
         const isEmpty =  (reduxProps && reduxProps.fetchStatus === FetchStatus.SUCCESS) &&
             (!articles || articles.length < 1);
         return (
-            <div className={classes.listContainer}>
-                {isEmpty ? 
-                    <Typography 
-                        className={classes.emptyText} 
-                        align="center"
-                        variant="display2">
-                        Coming Soon  :)
-                    </Typography> :
-                    articles.map(article => 
-                        <Article 
-                            key={`article:${article.uid}`} 
-                            article={article} 
-                            customClasses={{ root: classes.article, cardMedia: classes.articleImage }}/>)
-                }
-            </div>
+            <React.Fragment>
+                <Typography className={classes.header} variant='display1'>{menuName}</Typography>
+                <div className={classes.listContainer}>
+                    {isEmpty ? 
+                        <Typography 
+                            className={classes.emptyText} 
+                            align="center"
+                            variant="display2">
+                            Coming Soon  :)
+                        </Typography> :
+                        articles.map(article => 
+                            <Article 
+                                key={`article:${article.uid}`} 
+                                article={article} 
+                                customClasses={{ root: classes.article, cardMedia: classes.articleImage }}/>)
+                    }
+                </div>
+            </React.Fragment>
         );
     }
 }

@@ -30,6 +30,7 @@ class HottestArticleList extends React.Component<Props & WithStylesProps & Route
             (articles && articles.length);
         return (
             <div className={classes.container}>
+                <Typography className={classes.header} variant='display1'>Newest</Typography>
                 {articles.length > 0 ? 
                     <React.Fragment>
                         <Article customClasses={{ root: classes.firstCard, cardMedia: classes.largeMedia}} article={articles[0]}/>

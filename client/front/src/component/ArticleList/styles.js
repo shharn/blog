@@ -6,7 +6,7 @@ export default theme => ({
         position: 'relative',
         overflow: 'auto',
         display: 'grid',
-        height: 'calc(100vh - 112px)',
+        height: 'calc(100vh - 160px)',
         gridGap: '15px',
         padding: '2px',
         gridTemplateColumns: 'repeat(1, 1fr)',
@@ -16,6 +16,10 @@ export default theme => ({
         [theme.breakpoints.up(secondBreakpoint)]: {
             gridTemplateColumns: 'repeat(3, 1fr)'
         }
+    },
+    header: {
+        margin: '15px 10px',
+        color: 'rgba(0, 0, 0, 0.9)'
     },
     article: {
         height: '100%',
@@ -27,9 +31,6 @@ export default theme => ({
         },
         [theme.breakpoints.up(850)]: {
             height: '350px'
-        },
-        [theme.breakpoints.up(firstBreakpoint)]: {
-            height: '280px'
         },
         [theme.breakpoints.up(1240)]: {
             height: '340px'
