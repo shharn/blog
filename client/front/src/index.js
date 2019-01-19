@@ -29,7 +29,7 @@ if (container) {
         </Provider>,
         container
     );
-    // registerServiceWorker();
+    registerServiceWorker();
 } else {
     throw new Error(`Cannot find an element with id 'root'`);
 }
