@@ -34,7 +34,7 @@ const dataNameToUIDConverter = (action, srcData, targetDataFilter) => {
     let decodedName = decodeURIComponent(name);
     let result = data.filter(datum => datum[propName] === decodedName);
     let uid = result && result.length > 0 ? result[0].uid : null
-    const convertedURL = action.payload.url.replace(PLACEHOLDER_NAME_TO_CONVERT, uid);
+    const convertedURL = url.replace(PLACEHOLDER_NAME_TO_CONVERT, uid);
     return {
         type: DataActionType.REQUEST_GET_DATA_WITH_URL,
         payload: {

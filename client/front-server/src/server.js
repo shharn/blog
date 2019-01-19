@@ -20,9 +20,15 @@ import { HTTPStatusCode } from './constant';
 const { OK, INTERNAL_SERVER_ERROR } = HTTPStatusCode;
 const HEALTH_CHECK_PATH = '/healthz';
 const PORT = 3000;
-const healthCheckUAs = [ 'kube-probe', 'GoogleGC' ];
+const healthCheckUAs = [ 'kube-probe', 'GoogleHC' ];
 
-const isHealthCheckRequest = ua => ua && ua.length && healthCheckUAs.includes(ua).length;
+const isHealthCheckRequest = ua => {
+    if (!ua || !ua.length) return false;
+    for (let target of healthCheckUAs) {
+        if (ua.startsWith(target)) return true;
+    }
+    return false;
+};
 
 const app = express();
 
