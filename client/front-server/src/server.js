@@ -3,7 +3,8 @@ import chalk from 'chalk';
 import { 
     STATIC_FILES_PATH,
     INDEX_HTML_FILE_PATH,
-    ERROR_PAGE_FILE_PATH
+    ERROR_PAGE_FILE_PATH,
+    IS_DEVELOPMENT
 } from './constant';
 import Loadable from 'react-loadable';
 import { auth } from './middleware';
@@ -19,6 +20,9 @@ import { HTTPStatusCode } from './constant';
 const { OK, INTERNAL_SERVER_ERROR } = HTTPStatusCode;
 const HEALTH_CHECK_PATH = '/healthz';
 const PORT = 3000;
+const healthCheckUAs = [ 'kube-probe', 'GoogleGC' ];
+
+const isHealthCheckRequest = ua => ua && ua.length && healthCheckUAs.includes(ua).length;
 
 const app = express();
 
@@ -26,12 +30,12 @@ app.disable('x-powered-by');
 
 app.use((req, res, next) => {
     const ua = req.headers['user-agent'];
-    if (!ua.startsWith('kube-probe') && !ua.startsWith('GoogleHC')) {
+    if (!isHealthCheckRequest(ua)) {
         logger.info(`Request URL : ${req.originalUrl}, Protocol: ${req.protocol}, Headers: ${JSON.stringify(req.headers)}`);
     }
     const protocol = req.headers['x-forwarded-proto'] || '';
     const isHttp = protocol === 'http';
-    if (req.originalUrl !== HEALTH_CHECK_PATH && isHttp) {
+    if (req.originalUrl !== HEALTH_CHECK_PATH && isHttp && !IS_DEVELOPMENT) {
         res.redirect(`https://${req.hostname}${req.originalUrl}`);
         return;
     }
@@ -74,7 +78,7 @@ app.get('/menus/:menuName/articles/:articleTitle', articleDetail);
 
 // 404 handler
 app.all('*', (req, res) => {
-    logger.warn(`Request for not found endpoint. ${req.originalUrl}`);
+    logger.warning(`Request for not found endpoint. ${req.originalUrl}`);
     res.redirect('/');
 });
 

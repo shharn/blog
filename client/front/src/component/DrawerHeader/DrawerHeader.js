@@ -10,7 +10,7 @@ class DrawerHeader extends Component<WithStylesProps> {
         return (
             <a href="/" className={classes.drawerHeader}>
                 <div>
-                    <Typography variant="title">Puppyloper's blog</Typography>
+                    <Typography variant="h6">Puppyloper's blog</Typography>
                 </div>
                 <div>
                     <Typography variant="caption">I'm software engineer :)</Typography>

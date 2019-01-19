@@ -1,10 +1,7 @@
 import Component from './ArticleDetail';
 import { connect } from 'react-redux';
 import { 
-    PLACEHOLDER_NAME_TO_CONVERT
-} from '../../constant';
-import { 
-    requestDataWithNameAndURL,
+    requestDataWithURL,
     requestDataMutation,
     initializeMutationStatus,
     changeServerRenderingFlag
@@ -33,7 +30,7 @@ const mapStateToProps = (state: StoreState): Object => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch): Object => ({
-    getArticle: (articleName: string) : void=> dispatch(requestDataWithNameAndURL(articleName, `article`, 'title', `/articles/${PLACEHOLDER_NAME_TO_CONVERT}`)),
+    getArticle: (uid: string) : void=> dispatch(requestDataWithURL('article', `/articles/${uid}`)),
     deleteArticle: (uid: string): void => dispatch(requestDataMutation(MutationOperationType.DELETE, uid, DataName.ARTICLE)),
     initDeleteFetchStatus: (): void => dispatch(initializeMutationStatus(DataName.ARTICLE, MutationOperationType.DELETE)),
     setArticleToEdit: (article: Article): void => dispatch(setDataForCreateOrEditArticle(true, article)),

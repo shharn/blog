@@ -59,7 +59,7 @@ export function* dataGetRequestWithURLHandler(action: Action) : Generator<reques
 }
 
 export function* dataMutationRequestHandler(action: Action) : Generator<request.Response | PutEffect, void, null | PutEffect> {
-    const { operationType, dataName, data } = action.payload;
+    const { operationType, dataName, data, shouldBeRelayed } = action.payload;
     const token: string = LocalStorage.get(Token.key);
     if (!token || token.length < 1) {
         return put(dataMutationFail(dataName, operationType, {

@@ -1,45 +1,50 @@
-const firstBreakpoint = 950
-const secondBreakpoint = 1450
+const lastLayoutBreakpoint = 1550;
+// const firstLayoutBreakpoint = 950
+// const secondLayoutBreakpoint = 1450
 
 export default theme => ({
     listContainer: {
         position: 'relative',
         overflow: 'auto',
         display: 'grid',
-        height: 'calc(100vh - 160px)',
+        maxHeight: 'calc(100vh - 160px)',
         gridGap: '15px',
         padding: '2px',
         gridTemplateColumns: 'repeat(1, 1fr)',
-        [theme.breakpoints.up(firstBreakpoint)]: {
+        [theme.breakpoints.up('lg')]: {
             gridTemplateColumns: 'repeat(2, 1fr)',
         },
-        [theme.breakpoints.up(secondBreakpoint)]: {
+        [theme.breakpoints.up(lastLayoutBreakpoint)]: {
             gridTemplateColumns: 'repeat(3, 1fr)'
         }
     },
     header: {
         margin: '15px 10px',
-        color: 'rgba(0, 0, 0, 0.9)'
+        color: 'rgba(0, 0, 0, 0.85)'
     },
     article: {
         height: '100%',
     },
     articleImage: {
-        height: '200px',
-        [theme.breakpoints.up(750)]: {
-            height: '300px'
+        height: '52vw',
+        [theme.breakpoints.up('sm')]: {
+            height: '42vw'
         },
-        [theme.breakpoints.up(850)]: {
-            height: '350px'
+        [theme.breakpoints.up('lg')]: {
+            height: '27vw'
         },
-        [theme.breakpoints.up(1240)]: {
-            height: '340px'
-        }
+        [theme.breakpoints.up(lastLayoutBreakpoint)]: {
+            height: '18vw'
+        },
     },
     emptyText: {
-        position: 'absolute',
-        top: '50%',
+        position: 'fixed',
+        top: '52%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
+        color: 'rgba(0, 0, 0, 0.6)',
+        [theme.breakpoints.up('sm')]: {
+            left: 'calc(50% + 120px)'
+        },
     }
 });

@@ -22,7 +22,7 @@ class MetaInfo extends Component<Props & WithStylesProps> {
                     className={classes.avatar}></Avatar>
                 <Typography 
                     className={classes.createdAt} 
-                    variant="subheading">
+                    variant="subtitle2">
                     {time.toLocaleString('en-us', { day: 'numeric', month: 'short', year: 'numeric' })}
                 </Typography>
             </div>

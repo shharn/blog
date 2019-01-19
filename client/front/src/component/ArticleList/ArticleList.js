@@ -31,20 +31,10 @@ class ArticleList extends Component<RouterProps & WithStylesProps & InfiniteScro
                 prevMenuName: this.props.match.params['menuName']
             });
         }
-
-        if (this.props.data.length === 1) {
-            this.moveToOnlyOneArticle();
-        }
     }
 
     isMenuChanged = (): boolean => {
         return this.props.match.params['menuName'] !== this.state.prevMenuName
-    }
-
-    moveToOnlyOneArticle = (): void => {
-        const article = this.props.data[0];
-        const replacedTitle = encodeURIComponent(article.title);
-        this.props.history.push(`${this.props.location.pathname}/${replacedTitle}`)
     }
 
     render = () => {
@@ -55,13 +45,13 @@ class ArticleList extends Component<RouterProps & WithStylesProps & InfiniteScro
             (!articles || articles.length < 1);
         return (
             <React.Fragment>
-                <Typography className={classes.header} variant='display1'>{menuName}</Typography>
+                <Typography className={classes.header} variant='h5'>{menuName}</Typography>
                 <div className={classes.listContainer}>
                     {isEmpty ? 
                         <Typography 
                             className={classes.emptyText} 
                             align="center"
-                            variant="display2">
+                            variant="h3">
                             Coming Soon  :)
                         </Typography> :
                         articles.map(article => 

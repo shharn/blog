@@ -36,7 +36,7 @@ class DrawerItems extends Component<Props & WithStylesProps> {
                     <List className={classes.listContainer}>
                         {notChildMenus && notChildMenus.length > 0 ? 
                             notChildMenus.map(menu => <DrawerItem key={menu.uid} menu={menu} isChild={false}/>) :
-                            <Typography className={classes.text}>No Menus</Typography>} 
+                            <Typography variant='subtitle2' className={classes.text}>No Menus</Typography>} 
                     </List> :
                     <Typography className={classes.text}>{error.message}</Typography>
         );

@@ -21,7 +21,7 @@ const infScrOptions: InfiniteScrollableOptions = {
     statusWait: FetchStatus.WAIT,
     statusSuccess: FetchStatus.SUCCESS,
     statusFail: FetchStatus.FAIL,
-    error: () => <Typography variant="subheading">Fail to load Articles. :(</Typography>, 
+    error: () => <Typography variant="subtitle2">Fail to load Articles. :(</Typography>, 
     loader: (offset: number, count: number) => requestDataWithURL('hottestArticles', `/articles/hottest?offset=${offset}&count=${count}`),
     loading: () => <LinearProgress />,
     useRedux: true

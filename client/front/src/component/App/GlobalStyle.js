@@ -1,17 +1,14 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = (theme) => ({
+const styles = () => ({
     '@global': {
         html: {
             color: 'rgba(0, 0, 0, 0.87)',
             fontSize: '1rem',
             fontWeight: '400',
             fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-            lineHeight: '1.5em',
-            [theme.breakpoints.down('sm')]: {
-                fontSize: '0.8rem'
-            }
+            lineHeight: '1.5em'
         }
     }
 });

@@ -1,3 +1,3 @@
-import Component from './Article';
+import Component from './Container';
 
 export default Component;

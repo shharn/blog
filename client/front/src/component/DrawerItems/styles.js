@@ -1,6 +1,8 @@
 export default {
     listContainer: {
-        height: '100%'
+        height: '100%',
+        paddingLeft: '10px',
+        overflow: 'auto'
     },
     circularProgress: {
         flex: '1 1 auto',

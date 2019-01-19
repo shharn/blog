@@ -42,6 +42,7 @@ type WrapperProps = {
 type WrapperState = {
     offset: number,
     hasMore: boolean,
+    firstLoad: boolean,
     relayedData: Array<mixed>
 }
 
@@ -53,7 +54,8 @@ export const makeInfiniteScrollable = (options: InfiniteScrollableOptions) => (W
         state = {
             relayedData: [],
             offset: options.offset || 0,
-            hasMore: false
+            hasMore: false,
+            firstLoad: true
         };
 
         componentDidMount = (): void => {
@@ -63,16 +65,20 @@ export const makeInfiniteScrollable = (options: InfiniteScrollableOptions) => (W
         componentDidUpdate = (prevProps: WrapperProps): void => {
             // The data fetch succeeded when the scroll is at the bottom of the container
             if (this.props.data.status === options.statusSuccess && this.props.data.relayed !== prevProps.data.relayed) {
+                const { offset, firstLoad, relayedData } = this.state;
                 const addedData = this.props.data.relayed;
-                if (addedData && addedData.length > 0) {
+                const addedDataCount = Array.isArray(addedData) ? addedData.length : 0;
+                if (addedData.length > 0) {
                     this.setState({
-                        relayedData: this.state.relayedData.concat(addedData),
-                        hasMore:  addedData.length >= this.countPerRequest,
-                        offset: this.state.offset + addedData.length
+                        relayedData: relayedData.concat(addedData),
+                        hasMore:  addedDataCount >= (firstLoad ? this.initialCountPerRequest : this.countPerRequest),
+                        offset: offset + addedDataCount,
+                        firstLoad: false
                     });
                 } else {
                     this.setState({
-                        hasMore: false
+                        hasMore: false,
+                        firstLoad: false
                     });
                 }
             }
@@ -115,19 +121,26 @@ export const makeInfiniteScrollable = (options: InfiniteScrollableOptions) => (W
 
         render() {
             const { data, ...rest } = this.props;
+            const { status, error } = data;
             const { relayedData } = this.state;
             return (
                 <div onScroll={this.handleScroll}>
                     <WrappedComponent {...rest} data={relayedData} initLoader={this.initLoader}>
-                        {this.props.data.status === options.statusWait && options.loading()}
-                        {this.props.data.status === options.statusFail && options.error(this.props.data.error)}
+                        {status === options.statusWait && options.loading()}
+                        {status === options.statusFail && options.error(error)}
                     </WrappedComponent>
                 </div>
             );
         }
     }
 
-    const { loader, useRedux, dataProvider, statusProvider, errorProvider, reduxPropsProvider } = options;
+    const { loader, 
+        useRedux, 
+        dataProvider, 
+        statusProvider, 
+        errorProvider, 
+        reduxPropsProvider,
+    } = options;
     return useRedux ?
         connect(
             reduxProviderTemplate({ 

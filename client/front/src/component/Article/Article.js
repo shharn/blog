@@ -4,10 +4,12 @@ import Card  from '@material-ui/core/Card';
 import CardMedia from  '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
-import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import cn from 'classnames';
+import { withRouter } from 'react-router';
 import styles from './styles';
+
 import type { 
     WithStylesProps,
     Article as ArticleEntity
@@ -18,33 +20,40 @@ type Props = {
     customClasses: {
         root: string,
         cardMedia: string
-    }
+    },
+
+    setArticle: (article: ArticleEntity) => void
 };
 
 class Article extends Component<Props & WithStylesProps> {
+    onCardClick = () => {
+        const { article, setArticle } = this.props;
+        setArticle(article);
+        const encodedMenuName = encodeURIComponent(article.menu[0].name);
+        const encodedArticleName = encodeURIComponent(article.title);
+        this.props.history.push(`/menus/${encodedMenuName}/articles/${encodedArticleName}`);
+    }
+
     render = () => {
         const { article, classes, customClasses } = this.props;
         return (
-            <Link 
-                className={classes.outerAnchor} 
-                to={`/menus/${encodeURIComponent(article.menu[0].name)}/articles/${encodeURIComponent(article.title)}`}
-            >
-                <Card className={customClasses.root}>
-                    <CardHeader 
-                        title={article.title} 
-                        subheader={article.createdAt ? new Date(article.createdAt).toLocaleDateString('en-us', { year: 'numeric', month: 'short', day: 'numeric' }) : 'May be, 2018'}/>
-                    <CardMedia className={customClasses.cardMedia} 
-                        image={article.imageSource}
-                        title={article.title}/>
-                    <CardContent>
-                        <Typography component="p">
-                            {article.summary.length > 200 ? article.summary.substr(0, 200) + ' ... ' : article.summary}
-                        </Typography>
-                    </CardContent>
-                </Card>
-            </Link>
+            <Card 
+                className={cn(customClasses.root, classes.card)}
+                onClick={this.onCardClick}>
+                <CardHeader 
+                    title={article.title} 
+                    subheader={article.createdAt ? new Date(article.createdAt).toLocaleDateString('en-us', { year: 'numeric', month: 'short', day: 'numeric' }) : 'May be, 2018'}/>
+                <CardMedia className={customClasses.cardMedia} 
+                    image={article.imageSource}
+                    title={article.title}/>
+                <CardContent>
+                    <Typography variant='body1'>
+                        {article.summary.length > 200 ? article.summary.substr(0, 200) + ' ... ' : article.summary}
+                    </Typography>
+                </CardContent>
+            </Card>
         );
     }
 }
 
-export default withStyles(styles, { withTheme: true })(Article);
+export default withRouter(withStyles(styles, { withTheme: true })(Article));

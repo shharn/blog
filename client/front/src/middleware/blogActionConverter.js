@@ -57,5 +57,3 @@ export const articleNameActionConverter = () => {
         converter: createDataNameToUIDConverter(articleDataFilter)
     });
 };
-
-

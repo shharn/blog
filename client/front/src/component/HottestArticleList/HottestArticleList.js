@@ -3,10 +3,10 @@ import * as React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { FetchStatus } from '../../constant';
 import Article from '../Article';
+import NoSsr from '@material-ui/core/NoSsr';
 import { Typography } from '@material-ui/core';
 import styles from './styles';
-import type
- {
+import type {
     WithStylesProps,
     RouterProps,
     Article as ArticleEntity,
@@ -30,22 +30,44 @@ class HottestArticleList extends React.Component<Props & WithStylesProps & Route
             (articles && articles.length);
         return (
             <div className={classes.container}>
-                <Typography className={classes.header} variant='display1'>Newest</Typography>
+                <NoSsr>
+                    <Typography 
+                        className={classes.header} 
+                        variant='h5'>
+                        Newest
+                    </Typography>
+                </NoSsr>
                 {articles.length > 0 ? 
                     <React.Fragment>
-                        <Article customClasses={{ root: classes.firstCard, cardMedia: classes.largeMedia}} article={articles[0]}/>
-                        <div className={classes.remainingRoot} ref={container => this.innerContainer = container}>
-                            {articles.slice(1).map(article => <Article key={`hottestArticle:${article.uid}`} customClasses={{ root: classes.card, cardMedia: classes.smallMedia }} article={article}/>)}
+                        <Article 
+                            customClasses={{ 
+                                root: classes.firstCard, 
+                                cardMedia: classes.largeMedia
+                            }} 
+                            article={articles[0]}/>
+                        <div 
+                            className={classes.remainingRoot} 
+                            ref={container => this.innerContainer = container}>
+                            {articles.slice(1).map(article => (
+                                <Article 
+                                    key={`hottestArticle:${article.uid}`} 
+                                    customClasses={{ 
+                                        root: classes.card, 
+                                        cardMedia: classes.smallMedia 
+                                    }} 
+                                    article={article}/>
+                                )
+                            )}
                         </div>
                         {this.props.children}
                     </React.Fragment> :
-                    isEmpty ?
+                    isEmpty &&
                         <Typography 
                             className={classes.emptyMessage}
                             align="center"
-                            variant='display2'>
+                            variant='h3'>
                             Coming Soon  :)
-                        </Typography> : ''
+                        </Typography>
                 }
             </div>
         );

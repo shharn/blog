@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import ArticleList from '../ArticleList';
 import AddIcon from '@material-ui/icons/Add';
 import { Link } from 'react-router-dom';
@@ -21,16 +21,15 @@ class ArticleListWrapper extends Component<Props & RouterProps & WithStylesProps
         return (
             <React.Fragment>
                 {isAuthenticated &&
-                    <Button 
+                    <Fab 
                         component={Link} 
                         to={`/admin/article?prev=${encodeURI(this.props.location.pathname)}`} 
                         className={classes.createButton} 
-                        variant="fab" 
-                        mini 
-                        color="secondary" 
-                        aria-label="create article">
+                        color='secondary'
+                        size='small'
+                        aria-label='create article'>
                         <AddIcon/>
-                    </Button>
+                    </Fab>
                 }
                 <ArticleList {...rest}/>
             </React.Fragment>

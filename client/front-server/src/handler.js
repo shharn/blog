@@ -75,12 +75,12 @@ export function articleDetail(req, res) {
         return res.send(
             originalHTML.replace(
                 `<div id="root"></div>`,
-                `<div id="root">
-                    ${renderedReactAppHTML}
-                </div>
-                <script >
+                `<script >
                     window.__PRELOADED_STATE__ = ${JSON.stringify(newState).replace(/</g, '\\u003c')};
-                </script>`
+                </script>
+                <div id="root">
+                    ${renderedReactAppHTML}
+                </div>`
             )
         );
     });

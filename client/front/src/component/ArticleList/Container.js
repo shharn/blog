@@ -22,7 +22,7 @@ const infScrOptions: InfiniteScrollableOptions = {
     statusWait: FetchStatus.WAIT,
     statusSuccess: FetchStatus.SUCCESS,
     statusFail: FetchStatus.FAIL,
-    error: () => <Typography variant="subheading">Fail to load Articles. :(</Typography>, 
+    error: () => <Typography variant="subtitle2">Fail to load Articles. :(</Typography>, 
     loader: (offset: number, count: number, args?: Array<any>): void => {
         if (args && args.length > 0) {
             return requestDataWithNameAndURL(args[0], `articles`, 'name', `/menus/${PLACEHOLDER_NAME_TO_CONVERT}/articles?offset=${offset}&count=${count}`);

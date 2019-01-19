@@ -71,12 +71,15 @@ type Props = {
 class ArticleDetailContent extends Component<Props & WithStylesProps> {
     render = () => {
         const { classes, content } = this.props;
-        const parsed = JSON.parse(content);
-        const contentState = convertFromRaw(parsed);
-        const html = convertToHTML({
-            blockToHTML,
-            entityToHTML
-        })(contentState);
+        let html = '';
+        if (content && content.length) {
+            const parsed = JSON.parse(content);
+            const contentState = convertFromRaw(parsed);
+            html = convertToHTML({
+                blockToHTML,
+                entityToHTML
+            })(contentState);
+        }
         return (
             <div className={cn(classes.container, 'article_detail-content_container')} dangerouslySetInnerHTML={{ __html: html}}/>
         );

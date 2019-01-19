@@ -39,9 +39,9 @@ type StaticProps = {
 class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {}, StaticProps> {
     componentDidMount = () => {
         if (!this.props.isServerRendered) {
-            const articleName = this.props.match.params['articleName']
-            this.props.getArticle(articleName);
-            document.title = this.props.article.title;
+            const { uid, title } = this.props.article;
+            this.props.getArticle(uid);
+            document.title = title;
         } else {
             this.props.initServerRenderingFlag();
         }
@@ -82,21 +82,20 @@ class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {},
                     <CenteredCircularProgress/> :
                     <Paper elevation={4} className={classes.container}>
                         {fetchStatus === FetchStatus.FAIL ?
-                            <Typography variant="subheading">Temporarily not available :(</Typography> :
+                            <Typography variant="body1">Temporarily not available :(</Typography> :
                             <React.Fragment>
-                                <Typography className={classes.title} variant="display1">{article.title}</Typography>
+                                <Typography className={classes.title} variant="h4">{article.title}</Typography>
                                 <MetaInfo createdAt={article.createdAt}/>
                                 <ArticleDetailContent content={article.content || ''}/>
                             </React.Fragment>}
-                            <Divider className={classes.divider}/>
+                            <Divider />
                             <ButtonGroup 
                                 isAuthenticated={isAuthenticated} 
                                 parentURL={this.getParentURL(this.props.location.pathname)}
                                 onEditButtonClicked={this.onEditButtonClicked}
-                                onDeleteButtonClicked={this.onDeleteButtonClicked}
-                            />
+                                onDeleteButtonClicked={this.onDeleteButtonClicked} />
                     </Paper> :
-                <Typography className={classes.centered} variant="display1">No Article Found</Typography>
+                <Typography className={classes.centered} variant="h3">No Article Found</Typography>
         );
     }
 }

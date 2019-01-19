@@ -90,13 +90,13 @@ class Admin extends Component<Props & WithStylesProps & RouterProps, State> {
                 result = (
                     <div className={this.props.classes.bottomContainer}>
                         <Typography className={this.props.classes.errorMessage} variant="caption">{this.props.error.message}</Typography>
-                        <Button variant="raised" color="primary" className={this.props.classes.button} onClick={this.handleSubmit}>Submit</Button>           
+                        <Button variant="contained" color="primary" className={this.props.classes.button} onClick={this.handleSubmit}>Submit</Button>           
                     </div>
                 );
                 break;
             case AuthStatus.INITIAL:
             default:
-                result = <Button variant="raised" color="primary" className={this.props.classes.button} onClick={this.handleSubmit}>Submit</Button>;
+                result = <Button variant="contained" color="primary" className={this.props.classes.button} onClick={this.handleSubmit}>Submit</Button>;
                 break;
         }
         return result;
@@ -107,7 +107,7 @@ class Admin extends Component<Props & WithStylesProps & RouterProps, State> {
         return (
             <div className={this.props.classes.root} onKeyUp={this.handleKeyUp}>
                 <Paper elevation={4} className={this.props.classes.paper}>
-                    <Typography className={this.props.classes.header}  variant="subheading">Login</Typography>
+                    <Typography className={this.props.classes.header}  variant="subtitle1">Login</Typography>
                     <div className={this.props.classes.formContainer}>
                         <TextField
                             disabled={authStatus === AuthStatus.LOGIN_SUCCESS}

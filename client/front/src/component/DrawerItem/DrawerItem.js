@@ -41,7 +41,7 @@ class DrawerItem extends Component<Props & WithStylesProps, State> {
         const hasChildren = childMenus && childMenus.length > 0;
         if (hasChildren) {
             return (
-                <div>
+                <React.Fragment>
                     <ListItem button onClick={this.handleMenuClick}>
                         <ListItemText primary={name}/>
                         {this.state.openChild ? <ExpandLess/> : <ExpandMore/>}
@@ -51,7 +51,7 @@ class DrawerItem extends Component<Props & WithStylesProps, State> {
                             {childMenus.map(child => <NestedDrawerItem key={child.uid} menu={child}/>)}
                         </List>
                     </Collapse>
-                </div>
+                </React.Fragment>
             );
         } else {
             let to = url && url.length > 0 ? url : `/menus/${encodeURIComponent(name)}/articles`;

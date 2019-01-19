@@ -19,6 +19,7 @@ export type GetState = {
 const EmptyData = {
     menus: [],
     article: {
+        uid: '',
         title: '',
         createdAt: '',
         content: '',
@@ -41,7 +42,8 @@ const initialState: GetState = {
         fetchComplete: false
     },
     article: {
-        data : {
+        data: {
+            uid: '',
             title: '',
             createdAt: '',
             content: '',
@@ -83,7 +85,7 @@ const reducer = (state: GetState = initialState, action: Action): GetState => {
             };
         }
         case DataActionType.GET_DATA_RESPONSE_SUCCESS: {
-            let { data } = action.payload;
+            const { data } = action.payload;
             return {
                 ...state,
                 [dataName]: {
@@ -96,7 +98,7 @@ const reducer = (state: GetState = initialState, action: Action): GetState => {
             };
         }
         case DataActionType.GET_DATA_RESPONSE_ERROR: {
-            let { error } = action.payload;
+            const { error } = action.payload;
             return {
                 ...state,
                 [dataName]: {
@@ -107,7 +109,7 @@ const reducer = (state: GetState = initialState, action: Action): GetState => {
                 }
             };
         }
-        case DataActionType.INITIALIZE_DATA:
+        case DataActionType.INITIALIZE_DATA: {
             return {
                 ...state,
                 [dataName]: {
@@ -117,7 +119,8 @@ const reducer = (state: GetState = initialState, action: Action): GetState => {
                     fetchComplete: false
                 }
             }
-        case DataActionType.INITIALIZE_SERVER_RENDERING_FLAG:
+        }
+        case DataActionType.INITIALIZE_SERVER_RENDERING_FLAG: {
             const maybeFalse = action.payload.maybeFalse;
             return {
                 ...state,
@@ -126,6 +129,17 @@ const reducer = (state: GetState = initialState, action: Action): GetState => {
                     isServerRendered: maybeFalse
                 }
             };
+        }
+        case DataActionType.SET_DATA: {
+            const { data } = action.payload;
+            return {
+                ...state,
+                [dataName]: {
+                    ...state[dataName],
+                    data
+                }
+            };
+        }
         default:
             return state;
     }

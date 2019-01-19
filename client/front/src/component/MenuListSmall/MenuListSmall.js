@@ -39,7 +39,7 @@ class MenuListSmall extends Component<Props & WithStylesProps> {
                 </List> :
                 <Typography
                     className={classes.emptyMessage}
-                    variant="title"
+                    variant="h6"
                     align="center">
                     No Menu :(
                 </Typography>

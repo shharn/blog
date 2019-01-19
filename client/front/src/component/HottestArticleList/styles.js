@@ -1,3 +1,5 @@
+const lastLayoutBreakpoint = 1450;
+
 export default theme => ({
     container: {
         margin: '0 auto',
@@ -5,20 +7,20 @@ export default theme => ({
         height: 'calc(100vh - 96px)',
         overflow: 'auto',
         padding: '2px',
-        [theme.breakpoints.up('lg')]: {
+        [theme.breakpoints.up(lastLayoutBreakpoint)]: {
             overflow: 'hidden'
         }
     },
     header: {
         margin: '15px 10px',
-        color: 'rgba(0, 0, 0, 0.9)'
+        color: 'rgba(0, 0, 0, 0.75)'
     },
     firstCard: {
         width: '100%',
-        [theme.breakpoints.up('lg')]: {
+        [theme.breakpoints.up(lastLayoutBreakpoint)]: {
             float: 'left',
-            width: 'calc(60% - 10px)',
-            height: 'calc(100% - 78px)',
+            width: 'calc(70% - 10px)',
+            height: 'calc(100% - 70px)',
             marginRight: '10px'
         }
     },
@@ -29,12 +31,11 @@ export default theme => ({
             display: 'grid',
             gridGap: '10px',
             gridTemplateColumns: 'repeat(2, 1fr)',
-            gridAutoRows: 'minmax(430px, max-content)',
             marginTop: '10px',
         },
-        [theme.breakpoints.up('lg')]: {
+        [theme.breakpoints.up(lastLayoutBreakpoint)]: {
             display: 'block',
-            width: '40%',
+            width: '30%',
             height: 'calc(100% - 70px)',
             overflow: 'auto',
             marginTop: '0',
@@ -47,28 +48,42 @@ export default theme => ({
             height: '100%',
             marginBottom: 0,
         },
-        [theme.breakpoints.up('lg')]: {
+        [theme.breakpoints.up(lastLayoutBreakpoint)]: {
             height: 'auto',
             width: '99%',
-            marginBottom: '10px',
+            marginBottom: '10px'
         }
-    },
-    smallMedia: {
-        height: '250px',
     },
     largeMedia: {
-        height: '250px',
-        [theme.breakpoints.up('md')]: {
-            height: '320px'
+        height: '50vw',
+        [theme.breakpoints.up('sm')]: {
+            height: '36vw',
         },
-        [theme.breakpoints.up('lg')]: {
-            height: '70vh',
-        }
+        [theme.breakpoints.up('md')]: {
+            height: '53vw',
+        },
+        [theme.breakpoints.up(lastLayoutBreakpoint)]: {
+            height: '53vw',
+            maxHeight: '770px'
+        },
+    },
+    smallMedia: {
+        height: '50vw',
+        [theme.breakpoints.up('sm')]: {
+            height: '36vw',
+        },
+        [theme.breakpoints.up('md')]: {
+            height: '24vw',
+        },
+        [theme.breakpoints.up(lastLayoutBreakpoint)]: {
+            height: '16vw',
+        },
     },
     emptyMessage: {
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
+        color: 'rgba(0, 0, 0, 0.5)'
     }
 })

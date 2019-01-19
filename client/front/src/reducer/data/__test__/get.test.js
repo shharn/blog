@@ -16,6 +16,7 @@ const initial = {
     },
     article: {
         data : {
+            uid: '',
             title: '',
             createdAt: '',
             content: '',
