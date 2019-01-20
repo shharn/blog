@@ -66,11 +66,6 @@ app.get('/', (_, res) => {
     res.sendFile(INDEX_HTML_FILE_PATH);
 });
 
-app.get('/sitemap', (_, res) => {
-    const sitemapPath = path.join(STATIC_FILES_PATH, 'sitemap.xml');
-    res.sendFile(sitemapPath);
-});
-
 app.post('/upload', 
     auth, 
     uploader.any(), 

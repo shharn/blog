@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://blog.puppyloper.com/sitemap.xml
