@@ -1,5 +1,6 @@
 import express from 'express';
 import chalk from 'chalk';
+import path from 'path';
 import { 
     STATIC_FILES_PATH,
     INDEX_HTML_FILE_PATH,
@@ -63,6 +64,11 @@ app.get(HEALTH_CHECK_PATH, (_, res) => {
 
 app.get('/', (_, res) => {
     res.sendFile(INDEX_HTML_FILE_PATH);
+});
+
+app.get('/sitemap', (_, res) => {
+    const sitemapPath = path.join(STATIC_FILES_PATH, 'sitemap.html');
+    res.sendFile(sitemapPath);
 });
 
 app.post('/upload', 

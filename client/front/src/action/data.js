@@ -6,8 +6,7 @@ import type { ClientError } from '../flowtype';
 export type RequestDataAction = {
     type: DataActionType.REQUEST_GET_DATA,
     payload: {
-        dataName: string,
-        shouldBeRelayed: boolean
+        dataName: string
     }
 };
 
@@ -15,8 +14,7 @@ export type RequestDataWithURLAction = {
     type: DataActionType.REQUEST_GET_DATA_WITH_URL,
     payload: {
         dataName: string,
-        url: string,
-        shouldBeRelayed: boolean
+        url: string
     }
 };
 
@@ -26,8 +24,7 @@ export type RequestDataWithNameAndURLAction = {
         name: string,
         dataName: string,
         propName: string,
-        url: string,
-        shouldBeRelayed: boolean
+        url: string
     }
 };
 
@@ -43,8 +40,7 @@ export type DataResponseSuccessAction = {
     type: DataActionType.GET_DATA_RESPONSE_SUCCESS,
     payload: {
         data: mixed,
-        dataName: string,
-        shouldBeRelayed: boolean
+        dataName: string
     }
 };
 
