@@ -67,7 +67,7 @@ app.get('/', (_, res) => {
 });
 
 app.get('/sitemap', (_, res) => {
-    const sitemapPath = path.join(STATIC_FILES_PATH, 'sitemap.html');
+    const sitemapPath = path.join(STATIC_FILES_PATH, 'sitemap.xml');
     res.sendFile(sitemapPath);
 });
 

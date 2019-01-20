@@ -106,6 +106,14 @@ export type InitializeImageDialogStatusAction = {
     type: DataActionType.INITIALIZE_IMAGE_DIALOG_STATUS
 };
 
+export type SetDataAction = {
+    type: DataActionType.SET_DATA,
+    payload: {
+        dataName: string,
+        data: Object
+    }
+};
+
 export type DataAction = 
     RequestDataAction |
     RequestDataWithURLAction |
@@ -120,7 +128,8 @@ export type DataAction =
     UploadImageAction |
     UploadImageSuccessAction |
     UploadImageFailAction |
-    InitializeImageDialogStatusAction;
+    InitializeImageDialogStatusAction |
+    SetDataAction;
 
 export const requestData = (dataName: string): Action => ({
     type: DataActionType.REQUEST_GET_DATA,
