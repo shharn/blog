@@ -16,7 +16,6 @@ import type {
 } from '../../flowtype';
 
 type Props = {
-    progress: number,
     uploadStatus: $Values<ImageUploadStatus>,
     error: ClientError,
 

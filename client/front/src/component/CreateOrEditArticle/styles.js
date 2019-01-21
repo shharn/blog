@@ -53,5 +53,30 @@ export default theme => ({
     },
     errorMessage: {
         textAlign: 'center'
+    },
+    imageUploadFormContainer: {
+        display: 'flex',
+        flexDirecton: 'row',
+        width: '100%',
+        marginTop: '10px'
+    },
+    imageUploadFormLabel: {
+        width: '75%',
+        border: '1px solid #ced4da',
+        borderRadius: '5px',
+        lineHeight: '34px',
+        padding: '0 10px'
+    },
+    imageUploadFormButton: {
+        width: '25%',
+        marginLeft: '10px',
+    },
+    hiddenFileInput: {
+        opacity: '0',
+        position: 'absolute',
+        right: '0',
+        height: '36px',
+        width: '25%',
+        cursor: 'pointer'
     }
 });

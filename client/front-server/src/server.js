@@ -1,6 +1,5 @@
 import express from 'express';
 import chalk from 'chalk';
-import path from 'path';
 import { 
     STATIC_FILES_PATH,
     INDEX_HTML_FILE_PATH,

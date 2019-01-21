@@ -13,9 +13,10 @@ import ClearIcon from '@material-ui/icons/Clear';
 import Editor from '../CreateArticleEditor';
 import { formatString } from '../../util';
 import { withStyles } from '@material-ui/core/styles';
-import styles from './styles';
 import { FetchStatus } from '../../constant';
 import { Typography } from '@material-ui/core';
+import MainImageUploadForm from './MainImageUploadForm';
+import styles from './styles';
 
 import type {
     WithStylesProps,
@@ -218,25 +219,9 @@ class CreateArticle extends Component<Props & WithStylesProps & RouterProps, Sta
                     <FormHelperText>{(!!error.summary && (error.summary.length > 0)) && error.summary}</FormHelperText>
                 </FormControl>
                 <Editor ref={ref => this.editorRef = ref} isEditMode={isEditMode} content={article ? article.content : ''}/>
-                <FormControl 
-                    fullWidth
-                    classes={{
-                        root: classes.formContainer
-                    }}
-                >
-                    <div>Main Image URL</div>
-                    <Input 
-                        classes={{
-                            input: classes.input
-                        }}
-                        inputProps={{
-                            name: 'imageSource'
-                        }}
-                        value={imageSource}
-                        onChange={this.handleInputChange}
-                        disableUnderline={true}
-                        placeholder='Enter the image url !'/>
-                </FormControl>
+                <MainImageUploadForm
+                    uploadStatus={this.props.uploadStatus}
+                    uploadImage={this.props.uploadImage} />
                 <FormControl className={classes.selectContainer}>
                     <InputLabel 
                         shrink={false}

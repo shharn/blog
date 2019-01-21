@@ -3,7 +3,9 @@ import Component from './CreateOrEditArticle';
 import { connect } from 'react-redux';
 import { 
     requestDataMutation,
-    initializeMutationStatus
+    initializeMutationStatus,
+    uploadImage,
+    initializeImageDialogStatus
 } from '../../action/data';
 import { 
     MutationOperationType,
@@ -15,11 +17,13 @@ import type { Dispatch } from '../../action/types';
 
 const mapStateToProps = (state: StoreState): Object => {
     const { isEditMode, article } = { ...state.app.ui.createOrEditArticle };
+    const { uploadStatus } = state.app.ui.imageDialog;
     const fetchStatus = isEditMode ? state.app.data.mutation.articles.update : state.app.data.mutation.articles.create;
     return {
         menus: [ ...state.app.data.get.menus.data ],
         isAuthenticated: state.app.auth.isAuthenticated,
         fetchStatus: fetchStatus.status,
+        uploadStatus,
         isEditMode,
         article
     };
@@ -32,7 +36,9 @@ const mapDispatchToProps = (dispatch: Dispatch):Object => {
         initializeState: (): void => {
             dispatch(setDataForCreateOrEditArticle(false, null));
             dispatch(initializeMutationStatus(DataName.ARTICLE, MutationOperationType.UPDATE));
-        }
+            dispatch(initializeImageDialogStatus());
+        },
+        uploadImage: (file: File) => dispatch(uploadImage([ file ]))
     };
 };
 
