@@ -12,11 +12,11 @@ import type { WithStylesProps } from '../../flowtype';
 type Props = {
     uploadStatus: $Values<ImageUploadstatus>,
 
-    uploadImage: (file: File) => void
+    uploadImage: (file: File) => void,
+    updateImageSource: (imageSource: string) => void
 }
 
 type State = {
-    imageURL: string,
     file?: File
 }
 
@@ -24,17 +24,14 @@ const IMAGE_BASE_URL = `https://storage.googleapis.com/${process.env.NODE_ENV ==
 
 class MainImageUploadForm extends Component<Props & WithStylesProps, State> {
     state = {
-        imageURL: '',
         file: null
     };
 
     componentDidUpdate() {
         const { uploadStatus } = this.props;
         if (uploadStatus === ImageUploadStatus.SUCCESS) {
-            const { file } = this.state;
-            this.setState({
-                imageURL: `${IMAGE_BASE_URL}/${file.name}`
-            })
+            const imageSource = `${IMAGE_BASE_URL}/${this.state.file.name}`
+            this.props.updateImageSource(imageSource);
         }
     }
 
@@ -46,8 +43,7 @@ class MainImageUploadForm extends Component<Props & WithStylesProps, State> {
     }
 
     render = () => {
-        const { classes } = this.props;
-        const { imageURL } = this.state;
+        const { classes, imageSource } = this.props;
         return (
             <FormControl 
                     fullWidth
@@ -56,7 +52,7 @@ class MainImageUploadForm extends Component<Props & WithStylesProps, State> {
                     }}>
                     <div>Main Image URL</div>
                     <div className={classes.imageUploadFormContainer}>
-                        <Typography className={classes.imageUploadFormLabel}>{imageURL}</Typography>
+                        <Typography className={classes.imageUploadFormLabel}>{imageSource}</Typography>
                         <Button className={classes.imageUploadFormButton} variant="contained" color="primary">Upload</Button>
                         <input 
                             className={classes.hiddenFileInput}

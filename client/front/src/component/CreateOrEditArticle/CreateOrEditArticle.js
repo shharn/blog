@@ -171,9 +171,19 @@ class CreateArticle extends Component<Props & WithStylesProps & RouterProps, Sta
         return prevURL;
     }
 
+    updateImageSource = (imageSource: string): void => {
+        const { data } = this.state;
+        this.setState({
+            data: {
+                ...data,
+                imageSource
+            }
+        });
+    }
+
     render = () => {
         const { classes, isEditMode, article, fetchStatus } = this.props;
-        const { title, summary, imageSource, menuID } = this.state.data;
+        const { title, summary, menuID, imageSource } = this.state.data;
         const { error } = this.state;
         return (
             <Paper className={classes.container} elevation={4}>
@@ -220,6 +230,8 @@ class CreateArticle extends Component<Props & WithStylesProps & RouterProps, Sta
                 </FormControl>
                 <Editor ref={ref => this.editorRef = ref} isEditMode={isEditMode} content={article ? article.content : ''}/>
                 <MainImageUploadForm
+                    imageSource={imageSource}
+                    updateImageSource={this.updateImageSource}
                     uploadStatus={this.props.uploadStatus}
                     uploadImage={this.props.uploadImage} />
                 <FormControl className={classes.selectContainer}>
