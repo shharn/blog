@@ -29,8 +29,9 @@ class MainImageUploadForm extends Component<Props & WithStylesProps, State> {
 
     componentDidUpdate() {
         const { uploadStatus } = this.props;
-        if (uploadStatus === ImageUploadStatus.SUCCESS) {
-            const imageSource = `${IMAGE_BASE_URL}/${this.state.file.name}`
+        const { file } = this.state;
+        if (uploadStatus === ImageUploadStatus.SUCCESS && file) {
+            const imageSource = `${IMAGE_BASE_URL}/${file.name}`
             this.props.updateImageSource(imageSource);
         }
     }
