@@ -66,7 +66,9 @@ class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {},
     }
 
     onDeleteButtonClicked = (): void =>  {
-        this.props.deleteArticle(this.props.article.uid);
+        if (window.confirm('Really?')) {
+            this.props.deleteArticle(this.props.article.uid);
+        }
     }
 
     onEditButtonClicked = (): void => {
