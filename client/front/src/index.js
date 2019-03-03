@@ -6,12 +6,7 @@ import App from './component/App';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import createAppStore from './createAppStore';
-import type { AppState } from './reducer';
 
-export type StoreState = {
-    app: AppState,
-    router: any
-};
 
 const preloadedState = window.__PRELOADED_STATE__;
 

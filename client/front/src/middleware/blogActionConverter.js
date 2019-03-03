@@ -2,14 +2,16 @@
 import { Data as DataActionType } from '../action/types';
 import { PLACEHOLDER_NAME_TO_CONVERT } from '../constant';
 import { createActionConverter } from './actionConverter';
+import type { Action } from '../action/types';
+import type { State } from '../flowtype';
 
-const menuDataFilter = (state: AppState): Object => state.app.data.get.menus.data;
+const menuDataFilter = (state: State): Object => state.app.data.get.menus.data;
 
 const menuNameConverterChecker = (action: Action): boolean => 
     action.type === DataActionType.REQUEST_GET_DATA_WITH_NAME_AND_URL && 
     action.payload.propName === 'name';
 
-const articleDataFilter = (state: AppState): Object => {
+const articleDataFilter = (state: State): Object => {
     let data = state.app.data.get.articles.data;
     if (!data.length) {
         data = state.app.data.get.hottestArticles.data;
@@ -27,7 +29,7 @@ const createDataNameToUIDConverter = (targetDataFilter) => {
     }
 }
     
-const dataNameToUIDConverter = (action, srcData, targetDataFilter) => {
+const dataNameToUIDConverter = (action: Action, srcData: Object, targetDataFilter) => {
     const { name,  dataName, propName } = action.payload;
     let { url } = action.payload;
     const data = targetDataFilter(srcData);

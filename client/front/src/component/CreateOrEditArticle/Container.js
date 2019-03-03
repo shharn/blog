@@ -12,10 +12,12 @@ import {
     DataName
 } from '../../constant';
 import { setDataForCreateOrEditArticle } from '../../action/ui';
-import type { StoreState } from '../../';
-import type { Dispatch } from '../../action/types';
+import type {
+    State,
+    Dispatch
+ } from '../../flowtype';
 
-const mapStateToProps = (state: StoreState): Object => {
+const mapStateToProps = (state: State): Object => {
     const { isEditMode, article } = { ...state.app.ui.createOrEditArticle };
     const { uploadStatus } = state.app.ui.imageDialog;
     const fetchStatus = isEditMode ? state.app.data.mutation.articles.update : state.app.data.mutation.articles.create;

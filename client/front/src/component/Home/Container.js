@@ -2,10 +2,12 @@
 import Home from './Home';
 import { connect } from 'react-redux';
 import { validateToken } from '../../action/auth';
-import type { StoreState } from '../../';
-import type { Dispatch } from '../../action/types';
+import type { 
+    State,
+    Dispatch
+} from '../../flowtype';
 
-const mapStateToProps = (state: StoreState): Object => ({
+const mapStateToProps = (state: State): Object => ({
     isAuthenticated: state.app.auth.isAuthenticated
 });
 

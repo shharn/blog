@@ -6,16 +6,18 @@ import {
     MutationOperationType,
     DataName
 } from '../../constant';
-import type { Menu } from '../../flowtype';
-import type { StoreState } from '../../';
-import type { Dispatch } from '../../action/types';
+import type { 
+    Menu,
+    State,
+    Dispatch
+} from '../../flowtype';
 
 const emptyMenu: Menu = {
     uid: '0',
     name: 'None',
 };
 
-const mapStateToProps = (state: StoreState, ownProps: { menu: Menu }): Object => {
+const mapStateToProps = (state: State, ownProps: { menu: Menu }): Object => {
     const menus = [ ...state.app.data.get.menus.data ].filter(menu => menu.uid !== ownProps.menu.uid);
     menus.splice(0, 0, emptyMenu);
     return {

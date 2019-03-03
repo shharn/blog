@@ -10,14 +10,14 @@ import styles from './styles';
 import type { WithStylesProps } from '../../flowtype';
 
 type Props = {
-    uploadStatus: $Values<ImageUploadstatus>,
+    uploadStatus: $Values<ImageUploadStatus>,
 
     uploadImage: (file: File) => void,
     updateImageSource: (imageSource: string) => void
 }
 
 type State = {
-    file?: File
+    file: ?File
 }
 
 const IMAGE_BASE_URL = `https://storage.googleapis.com/${process.env.NODE_ENV === 'production' ? 'puppyloper-blog' : 'puppyloper-test'}/images`;
@@ -36,8 +36,8 @@ class MainImageUploadForm extends Component<Props & WithStylesProps, State> {
         }
     }
 
-    onFileInputChange = (e: File): void => {
-        const file = e.target.files[0];
+    onFileInputChange = (e: SyntheticInputEvent<HTMLInputElement>): void => {
+        const file: File = e.target.files[0];
         this.setState({
             file
         }, () => this.props.uploadImage(file));

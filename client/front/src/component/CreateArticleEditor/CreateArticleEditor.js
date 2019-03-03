@@ -19,10 +19,14 @@ import keycode from 'keycode';
 import className from 'classnames';
 import './styles.css';
 
-const IMAGE_BASE_URL = process.env.IMAGE_BASE_URL;
-const BUCKET_NAME = process.env.BUCKET_NAME;
-const FOLDER_NAME = process.env.IMAGE_FOLDER_NAME;
-const CDN_BASE_URL = `${IMAGE_BASE_URL}/${BUCKET_NAME}/${FOLDER_NAME}`;
+if (!process.env.IMAGE_BASE_URL) throw new Error('process.env.IMAGE_BASE_URL is not defined');
+if (!process.env.BUCKET_NAME) throw new Error('process.env.BUCKET_NAME is not defined');
+if (!process.env.IMAGE_FOLDER_NAME) throw new Error('process.env.IMAGE_FOLDER_NAME is not defined');
+
+const IMAGE_BASE_URL: string = process.env.IMAGE_BASE_URL;
+const BUCKET_NAME: string = process.env.BUCKET_NAME;
+const FOLDER_NAME: string = process.env.IMAGE_FOLDER_NAME;
+const CDN_BASE_URL: string = `${IMAGE_BASE_URL}/${BUCKET_NAME}/${FOLDER_NAME}`;
 
 function findLinkEntities(contentBlock: any, callback: Function, contentState: any): void {
     contentBlock.findEntityRanges(

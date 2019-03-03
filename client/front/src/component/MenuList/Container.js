@@ -4,13 +4,15 @@ import MenuList from './MenuList';
 import { changeToEditableCell } from '../../action/ui';
 import { requestDataMutation } from '../../action/data';
 import { MutationOperationType } from '../../constant';
-import type { Menu } from '../../flowtype';
-import type { StoreState } from '../../';
-import type { Dispatch } from '../../action/types';
+import type { 
+    Menu,
+    State,
+    Dispatch
+} from '../../flowtype';
 
 const MENU_DATA_NAME = 'menus';
 
-const mapStateToProps = (state: StoreState, ownProps: { switchToList: () => void, switchToCreateMenu: () => void }): Object => {
+const mapStateToProps = (state: State, ownProps: { switchToList: () => void, switchToCreateMenu: () => void }): Object => {
     const menus =  [ ...state.app.data.get.menus.data ];
     const { isEditable, editableRowId, editableCellName } = state.app.ui.menuList;
     return {

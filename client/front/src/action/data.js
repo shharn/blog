@@ -247,7 +247,7 @@ export const changeServerRenderingFlag = (maybeFalse: boolean): Action => ({
     }
 });
 
-export const setData = (dataName, data: any): Action => ({
+export const setData = (dataName: string, data: any): Action => ({
     type: DataActionType.SET_DATA,
     payload: {
         dataName,

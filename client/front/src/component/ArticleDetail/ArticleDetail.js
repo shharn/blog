@@ -32,11 +32,9 @@ type Props = {
     initServerRenderingFlag: () => void
 };
 
-type StaticProps = {
-    parentURL: string
-};
-
-class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {}, StaticProps> {
+class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {}> {
+    parentURL: string;
+    
     componentDidMount = () => {
         if (!this.props.isServerRendered) {
             const { uid, title } = this.props.article;

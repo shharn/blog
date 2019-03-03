@@ -7,16 +7,18 @@ import {
     initializeMutationStatus
 } from '../../action/data';
 import { MutationOperationType } from '../../constant';
-import type { StoreState } from '../../';
-import type { Dispatch } from '../../action/types';
-import type { Menu } from '../../flowtype';
+import type { 
+    Menu,
+    State,
+    Dispatch
+} from '../../flowtype';
 
-const emptyMenu = {
+const emptyMenu: Menu = {
     uid: '0',
     name: 'None',
 };
 
-const mapStateToProps = (state: StoreState, ownProps: { switchToList: () => void }): Object => {
+const mapStateToProps = (state: State, ownProps: { switchToList: () => void }): Object => {
     const menus = [ ...state.app.data.get.menus.data ];
     menus.splice(0, 0, emptyMenu);
     const { isEditMode, menu } = state.app.ui.createOrEditMenu;

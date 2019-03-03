@@ -42,3 +42,13 @@ export type RouterProps = {
     location: any, 
     match: any
 };
+
+export type State = {
+    app: AppState,
+    router: any
+};
+
+export type Dispatch = (action: Action) => any;
+
+export type GetState = () => State;
+

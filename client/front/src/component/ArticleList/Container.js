@@ -7,16 +7,16 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import { PLACEHOLDER_NAME_TO_CONVERT } from '../../constant';
 import { requestDataWithNameAndURL } from '../../action/data';
-import type { StoreState } from '../../';
+import type { State } from '../../flowtype';
 import type { InfiniteScrollableOptions } from '../InfiniteScrollable';
 
 const infScrOptions: InfiniteScrollableOptions = {
     initialCountPerRequest: 10,
     countPerRequest: 5,
-    dataProvider: (state: StoreState) => state.app.data.get.articles.data,
-    statusProvider: (state: StoreState) => state.app.data.get.articles.fetchStatus,
-    errorProvider: (state: StoreState) => state.app.data.get.articles.error,
-    reduxPropsProvider: (state: StoreState) => ({
+    dataProvider: (state: State) => state.app.data.get.articles.data,
+    statusProvider: (state: State) => state.app.data.get.articles.fetchStatus,
+    errorProvider: (state: State) => state.app.data.get.articles.error,
+    reduxPropsProvider: (state: State) => ({
         fetchStatus: state.app.data.get.articles.fetchStatus
     }),
     statusWait: FetchStatus.WAIT,

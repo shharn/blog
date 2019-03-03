@@ -118,7 +118,7 @@ class CreateOrEditMenu extends Component<Props & WithStylesProps & RouterProps, 
         this.props.switchToList();
     }
     
-    getStatueIndicator = (): Element<*> => {
+    getStatueIndicator = (): Element<*> | null => {
         const status: $Values<FetchStatus> = this.props.status;
         switch(status) {
             case FetchStatus.WAIT:
@@ -128,7 +128,7 @@ class CreateOrEditMenu extends Component<Props & WithStylesProps & RouterProps, 
             case FetchStatus.FAIL:
                 return <Typography variant="caption" color='error'>Failed</Typography>;
             default:
-                return;
+                return null;
         }
     }
 

@@ -3,11 +3,13 @@ import { connect } from 'react-redux';
 import MenuManagerTableRow from './MenuManagerTableRow';
 import { requestDataMutation } from '../../action/data';
 import { MutationOperationType, DataName } from '../../constant';
-import type { Menu } from '../../flowtype';
-import type { StoreState } from '../../';
-import type { Dispatch } from '../../action/types';
+import type { 
+    Menu,
+    State,
+    Dispatch
+} from '../../flowtype';
 
-const mapStateToProps = (_: StoreState, ownProps: { menu: Menu }): Object => {
+const mapStateToProps = (_: State, ownProps: { menu: Menu }): Object => {
     return {
         ...ownProps
     };

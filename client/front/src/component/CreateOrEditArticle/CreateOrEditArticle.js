@@ -50,7 +50,7 @@ type Props = {
     isAuthenticated: boolean,
     fetchStatus: $Values<FetchStatus>,
     isEditMode: boolean,
-    article: ?Article,
+    article: Article,
 
     submitNewArticle: (data: ArticleToSend) => void,
     submitUpdatedArticle: (data: Article) => void,

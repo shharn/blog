@@ -1,17 +1,21 @@
 // @flow
 import type { Action } from '../action/types';
-import type { AppState } from '../reducer';
+import type { 
+    State,
+    Dispatch,
+    GetState
+} from '../flowtype';
 
 type ActionConverterOpts = {
     checker: (action: Action) => boolean,
-    converter: (action: Action, srcData: AppState) => Action
+    converter: (action: Action, srcData: State) => Action
 };
 
 export function createActionConverter({
     checker,
     converter
 }: ActionConverterOpts) {
-    return ({ _, getState }) => next => action => {
+    return ({ _, getState }: { dispatch: Dispatch, getState: GetState }) => (next: (action: Action) => Object) => (action: Action) => {
         if (checker(action)) {
             action = converter(action, getState());
         }

@@ -8,10 +8,12 @@ import {
     switchMenuManagerChildComponent
 } from '../../action/ui';
 import { MenueManagerChildComponentType } from '../../constant';
-import type { StoreState } from '../../';
-import type { Dispatch } from '../../action/types';
+import type { 
+    State,
+    Dispatch
+} from '../../flowtype';
 
-const mapStateToProps = (state: StoreState): Object => {
+const mapStateToProps = (state: State): Object => {
      const { isDialogOpened, childComponent } = state.app.ui.menuManager;
     return {
         isDialogOpened,

@@ -4,11 +4,13 @@ import MenuManagerTableCell from './MenuManagerTableCell';
 import { requestDataMutation } from '../../action/data';
 import { changeToEditableCell } from '../../action/ui';
 import { MutationOperationType, DataName } from '../../constant';
-import type { Menu } from '../../flowtype';
-import type { StoreState } from '../../';
-import type { Dispatch } from '../../action/types';
+import type { 
+    Menu,
+    State,
+    Dispatch
+} from '../../flowtype';
 
-const mapStateToProps = (state: StoreState, ownProps: { menu: Menu, cellName: string }): Object => {
+const mapStateToProps = (state: State, ownProps: { menu: Menu, cellName: string }): Object => {
     const { isEditable, editableRowId, editableCellName } = state.app.ui.menuList;
     const { menu, cellName } = ownProps;
     return {

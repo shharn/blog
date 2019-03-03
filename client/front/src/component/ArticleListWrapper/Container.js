@@ -1,9 +1,9 @@
 // @flow
 import Component from './ArticleListWrapper';
 import { connect } from 'react-redux';
-import type { StoreState } from '../../';
+import type { State } from '../../flowtype';
 
-const mapStateToProps = (state: StoreState): Object => ({
+const mapStateToProps = (state: State): Object => ({
         isAuthenticated: state.app.auth.isAuthenticated
 });
 

@@ -6,16 +6,16 @@ import { makeInfiniteScrollable } from '../InfiniteScrollable';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import { requestDataWithURL } from '../../action/data';
-import type { StoreState } from '../../';
+import type { State } from '../../flowtype';
 import type { InfiniteScrollableOptions } from '../InfiniteScrollable';
 
 const infScrOptions: InfiniteScrollableOptions = {
     initialCountPerRequest: 10,
     countPerRequest: 5,
-    dataProvider: (state: StoreState): mixed => state.app.data.get.hottestArticles.data,
-    statusProvider: (state: StoreState): mixed => state.app.data.get.hottestArticles.fetchStatus,
-    errorProvider: (state: StoreState):mixed => state.app.data.get.hottestArticles.error,
-    reduxPropsProvider: (state: StoreState): mixed => ({
+    dataProvider: (state: State): mixed => state.app.data.get.hottestArticles.data,
+    statusProvider: (state: State): mixed => state.app.data.get.hottestArticles.fetchStatus,
+    errorProvider: (state: State):mixed => state.app.data.get.hottestArticles.error,
+    reduxPropsProvider: (state: State): mixed => ({
         fetchStatus: state.app.data.get.hottestArticles.fetchStats
     }),
     statusWait: FetchStatus.WAIT,

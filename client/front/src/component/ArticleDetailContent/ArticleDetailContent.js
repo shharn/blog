@@ -15,7 +15,7 @@ const getLastSplittedFromImageSrc = (src: string): string => {
     return splitted[len -1];
 };
 
-const blockToHTML = (block): Element<*> => {
+const blockToHTML = (block): Element<*> | { element: Element<*>, nest: Element<*> } => {
     switch(block.type.toLowerCase()) {
         case 'header-one':
             return <h1/>;

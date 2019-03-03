@@ -9,7 +9,7 @@ import type {
 } from '../../flowtype';
 
 
-type Mutation = {
+export type Mutation = {
     status: $Values<FetchStatus>,
     isFetching: boolean,
     error: ClientError

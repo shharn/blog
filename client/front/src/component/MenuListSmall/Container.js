@@ -2,11 +2,13 @@ import { connect } from 'react-redux';
 import MenuListSmall from './MenuListSmall';
 import { switchMenuManagerChildComponent, setDataForCreateOrEditMenu } from '../../action/ui';
 import { MenuManagerChildComponentType } from '../../constant';
-import type { Menu } from '../../flowtype';
-import type { StoreState } from '../../';
-import type { Dispatch } from '../../action/types';
+import type { 
+    Menu,
+    State,
+    Dispatch
+} from '../../flowtype';
 
-const mapStateToProps = (state: StoreState): Object => {
+const mapStateToProps = (state: State): Object => {
     const menus = [ ...state.app.data.get.menus.data ];
     return {
         menus

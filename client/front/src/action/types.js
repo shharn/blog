@@ -1,12 +1,5 @@
 import { createUnique } from '../util';
 
-export type Action = {
-    type: any, // symbol
-    payload?: Object
-};
-
-export type Dispatch = (action: Action) => any;
-
 export const Auth = {
     INITIALIZE_LOGIN_STATUS: createUnique('INITIALISE_LOGIN_STATUS'),
     REQUEST_LOGIN: createUnique('REQUEST_LOGIN'),

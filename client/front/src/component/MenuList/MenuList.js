@@ -16,6 +16,7 @@ import type {
     Menu,
     WithStylesProps
  } from '../../flowtype';
+import type { Mutation } from '../../reducer/data/mutation';
 
 const headerNames = [
     'Name', 'URL', 'Parent', 'Delete'
@@ -26,8 +27,8 @@ type Props = {
     editableRowId: number,
     editableCellName: string,
     menus: Array<Menu>,
-    updateMutationState: Mutation,
-    deleteMutationState: Mutation,
+    updateMutationStatus: Mutation,
+    deleteMutationStatus: Mutation,
 
     switchToList: () => void,
     switchToCreateMenu: () => void,

@@ -4,10 +4,13 @@ import { HEADER_NAME_FOR_TOKEN } from '../constant';
 import type { LoginInformation } from '../flowtype';
 
 const PROTOCOL = process.env.NODE_ENV === 'production' ? 'https:' : 'http:';
+if (!process.env.API_SERVER_URL) throw new Error('provess.env.API_SERVER_URL is not defined');
+
+const API_SERVER_URL: string = process.env.API_SERVER_URL || 'https://blog.puppyloper.com';
 
 export function requestLogin(loginInfo: LoginInformation): Promise<request.Response | Error> {
     return request
-            .post(`${PROTOCOL}//${process.env.API_SERVER_URL}/login`)
+            .post(`${PROTOCOL}//${API_SERVER_URL}/login`)
             .type('text/plain')
             .accept('json')
             .send(JSON.stringify(loginInfo))
@@ -17,7 +20,7 @@ export function requestLogin(loginInfo: LoginInformation): Promise<request.Respo
 
 export function validateToken(token: string): Promise<request.Response | Error> {
     return request
-        .get(`${PROTOCOL}//${process.env.API_SERVER_URL}/check`)
+        .get(`${PROTOCOL}//${API_SERVER_URL}/check`)
         .set(HEADER_NAME_FOR_TOKEN, token)
         .type('text/plain')
         .accept('json')
@@ -27,7 +30,7 @@ export function validateToken(token: string): Promise<request.Response | Error> 
 
 export function requestLogout(token: string): Promise<request.Response | Error> {
     return request
-        .post(`${PROTOCOL}//${process.env.API_SERVER_URL}/logout`)
+        .post(`${PROTOCOL}//${API_SERVER_URL}/logout`)
         .set(HEADER_NAME_FOR_TOKEN, token)
         .then(res => res)
         .catch(err => err.response ? err.response : err);
@@ -35,7 +38,7 @@ export function requestLogout(token: string): Promise<request.Response | Error> 
 
 export function getData(dataName: string): Promise<request.Response | Error> {
     return request
-        .get(`${PROTOCOL}//${process.env.API_SERVER_URL}/${dataName}`)
+        .get(`${PROTOCOL}//${API_SERVER_URL}/${dataName}`)
         .accept('json')
         .then(res => res)
         .catch(err => err.response ? err.response : err);
@@ -43,7 +46,7 @@ export function getData(dataName: string): Promise<request.Response | Error> {
 
 export function getDataWithURL(url: string): Promise<request.Response | Error> {
     return request
-        .get(`${PROTOCOL}//${process.env.API_SERVER_URL}/${url}`)
+        .get(`${PROTOCOL}//${API_SERVER_URL}/${url}`)
         .accept('json')
         .then(res => res)
         .catch(err => err.response ? err.response : err);
@@ -51,7 +54,7 @@ export function getDataWithURL(url: string): Promise<request.Response | Error> {
 
 export function createData(dataName: string, data: any, token: string): Promise<request.Response | Error> {
     return request
-        .post(`${PROTOCOL}//${process.env.API_SERVER_URL}/${dataName}`)
+        .post(`${PROTOCOL}//${API_SERVER_URL}/${dataName}`)
         .set(HEADER_NAME_FOR_TOKEN, token)
         .type('text/plain')
         .accept('json')
@@ -62,7 +65,7 @@ export function createData(dataName: string, data: any, token: string): Promise<
 
 export function updateData(dataName: string, data: any, token: string): Promise<request.Response | Error> {
     return request
-        .patch(`${PROTOCOL}//${process.env.API_SERVER_URL}/${dataName}/${data.uid}`)
+        .patch(`${PROTOCOL}//${API_SERVER_URL}/${dataName}/${data.uid}`)
         .set(HEADER_NAME_FOR_TOKEN, token)
         .type('text/plain')
         .accept('json')
@@ -73,7 +76,7 @@ export function updateData(dataName: string, data: any, token: string): Promise<
 
 export function deleteData(dataName: string, uid: string, token: string): Promise<request.Response | Error> {
     return request
-        .delete(`${PROTOCOL}//${process.env.API_SERVER_URL}/${dataName}/${uid}`)
+        .delete(`${PROTOCOL}//${API_SERVER_URL}/${dataName}/${uid}`)
         .set(HEADER_NAME_FOR_TOKEN, token)
         .type('text/plain')
         .accept('json')

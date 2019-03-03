@@ -2,7 +2,10 @@
 import Component from './EditableCell';
 import { connect } from 'react-redux';
 import { disableEditableCell } from '../../action/ui';
-import type { Dispatch } from '../../action/types';
+import type { 
+    State,
+    Dispatch
+} from '../../flowtype';
 import type { Mutation } from '../../reducer/data/mutation';
 
 type OwnPropsTypes = {
