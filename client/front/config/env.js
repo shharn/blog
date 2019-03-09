@@ -80,7 +80,8 @@ function getClientEnvironment(publicUrl) {
         API_SERVER_URL: process.env.NODE_ENV === 'development' ? 'localhost:5000' : 'api.puppyloper.com',
         BUCKET_NAME: process.env.BUCKET_NAME,
         IMAGE_FOLDER_NAME: process.env.IMAGE_FOLDER_NAME,
-        IMAGE_BASE_URL: 'https://storage.googleapis.com'
+        IMAGE_BASE_URL: 'https://storage.googleapis.com',
+        GOOGLE_OAUTH_CLIENT_ID: process.env.GOOGLE_OAUTH_CLIENT_ID
       }
     );
   // Stringify all values so we can feed into Webpack DefinePlugin

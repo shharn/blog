@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import TopBar from '../TopBar';
 import ResponsiveDrawer from '../ResponsiveDrawer';
 import MainArea from '../MainArea';
+import LoginModal from '../LoginModal';
 import { withStyles } from '@material-ui/core/styles';
 import { Token } from '../../constant';
 import LocalStorage from 'local-storage';
@@ -15,12 +16,14 @@ type Props = {
 };
 
 type State = {
-  smallScreenOpen: boolean
+  smallScreenOpen: boolean,
+  loginModalOpen: boolean
 };
 
 class Home extends Component<Props & WithStylesProps, State> {
   state = {
-    smallScreenOpen: false
+    smallScreenOpen: false,
+    loginModalOpen: false
   };
 
   componentDidMount() {
@@ -36,14 +39,39 @@ class Home extends Component<Props & WithStylesProps, State> {
       });
   }
 
+  openLoginModal = (): void => {
+    this.setState({
+      loginModalOpen: true
+    });
+  }
+
+  closeLoginModal = (): void => {
+    this.setState({
+      loginModalOpen: false
+    });
+  }
+
   render = () => {
     const { classes, isAuthenticated } = this.props;
+    const { loginModalOpen } = this.state;
     return (
       <div className={classes.homeContainer}>
           <div className={classes.appFrame}>
-              <TopBar toggleDrawer={this.handleDrawerToggle} isAuthenticated={isAuthenticated}/>
-              <ResponsiveDrawer toggleDrawer={this.handleDrawerToggle} smallScreenOpen={this.state.smallScreenOpen} isAuthenticated={isAuthenticated}/>
-              <MainArea/>
+              <TopBar 
+                toggleDrawer={this.handleDrawerToggle}
+                openLoginModal={this.openLoginModal}
+                isAuthenticated={isAuthenticated}
+              />
+              <ResponsiveDrawer 
+                toggleDrawer={this.handleDrawerToggle} 
+                smallScreenOpen={this.state.smallScreenOpen} 
+                isAuthenticated={isAuthenticated}
+              />
+              <MainArea />
+              <LoginModal
+                open={loginModalOpen}
+                closeLoginModal={this.closeLoginModal}
+              />
           </div>
       </div>
     );

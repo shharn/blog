@@ -3,7 +3,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import blue from '@material-ui/core/colors/blue';
 import pink from '@material-ui/core/colors/pink';
-import RootRoute from '../../route/RootRoute';
+import RootRoute from './RootRoute';
 import GlobalStyle from './GlobalStyle';
 
 const theme = createMuiTheme({

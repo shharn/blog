@@ -18,7 +18,8 @@ type Props = {
     isAuthenticated: boolean,
 
     toggleDrawer: () => void,
-    logout: () => void
+    logout: () => void,
+    openLoginModal: () => void
 };
 
 class TopBar extends Component<Props & WithStylesProps> {
@@ -26,9 +27,13 @@ class TopBar extends Component<Props & WithStylesProps> {
     //     console.log('handleSearchToggle');
     // }
 
-    handleAuthButtonClick = (): void => {
-        const { isAuthenticated } = this.props;
-        isAuthenticated ? this.props.logout() : this.props.history.push('/login');
+    onAuthButtonClick = (): void => {
+        const { logout, openLoginModal, isAuthenticated } = this.props;
+        if (isAuthenticated) {
+            logout();
+        } else {
+            openLoginModal();
+        }
     }
 
     render = () => {
@@ -54,7 +59,7 @@ class TopBar extends Component<Props & WithStylesProps> {
                                 root: classes.toggleButton
                             }}
                             aria-label={isAuthenticated ? "logout" : "login"}
-                            onClick={this.handleAuthButtonClick}>
+                            onClick={this.onAuthButtonClick}>
                             {isAuthenticated ? 
                                 <ExitToApp /> : 
                                 <PowerSettingsNew />}

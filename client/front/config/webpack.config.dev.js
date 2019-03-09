@@ -220,6 +220,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.appHtml,
+      meta: {
+        name: 'google-signin-client_id',
+        content: process.env.GOOGLE_OAUTH_CLIENT_ID
+      }
     }),
     // Add module names to factory functions so they appear in browser profiler.
     new webpack.NamedModulesPlugin(),

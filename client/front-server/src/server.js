@@ -80,7 +80,7 @@ app.post('/upload',
     }
 );
 
-app.get('/menus/:menuName/articles/:articleTitle', articleDetail);
+app.get('/menus/:menuName/articles/:articleTitle', articleDetail); 
 
 // 404 handler
 app.all('*', (req, res) => {

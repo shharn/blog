@@ -1,13 +1,17 @@
+// @flow
 import { connect } from 'react-redux';
-import Admin from './Admin';
+import Admin from './LoginModal';
 import { 
     requestLogin, 
     validateToken, 
 } from '../../action/auth';
-import type { StoreState } from '../../';
-import type { Dispatch} from '../../action/types';
+import type { 
+    State,
+    Dispatch,
+    LoginInformation
+} from '../../flowtype';
 
-const mapStateToProps = (state: StoreState): Object => {
+const mapStateToProps = (state: State): Object => {
     const { authStatus, error, isAuthenticated } = state.app.auth;
     return {
         authStatus,
@@ -17,8 +21,8 @@ const mapStateToProps = (state: StoreState): Object => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch): Object => ({
-    login: loginInfo => dispatch(requestLogin(loginInfo)),
-    validateToken: token => dispatch(validateToken(token))
+    login: (loginInfo: LoginInformation): void => dispatch(requestLogin(loginInfo)),
+    validateToken: (token: string): void => dispatch(validateToken(token))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Admin);

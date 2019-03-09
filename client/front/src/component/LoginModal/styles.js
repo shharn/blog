@@ -1,0 +1,54 @@
+import red from '@material-ui/core/colors/red';
+
+export const dialog = {
+    dialogPaper: {
+        width: '300px'
+    },
+    title: {
+        margin: '40px auto 0',
+        paddingBottom: 0
+    },
+    clearButton: {
+        position: 'absolute',
+        right: 0
+    },
+    backButton: {
+        position: 'absolute',
+        left: 0
+    }
+};
+
+export const adminContent = {
+    formContainer: {
+        margin: '10px 0',
+        width: '100%'
+    },
+    emailForm: {
+        marginBottom: '10px'
+    },
+    
+    submitButton: {
+        margin: '30px auto 0'
+    },
+    errorMessage: {
+        color: red[500]
+    },
+    circularProgress: {
+        marginTop: '20px'
+    }
+};
+
+export const authButtons = {
+    container: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: '25px 0'
+    },
+    adminButton: {
+        width: '100%',
+        backgroundColor: 'white'
+    }
+};
