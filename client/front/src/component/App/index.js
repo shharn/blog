@@ -4,6 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import blue from '@material-ui/core/colors/blue';
 import pink from '@material-ui/core/colors/pink';
 import RootRoute from './RootRoute';
+import AuthChecker from '../AuthChecker';
 import GlobalStyle from './GlobalStyle';
 
 const theme = createMuiTheme({
@@ -35,6 +36,7 @@ class App extends Component {
                 <React.Fragment>
                     <CssBaseline />
                     <GlobalStyle />
+                    <AuthChecker />
                     <RootRoute />
                 </React.Fragment>
             </MuiThemeProvider>

@@ -28,6 +28,7 @@ type Props = {
 
     login: (loginInfo: LoginInformation) => void,
     validateToken: (token: string) => void,
+    initializeAuthStatus: () => void,
     closeLoginModal: () => void    
 }
 
@@ -41,11 +42,15 @@ class LoginModal extends Component<Props & WithStylesProps & RouterProps, State>
     }
 
     componentDidUpdate =  () => {
-        this.props.authStatus === AuthStatus.LOGIN_SUCCESS && this.redirectToHomeWithDelay();
+        if (this.props.authStatus === AuthStatus.LOGIN_SUCCESS) {
+            this.props.initializeAuthStatus();
+            this.setState({ adminContent: false }); 
+            this.props.closeLoginModal();
+        }
     }
 
-    redirectToHomeWithDelay = (): void=> {
-        setTimeout(() => document.location.href='/', 1000);
+    componentWillUnmount = () => {
+        this.props.initializeAuthStatus();
     }
 
     toggleAdminContent = (adminContent: boolean) => () => {

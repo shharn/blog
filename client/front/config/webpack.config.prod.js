@@ -236,8 +236,7 @@ module.exports = {
       inject: true,
       template: paths.appHtml,
       meta: {
-        name: 'google-signin-client_id',
-        content: process.env.GOOGLE_OAUTH_CLIENT_ID
+        'google-signin-client_id': process.env.GOOGLE_OAUTH_CLIENT_ID
       },
       minify: {
         removeComments: true,

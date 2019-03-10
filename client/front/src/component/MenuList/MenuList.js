@@ -58,7 +58,7 @@ class MeuList extends React.Component<Props & WithStylesProps> {
                 {isEmpty ? 
                     <Typography 
                         className={classes.emptyMessage}
-                        variant="title"  
+                        variant="h6"  
                         align="center">
                         No Menu :(
                     </Typography> :

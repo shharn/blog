@@ -37,7 +37,7 @@ class AdminContent extends Component<Props & WithStylesProps, State> {
         password: ''
     }
 
-    handleSubmit = (): void => {
+    submit = (): void => {
         const { email, password } = this.state;
         const hashedPassword: string = sha512(password);
         this.props.login({ 
@@ -46,14 +46,18 @@ class AdminContent extends Component<Props & WithStylesProps, State> {
         });
     }
 
+    onSubmitButtonClick = (): void => {
+        this.submit();
+    }
+
     onTextFieldChange = (e: SyntheticInputEvent<HTMLInputElement>): void => {
         this.setState({
             [e.target.name]: e.target.value
         });
     }
 
-    handleKeyUp = (e: SyntheticKeyboardEvent<>): void => {
-        e.keyCode === keycode('enter') && this.handleSubmit();
+    onKeyUp = (e: SyntheticKeyboardEvent<>): void => {
+        e.keyCode === keycode('enter') && this.submit();
     }
 
     getComponentOnLoginStatus = (): Element<*> => {
@@ -65,19 +69,19 @@ class AdminContent extends Component<Props & WithStylesProps, State> {
                 result = <CircularProgress className={classes.circularProgerss}/>;
                 break;
             case AuthStatus.LOGIN_SUCCESS:
-                result = <Typography variant="caption">Confirmed. Will be redirected soon</Typography>;
+                result = <Typography className={classes.successMessage} variant="caption">Confirmed. Will be redirected soon</Typography>;
                 break;
             case AuthStatus.LOGIN_FAILED:
                 result = (
-                    <div className={classes.bottonContainer}>
+                    <React.Fragment>
                         <Typography className={classes.errorMessage} variant="caption">{error.message}</Typography>
-                        <Button variant="contained" color="primary" className={classes.submitButton} onClick={this.handleSubmit}>Submit</Button>           
-                    </div>
+                        <Button variant="contained" color="primary" className={classes.submitButton} onClick={this.onSubmitButtonClick}>Submit</Button>
+                    </React.Fragment>
                 );
                 break;
             case AuthStatus.INITIAL:
             default:
-                result = <Button variant="contained" color="primary" className={classes.submitButton} onClick={this.handleSubmit}>Submit</Button>;
+                result = <Button variant="contained" color="primary" className={classes.submitButton} onClick={this.onSubmitButtonClick}>Submit</Button>;
                 break;
         }
         return result;
@@ -87,7 +91,7 @@ class AdminContent extends Component<Props & WithStylesProps, State> {
         const { authStatus, classes } = this.props;
         const disableForm = authStatus === AuthStatus.LOGIN_SUCCESS;
         return (
-            <FormControl className={classes.formContainer}>
+            <FormControl className={classes.formContainer} onKeyUp={this.onKeyUp}>
                 <TextField
                     disabled={disableForm}
                     placeholder="Your Email"

@@ -5,14 +5,11 @@ import ResponsiveDrawer from '../ResponsiveDrawer';
 import MainArea from '../MainArea';
 import LoginModal from '../LoginModal';
 import { withStyles } from '@material-ui/core/styles';
-import { Token } from '../../constant';
-import LocalStorage from 'local-storage';
 import styles from './styles';
 import type { WithStylesProps } from '../../flowtype';
 
 type Props = {
-  isAuthenticated: boolean,
-  authenticate: (token: string) => void
+  isAuthenticated: boolean
 };
 
 type State = {
@@ -25,13 +22,6 @@ class Home extends Component<Props & WithStylesProps, State> {
     smallScreenOpen: false,
     loginModalOpen: false
   };
-
-  componentDidMount() {
-    if (!this.props.isAuthenticated) {
-      const token = LocalStorage.get(Token.key);
-      token && this.props.authenticate(token);
-    }
-  }
 
   handleDrawerToggle = () => {
       this.setState({

@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import Admin from './LoginModal';
 import { 
     requestLogin, 
-    validateToken, 
+    validateToken,
+    initializeLoginStatus 
 } from '../../action/auth';
 import type { 
     State,
@@ -22,7 +23,8 @@ const mapStateToProps = (state: State): Object => {
 
 const mapDispatchToProps = (dispatch: Dispatch): Object => ({
     login: (loginInfo: LoginInformation): void => dispatch(requestLogin(loginInfo)),
-    validateToken: (token: string): void => dispatch(validateToken(token))
+    validateToken: (token: string): void => dispatch(validateToken(token)),
+    initializeAuthStatus: (): void => dispatch(initializeLoginStatus())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Admin);
