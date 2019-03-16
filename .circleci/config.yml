@@ -13,7 +13,12 @@ jobs:
           - run: 
               name: Install client-side dependencies
               working_directory: ~/repo/client
-              command: yarn install
+              command: |
+                git diff --name-only --exit-code HEAD HEAD^1 client
+                if [ ! $? -eq 0 ]
+                then 
+                    yarn install
+                fi
           - save_cache:
               paths:
                   - client/node_modules
@@ -32,7 +37,11 @@ jobs:
                 name: Run tests of client-side application
                 working_directory: ~/repo/client
                 command: |
-                    yarn test
+                    git diff --name-only --exit-code HEAD HEAD^1 client
+                    if [ ! $? -eq 0 ]
+                    then 
+                        yarn test
+                    fi
     build-apiserver:
         docker:
             - image: circleci/golang:1.11.1
@@ -43,7 +52,11 @@ jobs:
                 name: Build a golang application
                 working_directory: ~/repo/server
                 command: |
-                    make install
+                    git diff --name-only --exit-code HEAD HEAD^1 server
+                    if [ ! $? -eq 0 ]
+                    then
+                        make install
+                    fi
     test-apiserver:
         docker:
             - image: circleci/golang:1.11.1
@@ -54,8 +67,12 @@ jobs:
                 name: Run tests of go application
                 working_directory: ~/repo/server
                 command: |
-                    export GOPATH=$(pwd)
-                    make test
+                    git diff --name-only --exit-code HEAD HEAD^1 server
+                    if [ ! $? -eq 0 ]
+                    then
+                        export GOPATH=$(pwd)
+                        make test
+                    fi
     deploy:
         docker:
             - image: google/cloud-sdk
@@ -78,15 +95,34 @@ jobs:
             - run:
                 name: Build docker image
                 command: |
-                    docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 server
-                    docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 --build-arg PROJECT_ID=$PROJECT_ID --build-arg=BUCKET_NAME=$BUCKET_NAME client
+                    git diff --name-only --exit-code HEAD HEAD^1 client
+                    if [ ! $? -eq 0 ]
+                    then
+                        docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 server
+                    fi
+
+                    git diff --name-only --exit-code HEAD HEAD^1 server
+                    if [ ! $? -eq 0 ]
+                    then
+                        docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 --build-arg PROJECT_ID=$PROJECT_ID --build-arg=BUCKET_NAME=$BUCKET_NAME client
+                    fi
             - run:
                 name: Push docker images to container registry
                 command: |
                     gcloud auth configure-docker
                     gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us.gcr.io
-                    docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
-                    docker push us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
+                    
+                    git diff --name-only --exit-code HEAD HEAD^1 client
+                    if [ ! $? -eq 0 ]
+                    then
+                        docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
+                    fi
+
+                    git diff --name-only --exit-code HEAD HEAD^1 server
+                    if [ ! $? -eq 0 ]
+                    then
+                        docker push us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
+                    fi
             - run:
                 name: Let's deploy the app!
                 command: |
