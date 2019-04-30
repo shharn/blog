@@ -1,9 +1,4 @@
 FROM golang:1.12.4-alpine3.9 as base
-
-ARG GOOGLE_OAUTH_CLIENT_ID
-ARG GOOGLE_OAUTH_CLIENT_SECRET
-ARG OAUTH_CSRF_STATE
-
 WORKDIR /app
 COPY . .
 RUN apk update && \
@@ -12,6 +7,11 @@ RUN apk update && \
     make build
 
 FROM golang:1.12.4-alpine3.9
+
+ARG GOOGLE_OAUTH_CLIENT_ID
+ARG GOOGLE_OAUTH_CLIENT_SECRET
+ARG OAUTH_CSRF_STATE
+
 WORKDIR /app
 ENV LOG_LEVEL=info \
     ENVIRONMENT=production \
