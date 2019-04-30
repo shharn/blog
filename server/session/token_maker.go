@@ -38,6 +38,7 @@ type Session struct {
 	Admin bool
 }
 
+// GetSessionFromLoginInformation takes a LoginInformation and transforms it to session object
 func GetSessionFromLoginInformation(info model.LoginInformation) (Session, error) {
 	id := getIDFromEmail(info.Email)
 	if len(id) < 1 {

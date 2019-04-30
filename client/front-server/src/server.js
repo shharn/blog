@@ -134,7 +134,6 @@ app.all('*', (req, res) => {
     res.redirect('/');
 });
 
-// error handler
 app.use((err, _, res, __) => {
     logger.error(`Unhandled error : ${err.message}. Line : ${err.lineNumber}, StackTrace : ${err.stack}`);
     res.sendFile(ERROR_PAGE_FILE_PATH);

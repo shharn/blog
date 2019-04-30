@@ -14,10 +14,12 @@ jobs:
               name: Install client-side dependencies
               command: |
                 git diff --name-only --exit-code HEAD HEAD^1 client
-                if [ ! $? -eq 0 ]
+                status=$?
+                if [ ! $status -eq 0 ]
                 then
                     echo client code is modified
-                    cd client && yarn install
+                    cd client
+                    yarn install
                 else
                     echo Client code is not changed. So skip package installation.
                 fi
@@ -40,9 +42,11 @@ jobs:
                 working_directory: ~/repo
                 command: |
                     git diff --name-only --exit-code HEAD HEAD^1 client
-                    if [ ! $? -eq 0 ]
+                    status=$?
+                    if [ ! $status -eq 0 ]
                     then 
-                        cd client && yarn test
+                        cd client
+                        yarn test
                     else
                         echo Client code is not changed. So skip test
                     fi
@@ -57,10 +61,12 @@ jobs:
                 working_directory: ~/repo
                 command: |
                     git diff --name-only --exit-code HEAD HEAD^1 server
-                    if [ ! $? -eq 0 ]
+                    status=$?
+                    if [ ! $status -eq 0 ]
                     then
                         echo server code is modified
-                        cd server && make build
+                        cd server
+                        make build
                     else
                         echo Server code is not changed. So skip build phase
                     fi
@@ -75,9 +81,11 @@ jobs:
                 working_directory: ~/repo
                 command: |
                     git diff --name-only --exit-code HEAD HEAD^1 server
-                    if [ ! $? -eq 0 ]
+                    status=$?
+                    if [ ! $status -eq 0 ]
                     then
-                        cd server && make test
+                        cd server
+                        make test
                     else
                         echo Server code is not changed. So skip test
                     fi
@@ -104,7 +112,8 @@ jobs:
                 name: Build docker image
                 command: |
                     git diff --name-only --exit-code HEAD HEAD^1 server
-                    if [ ! $? -eq 0 ]
+                    status1=$?
+                    if [ ! $status1 -eq 0 ]
                     then
                         docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 --build-arg OAUTH_CSRF_STATE=$OAUTH_CSRF_STATE --build-arg GOOGLE_OAUTH_CLIENT_ID=$GOOGLE_OAUTH_CLIENT_ID --build-arg GOOGLE_OAUTH_CLIENT_SECRET=$GOOGLE_OAUTH_CLIENT_SECRET server
                     else
@@ -112,7 +121,8 @@ jobs:
                     fi
 
                     git diff --name-only --exit-code HEAD HEAD^1 client
-                    if [ ! $? -eq 0 ]
+                    status2=$?
+                    if [ ! $status2 -eq 0 ]
                     then
                         docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 --build-arg PROJECT_ID=$PROJECT_ID --build-arg BUCKET_NAME=$BUCKET_NAME --build-arg OAUTH_CSRF_STATE=$OAUTH_CSRF_STATE  client
                     else
@@ -125,15 +135,17 @@ jobs:
                     gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us.gcr.io
                     
                     git diff --name-only --exit-code HEAD HEAD^1 server
-                    if [ ! $? -eq 0 ]
+                    status1=$?
+                    if [ ! $status1 -eq 0 ]
                     then
                         docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
                     else
-                        ecoh Skip push of docker image of client-side app
+                        echo Skip push of docker image of client-side app
                     fi
 
                     git diff --name-only --exit-code HEAD HEAD^1 client
-                    if [ ! $? -eq 0 ]
+                    status2=$?
+                    if [ ! $status2 -eq 0 ]
                     then
                         docker push us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
                     else
@@ -146,7 +158,8 @@ jobs:
                     apt-get install -qq -y gettext
 
                     git diff --name-only --exit-code HEAD HEAD^1 server
-                    if [ ! $? -eq 0 ]
+                    status1=$?
+                    if [ ! $status1 -eq 0 ]
                     then
                         envsubst < k8s_apiserver.yaml > k8s_apiserver_substitued.yaml
                         cat k8s_apiserver_substitued.yaml
@@ -156,7 +169,8 @@ jobs:
                     fi
 
                     git diff --name-only --exit-code HEAD HEAD^1 client
-                    if [ ! $? -eq 0 ]
+                    status2=$?
+                    if [ ! $status2 -eq 0 ]
                     then
                         envsubst < k8s_front.yaml > k8s_front_substitued.yaml
                         cat k8s_front_substitued.yaml
