@@ -48,7 +48,7 @@ jobs:
                     fi
     build-apiserver:
         docker:
-            - image: circleci/golang:1.11.1
+            - image: circleci/golang:1.12.4
         working_directory: ~/repo
         steps:
             - checkout
@@ -65,7 +65,7 @@ jobs:
                     fi
     test-apiserver:
         docker:
-            - image: circleci/golang:1.11.1
+            - image: circleci/golang:1.12.4
         working_directory: ~/repo
         steps:
             - checkout

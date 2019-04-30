@@ -61,7 +61,6 @@ func main() {
 		},
 	})
 	
-	// for load balancer
 	r.Get("/", handler.NoopHandler)
 
 	r.Post("/login", handler.LoginHandler)
