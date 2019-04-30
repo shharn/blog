@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import List from '@material-ui/core/List';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import ListItemWrapper from '../ListItemWrapper';
@@ -44,9 +44,9 @@ class MenuListSmall extends Component<Props & WithStylesProps> {
                     No Menu :(
                 </Typography>
                 }
-                <Button className={classes.addButton} variant="fab" mini color="secondary" aria-label="add" onClick={this.onAddButtonClicked}>
+                <Fab classes={{ root: classes.addButton}} size="small" color="secondary" aria-label="add" onClick={this.onAddButtonClicked}>
                     <AddIcon/>
-                </Button>
+                </Fab>
             </div>
         );
     }

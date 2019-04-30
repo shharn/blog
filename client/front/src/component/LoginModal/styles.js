@@ -2,7 +2,7 @@ import red from '@material-ui/core/colors/red';
 
 export const dialog = {
     dialogPaper: {
-        width: '300px'
+        minWidth: '300px'
     },
     title: {
         margin: '40px auto 0',
@@ -55,12 +55,19 @@ export const authButtons = {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        margin: '25px 0'
+        margin: '25px 0px 0px 0px'
     },
-    adminButton: {
+    signinButton: {
         width: '100%',
         backgroundColor: 'white',
-        height: '50px'
+        height: '50px',
+        marginBottom: '15px'
+    },
+    circularProgress: {
+        margin: '20px 0px 0px 0px'
+    },
+    errorMessage: {
+        color: 'red'
     }
 };
 

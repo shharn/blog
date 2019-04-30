@@ -12,7 +12,6 @@ import {
     uploadImageSuccess,
     uploadImageFail
 } from '../../action/data';
-import ls from 'local-storage';
 import  {
     put,
     call
@@ -172,7 +171,7 @@ describe('Should handle REQUEST_MUTATE_DATA', () => {
         const actionType = DataActionType.REQUEST_MUTATE_DATA;
 
         beforeEach(() => {
-            ls.set(Token.key, mockToken);
+            window.localStorage.setItem(Token.key, mockToken);
         });
 
         operationTypes.forEach(operationType => {
@@ -216,7 +215,7 @@ describe('Should handle REQUEST_MUTATE_DATA', () => {
         });
 
         beforeEach(() => {
-            ls.set(Token.key, mockToken);
+            window.localStorage.setItem(Token.key, mockToken);
         });
 
         test('Network is offline', () => {
@@ -232,7 +231,7 @@ describe('Should handle REQUEST_MUTATE_DATA', () => {
         });
 
         test('Has no token', () => {
-            ls.remove(Token.key);
+            window.localStorage.removeItem(Token.key);
             const clone = gen.clone();
             let next = clone.next();
             expect(next.value).toEqual(put(dataMutationFail(mockDataName, mockOperationType, {
@@ -278,7 +277,7 @@ describe('Should handle UPLOAD_IMAGE', () => {
     });
 
     beforeEach(() => {
-        ls.set(Token.key, mockToken);
+        window.localStorage.setItem(Token.key, mockToken);
     });
 
     test('Network is offline', () => {
@@ -297,7 +296,7 @@ describe('Should handle UPLOAD_IMAGE', () => {
     });
 
     test('Has no token', () => {
-        ls.remove(Token.key);
+        window.localStorage.removeItem(Token.key);
         const clone = gen.clone();
         let next = clone.next();
         expect(next.value).toEqual(put(uploadImageFail({

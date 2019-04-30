@@ -16,22 +16,43 @@ export type GetState = {
     [key: string]: DataTemplate
 };
 
-const EmptyData = {
-    menus: [],
-    article: {
-        uid: '',
-        title: '',
-        createdAt: '',
-        content: '',
-        summary: ''
-    },
-    articles: [],
-    hottestArticles: []
-};
-
 const NO_ERROR: ClientError = {
     code: 0,
     message: ''
+};
+
+const EmptyData: GetState = {
+    menus: {
+        data: [],
+        error: { ...NO_ERROR },
+        fetchStatus: FetchStatus.INITIAL,
+        fetchComplete: false
+    },
+    article: {
+        data: {
+            uid: '',
+            title: '',
+            createdAt: '',
+            content: '',
+            summary: '',
+        },
+        error: { ...NO_ERROR },
+        fetchStatus: FetchStatus.INITIAL,
+        fetchComplete: false,
+        isServerRendered: false
+    },
+    articles: {
+        data: [],
+        error: { ...NO_ERROR },
+        fetchStatus: FetchStatus.INITIAL,
+        fetchComplete: false
+    },
+    hottestArticles: {
+        data: [],
+        error: { ...NO_ERROR },
+        fetchStatus: FetchStatus.INITIAL,
+        fetchComplete: false
+    },
 };
 
 const initialState: GetState = {

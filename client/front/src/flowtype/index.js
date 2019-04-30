@@ -24,7 +24,9 @@ export type LoginInformation = {
 
 export type LoginResponse = {
     isValid: boolean,
-    token: string
+    token: string,
+    platform: string,
+    admin: boolean
 };
 
 export type ClientError = {

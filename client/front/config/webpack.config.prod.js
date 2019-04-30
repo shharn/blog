@@ -235,9 +235,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.appHtml,
-      meta: {
-        'google-signin-client_id': process.env.GOOGLE_OAUTH_CLIENT_ID
-      },
       minify: {
         removeComments: true,
         collapseWhitespace: true,

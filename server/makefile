@@ -1,20 +1,15 @@
 GOCMD=go
-GOINSTALL=$(GOCMD) install
+GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 
-APP_SRC_PATH=github.com/shharn/blog
 BINARY_NAME=blog
 
-all: test run
-deps:
-	$(GOGET) -d $(APP_SRC_PATH)/...
-deps_test:
-	$(GOGET) -u github.com/stretchr/testify
-install: deps
-	$(GOINSTALL) $(APP_SRC_PATH)
-test: deps deps_test
-	$(GOTEST) $(APP_SRC_PATH)/...
-run: install
+all: run
+build:
+	$(GOBUILD) -o bin/$(BINARY_NAME)
+test:
+	$(GOTEST) ./...
+run: build
 	bin/$(BINARY_NAME)

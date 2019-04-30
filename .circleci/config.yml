@@ -18,6 +18,8 @@ jobs:
                 if [ ! $? -eq 0 ]
                 then 
                     yarn install
+                else
+                    echo Client code is not changed. So skip package installation.
                 fi
           - save_cache:
               paths:
@@ -41,6 +43,8 @@ jobs:
                     if [ ! $? -eq 0 ]
                     then 
                         yarn test
+                    else
+                        echo Client code is not changed. So skip test
                     fi
     build-apiserver:
         docker:
@@ -55,7 +59,9 @@ jobs:
                     git diff --name-only --exit-code HEAD HEAD^1 server
                     if [ ! $? -eq 0 ]
                     then
-                        make install
+                        make build
+                    else
+                        echo Server code is not changed. So skip build phase
                     fi
     test-apiserver:
         docker:
@@ -70,8 +76,9 @@ jobs:
                     git diff --name-only --exit-code HEAD HEAD^1 server
                     if [ ! $? -eq 0 ]
                     then
-                        export GOPATH=$(pwd)
                         make test
+                    else
+                        echo Server code is not changed. So skip test
                     fi
     deploy:
         docker:
@@ -95,16 +102,20 @@ jobs:
             - run:
                 name: Build docker image
                 command: |
-                    git diff --name-only --exit-code HEAD HEAD^1 client
-                    if [ ! $? -eq 0 ]
-                    then
-                        docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 server
-                    fi
-
                     git diff --name-only --exit-code HEAD HEAD^1 server
                     if [ ! $? -eq 0 ]
                     then
-                        docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 --build-arg PROJECT_ID=$PROJECT_ID --build-arg=BUCKET_NAME=$BUCKET_NAME client
+                        docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 --build-arg OAUTH_CSRF_STATE=$OAUTH_CSRF_STATE --build-arg GOOGLE_OAUTH_CLIENT_ID=$GOOGLE_OAUTH_CLIENT_ID --build-arg GOOGLE_OAUTH_CLIENT_SECRET=$GOOGLE_OAUTH_CLIENT_SECRET server
+                    else
+                        echo Skip build of docker image of client-side app
+                    fi
+
+                    git diff --name-only --exit-code HEAD HEAD^1 client
+                    if [ ! $? -eq 0 ]
+                    then
+                        docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 --build-arg PROJECT_ID=$PROJECT_ID --build-arg BUCKET_NAME=$BUCKET_NAME --build-arg OAUTH_CSRF_STATE=$OAUTH_CSRF_STATE  client
+                    else
+                        echo Skip build of docker image of server-side app
                     fi
             - run:
                 name: Push docker images to container registry
@@ -112,25 +123,48 @@ jobs:
                     gcloud auth configure-docker
                     gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us.gcr.io
                     
-                    git diff --name-only --exit-code HEAD HEAD^1 client
-                    if [ ! $? -eq 0 ]
-                    then
-                        docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
-                    fi
-
                     git diff --name-only --exit-code HEAD HEAD^1 server
                     if [ ! $? -eq 0 ]
                     then
+                        docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
+                    else
+                        ecoh Skip push of docker image of client-side app
+                    fi
+
+                    git diff --name-only --exit-code HEAD HEAD^1 client
+                    if [ ! $? -eq 0 ]
+                    then
                         docker push us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
+                    else
+                        echo Skip push of docker image of server-side app
                     fi
             - run:
                 name: Let's deploy the app!
                 command: |
                     apt-get update
                     apt-get install -qq -y gettext
-                    envsubst < k8s.yaml > k8s_substitued.yaml
-                    cat k8s_substitued.yaml
-                    kubectl apply -f k8s_substitued.yaml
+
+                    git diff --name-only --exit-code HEAD HEAD^1 server
+                    if [ ! $? -eq 0 ]
+                    then
+                        envsubst < k8s_apiserver.yaml > k8s_apiserver_substitued.yaml
+                        cat k8s_apiserver_substitued.yaml
+                        kubectl apply -f k8s_apiserver_substitued.yaml
+                    else
+                        echo Skip applying k8s_apiserver.yaml to cluster
+                    fi
+
+                    git diff --name-only --exit-code HEAD HEAD^1 client
+                    if [ ! $? -eq 0 ]
+                    then
+                        envsubst < k8s_front.yaml > k8s_front_substitued.yaml
+                        cat k8s_front_substitued.yaml
+                        kubectl apply -f k8s_front_substitued.yaml
+                    else
+                        echo Skip applying k8s_front.yaml to cluster
+                    fi
+
+                    kubectl apply -f k8s_ingress.yaml
                     kubectl apply -f k8s_db.yaml
 workflows:
     version: 2

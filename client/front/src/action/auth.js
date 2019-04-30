@@ -1,79 +1,12 @@
 // @flow
 import { Auth } from './types';
+import { AuthPlatform } from '../constant';
 import type { Action } from './types';
 import type { 
     LoginInformation, 
     LoginResponse, 
     ClientError 
 } from '../flowtype';
-
-export type InitializeLoginStatusAction = {
-    type: Auth.INITIALISE_LOGIN_STATUS
-};
-
-export type RequestLoginAction = {
-    type: Auth.REQUEST_LOGIN,
-    payload: {
-        loginInfo: LoginInformation
-    }
-};
-
-export type LoginSuccessAction = {
-    type: Auth.LOGIN_SUCCESS,
-    payload: LoginResponse
-};
-
-export type LoginFailedAction = {
-    type: Auth.LOGIN_FAILED,
-    payload: {
-        error: ClientError
-    }
-};
-
-export type ValidateTokenAction = {
-    type: Auth.VALIDATE_TOKEN,
-    payload: {
-        token: string
-    }
-};
-
-export type ValidTokenAction = {
-    type: Auth.VALID_TOKEN
-};
-
-export type InvalidTokenAction = {
-    type: Auth.INVALID_TOKEN,
-    payload: {
-        error: ClientError
-    }
-};
-
-export type RequestLogoutAction = {
-    type: Auth.REQUEST_LOGOUT
-};
-
-export type LogoutSuccessAction = {
-    type: Auth.LOGOUT_SUCCESS
-};
-
-export type LogoutFailedAction = {
-    type: Auth.LOGOUT_FAILED,
-    payload: {
-        error: ClientError
-    }
-};
-
-export type AuthAction = 
-    InitializeLoginStatusAction |
-    RequestLoginAction |
-    LoginSuccessAction |
-    LoginFailedAction |
-    ValidateTokenAction |
-    ValidTokenAction |
-    InvalidTokenAction |
-    RequestLogoutAction |
-    LogoutSuccessAction |
-    LogoutFailedAction;
 
 export const initializeLoginStatus = (): Action => ({
     type: Auth.INITIALIZE_LOGIN_STATUS
@@ -82,7 +15,8 @@ export const initializeLoginStatus = (): Action => ({
 export const requestLogin = (loginInfo : LoginInformation): Action=> ({
     type: Auth.REQUEST_LOGIN,
     payload: {
-        loginInfo
+        loginInfo,
+        platform: AuthPlatform.NATIVE
     }
 })
 
@@ -105,8 +39,12 @@ export const validateToken = (token: string): Action => ({
     }
 })
 
-export const validToken = (): Action => ({
-    type: Auth.VALID_TOKEN
+export const validToken = (validResponse: { platform: $Values<AuthPlatform>, admin: boolean }): Action => ({
+    type: Auth.VALID_TOKEN,
+    payload: {
+        platform: validResponse.platform,
+        admin: validResponse.admin
+    }
 })
 
 export const invalidToken = (error: ClientError): Action => ({
@@ -116,7 +54,7 @@ export const invalidToken = (error: ClientError): Action => ({
     }
 })
 
-export const requestLogout = (): Action=> ({
+export const requestLogout = (): Action => ({
     type: Auth.REQUEST_LOGOUT
 })
 
@@ -128,5 +66,19 @@ export const logoutFailed = (error: ClientError): Action => ({
     type: Auth.LOGOUT_FAILED,
     payload: {
         error
+    }
+})
+
+export const requestOAuthLogin = (platform: $Values<AuthPlatform>): Action => ({
+    type: Auth.REQUEST_OAUTH_LOGIN,
+    payload: {
+        platform
+    }
+})
+
+export const oauthAuthorizationSuccess = (authCodeURL: string): Action => ({
+    type: Auth.OAUTH_AUTHORIZATION_SUCCESS,
+    payload: {
+        authCodeURL
     }
 })

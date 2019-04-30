@@ -24,7 +24,7 @@ export function auth(req, res, next) {
                 if (res.statusCode === OK && res.body.isValid) {
                     next();
                 } else {
-                    logger.warning(`Invalid token received = ${token}`)
+                    logger.warn(`Invalid token received = ${token}`)
                     res
                         .status(UNAUTHORIZED)
                         .json(HTTPBodyPreset[UNAUTHORIZED]);

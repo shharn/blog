@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: blog-ingress
+    annotations:
+        kubernetes.io/ingress.global-static-ip-name: blog-public-static-ip
+        certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+        certmanager.k8s.io/acme-http01-edit-in-place: "true"
+    labels:
+        app: blog-ingress
+spec:
+    tls:
+    - secretName: blog-front-server-certificate
+      hosts:
+      - blog.puppyloper.com
+    - secretName: blog-api-server-certificate
+      hosts:
+      - api.puppyloper.com
+    rules:
+    - host: blog.puppyloper.com
+      http:
+          paths:
+          - backend:
+              serviceName: front-server-service
+              servicePort: 3000
+    - host: api.puppyloper.com
+      http:
+          paths:
+          - backend:
+              serviceName: api-server-service
+              servicePort: 5000
+    - http:
+        paths:
+            - backend:
+                serviceName: front-server-service
+                servicePort: 3000

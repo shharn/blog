@@ -7,58 +7,6 @@ import type {
     Article
 } from '../flowtype';
 
-export type OpenMenuManagementDialogAction = {
-    type: UIActionType.OPEN_MENU_MANAGEMENT_DIALOG
-};
-
-export type CloseMenuManagementDialogAction = {
-    type: UIActionType.CLOSE_MENU_MANAGEMENT_DIALOG
-};
-
-export type SwitchMenuManagerChildComponentAction = {
-    type: UIActionType.SWITCH_MENU_MANAGER_CHILD_COMPONENT,
-    payload: {
-        childComponent: $Values<MenuManagerChildComponentType>
-    }
-};
-
-export type ChangeToEditableCellAction = {
-    type: UIActionType.CHANGE_EDITABLE_CELL,
-    payload: {
-        rowId: string,
-        cellName: string
-    }
-};
-
-export type DisableEditableCellAction = {
-    type: UIActionType.DISABLE_EDITABLE_CELL
-};
-
-export type SetDataForCreateOrEditMenuAction = {
-    type: UIActionType.SET_DATA_FOR_CREATE_OR_EDIT_MENU,
-    payload: {
-        isEditMode: boolean,
-        menu: Menu
-    }
-};
-
-export type SetDataForCreateOrEditArticleAction = {
-    type: UIActionType.SET_DATA_FOR_CREATE_OR_EDIT_ARTICLE,
-    payload: {
-        isEditMode: boolean,
-        article: Article
-    }
-};
-
-export type UIAction = 
-    OpenMenuManagementDialogAction |
-    CloseMenuManagementDialogAction |
-    SwitchMenuManagerChildComponentAction |
-    ChangeToEditableCellAction |
-    DisableEditableCellAction |
-    SetDataForCreateOrEditMenuAction |
-    SetDataForCreateOrEditArticleAction;
-
 export const openMenuManagementDialog = (): Action => ({
     type: UIActionType.OPEN_MENU_MANAGEMENT_DIALOG
 })

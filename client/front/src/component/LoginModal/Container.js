@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import Admin from './LoginModal';
 import { 
     requestLogin, 
-    validateToken,
-    initializeLoginStatus 
+    initializeLoginStatus,
+    requestOAuthLogin
 } from '../../action/auth';
+import { AuthPlatform } from '../../constant';
 import type { 
     State,
     Dispatch,
@@ -13,18 +14,19 @@ import type {
 } from '../../flowtype';
 
 const mapStateToProps = (state: State): Object => {
-    const { authStatus, error, isAuthenticated } = state.app.auth;
+    const { authStatus, error, isAuthenticated, authCodeURL } = state.app.auth;
     return {
         authStatus,
         error,
-        isAuthenticated
+        isAuthenticated,
+        authCodeURL
     };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch): Object => ({
     login: (loginInfo: LoginInformation): void => dispatch(requestLogin(loginInfo)),
-    validateToken: (token: string): void => dispatch(validateToken(token)),
-    initializeAuthStatus: (): void => dispatch(initializeLoginStatus())
+    initializeAuthStatus: (): void => dispatch(initializeLoginStatus()),
+    oauth: (platform: $Values<AuthPlatform>): void => dispatch(requestOAuthLogin(platform))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Admin);

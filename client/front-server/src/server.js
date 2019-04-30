@@ -6,6 +6,7 @@ import {
     ERROR_PAGE_FILE_PATH,
     IS_DEVELOPMENT
 } from './constant';
+import { OAUTH_RESULT_LOCALSTORAGE_KEY } from '../../front/src/constant';
 import Loadable from 'react-loadable';
 import { auth } from './middleware';
 import logger from './logger';
@@ -54,7 +55,7 @@ app.use(express.static(STATIC_FILES_PATH, {
     etag: true,
     lastModified: true,
     cacheControl: true,
-    maxAge: 31536000000
+    maxAge: 60 * 60 * 24 * 365
 }));
 
 app.get(HEALTH_CHECK_PATH, (_, res) => {
@@ -82,6 +83,51 @@ app.post('/upload',
 
 app.get('/menus/:menuName/articles/:articleTitle', articleDetail); 
 
+const getEndpointForAuthCodeExchange = (platform, code) => `${process.env.API_SERVER_URL}/oauth/authorizations/${platform}/codes/${encodeURIComponent(code)}`;
+
+app.get('/oauth/authorizations/:platform/callback', (req, res) => {
+    res.setHeader('Content-Type', 'text/html');
+    const templatePlaceholder = '$$PLACEHOLDER';
+    let template = `
+    <html>
+        <body>
+            <script>
+               ${templatePlaceholder}
+            </script>
+        </body>
+        </html>
+    `;
+    const clientState = req.query.state;
+    const serverState = process.env.OAUTH_CSRF_STATE;
+    logger.debug(`clientState - ${clientState}, serverState - ${serverState}`);
+    if (clientState !== serverState) {
+        template = template.replace(templatePlaceholder, `
+            localStorage.setItem('${OAUTH_RESULT_LOCALSTORAGE_KEY}', ${JSON.stringify({isValid: false, admin: false})});
+        `);
+        res.send(template).end();
+        return;
+    }
+
+    const platform = req.params['platform'];
+    const code = req.query.code;
+    logger.debug(`oauth callback, platform - ${platform}, code - ${code}`);
+    template = template.replace(templatePlaceholder, `
+        fetch('${getEndpointForAuthCodeExchange(platform, code)}')
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function (res) {
+                localStorage.setItem('${OAUTH_RESULT_LOCALSTORAGE_KEY}', JSON.stringify(res));
+                window.close();
+            })
+            .catch(function (err) {
+                localStorage.setItem('${OAUTH_RESULT_LOCALSTORAGE_KEY}', '${JSON.stringify({isValid: false, isAdmin: false})}');
+                window.close();
+            });
+    `);
+    res.send(template).end();
+});
+
 // 404 handler
 app.all('*', (req, res) => {
     logger.warning(`Request for not found endpoint. ${req.originalUrl}`);
@@ -89,8 +135,8 @@ app.all('*', (req, res) => {
 });
 
 // error handler
-app.use((err, req, res, next) => {
-    logger.error(`Unhandled error : ${err.message}`);
+app.use((err, _, res, __) => {
+    logger.error(`Unhandled error : ${err.message}. Line : ${err.lineNumber}, StackTrace : ${err.stack}`);
     res.sendFile(ERROR_PAGE_FILE_PATH);
 });
 

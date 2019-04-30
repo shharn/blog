@@ -1,6 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import ls from 'local-storage';
 import { Token } from '../../constant';
 
 type Props = {
@@ -11,7 +10,7 @@ type Props = {
 class AuthChecker extends Component<Props> {
     componentDidMount = () => {
         if (!this.props.isAuthenticated) {
-            const token = ls.get(Token.key);
+            const token = window.localStorage.getItem(Token.key);
             token && this.props.authenticate(token);
           }
     }

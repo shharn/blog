@@ -9,8 +9,10 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import AuthButtons from './AuthButtons';
 import AdminContent from './AdminContent';
 import { withStyles } from '@material-ui/core/styles';
-import { AuthStatus } from '../../constant';
-
+import {
+    AuthStatus,
+    AuthPlatform
+} from '../../constant';
 import { dialog } from './styles';
 
 import type { 
@@ -25,10 +27,11 @@ type Props = {
     authStatus: $Values<AuthStatus>,
     isAuthenticated: boolean,
     error: ClientError,
+    authCodeURL: string,
 
     login: (loginInfo: LoginInformation) => void,
-    validateToken: (token: string) => void,
     initializeAuthStatus: () => void,
+    oauth: (platform: $Values<AuthPlatform>) => void,
     closeLoginModal: () => void    
 }
 
@@ -57,6 +60,12 @@ class LoginModal extends Component<Props & WithStylesProps & RouterProps, State>
         this.setState({ adminContent });
     }
 
+    onDialogClose = () => {
+        this.setState({
+            adminContent: false
+        });
+    }
+
     render = () => {
         const { toggleAdminContent } = this;
         const { 
@@ -66,6 +75,8 @@ class LoginModal extends Component<Props & WithStylesProps & RouterProps, State>
             authStatus,
             closeLoginModal,
             login,
+            oauth,
+            authCodeURL,
             error
         } = this.props;
         const { adminContent } = this.state;
@@ -101,7 +112,13 @@ class LoginModal extends Component<Props & WithStylesProps & RouterProps, State>
                             authStatus={authStatus}
                             error={error}
                         /> :
-                        <AuthButtons showAdminContent={toggleAdminContent(true)}/>
+                        <AuthButtons 
+                            authStatus={authStatus}
+                            showAdminContent={toggleAdminContent(true)}
+                            error={error}
+                            oauth={oauth}
+                            authCodeURL={authCodeURL}
+                        />
                     }
                 </DialogContent>
             </Dialog>

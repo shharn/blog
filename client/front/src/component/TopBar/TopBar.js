@@ -62,7 +62,8 @@ class TopBar extends Component<Props & WithStylesProps> {
                             onClick={this.onAuthButtonClick}>
                             {isAuthenticated ? 
                                 <ExitToApp /> : 
-                                <PowerSettingsNew />}
+                                <PowerSettingsNew />
+                            }
                         </Button>
                     </div>
                   </Toolbar>

@@ -9,7 +9,8 @@ import styles from './styles';
 import type { WithStylesProps } from '../../flowtype';
 
 type Props = {
-  isAuthenticated: boolean
+  isAuthenticated: boolean,
+  admin: boolean
 };
 
 type State = {
@@ -42,7 +43,7 @@ class Home extends Component<Props & WithStylesProps, State> {
   }
 
   render = () => {
-    const { classes, isAuthenticated } = this.props;
+    const { classes, isAuthenticated, admin } = this.props;
     const { loginModalOpen } = this.state;
     return (
       <div className={classes.homeContainer}>
@@ -56,6 +57,7 @@ class Home extends Component<Props & WithStylesProps, State> {
                 toggleDrawer={this.handleDrawerToggle} 
                 smallScreenOpen={this.state.smallScreenOpen} 
                 isAuthenticated={isAuthenticated}
+                admin={admin}
               />
               <MainArea />
               <LoginModal

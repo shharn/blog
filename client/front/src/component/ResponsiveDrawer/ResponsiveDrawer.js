@@ -12,13 +12,15 @@ import type { WithStylesProps } from '../../flowtype';
 
 type Props = {
     isAuthenticated: boolean,
+    admin: boolean,
+
     toggleDrawer: () => void,
     smallScreenOpen: boolean
 };
 
 class ResponsiveDrawer extends React.Component<Props & WithStylesProps> {
     render = () => {
-        const { classes, theme, toggleDrawer, smallScreenOpen, isAuthenticated } = this.props;
+        const { classes, theme, toggleDrawer, smallScreenOpen, isAuthenticated, admin } = this.props;
         return (
             <div>
                 <Hidden smUp>
@@ -31,7 +33,7 @@ class ResponsiveDrawer extends React.Component<Props & WithStylesProps> {
                     >
                         <DrawerHeader/>
                         <DrawerItems/>
-                        {isAuthenticated && <MenuManager/>}
+                        {isAuthenticated && admin && <MenuManager/>}
                         <SocialIcons/>
                     </Drawer>
                 </Hidden>
@@ -39,7 +41,7 @@ class ResponsiveDrawer extends React.Component<Props & WithStylesProps> {
                     <Drawer variant="permanent" open classes={{ paper: classes.drawerPaper }}>
                         <DrawerHeader/>
                         <DrawerItems/>
-                        {isAuthenticated && <MenuManager/>}
+                        {isAuthenticated && admin && <MenuManager/>}
                         <SocialIcons/>
                     </Drawer>
                 </Hidden>

@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import MetaInfo from '../MetaInfo';
@@ -22,6 +22,7 @@ type Props = {
     error: ClientError,
     fetchStatus: $Values<FetchStatus>,
     isAuthenticated: boolean,
+    admin: boolean,
     deleteFetchStatus: $Values<FetchStatus>,
     isServerRendered: boolean,
 
@@ -32,7 +33,7 @@ type Props = {
     initServerRenderingFlag: () => void
 };
 
-class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {}> {
+class ArticleDetail extends React.Component<Props & RouterProps & WithStylesProps, {}> {
     parentURL: string;
     
     componentDidMount = () => {
@@ -75,7 +76,7 @@ class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {}>
     }
 
     render = () => {
-        const { classes, article, fetchStatus, isAuthenticated } = this.props;
+        const { classes, article, fetchStatus, isAuthenticated, admin } = this.props;
         return (
             article ? 
                 fetchStatus === FetchStatus.WAIT || fetchStatus === FetchStatus.INITIAL ?
@@ -91,6 +92,7 @@ class ArticleDetail extends Component<Props & RouterProps & WithStylesProps, {}>
                             <Divider />
                             <ButtonGroup 
                                 isAuthenticated={isAuthenticated} 
+                                admin={admin}
                                 parentURL={this.getParentURL(this.props.location.pathname)}
                                 onEditButtonClicked={this.onEditButtonClicked}
                                 onDeleteButtonClicked={this.onDeleteButtonClicked} />

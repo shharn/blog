@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Article from '../Article';
 import { withStyles } from '@material-ui/core/styles';
@@ -15,7 +15,7 @@ type State = {
     prevMenuName: string
 };
 
-class ArticleList extends Component<RouterProps & WithStylesProps & InfiniteScrollabledProps, State> {
+class ArticleList extends React.Component<RouterProps & WithStylesProps & InfiniteScrollabledProps, State> {
     state = {
             prevMenuName: this.props.match.params['menuName']
     };

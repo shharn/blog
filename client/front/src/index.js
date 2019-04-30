@@ -16,6 +16,7 @@ const { store, history } = createAppStore(preloadedState);
 
 const container = document.getElementById('root');
 if (container) {
+    // $FlowFixMe
     ReactDOM.hydrate(
         <Provider store={store}>
             <ConnectedRouter history={history}>

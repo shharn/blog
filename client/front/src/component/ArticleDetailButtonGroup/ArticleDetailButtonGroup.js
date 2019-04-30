@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import ListIcon from '@material-ui/icons/List';
 import EditIcon from '@material-ui/icons/Edit';
@@ -13,12 +13,13 @@ import type { WithStylesProps} from '../../flowtype';
 
 type Props = {
     isAuthenticated: boolean,
+    admin: boolean,
     parentURL: string
 };
 
-class ArticleDetailButtonGroup extends Component<Props & WithStylesProps> {
+class ArticleDetailButtonGroup extends React.Component<Props & WithStylesProps> {
     render = () => {
-        const { classes, isAuthenticated, parentURL } = this.props;
+        const { classes, isAuthenticated, admin, parentURL } = this.props;
         return (
             <div className={classes.container}>
                 <Button 
@@ -28,7 +29,7 @@ class ArticleDetailButtonGroup extends Component<Props & WithStylesProps> {
                 >
                     <ListIcon fontSize='inherit'/>
                 </Button>
-                {isAuthenticated &&
+                {(isAuthenticated && admin) &&
                     <React.Fragment>
                         <Button 
                             classes={{ root: cn(classes.button, classes.iconButton)}}

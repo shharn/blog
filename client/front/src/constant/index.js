@@ -7,7 +7,16 @@ export const AuthStatus = {
     LOGIN_FAILED: createUnique('LOGIN_FAIL'),
     LOGOUT_WAIT: createUnique('LOGOUT_WAIT'),
     LOGOUT_SUCCESS: createUnique('LOGOUT_SUCCESS'),
-    LOGOUT_FAILED: createUnique('LOGOUT_FAIL')
+    LOGOUT_FAILED: createUnique('LOGOUT_FAIL'),
+    OAUTH_AUTHORIZATION_SUCCESS: createUnique('OAUTH_AUTHORIZATION_SUCCESS')
+};
+
+export const AuthPlatform = {
+    NONE: 'none',
+    NATIVE: 'native',
+    GOOGLE: 'google',
+    FACEBOOK: 'facebook',
+    GITHUB: 'github'
 };
 
 export const FetchStatus = {
@@ -18,7 +27,7 @@ export const FetchStatus = {
 };
 
 export const HEADER_NAME_FOR_TOKEN = 'X-Session-Token';
-
+export const OAUTH_RESULT_LOCALSTORAGE_KEY = 'puppy:oauth:result';
 export const Token = {
     key: 'puppyToken'
 };

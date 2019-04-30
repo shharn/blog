@@ -1,11 +1,12 @@
 // @flow
 import request from 'superagent';
-import { HEADER_NAME_FOR_TOKEN } from '../constant';
+import {
+    HEADER_NAME_FOR_TOKEN,
+    AuthPlatform
+} from '../constant';
 import type { LoginInformation } from '../flowtype';
 
 const PROTOCOL = process.env.NODE_ENV === 'production' ? 'https:' : 'http:';
-if (!process.env.API_SERVER_URL) throw new Error('provess.env.API_SERVER_URL is not defined');
-
 const API_SERVER_URL: string = process.env.API_SERVER_URL || 'https://blog.puppyloper.com';
 
 export function requestLogin(loginInfo: LoginInformation): Promise<request.Response | Error> {
@@ -16,6 +17,15 @@ export function requestLogin(loginInfo: LoginInformation): Promise<request.Respo
             .send(JSON.stringify(loginInfo))
             .then(res => res)
             .catch(err => err.response ? err.response : err);
+}
+
+export function requestOAuthAuthorization(platform: $Values<AuthPlatform>): Promise<request.Response | Error> {
+    return request
+        .post(`${PROTOCOL}//${API_SERVER_URL}/oauth/authorizations/${platform}`)
+        .type('text/plain')
+        .accept('json')
+        .then(res => res)
+        .catch(err => err.response ? err.response : err);
 }
 
 export function validateToken(token: string): Promise<request.Response | Error> {

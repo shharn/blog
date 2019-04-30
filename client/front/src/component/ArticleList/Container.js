@@ -26,9 +26,8 @@ const infScrOptions: InfiniteScrollableOptions = {
     loader: (offset: number, count: number, args?: Array<any>): void => {
         if (args && args.length > 0) {
             return requestDataWithNameAndURL(args[0], `articles`, 'name', `/menus/${PLACEHOLDER_NAME_TO_CONVERT}/articles?offset=${offset}&count=${count}`);
-        } else {
-            throw new Error(`Invalid arguments passed to InfiniteScrollable.loader method. arguments: ${JSON.stringify(args)}`);
         }
+        throw new Error('Empty arguments passed to InfiniteScrollable.loader method.');
     },
     loaderArgs: function() {
         return this.props.match.params["menuName"];

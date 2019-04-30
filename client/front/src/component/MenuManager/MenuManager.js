@@ -83,8 +83,8 @@ class MenuManager extends Component<Props & WithStylesProps> {
                         root: classes.button
                     }}
                     aria-label="Management" 
-                    onClick={this.handleManagementButtonClick}>
-                    
+                    onClick={this.handleManagementButtonClick}
+                >
                     <Settings/> 
                 </Button>
                 <Dialog

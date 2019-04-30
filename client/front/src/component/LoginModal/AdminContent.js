@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React  from 'react';
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
@@ -27,11 +27,11 @@ type Props = {
 }
 
 type State = {
-    emailValue: string,
-    passwordValue: string
+    email: string,
+    password: string
 }
 
-class AdminContent extends Component<Props & WithStylesProps, State> {
+class AdminContent extends React.Component<Props & WithStylesProps, State> {
     state = {
         email: '',
         password: ''

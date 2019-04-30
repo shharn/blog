@@ -15,7 +15,10 @@ export const Auth = {
     VALIDATE_TOKEN: createUnique('VALIDATE_TOKEN'),
     VALID_TOKEN: createUnique('VALID_TOKEN'),
     INVALID_TOKEN: createUnique('INVALID_TOKEN'),
-    CLIENT_HAS_NO_TOKEN: createUnique('CLIENT_HAS_NO_TOKEN')
+    CLIENT_HAS_NO_TOKEN: createUnique('CLIENT_HAS_NO_TOKEN'),
+
+    REQUEST_OAUTH_LOGIN: createUnique('REQUEST_OAUTH_LOGIN'),
+    OAUTH_AUTHORIZATION_SUCCESS: createUnique('OAUTH_AUTHORIZATION_SUCCESS')
 }
 
 export const Data = {

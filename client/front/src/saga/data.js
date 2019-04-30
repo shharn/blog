@@ -5,7 +5,6 @@ import {
     PutEffect, 
     ForkEffect
 } from 'redux-saga/effects';
-import LocalStorage from 'local-storage';
 import { 
     dataResponseSuccess, 
     dataResponseFailed,
@@ -60,7 +59,7 @@ export function* dataGetRequestWithURLHandler(action: Action) : Generator<reques
 
 export function* dataMutationRequestHandler(action: Action) : Generator<request.Response | PutEffect, void, null | PutEffect> {
     const { operationType, dataName, data } = action.payload;
-    const token: string = LocalStorage.get(Token.key);
+    const token: string = window.localStorage.getItem(Token.key);
     if (!token || token.length < 1) {
         return put(dataMutationFail(dataName, operationType, {
             code: 401,
@@ -102,7 +101,7 @@ export function* dataMutationRequestHandler(action: Action) : Generator<request.
 
 export function* uploadImageRequestHandler(action: Action) : Generator<request.Response | PutEffect, void, null | PutEffect> {
     const { files } = action.payload;
-    const token: string = LocalStorage.get(Token.key);
+    const token: string = window.localStorage.getItem(Token.key);
     if (!token || token.length < 1) {
         return put(uploadImageFail({
             code: 401,

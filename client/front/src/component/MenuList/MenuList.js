@@ -5,10 +5,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import { Fab } from '@material-ui/core';
 import MenuTableRow from '../MenuManagerTableRow';
 import styles from './styles';
 import { FetchStatus } from '../../constant';
@@ -18,7 +18,7 @@ import type {
  } from '../../flowtype';
 import type { Mutation } from '../../reducer/data/mutation';
 
-const headerNames = [
+const headerNames: Array<string> = [
     'Name', 'URL', 'Parent', 'Delete'
 ];
 
@@ -88,9 +88,9 @@ class MeuList extends React.Component<Props & WithStylesProps> {
                         {this.getErrorMessage()} 
                     </Typography>
                 }
-                <Button className={classes.addButton} variant="fab" mini color="secondary" aria-label="add" onClick={this.onAddButtonClicked}>
+                <Fab classes={{ root: classes.addButton }} size="small" color="secondary" aria-label="add" onClick={this.onAddButtonClicked}>
                     <AddIcon/>
-                </Button>
+                </Fab>
             </div>
         );
     }

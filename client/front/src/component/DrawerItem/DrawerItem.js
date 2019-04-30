@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -25,7 +25,7 @@ type State = {
     openChild: boolean
 };
 
-class DrawerItem extends Component<Props & WithStylesProps, State> {
+class DrawerItem extends React.Component<Props & WithStylesProps, State> {
     state = {
         openChild: false
     }

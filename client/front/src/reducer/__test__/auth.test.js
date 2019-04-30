@@ -1,18 +1,9 @@
-import reducer from '../auth';
+import reducer, { initialState, NO_ERROR } from '../auth';
 import { Auth as AuthActionType } from '../../action/types'
-import { AuthStatus, Token } from '../../constant';
-import LocalStorage from 'local-storage';
-
-const NO_ERROR = {
-    code: 0,
-    message: ''
-};
-
-const initialState = {
-    authStatus: AuthStatus.INITIAL,
-    error: { ...NO_ERROR },
-    isAuthenticated: false
-};
+import { 
+    AuthStatus,
+    AuthPlatform
+} from '../../constant';
 
 describe('app.auth reducer test', () => {
     test('Should return the initial state', () => {
@@ -22,18 +13,6 @@ describe('app.auth reducer test', () => {
     });
 
     describe('Should handle INITIALISE_LOGIN_STATUS', () => {
-        test('INITIALIZE_LOGIN_STATUS -> INITIALIZE_LOGIN_STATUS', () => {
-            const actual = reducer(undefined, {
-                type: AuthActionType.INITIALIZE_LOGIN_STATUS
-            });
-            const expected = {
-                authStatus: AuthStatus.INITIAL,
-                error: { ...NO_ERROR },
-                isAuthenticated: false
-            };
-            expect(actual).toEqual(expected);
-        });
-
         test('LOGIN_SUCCUESS -> INITIALIZE_LOGIN_STATUS & leave "isAuthenticated" property as the same', () => {
             const initial = {
                 ...initialState,
@@ -46,7 +25,8 @@ describe('app.auth reducer test', () => {
             const expected = {
                 ...initialState,
                 authStatus: AuthStatus.LOGIN_SUCCESS,
-                isAuthenticated: true
+                isAuthenticated: true,
+                platform: AuthPlatform.NONE
             };
             expect(actual).toEqual(expected);
         });
@@ -61,7 +41,8 @@ describe('app.auth reducer test', () => {
             });
             const expected = {
                 ...initialState,
-                authStatus: AuthStatus.INITIAL
+                authStatus: AuthStatus.INITIAL,
+                platform: AuthPlatform.NONE
             };
             expect(actual).toEqual(expected);
         });
@@ -70,11 +51,15 @@ describe('app.auth reducer test', () => {
     describe('Should handle REQUEST_LOGIN', () => {
         test('INITIAL -> REQUEST_LOGIN', () => {
             const actual = reducer(undefined, {
-                type: AuthActionType.REQUEST_LOGIN
+                type: AuthActionType.REQUEST_LOGIN,
+                payload: {
+                    platform: AuthPlatform.NATIVE
+                }
             });
             const expected = {
                 ...initialState,
-                authStatus: AuthStatus.LOGIN_WAIT
+                authStatus: AuthStatus.LOGIN_WAIT,
+                platform: AuthPlatform.NATIVE
             };
             expect(actual).toEqual(expected);
         });
@@ -88,11 +73,34 @@ describe('app.auth reducer test', () => {
                 }
             };
             const actual = reducer(initial, {
-                type: AuthActionType.REQUEST_LOGIN
+                type: AuthActionType.REQUEST_LOGIN,
+                payload: {
+                    platform: AuthPlatform.NATIVE
+                }
             });
             const expected = {
                 ...initialState,
-                authStatus: AuthStatus.LOGIN_WAIT
+                authStatus: AuthStatus.LOGIN_WAIT,
+                platform: AuthPlatform.NATIVE,
+                isAuthenticated: false,
+                admin: false
+            };
+            expect(actual).toEqual(expected);
+        });
+    });
+
+    describe('Should handle REQUEST_OAUTH_LOGIN', () => {
+        test('INITIAL -> REQUEST_OAUTH_LOGIN', () => {
+            const actual = reducer(undefined, {
+                type: AuthActionType.REQUEST_OAUTH_LOGIN,
+                payload: {
+                    platform: AuthPlatform.FACEBOOK
+                }
+            });
+            const expected = {
+                ...initialState,
+                authStatus: AuthStatus.LOGIN_WAIT,
+                platform: AuthPlatform.FACEBOOK
             };
             expect(actual).toEqual(expected);
         });
@@ -134,17 +142,19 @@ describe('app.auth reducer test', () => {
                 type: AuthActionType.LOGIN_SUCCESS,
                 payload: {
                     token: tokenValue,
-                    isValid: true
+                    isValid: true,
+                    platform: AuthPlatform.NATIVE,
+                    admin: true
                 }
             });
             const expected = {
                 ...initialState,
                 authStatus: AuthStatus.LOGIN_SUCCESS,
-                isAuthenticated: true
+                isAuthenticated: true,
+                platform: AuthPlatform.NATIVE,
+                admin: true
             };
-            const storedToken = LocalStorage.get(Token.key);
             expect(actual).toEqual(expected);
-            expect(storedToken).toEqual(tokenValue);
         });
     });
 
@@ -168,8 +178,12 @@ describe('app.auth reducer test', () => {
                     message: 'test error message'
                 }
             };
+            const mockToken = 'mocktoken';
             const actual = reducer(initial, {
-                type: AuthActionType.VALIDATE_TOKEN
+                type: AuthActionType.VALIDATE_TOKEN,
+                payload: {
+                    token: mockToken
+                }
             });
             const expected = {
                 ...initialState,
@@ -187,12 +201,17 @@ describe('app.auth reducer test', () => {
                 authStatus: AuthStatus.LOGIN_WAIT
             };
             const actual = reducer(initial, {
-                type: AuthActionType.VALID_TOKEN
+                type: AuthActionType.VALID_TOKEN,
+                payload: {
+                    admin: false,
+                    platform: AuthPlatform.FACEBOOK
+                }
             });
             const expected = {
                 ...initialState,
                 authStatus: AuthStatus.LOGIN_SUCCESS,
-                isAuthenticated: true
+                isAuthenticated: true,
+                platform: AuthPlatform.FACEBOOK
             };
             expect(actual).toEqual(expected);
         });
@@ -211,30 +230,19 @@ describe('app.auth reducer test', () => {
                 ...initialState,
                 authStatus: AuthStatus.INITIAL,
                 isAuthenticated: false,
+                platform: AuthPlatform.NONE
             };
             expect(actual).toEqual(expected);
-        });
-
-        test('Should remove existing invalid token from localstorage', () => {
-            LocalStorage.set(Token.key, 'testtoken');
-            reducer(undefined, {
-                type: AuthActionType.INVALID_TOKEN,
-                payload: {
-                    error: {
-                        code: 500,
-                        message: ''
-                    }
-                }
-            });
-            const maybeRemovedToken = LocalStorage.get(Token.key);
-            expect(maybeRemovedToken).toBeNull();
         });
     });
 
     describe('Should handle REQUEST_LOGOUT', () => {
         test('Should be in wait state', () => {
             const actual = reducer(undefined, {
-                type: AuthActionType.REQUEST_LOGOUT
+                type: AuthActionType.REQUEST_LOGOUT,
+                payload: {
+                    platform: AuthPlatform.GITHUB
+                }
             });
             const expected = {
                 ...initialState,
@@ -252,7 +260,10 @@ describe('app.auth reducer test', () => {
                 }
             };
             const actual = reducer(initial, {
-                type: AuthActionType.REQUEST_LOGOUT
+                type: AuthActionType.REQUEST_LOGOUT,
+                payload: {
+                    platform: AuthPlatform.NATIVE
+                }
             });
             const expected = {
                 ...initialState,
@@ -299,6 +310,30 @@ describe('app.auth reducer test', () => {
                 authStatus: AuthStatus.INITIAL,
                 error: { ...testError },
                 isAuthenticated: false
+            };
+            expect(actual).toEqual(expected);
+        });
+    });
+
+    describe('Should handle OAUTH_AUTHORIZATION_SUCCESS', () => {
+        test('LOGIN_WAIT -> OAUTH_AUTHORIZATION_SUCCESS', () => {
+            const mockAuthCodeURL = 'https://oauth2.com/authcodeURL?code=asdf';
+            const initial = {
+                ...initialState,
+                authStatus: AuthStatus.LOGIN_WAIT,
+                platform: AuthPlatform.GITHUB
+            };
+            const actual = reducer(initial, {
+                type: AuthActionType.OAUTH_AUTHORIZATION_SUCCESS,
+                payload: {
+                    authCodeURL: mockAuthCodeURL
+                }
+            });
+            const expected = {
+                ...initialState,
+                authStatus: AuthStatus.OAUTH_AUTHORIZATION_SUCCESS,
+                platform: AuthPlatform.GITHUB,
+                authCodeURL: mockAuthCodeURL
             };
             expect(actual).toEqual(expected);
         });

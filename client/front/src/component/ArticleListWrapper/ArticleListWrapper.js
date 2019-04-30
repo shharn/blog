@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import * as React from 'react';
 import Fab from '@material-ui/core/Fab';
 import ArticleList from '../ArticleList';
 import AddIcon from '@material-ui/icons/Add';
@@ -15,12 +15,12 @@ type Props = {
     isAuthenticated: boolean
 };
 
-class ArticleListWrapper extends Component<Props & RouterProps & WithStylesProps> {
+class ArticleListWrapper extends React.Component<Props & RouterProps & WithStylesProps> {
     render = () => {
-        const { isAuthenticated, classes, ...rest } = this.props;
+        const { isAuthenticated, admin, classes, ...rest } = this.props;
         return (
             <React.Fragment>
-                {isAuthenticated &&
+                {isAuthenticated && admin &&
                     <Fab 
                         component={Link} 
                         to={`/admin/article?prev=${encodeURI(this.props.location.pathname)}`} 

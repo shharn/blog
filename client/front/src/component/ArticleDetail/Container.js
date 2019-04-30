@@ -18,12 +18,13 @@ import type { Article } from '../../constant';
 const mapStateToProps = (state: StoreState): Object => {
     const { data: article, error, fetchStatus, isServerRendered } = { ...state.app.data.get.article };
     const deleteFetchStatus = state.app.data.mutation.articles.delete.status;
-    const { isAuthenticated } = state.app.auth;
+    const { isAuthenticated, admin } = state.app.auth;
     return {
         article,
         error,
         fetchStatus,
         isAuthenticated,
+        admin,
         deleteFetchStatus,
         isServerRendered
     };
