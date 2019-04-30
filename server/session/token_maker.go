@@ -74,6 +74,7 @@ type TokenMaker interface {
 	Decode(string) (interface{}, error)
 }
 
+// JWTTokenMaker is an implementation of TokenMaker with jwt
 type JWTTokenMaker struct {}
 
 func (e JWTTokenMaker) Encode(v interface{}) (string, error) {

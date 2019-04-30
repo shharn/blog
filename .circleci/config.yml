@@ -12,17 +12,9 @@ jobs:
                   - node-modules-
           - run: 
               name: Install client-side dependencies
+              working_directory: ~/repo/client
               command: |
-                git diff --name-only --exit-code HEAD HEAD^1 client
-                status=$?
-                if [ ! $status -eq 0 ]
-                then
-                    echo client code is modified
-                    cd client
-                    yarn install
-                else
-                    echo Client code is not changed. So skip package installation.
-                fi
+                  yarn install
           - save_cache:
               paths:
                   - client/node_modules
@@ -39,17 +31,9 @@ jobs:
                     - node-modules-
             - run: 
                 name: Run tests of client-side application
-                working_directory: ~/repo
+                working_directory: ~/repo/client
                 command: |
-                    git diff --name-only --exit-code HEAD HEAD^1 client
-                    status=$?
-                    if [ ! $status -eq 0 ]
-                    then 
-                        cd client
-                        yarn test
-                    else
-                        echo Client code is not changed. So skip test
-                    fi
+                    yarn test
     build-apiserver:
         docker:
             - image: circleci/golang:1.12.4
@@ -58,18 +42,9 @@ jobs:
             - checkout
             - run:
                 name: Build a golang application
-                working_directory: ~/repo
+                working_directory: ~/repo/server
                 command: |
-                    git diff --name-only --exit-code HEAD HEAD^1 server
-                    status=$?
-                    if [ ! $status -eq 0 ]
-                    then
-                        echo server code is modified
-                        cd server
-                        make build
-                    else
-                        echo Server code is not changed. So skip build phase
-                    fi
+                    make build
     test-apiserver:
         docker:
             - image: circleci/golang:1.12.4
@@ -78,17 +53,9 @@ jobs:
             - checkout
             - run:
                 name: Run tests of go application
-                working_directory: ~/repo
+                working_directory: ~/repo/server
                 command: |
-                    git diff --name-only --exit-code HEAD HEAD^1 server
-                    status=$?
-                    if [ ! $status -eq 0 ]
-                    then
-                        cd server
-                        make test
-                    else
-                        echo Server code is not changed. So skip test
-                    fi
+                    make test
     deploy:
         docker:
             - image: google/cloud-sdk
@@ -111,73 +78,27 @@ jobs:
             - run:
                 name: Build docker image
                 command: |
-                    git diff --name-only --exit-code HEAD HEAD^1 server
-                    status1=$?
-                    if [ ! $status1 -eq 0 ]
-                    then
-                        docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 --build-arg OAUTH_CSRF_STATE=$OAUTH_CSRF_STATE --build-arg GOOGLE_OAUTH_CLIENT_ID=$GOOGLE_OAUTH_CLIENT_ID --build-arg GOOGLE_OAUTH_CLIENT_SECRET=$GOOGLE_OAUTH_CLIENT_SECRET server
-                    else
-                        echo Skip build of docker image of client-side app
-                    fi
-
-                    git diff --name-only --exit-code HEAD HEAD^1 client
-                    status2=$?
-                    if [ ! $status2 -eq 0 ]
-                    then
-                        docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 --build-arg PROJECT_ID=$PROJECT_ID --build-arg BUCKET_NAME=$BUCKET_NAME --build-arg OAUTH_CSRF_STATE=$OAUTH_CSRF_STATE  client
-                    else
-                        echo Skip build of docker image of server-side app
-                    fi
+                    docker build --tag us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1 --build-arg OAUTH_CSRF_STATE=$OAUTH_CSRF_STATE --build-arg GOOGLE_OAUTH_CLIENT_ID=$GOOGLE_OAUTH_CLIENT_ID --build-arg GOOGLE_OAUTH_CLIENT_SECRET=$GOOGLE_OAUTH_CLIENT_SECRET server
+                    docker build --tag us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1 --build-arg PROJECT_ID=$PROJECT_ID --build-arg BUCKET_NAME=$BUCKET_NAME --build-arg OAUTH_CSRF_STATE=$OAUTH_CSRF_STATE  client
             - run:
                 name: Push docker images to container registry
                 command: |
                     gcloud auth configure-docker
                     gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://us.gcr.io
                     
-                    git diff --name-only --exit-code HEAD HEAD^1 server
-                    status1=$?
-                    if [ ! $status1 -eq 0 ]
-                    then
-                        docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
-                    else
-                        echo Skip push of docker image of client-side app
-                    fi
-
-                    git diff --name-only --exit-code HEAD HEAD^1 client
-                    status2=$?
-                    if [ ! $status2 -eq 0 ]
-                    then
-                        docker push us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
-                    else
-                        echo Skip push of docker image of server-side app
-                    fi
+                    docker push us.gcr.io/$PROJECT_ID/blog-api-server:$CIRCLE_SHA1
+                    docker push us.gcr.io/$PROJECT_ID/blog-front-server:$CIRCLE_SHA1
             - run:
                 name: Let's deploy the app!
                 command: |
                     apt-get update
                     apt-get install -qq -y gettext
 
-                    git diff --name-only --exit-code HEAD HEAD^1 server
-                    status1=$?
-                    if [ ! $status1 -eq 0 ]
-                    then
-                        envsubst < k8s_apiserver.yaml > k8s_apiserver_substitued.yaml
-                        cat k8s_apiserver_substitued.yaml
-                        kubectl apply -f k8s_apiserver_substitued.yaml
-                    else
-                        echo Skip applying k8s_apiserver.yaml to cluster
-                    fi
+                    envsubst < k8s_apiserver.yaml > k8s_apiserver_substitued.yaml
+                    kubectl apply -f k8s_apiserver_substitued.yaml
 
-                    git diff --name-only --exit-code HEAD HEAD^1 client
-                    status2=$?
-                    if [ ! $status2 -eq 0 ]
-                    then
-                        envsubst < k8s_front.yaml > k8s_front_substitued.yaml
-                        cat k8s_front_substitued.yaml
-                        kubectl apply -f k8s_front_substitued.yaml
-                    else
-                        echo Skip applying k8s_front.yaml to cluster
-                    fi
+                    envsubst < k8s_front.yaml > k8s_front_substitued.yaml
+                    kubectl apply -f k8s_front_substitued.yaml
 
                     kubectl apply -f k8s_ingress.yaml
                     kubectl apply -f k8s_db.yaml
