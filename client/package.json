@@ -46,7 +46,7 @@
     "html-webpack-plugin": "^3.2.0",
     "ignore-styles": "^5.0.1",
     "immutable": "^3.8.2",
-    "jest": "20.0.4",
+    "jest": "^24.7.1",
     "jest-dom": "^1.12.1",
     "js-cookie": "^2.2.0",
     "js-sha512": "^0.8.0",
@@ -101,7 +101,9 @@
     "setupFiles": [
       "<rootDir>/front/config/polyfills.js"
     ],
-    "setupTestFrameworkScriptFile": "<rootDir>/front/config/jest/setupTests.js",
+    "setupFilesAfterEnv": [
+      "<rootDir>/front/config/jest/setupTests.js"
+    ],
     "testMatch": [
       "<rootDir>/front/src/**/__tests__/**/*.{js,jsx,mjs}",
       "<rootDir>/front/src/**/?(*.)(spec|test).{js,jsx,mjs}"

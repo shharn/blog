@@ -34,17 +34,6 @@ jobs:
                 working_directory: ~/repo/client
                 command: |
                     yarn test
-    build-apiserver:
-        docker:
-            - image: circleci/golang:1.12.4
-        working_directory: ~/repo
-        steps:
-            - checkout
-            - run:
-                name: Build a golang application
-                working_directory: ~/repo/server
-                command: |
-                    make build
     test-apiserver:
         docker:
             - image: circleci/golang:1.12.4

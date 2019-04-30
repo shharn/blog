@@ -248,7 +248,7 @@ describe('app.auth reducer test', () => {
                 ...initialState,
                 authStatus: AuthStatus.LOGOUT_WAIT
             };
-            expect(actual, expected);
+            expect(actual).toEqual(expected);
         });
 
         test('The existing error should be cleaned', () => {
