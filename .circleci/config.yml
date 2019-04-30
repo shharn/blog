@@ -16,6 +16,7 @@ jobs:
                 git diff --name-only --exit-code HEAD HEAD^1 client
                 if [ ! $? -eq 0 ]
                 then
+                    echo client code is modified
                     cd client && yarn install
                 else
                     echo Client code is not changed. So skip package installation.
@@ -58,6 +59,7 @@ jobs:
                     git diff --name-only --exit-code HEAD HEAD^1 server
                     if [ ! $? -eq 0 ]
                     then
+                        echo server code is modified
                         cd server && make build
                     else
                         echo Server code is not changed. So skip build phase
