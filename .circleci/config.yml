@@ -12,12 +12,11 @@ jobs:
                   - node-modules-
           - run: 
               name: Install client-side dependencies
-              working_directory: ~/repo/client
               command: |
                 git diff --name-only --exit-code HEAD HEAD^1 client
                 if [ ! $? -eq 0 ]
-                then 
-                    yarn install
+                then
+                    cd client && yarn install
                 else
                     echo Client code is not changed. So skip package installation.
                 fi
@@ -37,12 +36,12 @@ jobs:
                     - node-modules-
             - run: 
                 name: Run tests of client-side application
-                working_directory: ~/repo/client
+                working_directory: ~/repo
                 command: |
                     git diff --name-only --exit-code HEAD HEAD^1 client
                     if [ ! $? -eq 0 ]
                     then 
-                        yarn test
+                        cd client && yarn test
                     else
                         echo Client code is not changed. So skip test
                     fi
@@ -54,12 +53,12 @@ jobs:
             - checkout
             - run:
                 name: Build a golang application
-                working_directory: ~/repo/server
+                working_directory: ~/repo
                 command: |
                     git diff --name-only --exit-code HEAD HEAD^1 server
                     if [ ! $? -eq 0 ]
                     then
-                        make build
+                        cd server && make build
                     else
                         echo Server code is not changed. So skip build phase
                     fi
@@ -71,12 +70,12 @@ jobs:
             - checkout
             - run:
                 name: Run tests of go application
-                working_directory: ~/repo/server
+                working_directory: ~/repo
                 command: |
                     git diff --name-only --exit-code HEAD HEAD^1 server
                     if [ ! $? -eq 0 ]
                     then
-                        make test
+                        cd server && make test
                     else
                         echo Server code is not changed. So skip test
                     fi

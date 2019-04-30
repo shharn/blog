@@ -23,7 +23,6 @@ export function articleDetail(req, res) {
         }
 
         const articleTitle = req.params["articleTitle"];
-        logger.info(`ArticleTitle param value : ${articleTitle}`);
         if (!articleTitle || articleTitle.length < 1) {
             return res.redirect('/');
         }
@@ -31,7 +30,7 @@ export function articleDetail(req, res) {
         try {
             article = await getArticleByTitle(articleTitle);
             if (!article) {
-                logger.info(`article is null`);
+                logger.info(`article is null. The title param value - ${articleTitle}`);
                 return res.redirect('/');
             }
         } catch (ex) {
@@ -89,7 +88,7 @@ export function articleDetail(req, res) {
 function getArticleByTitle(title) {
     const encoded = encodeURIComponent(title);
     const path = `http://${INTERNAL_API_SERVER_SERVICE}/articles/titles/${encoded}`;
-    logger.info(`Request to API server path : ${path}`);
+    logger.debug(`Request to API server path : ${path}`);
     return new Promise((resolve, reject) => {
         http.get(path, res => {
             const { statusCode } = res;

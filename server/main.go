@@ -83,7 +83,7 @@ func main() {
 	r.Delete("/articles/:id", handler.DeleteArticleHandler)
 
 	if err := http.ListenAndServe(":5000", r); err != nil {
-		logger.Error(errors.WithStack(err))
+		logger.Fatal(errors.WithStack(err))
 	} else {
 		logger.Info("Listening on port 5000")
 	}
