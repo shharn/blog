@@ -204,11 +204,14 @@ func (c *Client) Delete(md MutationData) (*api.Assigned, error) {
 
 // Commit DOES commit the transaction
 func (c *Client) Commit() {
-	defer c.tx.Discard(c.ctx)
 	if err := c.tx.Commit(c.ctx); err != nil {
 		err = errors.WithStack(err)
 		logger.Error(err)
 	}
+}
+
+func (c *Client) Discard() {
+	c.tx.Discard(c.ctx)
 }
 
 // CleanUp releases the underlying resources

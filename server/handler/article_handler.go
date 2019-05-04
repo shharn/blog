@@ -8,8 +8,8 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/shharn/blog/model"
-	"github.com/shharn/blog/router"
 	"github.com/shharn/blog/service"
+	"github.com/shharn/blog/router"
 )
 
 const titleSep = "-"
@@ -27,60 +27,55 @@ func sanitizeQueryParamOf(qps url.Values, key, defVal string) string {
 	return sanitized
 }
 
+type ArticleHandler struct {
+	articleService service.ArticleService
+}
+
 // GetArticlesOnMenuHandler is for "GET /menus/:id/articles"
 // Get all articles related to a menu by id
-func GetArticlesOnMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
+func (h *ArticleHandler) GetArticlesOnMenuHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
 	queryParams := rq.URL.Query()
 	offset := sanitizeQueryParamOf(queryParams, "offset", "0")
 	count := sanitizeQueryParamOf(queryParams, "count", defaultNumberOfHottestArticles)
-	articles, err := service.GetArticlesOnMenu(params["id"].(string), offset, count)
-	if err != nil {
-		return nil, router.NewErrorResponseWithError(http.StatusInternalServerError, "Fail to get articles", err)
-	}
+	articles := h.articleService.GetArticlesOnMenu(params["id"].(string), offset, count)
 	return articles, router.EmptyErrorResponse
 }
 
 // GetTheHottestArticlesHandler is for "GET /articles/hottest
 // Get the hottest articles
-func GetTheHottestArticlesHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
+func (h *ArticleHandler) GetTheHottestArticlesHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
 	queryParams := rq.URL.Query()
 	offset := sanitizeQueryParamOf(queryParams, "offset", "0")
 	count := sanitizeQueryParamOf(queryParams, "count", defaultNumberOfHottestArticles)
-	articles, err := service.GetTheHottestArticles(offset, count)
-	if err != nil {
-		return nil, router.NewErrorResponseWithError(http.StatusInternalServerError, "Fail to get the hottest articles", err)
-	}
+	articles := h.articleService.GetTheHottestArticles(offset, count)
 	return articles, router.EmptyErrorResponse
 }
 
 // CreateArticleHandler is for "POST /articles"
-func CreateArticleHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
+func (h *ArticleHandler) CreateArticleHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
 	var article model.Article
 	if err := json.NewDecoder(rq.Body).Decode(&article); err != nil {
 		err = errors.WithStack(err)
 		return nil, router.NewErrorResponseWithError(http.StatusInternalServerError, "Fail to deserialize", err)
 	}
 	
-	if err := service.CreateArticle(article); err != nil {
+	if err := h.articleService.CreateArticle(article); err != nil {
 		return nil, router.NewErrorResponseWithError(http.StatusInternalServerError, "Fail to create an article", err)
 	}
 	return nil, router.EmptyErrorResponse
 }
 
 // GetArticleHandler is for "GET /articles/:id"
-func GetArticleHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
+func (h *ArticleHandler) GetArticleHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
 	id, exists := params["id"]
 	if !exists {
 		return nil, router.NewErrorResponse(http.StatusBadRequest, "No id value found")
 	}
-	article, err := service.GetArticle(id.(string))
-	if err != nil {
-		return nil, router.NewErrorResponseWithError(http.StatusInternalServerError, fmt.Sprintf("Fail to get an article with id - %v", id), err)
-	}
+	article := h.articleService.GetArticle(id.(string))
 	return article, router.EmptyErrorResponse
 }
 
-func UpdateArticleHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
+func (h *ArticleHandler) UpdateArticleHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
 	id, exists := params["id"]
 	if !exists {
 		return nil, router.NewErrorResponse(http.StatusBadRequest, "No id value found")
@@ -92,35 +87,37 @@ func UpdateArticleHandler(w http.ResponseWriter, rq *http.Request, params router
 		return nil, router.NewErrorResponseWithError(http.StatusInternalServerError, "Fail to deserialize", err)
 	}
 
-	if err := service.UpdateArticle(id.(string), article); err != nil {
+	article.ID = id.(string)
+	if err := h.articleService.UpdateArticle(article); err != nil {
 		return nil, router.NewErrorResponseWithError(http.StatusInternalServerError, fmt.Sprintf("Fail to update an article with id - %v", id), err)
 	}
 	return nil, router.EmptyErrorResponse
 }
 
 // DeleteArticleHandler is for "DELETE /articles/:id"
-func DeleteArticleHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
+func (h *ArticleHandler) DeleteArticleHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
 	id, exists := params["id"]
 	if !exists {
 		return nil, router.NewErrorResponse(http.StatusBadRequest, "No id value found")
 	}
 
-	if err := service.DeleteArticle(id.(string)); err != nil {
+	if err := h.articleService.DeleteArticle(id.(string)); err != nil {
 		return nil, router.NewErrorResponseWithError(http.StatusInternalServerError, fmt.Sprintf("Fail to delete an article with id - %v", id), err)
 	}
 	return nil, router.EmptyErrorResponse
 }
 
 
-func GetArticleByTitleHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
+func (h *ArticleHandler) GetArticleByTitleHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
 	title, exists := params["title"]
 	if !exists  || len(title.(string)) < 1{
 		return nil, router.NewErrorResponse(http.StatusBadRequest, "No title value found")
 	}
 
-	article, err := service.GetArticleByTitle(title.(string))
-	if err != nil {
-		return nil, router.NewErrorResponseWithError(http.StatusInternalServerError, fmt.Sprintf("Fail to get an article with title - %v", title.(string)), err)
-	}
+	article := h.articleService.GetArticleByTitle(title.(string))
 	return article, router.EmptyErrorResponse
+}
+
+func NewArticleHandler(s service.ArticleService) *ArticleHandler {
+	return &ArticleHandler{s}
 }

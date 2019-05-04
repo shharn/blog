@@ -5,7 +5,9 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/shharn/blog/handler"
+	"github.com/shharn/blog/service"
 	"github.com/shharn/blog/logger"
+	"github.com/shharn/blog/repository"
 	"github.com/shharn/blog/router"
 	"github.com/shharn/blog/session"
 )
@@ -74,13 +76,15 @@ func main() {
 	r.Patch("/menus/:id", handler.UpdateMenuHandler)
 	r.Delete("/menus/:id", handler.DeleteMenuHandler)
 
-	r.Get("/menus/:id/articles", handler.GetArticlesOnMenuHandler)
-	r.Get("/articles/hottest", handler.GetTheHottestArticlesHandler)
-	r.Post("/articles", handler.CreateArticleHandler)
-	r.Get("/articles/:id", handler.GetArticleHandler)
-	r.Get("/articles/titles/:title", handler.GetArticleByTitleHandler)
-	r.Patch("/articles/:id", handler.UpdateArticleHandler)
-	r.Delete("/articles/:id", handler.DeleteArticleHandler)
+	articleService := service.NewArticleService(repository.NewArticleRepository())
+	articleHandler := handler.NewArticleHandler(articleService)
+	r.Get("/articles/hottest", articleHandler.GetTheHottestArticlesHandler)
+	r.Post("/articles", articleHandler.CreateArticleHandler)
+	r.Get("/articles/:id", articleHandler.GetArticleHandler)
+	r.Get("/articles/titles/:title", articleHandler.GetArticleByTitleHandler)
+	r.Patch("/articles/:id", articleHandler.UpdateArticleHandler)
+	r.Delete("/articles/:id", articleHandler.DeleteArticleHandler)
+	r.Get("/menus/:id/articles", articleHandler.GetArticlesOnMenuHandler)
 
 	if err := http.ListenAndServe(":5000", r); err != nil {
 		logger.Fatal(errors.WithStack(err))

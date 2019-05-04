@@ -38,7 +38,6 @@ export function articleDetail(req, res) {
             return res.redirect('/');
         }
 
-        const { content, createdAt, summary, title, menu } = article;
         const { store, history } = createAppStore();
         const initialState = store.getState();
         const newState = {
@@ -51,13 +50,7 @@ export function articleDetail(req, res) {
                         ...initialState.app.data.get,
                         article: {
                             ...initialState.app.data.get.article,
-                            data: {
-                                content,
-                                createdAt,
-                                summary,
-                                title,
-                                menu
-                            },
+                            data: article,
                             isServerRendered: true
                         }
                     }

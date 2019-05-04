@@ -11,3 +11,5 @@ type Article struct {
 	Menu        *[]Menu `json:"menu,omitempty"`
 	Views	int `json:"views,omitempty"`
 }
+
+var EmptyArticle = Article{}
