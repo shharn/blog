@@ -79,6 +79,9 @@ func (c *Client) Mutate(md MutationData) (*api.Assigned, error) {
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
+	logger.WithFields(logger.Tuples{
+		"assigned": assigned,
+	})("trace", "db.Client.Mutate")
 	return assigned, nil
 }
 

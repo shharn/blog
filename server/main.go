@@ -71,10 +71,12 @@ func main() {
 	r.Post("/logout", handler.LogoutHandler)
 	r.Get("/check", handler.CheckHandler)
 
-	r.Get("/menus", handler.GetMenusHandler)
-	r.Post("/menus", handler.CreateMenuHandler)
-	r.Patch("/menus/:id", handler.UpdateMenuHandler)
-	r.Delete("/menus/:id", handler.DeleteMenuHandler)
+	menuService := service.NewMenuService(repository.NewMenuRepository())
+	menuHandler := handler.NewMenuHandler(menuService)
+	r.Get("/menus", menuHandler.GetMenusHandler)
+	r.Post("/menus", menuHandler.CreateMenuHandler)
+	r.Patch("/menus/:id", menuHandler.UpdateMenuHandler)
+	r.Delete("/menus/:id", menuHandler.DeleteMenuHandler)
 
 	articleService := service.NewArticleService(repository.NewArticleRepository())
 	articleHandler := handler.NewArticleHandler(articleService)

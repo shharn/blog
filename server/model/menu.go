@@ -11,3 +11,5 @@ type Menu struct {
 
 // Menus is a map for [id : menu] pair
 type Menus map[int]Menu
+
+var EmptyMenu = Menu{}
