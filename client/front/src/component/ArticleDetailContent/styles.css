@@ -1,11 +1,3 @@
-.article_detail-content_container pre {
-    background-color: rgba(0, 0, 0, 0.05);
-    font-size: 16px;
-    padding: 10px 15px;
-    margin: 0;
-    font-family: "Roboto";
-}
-
 .article_detail-content_container blockquote {
     border-left: 5px solid #eee;
     color: #666;
@@ -34,6 +26,10 @@
 }
 
 .article_detail-content_container pre {
+    background-color: rgba(0, 0, 0, 0.05);
+    font-size: 16px;
+    padding: 5px 15px;
+    margin: 0;
     white-space: pre-wrap;
     word-wrap: break-word;
 }

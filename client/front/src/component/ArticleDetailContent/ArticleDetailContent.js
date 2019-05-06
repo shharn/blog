@@ -30,7 +30,7 @@ const blockToHTML = (block): Element<*> | { element: Element<*>, nest: Element<*
         case 'header-six':
             return <h6/>;
         case 'code-block': 
-            return <pre/>;
+            return block.text.length < 1 ? <pre> </pre> : <pre/>;
         case 'unordered-list-item':
             return {
                 element: <li/>,
