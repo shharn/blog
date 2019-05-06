@@ -93,7 +93,7 @@ func (suite *createMenuTestSuite) TestHappyPathWithParentMenu() {
 	suite.mr.On("Context").Return(suite.mc).Once()
 	suite.mr.On("Create", suite.mc, mockMenu).Return("0x02", nil)
 	suite.mr.On("Get", suite.mc, "0x01").Return(parentMenu, nil)
-	suite.mr.On("Update", suite.mc, updatedParentMenu).Return(nil)
+	suite.mr.On("AddChild", suite.mc, "0x01", "0x02").Return(nil)
 
 	result := svc.CreateMenu(mockMenu)
 
@@ -118,7 +118,7 @@ func (suite *createMenuTestSuite) TestWhenErrorFromCreateMethodOfRepository() {
 	suite.mr.AssertExpectations(suite.T())
 }
 
-func (suite *createMenuTestSuite) TestWhenErrorFromGetMethodOfRepository() {
+func (suite *createMenuTestSuite) TestWhenErrorFromAddChildMethodOfRepository() {
 	parentMenu := model.Menu{"0x01", "parent menu", "", nil, nil}
 	updatedParentMenu := parentMenu
 	updatedParentMenu.Children = &[]model.Menu{model.Menu{ID:"0x02"}}
@@ -130,7 +130,7 @@ func (suite *createMenuTestSuite) TestWhenErrorFromGetMethodOfRepository() {
 	suite.mr.On("Context").Return(suite.mc).Once()
 	suite.mr.On("Create", suite.mc, mockMenu).Return("0x02", nil)
 	suite.mr.On("Get", suite.mc, "0x01").Return(parentMenu, nil)
-	suite.mr.On("Update", suite.mc, updatedParentMenu).Return(mockError)
+	suite.mr.On("AddChild", suite.mc, "0x01", "0x02").Return(mockError)
 	
 	result := svc.CreateMenu(mockMenu)
 
@@ -139,7 +139,7 @@ func (suite *createMenuTestSuite) TestWhenErrorFromGetMethodOfRepository() {
 	suite.mr.AssertExpectations(suite.T())
 }
 
-func (suite *createMenuTestSuite) TestWhenErrorFromUpdateMethodOfRepository() {
+func (suite *createMenuTestSuite) TestWhenErrorFromGetMethodOfRepository() {
 	parentMenu := model.Menu{"0x01", "parent menu", "", nil, nil}
 	mockMenu := model.Menu{"", "name 1", "", &[]model.Menu{parentMenu}, nil}
 	mockError := errors.New("mock error")

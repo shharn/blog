@@ -54,8 +54,7 @@ func (s *BlogMenuService) CreateMenu(menu model.Menu) error {
 	if err != nil {
 		return err
 	}
-	pmenu.Children = &[]model.Menu{model.Menu{ID:menu.ID}}
-	return s.repo.Update(ctx, pmenu)
+	return s.repo.AddChild(ctx, pmenu.ID, id)
 }
 
 // DeleteMenu is service for "DELETE /menus"
