@@ -51,20 +51,6 @@ const (
 			}
 		}
 	`
-	getParentMenusQuery = `
-		query getParentMenus($id: string) {
-			parents(func: has(url)) @filter(uid_in(child, $id)) {
-				uid
-			}
-		}
-	`
-	getChildMenusQuery = `
-		query getChildMenus($id: string) {
-			children(func: has(url)) @filter(uid_in(parent, $id)) {
-				uid
-			}
-		}
-	`
 )
 
 type getMenusPayload struct {
