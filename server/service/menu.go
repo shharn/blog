@@ -109,10 +109,12 @@ func (s *BlogMenuService) UpdateMenu(menu model.Menu) error {
 		}
 	}
 
-	if menu.Parent != nil {
-		pid := (*menu.Parent)[0].ID
-		if err := s.repo.AddChild(ctx, pid, id); err != nil {
-			return err
+	if hasParentMenu(menu) {
+		if oldMenu.Parent == nil || (*menu.Parent)[0].ID != (*oldMenu.Parent)[0].ID {
+			pid := (*menu.Parent)[0].ID
+			if err := s.repo.AddChild(ctx, pid, id); err != nil {
+				return err
+			}
 		}
 	}
 

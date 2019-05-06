@@ -189,7 +189,7 @@ func Authenticate(email, password string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	defer c.CleanUp()
+	defer c.Dispose()
 
 	vars := map[string]string{
 		"$email": email,

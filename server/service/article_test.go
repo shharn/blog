@@ -6,73 +6,21 @@ import (
 	"time"
 
 	"github.com/shharn/blog/model"
-	"github.com/shharn/blog/repository"
+	repoMock "github.com/shharn/blog/repository/mock"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 )
 
-type mockContext struct {
-	mock.Mock
-}
-
-func (mc *mockContext) Dispose() {
-	mc.Called()
-}
-
-type mockRepository struct {
-	mock.Mock
-}
-
-func (mr *mockRepository) Context() interface{} {
-	ret := mr.Called()
-	return ret.Get(0).(repository.Disposable)
-}
-
-func (mr *mockRepository)  HottestArticles(ctx interface{}, offset, count string) ([]model.Article, error) {
-	ret := mr.Called(ctx, offset, count)
-	return ret.Get(0).([]model.Article), ret.Error(1)
-}
-
-func (mr *mockRepository) ArticlesOnMenu(ctx interface{}, mid, offset, count string) ([]model.Article, error) {
-	ret := mr.Called(ctx, mid, offset, count)
-	return ret.Get(0).([]model.Article), ret.Error(1)
-}
-
-func (mr *mockRepository) Create(ctx interface{}, article model.Article) error {
-	ret := mr.Called(ctx, article)
-	return ret.Error(0)
-}
-
-func (mr *mockRepository) Get(ctx interface{}, id string) (model.Article, error) {
-	ret := mr.Called(ctx, id)
-	return ret.Get(0).(model.Article), ret.Error(1)
-}
-
-func (mr *mockRepository) Delete(ctx interface{}, id string) error {
-	ret:= mr.Called(ctx, id)
-	return ret.Error(0)
-}
-
-func (mr *mockRepository) Update(ctx interface{}, article model.Article) error {
-	ret := mr.Called(ctx, article)
-	return ret.Error(0)
-}
-
-func (mr *mockRepository) GetByTitle(ctx interface{}, title string) (model.Article, error) {
-	ret := mr.Called(ctx, title)
-	return ret.Get(0).(model.Article), ret.Error(1)
-}
 
 type getTheHottestArticlesTestSuite struct {
 	suite.Suite
-	mc *mockContext
-	mr *mockRepository
+	mc *repoMock.MockContext
+	mr *repoMock.MockArticleRepository
 }
 
 func (suite *getTheHottestArticlesTestSuite) SetupTest() {
-	suite.mc = new(mockContext)
-	suite.mr = new(mockRepository)
+	suite.mc = new(repoMock.MockContext)
+	suite.mr = new(repoMock.MockArticleRepository)
 }
 
 func (suite *getTheHottestArticlesTestSuite) TestHappyPath() {
@@ -109,13 +57,13 @@ func (suite *getTheHottestArticlesTestSuite) TestWhenErrorFromRepository() {
 
 type getArticlesOnMenuTestSuite struct {
 	suite.Suite
-	mc *mockContext
-	mr *mockRepository
+	mc *repoMock.MockContext
+	mr *repoMock.MockArticleRepository
 }
 
 func (suite *getArticlesOnMenuTestSuite) SetupTest() {
-	suite.mc = new(mockContext)
-	suite.mr = new(mockRepository)
+	suite.mc = new(repoMock.MockContext)
+	suite.mr = new(repoMock.MockArticleRepository)
 }
 
 func (suite *getArticlesOnMenuTestSuite) TestHappyPath() {
@@ -153,13 +101,13 @@ func (suite *getArticlesOnMenuTestSuite) TestWhenErrorFromRepository() {
 
 type createArticleTestSuite struct {
 	suite.Suite
-	mc *mockContext
-	mr *mockRepository
+	mc *repoMock.MockContext
+	mr *repoMock.MockArticleRepository
 }
 
 func (suite *createArticleTestSuite) SetupTest() {
-	suite.mc = new(mockContext)
-	suite.mr = new(mockRepository)
+	suite.mc = new(repoMock.MockContext)
+	suite.mr = new(repoMock.MockArticleRepository)
 }
 
 func (suite *createArticleTestSuite) TestHappyPath() {
@@ -201,13 +149,13 @@ func (suite *createArticleTestSuite) TestWhenErrorFromRepository() {
 
 type getArticleTestSuite struct {
 	suite.Suite
-	mc *mockContext
-	mr *mockRepository
+	mc *repoMock.MockContext
+	mr *repoMock.MockArticleRepository
 }
 
 func (suite *getArticleTestSuite) SetupTest() {
-	suite.mc = new(mockContext)
-	suite.mr = new(mockRepository)
+	suite.mc = new(repoMock.MockContext)
+	suite.mr = new(repoMock.MockArticleRepository)
 }
 
 func (suite *getArticleTestSuite) TestHappyPath() {
@@ -261,13 +209,13 @@ func (suite *getArticleTestSuite) TestWhenErrorFromUpdateMethodOfRepository() {
 
 type deleteArticleTestSuite struct {
 	suite.Suite
-	mc *mockContext
-	mr *mockRepository
+	mc *repoMock.MockContext
+	mr *repoMock.MockArticleRepository
 }
 
 func (suite *deleteArticleTestSuite) SetupTest() {
-	suite.mc = new(mockContext)
-	suite.mr = new(mockRepository)
+	suite.mc = new(repoMock.MockContext)
+	suite.mr = new(repoMock.MockArticleRepository)
 }
 
 func (suite *deleteArticleTestSuite) TestHappyPath() {
@@ -301,13 +249,13 @@ func (suite *deleteArticleTestSuite) TestWhenErrorFromRepository() {
 
 type updateArticleTestSuite struct {
 	suite.Suite
-	mc *mockContext
-	mr *mockRepository
+	mc *repoMock.MockContext
+	mr *repoMock.MockArticleRepository
 }
 
 func (suite *updateArticleTestSuite) SetupTest() {
-	suite.mc = new(mockContext)
-	suite.mr = new(mockRepository)
+	suite.mc = new(repoMock.MockContext)
+	suite.mr = new(repoMock.MockArticleRepository)
 }
 
 func (suite *updateArticleTestSuite) TestHappyPath() {
@@ -343,13 +291,13 @@ func (suite *updateArticleTestSuite) TestWhenErrorFromRepository() {
 
 type getArticleByTitleTestSuite struct {
 	suite.Suite
-	mc *mockContext
-	mr *mockRepository
+	mc *repoMock.MockContext
+	mr *repoMock.MockArticleRepository
 }
 
 func (suite *getArticleByTitleTestSuite) SetupTest() {
-	suite.mc = new(mockContext)
-	suite.mr = new(mockRepository)
+	suite.mc = new(repoMock.MockContext)
+	suite.mr = new(repoMock.MockArticleRepository)
 }
 
 func (suite *getArticleByTitleTestSuite) TestHappyPath() {
@@ -402,7 +350,7 @@ func (suite *getArticleByTitleTestSuite) TestWhenErrorFromUpdateMethodOfReposito
 	suite.mr.AssertExpectations(suite.T())
 }
 
-func TestRunAllSuits(t *testing.T) {
+func TestRunAllArticleServiceTestSuites(t *testing.T) {
 	suite.Run(t, new(getTheHottestArticlesTestSuite))
 	suite.Run(t, new(getArticlesOnMenuTestSuite))
 	suite.Run(t, new(createArticleTestSuite))

@@ -213,12 +213,12 @@ func (c *Client) Commit() {
 	}
 }
 
-func (c *Client) Discard() {
+func (c *Client) Rollback() {
 	c.tx.Discard(c.ctx)
 }
 
 // CleanUp releases the underlying resources
-func (c *Client) CleanUp() {
+func (c *Client) Dispose() {
 	if c != nil {
 		if err := c.conn.Close(); err != nil {
 			err = errors.WithStack(err)

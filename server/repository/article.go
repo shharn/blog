@@ -65,16 +65,6 @@ const (
 			}
 		}
 	`
-	getMenuToWhichTheArticleBelongQuery = `
-		query getMenuToWhichTheArticleBelongQuery($articleID: string) {
-			articles (func: uid($articleID)) {
-				menu {
-					uid
-				}
-				createdAt
-			}
-		}
-	`
 	getArticleByTitleQuery = `
 		query getArticleByTitle($title: string) {
 			articles (func: eq(title, $title)) {
@@ -106,32 +96,6 @@ type getArticlePayload struct {
 	Articles []model.Article `json:"articles"`
 }
 
-type getMenuToWhichTheArticleBelongPayload struct {
-	Articles []model.Article `json:"articles"`
-}
-
-type DgraphRepositoryContext struct {
-	Client *db.Client
-	Err error
-}
-
-func (c *DgraphRepositoryContext) Commit() {
-	c.Client.Commit()
-}
-
-func (c *DgraphRepositoryContext) Rollback() {
-	c.Client.Discard()
-}
-
-func (c *DgraphRepositoryContext) Dispose() {
-	defer c.Client.CleanUp()
-	if c.Err == nil {
-		c.Commit()
-	} else {
-		c.Rollback()
-	}
-}
-
 type DgraphArticleRepository struct {}
 
 func (r *DgraphArticleRepository) Context() interface{} {
@@ -139,11 +103,11 @@ func (r *DgraphArticleRepository) Context() interface{} {
 	if err != nil {
 		panic(err)
 	}
-	return &DgraphRepositoryContext{c, nil}
+	return &dgraphRepositoryContext{c, nil}
 }
 
 func (r *DgraphArticleRepository) HottestArticles(ctx interface{}, offset, count string) ([]model.Article, error) {
-	rctx := ctx.(*DgraphRepositoryContext)
+	rctx := ctx.(*dgraphRepositoryContext)
 	vars := map[string]string{
 		"$offset": offset,
 		"$count":  count,
@@ -163,7 +127,7 @@ func (r *DgraphArticleRepository) HottestArticles(ctx interface{}, offset, count
 }
 
 func (r *DgraphArticleRepository) ArticlesOnMenu(ctx interface{}, mid, offset, count string) ([]model.Article, error) {
-	rctx := ctx.(*DgraphRepositoryContext)
+	rctx := ctx.(*dgraphRepositoryContext)
 	vars := map[string]string{
 		"$menuID": mid,
 		"$offset": offset,
@@ -184,7 +148,7 @@ func (r *DgraphArticleRepository) ArticlesOnMenu(ctx interface{}, mid, offset, c
 }
 
 func (r *DgraphArticleRepository) Create(ctx interface{}, article model.Article) error {
-	rctx := ctx.(*DgraphRepositoryContext)
+	rctx := ctx.(*dgraphRepositoryContext)
 	md := db.MutationData{article}
 	if _, err := rctx.Client.Mutate(md); err != nil {
 		rctx.Err = err
@@ -194,7 +158,7 @@ func (r *DgraphArticleRepository) Create(ctx interface{}, article model.Article)
 }
 
 func (r *DgraphArticleRepository) Get(ctx interface{}, id string) (model.Article, error) {
-	rctx := ctx.(*DgraphRepositoryContext)
+	rctx := ctx.(*dgraphRepositoryContext)
 	vars := map[string]string{"$articleID": id}
 	res, err := rctx.Client.QueryWithVars(getArticleQuery, vars)
 	if err != nil {
@@ -216,7 +180,7 @@ func (r *DgraphArticleRepository) Get(ctx interface{}, id string) (model.Article
 }
 
 func (r *DgraphArticleRepository) Delete(ctx interface{}, id string) error {
-	rctx := ctx.(*DgraphRepositoryContext)
+	rctx := ctx.(*dgraphRepositoryContext)
 	_, err := rctx.Client.DeleteNode(id)
 	if err != nil {
 		rctx.Err = err
@@ -226,7 +190,7 @@ func (r *DgraphArticleRepository) Delete(ctx interface{}, id string) error {
 }
 
 func (r *DgraphArticleRepository) Update(ctx interface{}, article model.Article) error {
-	rctx := ctx.(*DgraphRepositoryContext)
+	rctx := ctx.(*dgraphRepositoryContext)
 	oldArticle, err := r.Get(ctx, article.ID)
 	if err != nil {
 		rctx.Err = err
@@ -254,7 +218,7 @@ func (r *DgraphArticleRepository) Update(ctx interface{}, article model.Article)
 }
 
 func (r *DgraphArticleRepository) GetByTitle(ctx interface{}, title string) (model.Article, error) {
-	rctx := ctx.(*DgraphRepositoryContext)
+	rctx := ctx.(*dgraphRepositoryContext)
 	vars := map[string]string{"$title": title}
 	res, err := rctx.Client.QueryWithVars(getArticleByTitleQuery, vars)
 	if err != nil {

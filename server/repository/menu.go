@@ -82,11 +82,11 @@ func (r *DgraphMenuRepository) Context() interface{} {
 	if err != nil {
 		panic(err)
 	}
-	return &DgraphRepositoryContext{c, nil}
+	return &dgraphRepositoryContext{c, nil}
 }
 
 func (r *DgraphMenuRepository) GetAll(ctx interface{}) ([]model.Menu, error) {
-	rctx := ctx.(*DgraphRepositoryContext)
+	rctx := ctx.(*dgraphRepositoryContext)
 	res, err := rctx.Client.Query(getMenusQuery)
 	if err != nil {
 		rctx.Err = err
@@ -101,7 +101,7 @@ func (r *DgraphMenuRepository) GetAll(ctx interface{}) ([]model.Menu, error) {
 }
 
 func (r *DgraphMenuRepository) Create(ctx interface{}, menu model.Menu) (string, error) {
-	rctx := ctx.(*DgraphRepositoryContext)
+	rctx := ctx.(*dgraphRepositoryContext)
 	menu.ID = "_:new"
 	md := db.MutationData{menu}
 	assigned, err := rctx.Client.Mutate(md)
@@ -113,7 +113,7 @@ func (r *DgraphMenuRepository) Create(ctx interface{}, menu model.Menu) (string,
 }
 
 func (r *DgraphMenuRepository) Update(ctx interface{}, menu model.Menu) error {
-	rctx := ctx.(*DgraphRepositoryContext)
+	rctx := ctx.(*dgraphRepositoryContext)
 	md := db.MutationData{menu}
 	_, err := rctx.Client.Mutate(md)
 	if err != nil {
@@ -123,7 +123,7 @@ func (r *DgraphMenuRepository) Update(ctx interface{}, menu model.Menu) error {
 }
 
 func (r *DgraphMenuRepository) Get(ctx interface{}, id string) (model.Menu, error) {
-	rctx := ctx.(*DgraphRepositoryContext)
+	rctx := ctx.(*dgraphRepositoryContext)
 	vars := map[string]string{"$id":id}
 	res, err := rctx.Client.QueryWithVars(getMenuQuery, vars)
 	if err != nil {
@@ -144,28 +144,28 @@ func (r *DgraphMenuRepository) Get(ctx interface{}, id string) (model.Menu, erro
 }
 
 func (r *DgraphMenuRepository) Delete(ctx interface{}, id string) error {
-	rctx := ctx.(*DgraphRepositoryContext)
+	rctx := ctx.(*dgraphRepositoryContext)
 	_, err := rctx.Client.DeleteNode(id)
 	rctx.Err = err
 	return err
 }
 
 func (r *DgraphMenuRepository) DeleteParent(ctx interface{}, id, pid string) error {
-	rctx := ctx.(*DgraphRepositoryContext)
+	rctx := ctx.(*dgraphRepositoryContext)
 	_, err := rctx.Client.DeleteEdge(id, "parent", pid)
 	rctx.Err = err
 	return err
 }
 
 func (r *DgraphMenuRepository) DeleteChild(ctx interface{}, id, cid string) error {
-	rctx := ctx.(*DgraphRepositoryContext)
+	rctx := ctx.(*dgraphRepositoryContext)
 	_, err := rctx.Client.DeleteEdge(id, "child", cid)
 	rctx.Err = err
 	return err
 }
 
 func (r *DgraphMenuRepository) AddChild(ctx interface{}, id, cid string) error {
-	rctx := ctx.(*DgraphRepositoryContext)
+	rctx := ctx.(*dgraphRepositoryContext)
 	_, err := rctx.Client.AddEdge(id, "child", cid)
 	rctx.Err = err
 	return err
