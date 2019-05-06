@@ -15,23 +15,21 @@ import (
 
 var (
 	TokenName = "X-Session-Token"
-	oauthTokenName = "X-OAuth-Token"
 	invalidAuthentication = model.Authentication{IsValid:false}
 	sessionStorage = session.BlogSessionStorage()
 	tokenMaker = session.BlogTokenMaker()
-
-	noPlatformVariablesFoundError = errors.New("Should be given platform variable. But no")
-	unsupportedPlatformVariableErrorMaker = func (platform string) error {
-		return errors.New(fmt.Sprintf("Unsupported platform variables found - %v", platform))
-	}
 )
 
 type oauthAuthCodeURLResponse struct {
 	AuthCodeURL string `json:"authCodeURL"`
 }
 
+type AuthenticationHandler struct {
+	authenticationService service.AuthenticationService
+}
+
 // LoginHandler is a handler for "POST /login"
-func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
+func (h *AuthenticationHandler) LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
 	var loginInfo model.LoginInformation
 	if err := json.NewDecoder(r.Body).Decode(&loginInfo); err != nil {
 		return nil, router.NewErrorResponseWithError(http.StatusBadRequest, "Fail to deserialize", errors.WithStack(err))
@@ -41,11 +39,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) 
 		return nil, router.NewErrorResponse(http.StatusUnauthorized, "Invalid email or password")
 	}
 
-	isValid, err := service.Authenticate(loginInfo.Email, loginInfo.Password)
+	isValid := h.authenticationService.AuthenticateAdmin(loginInfo.Email, loginInfo.Password)
 	if !isValid {
-		if err != nil {
-			return nil, router.NewErrorResponseWithError(http.StatusInternalServerError, "Fail to authenticate", err)
-		}
 		return nil, router.NewErrorResponse(http.StatusUnauthorized, "Invalid email or password")
 	}
 
@@ -68,14 +63,14 @@ func LoginHandler(w http.ResponseWriter, r *http.Request, params router.Params) 
 }
 
 // CheckHandler is handler for "/check"
-func CheckHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
+func (h *AuthenticationHandler) CheckHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
 	clientToken := rq.Header.Get(TokenName)
 	if len(clientToken) < 1 {
-		return model.Authentication{IsValid:false}, router.EmptyErrorResponse
+		return invalidAuthentication, router.EmptyErrorResponse
 	}
 	
 	if !sessionStorage.Has(clientToken) {
-		return model.Authentication{IsValid:false}, router.EmptyErrorResponse
+		return invalidAuthentication, router.EmptyErrorResponse
 	}
 
 	rawSession, err := tokenMaker.Decode(clientToken)
@@ -87,24 +82,24 @@ func CheckHandler(w http.ResponseWriter, rq *http.Request, params router.Params)
 			Admin: s.Admin,
 		}, router.EmptyErrorResponse
 	}
-	return model.Authentication{IsValid: false}, router.NewErrorResponseWithError(http.StatusOK, "Invalid token", err)
+	return invalidAuthentication, router.NewErrorResponseWithError(http.StatusOK, "Invalid token", err)
 }
 
 // OAuthLoginHandler handles login request with OAuth token
-func OAuthAuthorizationHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
+func (h *AuthenticationHandler) OAuthAuthorizationHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
 	platform := params["platform"].(string)
 	if len(platform) < 1 {
 		return nil, router.NewErrorResponse(http.StatusBadRequest, "Empty oauth2 platform")
 	}
 
-	url := service.AuthorizeWithOAuthProvider(platform)
+	url := h.authenticationService.AuthorizeWithOAuthProvider(platform)
 	if len(url) < 1 {
 		return nil, router.NewErrorResponse(http.StatusBadRequest, fmt.Sprintf("Unsupported oauth2 platform - %v", platform))
 	}
 	return oauthAuthCodeURLResponse{AuthCodeURL: url}, router.EmptyErrorResponse
 }
 
-func OAuthCodeExchangeHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
+func (h *AuthenticationHandler) OAuthCodeExchangeHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
 	platform := params["platform"].(string)
 	authCode := params["code"].(string)
 	logger.Tracef("[OAuthCodeExchangeHandler] platform - %v, authCode - %v", platform, authCode)
@@ -116,7 +111,7 @@ func OAuthCodeExchangeHandler(w http.ResponseWriter, rq *http.Request, params ro
 		}, router.EmptyErrorResponse
 	}
 
-	t, err := service.GetBlogTokenFromAuthCode(authCode, platform)
+	t, err := h.authenticationService.GetBlogTokenFromAuthCode(authCode, platform)
 	if err != nil {
 		return model.Authentication {
 			IsValid: false,
@@ -135,7 +130,7 @@ func OAuthCodeExchangeHandler(w http.ResponseWriter, rq *http.Request, params ro
 }
 
 // LogoutHandler is the service for "POST /logout"
-func LogoutHandler(w http.ResponseWriter, r *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
+func (h *AuthenticationHandler) LogoutHandler(w http.ResponseWriter, r *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
 	tokenFromClient := r.Header.Get(TokenName)
 	s, err := tokenMaker.Decode(tokenFromClient)
 	logger.WithFields(logger.Tuples{
@@ -146,4 +141,8 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request, params router.Params)
 		return nil, router.EmptyErrorResponse
 	}
 	return nil, router.NewErrorResponse(http.StatusUnauthorized, "Invalid Token")
+}
+
+func NewAuthenticationHandler(authenticationService service.AuthenticationService) *AuthenticationHandler {
+	return &AuthenticationHandler{authenticationService}
 }

@@ -65,11 +65,13 @@ func main() {
 	
 	r.Get("/", handler.NoopHandler)
 
-	r.Post("/login", handler.LoginHandler)
-	r.Post("/oauth/authorizations/:platform", handler.OAuthAuthorizationHandler)
-	r.Get("/oauth/authorizations/:platform/codes/:code", handler.OAuthCodeExchangeHandler)
-	r.Post("/logout", handler.LogoutHandler)
-	r.Get("/check", handler.CheckHandler)
+	authenticationService := service.NewAuthenticationService(repository.NewAuthenticationRepository())
+	authenticationHandler := handler.NewAuthenticationHandler(authenticationService)
+	r.Post("/login", authenticationHandler.LoginHandler)
+	r.Post("/oauth/authorizations/:platform", authenticationHandler.OAuthAuthorizationHandler)
+	r.Get("/oauth/authorizations/:platform/codes/:code", authenticationHandler.OAuthCodeExchangeHandler)
+	r.Post("/logout", authenticationHandler.LogoutHandler)
+	r.Get("/check", authenticationHandler.CheckHandler)
 
 	menuService := service.NewMenuService(repository.NewMenuRepository())
 	menuHandler := handler.NewMenuHandler(menuService)
