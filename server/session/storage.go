@@ -4,16 +4,11 @@ import (
 	"sync"
 )
 
-type sessionStorage interface {
+type SessionStorage interface {
 	Put(key string)
 	Has(key string) bool
 	Remove(key string)
 }
-
-var (
-	storageInstance sessionStorage
-	storageOnce sync.Once
-)
 
 type mapSessionStorage struct {
 	storage map[string]bool
@@ -39,12 +34,9 @@ func (s *mapSessionStorage) Remove(key string) {
 	delete(s.storage, key)
 }
 
-func BlogSessionStorage() sessionStorage {
-	storageOnce.Do(func () {
-		storageInstance = &mapSessionStorage{
-			storage: map[string]bool{},
-			lock: &sync.RWMutex{},
-		}
-	})
-	return storageInstance
+func BlogSessionStorage() SessionStorage {
+	return &mapSessionStorage{
+		storage: map[string]bool{},
+		lock: &sync.RWMutex{},
+	}
 }

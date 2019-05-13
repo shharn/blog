@@ -7,19 +7,8 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/shharn/blog/model"
 	"github.com/stretchr/testify/assert"
 )
-
-func TestBlogTokenMakerOfSingleton(t *testing.T) {
-	b1 := BlogTokenMaker()
-	b2 := BlogTokenMaker()
-	b3 := BlogTokenMaker()
-
-	assert.Equal(t, b1, b2)
-	assert.Equal(t, b2, b3)
-	assert.Equal(t, b1, b3)
-}
 
 func TestBlogTokenMakerOfMakeClaims(t *testing.T) {
 	b, ok := BlogTokenMaker().(*JWTTokenMaker)
@@ -155,19 +144,19 @@ func TestGetIDFromEmail(t *testing.T) {
 	}
 }
 
-func TestGetSessionFromLoginInformation(t *testing.T) {
+func TestGetAdminSessionFromEmail(t *testing.T) {
 	tcs := []struct {
-		in model.LoginInformation
+		in string
 		expected Session
 		hasError bool
 	}{
-		{model.LoginInformation{"aaaa@asdf", "ff"}, Session{"aaaa", adminName, adminPictureURL,OAuthPlatformNative, time.Now(), time.Now(), true}, false},
-		{model.LoginInformation{"", ""}, Session{}, true},
-		{model.LoginInformation{"aaa", ""}, Session{"aaa", adminName,  adminPictureURL, OAuthPlatformNative, time.Now(), time.Now(), true}, false},
+		{"aaaa@asdf", Session{"aaaa", adminName, adminPictureURL,OAuthPlatformNative, time.Now(), time.Now(), true}, false},
+		{"", Session{}, true},
+		{"aaa", Session{"aaa", adminName,  adminPictureURL, OAuthPlatformNative, time.Now(), time.Now(), true}, false},
 	}
 
 	for _, tc := range tcs {
-		actual, err := GetSessionFromLoginInformation(tc.in)
+		actual, err := GetAdminSessionFromEmail(tc.in)
 		assert.Equal(t, tc.hasError, err != nil)
 		if !tc.hasError {
 			assert.Equal(t, tc.expected.ID, actual.ID)

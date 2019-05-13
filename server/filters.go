@@ -7,10 +7,7 @@ import (
 
 	"github.com/shharn/blog/logger"
 	"github.com/shharn/blog/router"
-	"github.com/shharn/blog/session"
 )
-
-var tokenMaker = session.BlogTokenMaker()
 
 type LogFilter struct {}
 

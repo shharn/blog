@@ -13,3 +13,7 @@ type LoginInformation struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
+var (
+	InvalidAuthentication = Authentication{IsValid:false}
+)

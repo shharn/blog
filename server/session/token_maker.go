@@ -3,12 +3,10 @@ package session
 import (
 	"os"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
-	"github.com/shharn/blog/model"
 )
 
 const (
@@ -38,9 +36,11 @@ type Session struct {
 	Admin bool
 }
 
+type AdminSessionTransformFunc func(string) (Session, error)
+
 // GetSessionFromLoginInformation takes a LoginInformation and transforms it to session object
-func GetSessionFromLoginInformation(info model.LoginInformation) (Session, error) {
-	id := getIDFromEmail(info.Email)
+func GetAdminSessionFromEmail(email string) (Session, error) {
+	id := getIDFromEmail(email)
 	if len(id) < 1 {
 		return Session{}, invalidEmailInput
 	}
@@ -64,9 +64,7 @@ func getIDFromEmail(email string) string {
 
 var (
 	issuer = "puppyloper :)"
-	tokenMakerOnce sync.Once
 	jwtSecretKeyEnvName = "JWT_SECRET"
-	tmInstance TokenMaker
 )
 
 type TokenMaker interface {
@@ -167,8 +165,5 @@ func (e JWTTokenMaker) Decode(tokenString string) (interface{}, error) {
 }
 
 func BlogTokenMaker() TokenMaker {
-	tokenMakerOnce.Do(func () {
-		tmInstance = &JWTTokenMaker{}
-	})
-	return tmInstance
+	return &JWTTokenMaker{}
 }

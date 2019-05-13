@@ -1,26 +1,38 @@
 package service
 
 import (
+	"time"
+
+	"github.com/pkg/errors"
 	"github.com/shharn/blog/logger"
+	"github.com/shharn/blog/model"
 	"github.com/shharn/blog/repository"
 	"github.com/shharn/blog/session"
 )
 
-var tokenMaker = session.BlogTokenMaker()
+var (
+	InvalidEmailOrPasswordError = errors.New("Invalid email or password")
+	SessionCreationFailureError = errors.New("Fail to create a session")
+	InvalidTokenError = errors.New("Invalid token")
+)
 
 type AuthenticationService interface {
-	AuthenticateAdmin(string, string) bool
+	ValidateEmailAndPassword(string, string) bool
+	CreateToken(string, session.AdminSessionTransformFunc) (string, error)
+	ValidateToken(string) (model.Authentication, error)
+	StoreToken(string, time.Duration)
+	RevokeToken(string)
 	AuthorizeWithOAuthProvider(string) string
 	GetBlogTokenFromAuthCode(string, string) (string, error)
 }
 
 type BlogAuthenticationService struct {
 	repo repository.AuthenticationRepository
+	sessionStorage session.SessionStorage
+	tokenMaker session.TokenMaker
 }
 
-// Authenticated receives email & password. Then check the parameters on Databse
-// Dgraph server will throw the result
-func (s *BlogAuthenticationService) AuthenticateAdmin(email, password string) bool {
+func (s *BlogAuthenticationService) ValidateEmailAndPassword(email, password string) bool {
 	ctx := s.repo.Context()
 	defer ctx.(repository.Disposable).Dispose()
 	valid, err := s.repo.Authenticate(ctx, email, password)
@@ -29,6 +41,49 @@ func (s *BlogAuthenticationService) AuthenticateAdmin(email, password string) bo
 		return false
 	}
 	return valid
+}
+
+func (s *BlogAuthenticationService) CreateToken(email string, fn session.AdminSessionTransformFunc) (string, error) {
+	inputSession, err := fn(email)
+	if err != nil {
+		return "", err
+	}
+
+	token, err := s.tokenMaker.Encode(inputSession)
+	if err != nil {
+		return "", err
+	}
+	return token, nil
+}
+
+func (s *BlogAuthenticationService) StoreToken(token string, d time.Duration) {
+	s.sessionStorage.Put(token)
+	go func() {
+		time.Sleep(d)
+		s.sessionStorage.Remove(token)
+	}()
+}
+
+func (s *BlogAuthenticationService) ValidateToken(token string) (model.Authentication, error) {
+	if !s.sessionStorage.Has(token) {
+		return model.InvalidAuthentication, InvalidTokenError
+	}
+
+	rawSession, err := s.tokenMaker.Decode(token)
+	if err == nil {
+		s := rawSession.(*session.Session)
+		return model.Authentication{
+			IsValid:true,
+			Platform: s.Platform,
+			Admin: s.Admin,
+		}, nil
+	}
+	s.sessionStorage.Remove(token)
+	return model.InvalidAuthentication, err
+}
+
+func (s *BlogAuthenticationService) RevokeToken(token string) {
+	s.sessionStorage.Remove(token)
 }
 
 func (s *BlogAuthenticationService) AuthorizeWithOAuthProvider(platform string) string {
@@ -56,13 +111,13 @@ func (s *BlogAuthenticationService) GetBlogTokenFromAuthCode(authCode, platform 
 	}
 	session := profile.ToSession()
 
-	blogToken, err := tokenMaker.Encode(session)
+	blogToken, err := s.tokenMaker.Encode(session)
 	if err != nil {
 		return "", err
 	}
 	return blogToken, nil
 }
 
-func NewAuthenticationService(r repository.AuthenticationRepository) AuthenticationService {
-	return &BlogAuthenticationService{r}
+func NewAuthenticationService(r repository.AuthenticationRepository, s session.SessionStorage, tm session.TokenMaker) AuthenticationService {
+	return &BlogAuthenticationService{r, s, tm}
 }

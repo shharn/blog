@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/shharn/blog/model"
@@ -15,9 +16,8 @@ import (
 
 var (
 	TokenName = "X-Session-Token"
-	invalidAuthentication = model.Authentication{IsValid:false}
-	sessionStorage = session.BlogSessionStorage()
-	tokenMaker = session.BlogTokenMaker()
+	invalidEmailOrPasswordError = errors.New("Invalid email or password")
+	validDurationOfToken = time.Hour * 2
 )
 
 type oauthAuthCodeURLResponse struct {
@@ -36,28 +36,24 @@ func (h *AuthenticationHandler) LoginHandler(w http.ResponseWriter, r *http.Requ
 	}
 	
 	if len(loginInfo.Email) < 1 || len(loginInfo.Password) < 1 {
-		return nil, router.NewErrorResponse(http.StatusUnauthorized, "Invalid email or password")
+		return nil, router.NewErrorResponse(http.StatusBadRequest, "Invalid email or password")
 	}
 
-	isValid := h.authenticationService.AuthenticateAdmin(loginInfo.Email, loginInfo.Password)
+	isValid := h.authenticationService.ValidateEmailAndPassword(loginInfo.Email, loginInfo.Password)
 	if !isValid {
-		return nil, router.NewErrorResponse(http.StatusUnauthorized, "Invalid email or password")
+		return nil, router.NewErrorResponse(http.StatusBadRequest, "Invalid email or password")
 	}
 
-	inputSession, err := session.GetSessionFromLoginInformation(loginInfo)
+	token, err := h.authenticationService.CreateToken(loginInfo.Email, session.GetAdminSessionFromEmail)
 	if err != nil {
-		return nil, router.NewErrorResponseWithError(http.StatusInternalServerError, "Fail to create a session", err)
+		return nil, router.NewErrorResponseWithError(http.StatusInternalServerError, err.Error(), err)
 	}
 
-	sessionToken, err := tokenMaker.Encode(inputSession)
-	if err != nil {
-		return nil, router.NewErrorResponseWithError(http.StatusInternalServerError, "Fail to create a session", err)
-	}
-	sessionStorage.Put(sessionToken)
+	h.authenticationService.StoreToken(token, validDurationOfToken)
 	return model.Authentication{
 		IsValid: true,
-		Token: sessionToken,
-		Platform: inputSession.Platform,
+		Token: token,
+		Platform: session.OAuthPlatformNative,
 		Admin: true,
 	}, router.EmptyErrorResponse
 }
@@ -66,23 +62,14 @@ func (h *AuthenticationHandler) LoginHandler(w http.ResponseWriter, r *http.Requ
 func (h *AuthenticationHandler) CheckHandler(w http.ResponseWriter, rq *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
 	clientToken := rq.Header.Get(TokenName)
 	if len(clientToken) < 1 {
-		return invalidAuthentication, router.EmptyErrorResponse
+		return model.InvalidAuthentication, router.EmptyErrorResponse
 	}
 	
-	if !sessionStorage.Has(clientToken) {
-		return invalidAuthentication, router.EmptyErrorResponse
+	authentication, err := h.authenticationService.ValidateToken(clientToken)
+	if err != nil {
+		return authentication, router.NewErrorResponseWithError(http.StatusOK, err.Error(), err)
 	}
-
-	rawSession, err := tokenMaker.Decode(clientToken)
-	if err == nil {
-		s := rawSession.(*session.Session)
-		return model.Authentication{
-			IsValid:true,
-			Platform: s.Platform,
-			Admin: s.Admin,
-		}, router.EmptyErrorResponse
-	}
-	return invalidAuthentication, router.NewErrorResponseWithError(http.StatusOK, "Invalid token", err)
+	return authentication, router.EmptyErrorResponse
 }
 
 // OAuthLoginHandler handles login request with OAuth token
@@ -120,7 +107,7 @@ func (h *AuthenticationHandler) OAuthCodeExchangeHandler(w http.ResponseWriter, 
 		}, router.NewErrorResponseWithError(http.StatusBadRequest, fmt.Sprintf("Invalid auth code. Platform - %v, authCode - %v", platform, authCode), err)
 	}
 
-	sessionStorage.Put(t)
+	h.authenticationService.StoreToken(t, validDurationOfToken)
 	return model.Authentication{
 		Token: t,
 		IsValid: true,
@@ -131,16 +118,9 @@ func (h *AuthenticationHandler) OAuthCodeExchangeHandler(w http.ResponseWriter, 
 
 // LogoutHandler is the service for "POST /logout"
 func (h *AuthenticationHandler) LogoutHandler(w http.ResponseWriter, r *http.Request, params router.Params) (interface{}, router.ErrorResponse) {
-	tokenFromClient := r.Header.Get(TokenName)
-	s, err := tokenMaker.Decode(tokenFromClient)
-	logger.WithFields(logger.Tuples{
-		"decoded_session": s,
-	})("trace", "Decoded session")
-	if err == nil {
-		sessionStorage.Remove(tokenFromClient)
-		return nil, router.EmptyErrorResponse
-	}
-	return nil, router.NewErrorResponse(http.StatusUnauthorized, "Invalid Token")
+	token := r.Header.Get(TokenName)
+	h.authenticationService.RevokeToken(token)
+	return nil, router.EmptyErrorResponse
 }
 
 func NewAuthenticationHandler(authenticationService service.AuthenticationService) *AuthenticationHandler {

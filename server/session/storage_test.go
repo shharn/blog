@@ -8,15 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestBlogSessionStorageSingleton(t *testing.T) {
-	s1 := BlogSessionStorage()
-	s2 := BlogSessionStorage()
-	s3 := BlogSessionStorage()
-	assert.Equal(t, s1, s2)
-	assert.Equal(t, s1, s3)
-	assert.Equal(t, s2, s3)
-}
-
 func TestBlogSessionStorage(t *testing.T) {
 	s := BlogSessionStorage()
 	assert.NotNil(t, s)

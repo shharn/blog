@@ -16,6 +16,9 @@ var (
 	allowedOrigin = []string{ "http://blog.puppyloper.com", "https://blog.puppyloper.com" }
 	allowedMethods = "GET, POST, DELETE, OPTIONS, PATCH"
 	allowedHeaders = "Access-Control-Request-Headers,Access-Control-Request-Headers, Access-Control-Request-Method, Origin, Content-Type, Accept, X-Session-Token"
+
+	sessionStorage = session.BlogSessionStorage()
+	tokenMaker = session.BlogTokenMaker()
 )
 
 func getSession(rq *http.Request) *session.Session {
@@ -65,7 +68,7 @@ func main() {
 	
 	r.Get("/", handler.NoopHandler)
 
-	authenticationService := service.NewAuthenticationService(repository.NewAuthenticationRepository())
+	authenticationService := service.NewAuthenticationService(repository.NewAuthenticationRepository(), sessionStorage, tokenMaker)
 	authenticationHandler := handler.NewAuthenticationHandler(authenticationService)
 	r.Post("/login", authenticationHandler.LoginHandler)
 	r.Post("/oauth/authorizations/:platform", authenticationHandler.OAuthAuthorizationHandler)
