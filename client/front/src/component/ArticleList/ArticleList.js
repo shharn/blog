@@ -58,7 +58,11 @@ class ArticleList extends React.Component<RouterProps & WithStylesProps & Infini
                             <Article 
                                 key={`article:${article.uid}`} 
                                 article={article} 
-                                customClasses={{ root: classes.article, cardMedia: classes.articleImage }}/>)
+                                customClasses={{ 
+                                    root: classes.article, 
+                                    cardImage: classes.articleImage,
+                                    cardContent: classes.articleContent
+                                 }}/>)
                     }
                 </div>
             </React.Fragment>

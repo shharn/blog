@@ -26,8 +26,9 @@ class HottestArticleList extends React.Component<Props & WithStylesProps & Route
     render = () => {
         const { classes, reduxProps } = this.props;
         const articles = this.props.data;
-        const isEmpty = (reduxProps && reduxProps.fetchStatus === FetchStatus.SUCCESS) &&
-            (articles && articles.length);
+        const isFetched = reduxProps && reduxProps.fetchStatus === FetchStatus.SUCCESS;
+        const isEmpty = !(articles && articles.length);
+        console.log(`isEmpty - ${isEmpty}`);
         return (
             <div className={classes.container}>
                 <NoSsr>
@@ -37,38 +38,37 @@ class HottestArticleList extends React.Component<Props & WithStylesProps & Route
                         Newest
                     </Typography>
                 </NoSsr>
-                {articles.length > 0 ? 
-                    <React.Fragment>
-                        <Article 
-                            customClasses={{ 
-                                root: classes.firstCard, 
-                                cardMedia: classes.largeMedia
-                            }} 
-                            article={articles[0]}/>
-                        <div 
-                            className={classes.remainingRoot} 
-                            ref={container => this.innerContainer = container}>
-                            {articles.slice(1).map(article => (
-                                <Article 
-                                    key={`hottestArticle:${article.uid}`} 
-                                    customClasses={{ 
-                                        root: classes.card, 
-                                        cardMedia: classes.smallMedia 
-                                    }} 
-                                    article={article}/>
-                                )
-                            )}
-                        </div>
-                        {this.props.children}
-                    </React.Fragment> :
-                    isEmpty &&
-                        <Typography 
-                            className={classes.emptyMessage}
-                            align="center"
-                            variant='h3'>
-                            Coming Soon  :)
-                        </Typography>
+                {isFetched && isEmpty &&
+                    <Typography 
+                        className={classes.emptyMessage}
+                        align="center"
+                        variant='h3'>
+                        Coming Soon  :)
+                    </Typography>
                 }
+                {!isEmpty &&
+                    <div className={classes.listContainer}>
+                        <Article
+                            customClasses={{
+                                root: classes.firstCard,
+                                cardImage: classes.firstCardImage,
+                                cardContent: classes.firstCardContent
+                            }}
+                            article={articles[0]}/>
+                        {articles.slice(1).map(article => (
+                            <Article
+                                key={`hottest-article-${article.uid}`}
+                                customClasses={{
+                                    root: classes.card,
+                                    cardImage: classes.cardImage,
+                                    cardContent: classes.cardContent
+                                }}
+                                article={article}
+                            />
+                        ))}
+                    </div>
+                }
+                {this.props.children}
             </div>
         );
     }

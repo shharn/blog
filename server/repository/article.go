@@ -61,7 +61,6 @@ const (
 					uid
 					name
 				}
-				views
 			}
 		}
 	`
@@ -78,7 +77,6 @@ const (
 					uid
 					name
 				}
-				views
 			}
 		}
 	`

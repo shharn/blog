@@ -1,41 +1,30 @@
-const lastLayoutBreakpoint = 1550;
-// const firstLayoutBreakpoint = 950
-// const secondLayoutBreakpoint = 1450
+const secondLayoutBreakpoint = 1086;
 
 export default theme => ({
     listContainer: {
         position: 'relative',
-        overflow: 'auto',
         display: 'grid',
-        maxHeight: 'calc(100vh - 160px)',
-        gridGap: '15px',
-        padding: '2px',
-        gridTemplateColumns: 'repeat(1, 1fr)',
-        [theme.breakpoints.up('lg')]: {
-            gridTemplateColumns: 'repeat(2, 1fr)',
-        },
-        [theme.breakpoints.up(lastLayoutBreakpoint)]: {
-            gridTemplateColumns: 'repeat(3, 1fr)'
-        }
+        gridTemplateColumns: 'repeat(auto-fill, minmax(325px, 400px))',
+        gridAutoRows: 'minmax(400px, 440px)',
+        gridGap: '10px',
+        justifyContent: 'center'
     },
     header: {
         margin: '15px 10px',
         color: 'rgba(0, 0, 0, 0.85)'
     },
     article: {
+        width: '100%',
         height: '100%',
+        borderRadius: '15px',
+        margin: '0 auto',
+        position: 'relative'
     },
     articleImage: {
-        height: '52vw',
-        [theme.breakpoints.up('sm')]: {
-            height: '42vw'
-        },
-        [theme.breakpoints.up('lg')]: {
-            height: '27vw'
-        },
-        [theme.breakpoints.up(lastLayoutBreakpoint)]: {
-            height: '18vw'
-        },
+        height: '65%',
+    },
+    articleContent: {
+        height: '35%',
     },
     emptyText: {
         position: 'fixed',

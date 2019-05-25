@@ -1,4 +1,4 @@
-const lastLayoutBreakpoint = 1450;
+const secondLayoutBreakpoint = 1086;
 
 export default theme => ({
     container: {
@@ -6,78 +6,54 @@ export default theme => ({
         position: 'relative',
         height: 'calc(100vh - 96px)',
         overflow: 'auto',
-        padding: '2px',
-        [theme.breakpoints.up(lastLayoutBreakpoint)]: {
-            overflow: 'hidden'
-        }
+        padding: '2px'
     },
     header: {
         margin: '15px 10px',
         color: 'rgba(0, 0, 0, 0.75)'
     },
+    listContainer: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(325px, 400px))',
+        gridAutoRows: 'minmax(400px, 440px)',
+        gridGap: '10px',
+        justifyContent: 'center'
+    },
     firstCard: {
         width: '100%',
-        [theme.breakpoints.up(lastLayoutBreakpoint)]: {
-            float: 'left',
-            width: 'calc(70% - 10px)',
-            height: 'calc(100% - 70px)',
-            marginRight: '10px'
-        }
-    },
-    remainingRoot: {
-        width: '100%',
-        marginTop: '10px',
-        [theme.breakpoints.up('md')]: {
-            display: 'grid',
-            gridGap: '10px',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            marginTop: '10px',
-        },
-        [theme.breakpoints.up(lastLayoutBreakpoint)]: {
-            display: 'block',
-            width: '30%',
-            height: 'calc(100% - 70px)',
-            overflow: 'auto',
-            marginTop: '0',
+        height: '100%',
+        borderRadius: '15px',
+        margin: '0 auto',
+        position: 'relative',
+        [theme.breakpoints.up(secondLayoutBreakpoint)]: {
+            gridRow: '1 / span 2',
+            gridColumn: '1 / span 2'
         }
     },
     card: {
         width: '100%',
-        marginBottom: '10px',
-        [theme.breakpoints.up('md')]: {
-            height: '100%',
-            marginBottom: 0,
-        },
-        [theme.breakpoints.up(lastLayoutBreakpoint)]: {
-            height: 'auto',
-            width: '99%',
-            marginBottom: '10px'
+        height: '100%',
+        borderRadius: '15px',
+        margin: '0 auto',
+        position: 'relative'
+    },
+    firstCardImage: {
+        height: '65%',
+        [theme.breakpoints.up(secondLayoutBreakpoint)]: {
+            height: '80%'
         }
     },
-    largeMedia: {
-        height: '50vw',
-        [theme.breakpoints.up('sm')]: {
-            height: '36vw',
-        },
-        [theme.breakpoints.up('md')]: {
-            height: '53vw',
-        },
-        [theme.breakpoints.up(lastLayoutBreakpoint)]: {
-            height: '53vw',
-            maxHeight: '770px'
-        },
+    firstCardContent: {
+        height: '35%',
+        [theme.breakpoints.up(secondLayoutBreakpoint)]: {
+            height: '20%',
+        }
     },
-    smallMedia: {
-        height: '50vw',
-        [theme.breakpoints.up('sm')]: {
-            height: '36vw',
-        },
-        [theme.breakpoints.up('md')]: {
-            height: '24vw',
-        },
-        [theme.breakpoints.up(lastLayoutBreakpoint)]: {
-            height: '16vw',
-        },
+    cardImage: {
+        height: '65%'
+    },
+    cardContent: {
+        height: '35%',
     },
     emptyMessage: {
         position: 'absolute',
