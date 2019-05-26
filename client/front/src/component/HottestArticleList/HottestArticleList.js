@@ -28,7 +28,6 @@ class HottestArticleList extends React.Component<Props & WithStylesProps & Route
         const articles = this.props.data;
         const isFetched = reduxProps && reduxProps.fetchStatus === FetchStatus.SUCCESS;
         const isEmpty = !(articles && articles.length);
-        console.log(`isEmpty - ${isEmpty}`);
         return (
             <div className={classes.container}>
                 <NoSsr>
