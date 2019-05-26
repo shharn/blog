@@ -39,6 +39,8 @@ export default theme => ({
     },
     firstCardImage: {
         height: '65%',
+        display: 'flex',
+        justifyContent: 'center',
         [theme.breakpoints.up(secondLayoutBreakpoint)]: {
             height: '80%'
         }
@@ -50,7 +52,9 @@ export default theme => ({
         }
     },
     cardImage: {
-        height: '65%'
+        height: '65%',
+        display: 'flex',
+        justifyContent: 'center'
     },
     cardContent: {
         height: '35%',

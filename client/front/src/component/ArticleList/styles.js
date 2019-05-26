@@ -22,6 +22,8 @@ export default theme => ({
     },
     articleImage: {
         height: '65%',
+        display: 'flex',
+        justifyContent: 'center'
     },
     articleContent: {
         height: '35%',
