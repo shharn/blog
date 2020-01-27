@@ -48,4 +48,24 @@
     <loc>https://blog.puppyloper.com/menus/Design%20%26%20Architecture/articles/Test%20Code%EC%9D%98%20%EC%9D%98%EB%AF%B8</loc>
     <lastmod>2019-05-26</lastmod>
   </url>
+  <url>
+    <loc>https://blog.puppyloper.com/menus/Golang/articles/Goroutine과%20Go%20scheduler</loc>
+    <lastmod>2019-07-13</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.puppyloper.com/menus/Common/articles/Binary%20format%20protocol과%20gRPC</loc>
+    <lastmod>2019-07-23</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.puppyloper.com/menus/Kubernetes/articles/Skaffold와%20함께%20kuberentes%20개발환경%20만들기%20(feat.%20hot%20reload)</loc>
+    <lastmod>2019-09-16</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.puppyloper.com/menus/Front-end/articles/Web%20components와%20Polymer</loc>
+    <lastmod>2019-09-17</lastmod>
+  </url>
+  <url>
+    <loc>https://blog.puppyloper.com/menus/Kubernetes/articles/CI%2FCD%20for%20applications%20on%20kubernetes</loc>
+    <lastmod>2019-10-13</lastmod>
+  </url>
 </urlset>
