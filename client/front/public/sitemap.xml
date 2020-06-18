@@ -68,4 +68,8 @@
     <loc>https://blog.puppyloper.com/menus/Kubernetes/articles/CI%2FCD%20for%20applications%20on%20kubernetes</loc>
     <lastmod>2019-10-13</lastmod>
   </url>
+  <url>
+    <loc>https://blog.puppyloper.com/menus/Golang/articles/Golang과%20Unit%20of%20work</loc>
+    <lastmod>2020-02-27</lastmod>
+  </url>
 </urlset>
